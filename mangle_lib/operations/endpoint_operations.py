@@ -11,62 +11,62 @@ class EndpointOperations(object):
     """
     This class contains operations related to Endpoints
     """
-    def setup_fault_infra(self, mangle_seesion_obj, remote_machine_ip,
-                          remote_machine_username, remote_machine_password,
-                          endpoint_name):
+    def setup_fault_infra(self, mangle_seesion_obj, k8s_endpoint,
+                          k8s_credential, k8s_namespace,
+                          ep_name):
         """
         Create a setup like create endpoint endpoint if doesn't exist
         """
         endpoints_obj = Endpoints(mangle_seesion_obj)
         endpoint_credential_obj = EndpointCredential(mangle_seesion_obj)
         test_connection_obj = TestConnection(mangle_seesion_obj)
-
-        endpoint_credential_name = "ep-cred-%s" % remote_machine_ip
         log.banner("%s *** Creating Endpoint Credential ***",
                    logger.plugin_name)
         log.debug("%s *** endpoint credential name is '%s' ***",
-                  logger.plugin_name, endpoint_credential_name)
-
+                  logger.plugin_name, k8s_credential)
         # Creating new endpoint credential if does not exist
         if self.is_endpoint_credential_exist(endpoint_credential_obj,
-                                             endpoint_credential_name):
+                                             k8s_credential):
             log.debug("%s *** Endpoint credential %s already exists. Skipping"
-                      " creating it ***", logger.plugin_name, endpoint_name)
+                      " creating it ***", logger.plugin_name, k8s_endpoint)
         else:
+            multipart_form_data = {
+                'kubeConfig': open('/Users/bverma/Downloads/scdc1-staging-trace-it-now.yaml', 'rb')
+            }
             status, output = endpoint_credential_obj.create(
-                endpoint_credential_name, remote_machine_username,
-                remote_machine_password)
+                k8s_credential, multipart_form_data)
+            print(output)
             log.debug("%s *** output of endpoint credential create obj ***"
                       " \n %s", logger.plugin_name, output )
 
-        # Creating payload for endpoint and testconnetion
-        payload = '{"name": "%s", "endPointType": "MACHINE",' \
-                  '"credentialsName": "%s",' \
-                  '"remoteMachineConnectionProperties": ' \
-                  '{"host": "%s", "osType": "LINUX", "sshPort": 22, ' \
-                  '"timeout": 1000}}' % (
-                      endpoint_name, endpoint_credential_name,
-                      remote_machine_ip)
-        log.debug("%s *** payload for endpoint & test-connection *** \n %s",
-                  logger.plugin_name, payload)
+            # Creating payload for endpoint and testconnetion
+            payload = '{"name": "%s", "endPointType": "K8S_CLUSTER",' \
+                      '"credentialsName": "%s",' \
+                      '"k8sConnectionProperties": ' \
+                      '{"namespace": "%s"}}' % (
+                          k8s_endpoint, k8s_credential,k8s_namespace)
 
-        # Testing connection for endpoint credential
-        log.banner("%s *** Testing Endpoint Connection ***",
-                   logger.plugin_name)
-        status, output = test_connection_obj.create(payload)
-        if status:
-            self.wait_for_endpoint_credential_to_create(
-                endpoint_credential_obj, endpoint_credential_name)
+            print(payload)
+            log.debug("%s *** payload for endpoint & test-connection *** \n %s",
+                      logger.plugin_name, payload)
 
-        # Creating endpoint if does not exist
-        log.banner("%s *** Creating Endpoint ***", logger.plugin_name)
-        if self.is_endpoint_exist(endpoints_obj, endpoint_name):
-            log.debug("%s *** Endpoint %s already exists. Skipping creating"
-                      " it ***", logger.plugin_name, endpoint_name)
-        else:
-            status, output = endpoints_obj.create(payload)
-            log.debug("%s *** output of endpoint create obj *** \n%s",
-                      logger.plugin_name, output)
+            # Testing connection for endpoint credential
+            log.banner("%s *** Testing Endpoint Connection ***",
+                       logger.plugin_name)
+            status, output = test_connection_obj.create(payload)
+            if status:
+                self.wait_for_endpoint_credential_to_create(
+                    endpoint_credential_obj, k8s_credential)
+
+            # Creating endpoint if does not exist
+            log.banner("%s *** Creating Endpoint ***", logger.plugin_name)
+            if self.is_endpoint_exist(endpoints_obj, k8s_endpoint):
+                log.debug("%s *** Endpoint %s already exists. Skipping creating"
+                          " it ***", logger.plugin_name, k8s_endpoint)
+            else:
+                status, output = endpoints_obj.create(payload)
+                log.debug("%s *** output of endpoint create obj *** \n%s",
+                          logger.plugin_name, output)
 
     @utilities.retry(retries=5, exceptions=Exception, sleep=10)
     def is_endpoint_credential_exist(self, endpoint_credential_obj,
