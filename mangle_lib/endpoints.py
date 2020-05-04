@@ -27,6 +27,7 @@ class Endpoints(Common):
         Gets endpoint details
         :return:
         """
+        print(self.api_endpoint)
         return self.mangle_api.send("GET", self.api_endpoint)
 
     def delete(self, endpoint_name):
@@ -53,16 +54,18 @@ class EndpointCredential(Common):
     This class contains methods related to endpoint credentials
     """
 
-    def create(self, endpoint_credential_name, mp_username, mp_password):
+    def create(self, endpoint_credential_name, config_data):
         """
         Creates endpoint credentials
         :return:
         """
-        api_endpoint = "{0}/credentials/remotemachine?name={1}" \
-                       "&password={2}&username={3}".\
-            format(self.api_endpoint, endpoint_credential_name, mp_password,
-                   mp_username)
-        return self.mangle_api.send("POST", api_endpoint)
+        header = {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json'
+        }
+        api_endpoint = "{0}/credentials/k8s?id={1}&name={2}".format(self.api_endpoint,endpoint_credential_name,endpoint_credential_name)
+        print(api_endpoint)
+        return self.mangle_api.send("POST", api_endpoint,files=config_data)
 
     def delete(self, endpoint_credential_name):
         """
@@ -78,6 +81,7 @@ class EndpointCredential(Common):
         Gives endpoint credential details
         """
         api_endpoint = "{0}/credentials".format(self.api_endpoint)
+        print(api_endpoint)
         return self.mangle_api.send("GET", api_endpoint)
 
 

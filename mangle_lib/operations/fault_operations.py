@@ -50,22 +50,22 @@ class FaultBase(object):
                          'LOSS': 'PACKET_LOSS_PERCENTAGE'
                          }
 
-    def __init__(self, mangle_ip, mangle_username, mangle_password, nsxt_ip,
-                 nsxt_username, nsxt_password, fault_area):
+    def __init__(self, mangle_ip, mangle_username, mangle_password, k8s_endpoint,
+                 k8s_credential, k8s_namespace, fault_area):
 
         self.mangle_ip = mangle_ip
         self.mangle_username = mangle_username
         self.mangle_password = mangle_password
 
         # Initialize NSXT Objects
-        self.nsxt_ip = nsxt_ip
-        self.nsxt_username = nsxt_username
-        self.nsxt_password = nsxt_password
+        self.k8s_endpoint = k8s_endpoint
+        self.k8s_credential = k8s_credential
+        self.k8s_namespace = k8s_namespace
 
         # Initialize fault area i.e INFRA or APP
         self.fault_area = fault_area
 
-        self.ep_name = "ep-%s" % self.nsxt_ip
+        self.ep_name = "ep-%s" % self.k8s_endpoint
         log.debug("%s *** endpoint name is '%s' ***", logger.plugin_name,
                   self.ep_name)
         # set endpoints for fault(s)
@@ -82,12 +82,12 @@ class FaultBase(object):
 
         # TODO : Endpoint creation to be done after operations is ready
         endpoint_operations = EndpointOperations()
-        endpoint_operations.setup_fault_infra(self.mangleapi, self.nsxt_ip,
-                                              self.nsxt_username,
-                                              self.nsxt_password, self.ep_name)
-        # get nsxt-object
-        self.nsxt_obj = NSXTVerifiers(self.nsxt_ip, self.nsxt_username,
-                                      self.nsxt_password)
+        endpoint_operations.setup_fault_infra(self.mangleapi, self.k8s_endpoint,
+                                              self.k8s_credential,
+                                              self.k8s_namespace, self.ep_name)
+        # # get nsxt-object
+        # self.nsxt_obj = NSXTVerifiers(self.nsxt_ip, self.nsxt_username,
+        #                               self.nsxt_password)
 
     @property
     def mangleapi(self):
@@ -232,11 +232,11 @@ class InfraFaultOperations(FaultBase):
     # TODO:
     """
 
-    def __init__(self, mangle_ip, mangle_username, mangle_password, nsxt_ip,
-                 nsxt_username, nsxt_password, fault_area="INFRA"):
+    def __init__(self, mangle_ip, mangle_username, mangle_password, k8s_endpoint,
+                 k8s_credential, k8s_namesapce, fault_area="INFRA"):
         super(InfraFaultOperations, self).__init__(
-            mangle_ip, mangle_username, mangle_password, nsxt_ip,
-            nsxt_username, nsxt_password, fault_area)
+            mangle_ip, mangle_username, mangle_password, k8s_endpoint,
+            k8s_credential, k8s_namesapce, fault_area)
 
     def generate_cpu_fault(self, cpuload, timeout, injection_homedir="/tmp",
                            schedule_epoch_time=None, schedule_cron_exp=None,
