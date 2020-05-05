@@ -238,7 +238,7 @@ class InfraFaultOperations(FaultBase):
             mangle_ip, mangle_username, mangle_password, k8s_endpoint,
             k8s_credential, k8s_namesapce, fault_area)
 
-    def generate_cpu_fault(self, cpuload, timeout, injection_homedir="/tmp",
+    def generate_cpu_fault(self, cpuload, timeout,container_name,label, injection_homedir="/tmp",
                            schedule_epoch_time=None, schedule_cron_exp=None,
                            tags={}):
         """
@@ -253,7 +253,12 @@ class InfraFaultOperations(FaultBase):
             "cpuLoad": cpuload,
             "timeoutInMilliseconds": timeout * 1000,
             "injectionHomeDir": injection_homedir,
-            "endpointName": self.ep_name,
+            "endpointName": self.k8s_endpoint,
+            "k8sArguments": {
+                "containerName": container_name,
+                "podLabels": label,
+                "enableRandomInjection": True
+            },
             "schedule": None if not bool(schedule) else schedule,
             "tags": None if not bool(tags) else tags
         }

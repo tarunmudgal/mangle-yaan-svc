@@ -60,12 +60,11 @@ class EndpointCredential(Common):
         :return:
         """
         header = {
-            'Content-Type': 'multipart/form-data',
-            'Accept': 'application/json'
+            'Authorization': 'Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu'
         }
         api_endpoint = "{0}/credentials/k8s?id={1}&name={2}".format(self.api_endpoint,endpoint_credential_name,endpoint_credential_name)
         print(api_endpoint)
-        return self.mangle_api.send("POST", api_endpoint,files=config_data)
+        return self.mangle_api.send("POST", api_endpoint,files=config_data,headers=header)
 
     def delete(self, endpoint_credential_name):
         """
@@ -81,7 +80,6 @@ class EndpointCredential(Common):
         Gives endpoint credential details
         """
         api_endpoint = "{0}/credentials".format(self.api_endpoint)
-        print(api_endpoint)
         return self.mangle_api.send("GET", api_endpoint)
 
 

@@ -30,9 +30,7 @@ class EndpointOperations(object):
             log.debug("%s *** Endpoint credential %s already exists. Skipping"
                       " creating it ***", logger.plugin_name, k8s_endpoint)
         else:
-            multipart_form_data = {
-                'kubeConfig': open('/Users/bverma/Downloads/scdc1-staging-trace-it-now.yaml', 'rb')
-            }
+            multipart_form_data = [('kubeConfig', open('/Users/bverma/Downloads/scdc1-staging-trace-it-now.yaml','rb'))]
             status, output = endpoint_credential_obj.create(
                 k8s_credential, multipart_form_data)
             print(output)

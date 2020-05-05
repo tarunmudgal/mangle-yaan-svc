@@ -9,7 +9,7 @@ class CommonOps(object):
     """
 
     @staticmethod
-    def poll_fault_status(session_obj, fault_id, expected_status="COMPLETED",
+    def ptoll_fault_status(session_obj, fault_id, expected_status="COMPLETED",
                           timeout=120):
         """
         # TODO:

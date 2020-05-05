@@ -45,7 +45,7 @@ class MangleApi(object):
         return 'MANGLEAPI(%r, %r, %r, %r)' % (self.hostname, self.username,
                                               self.password, self.prefix)
 
-    def send(self, verb, ep_name, prefix=None, headers=None, **kwargs):
+    def send(self, verb, ep_name, prefix=None,files=None, headers=None, **kwargs):
         """
         verb: string
         HTTP verb; 'GET', 'POST', 'PUT', 'DELETE'
@@ -64,6 +64,8 @@ class MangleApi(object):
         will return True with api's json content on success else false with
                                                     respective cause of failure
         """
+        if files is not None:
+            kwargs['files']=files
         kwargs['headers'] = headers
         if headers is None:
             kwargs['headers'] = {'Content-type': 'application/json'}

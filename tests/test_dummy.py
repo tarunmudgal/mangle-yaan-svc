@@ -8,6 +8,6 @@ import pytest
 
 
 
-@pytest.mark.parametrize("inject_infra_cpu_fault",[{'cpuload':90,'timeout':300}],indirect=["inject_infra_cpu_fault"])
+@pytest.mark.parametrize("inject_infra_cpu_fault",[{'cpuload':80,'timeout':30000,'container_name':'csp-data-enrichment','label':'app=csp-data-enrichment'}],indirect=["inject_infra_cpu_fault"])
 def test_cluster_status(inject_infra_cpu_fault, request):
     print("Execute test")
