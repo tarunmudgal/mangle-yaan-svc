@@ -14,7 +14,7 @@ FORMAT = ('%(asctime)s %(levelname)s %(name)s'
 
 log = logging.getLogger(__name__)
 
-plugin_name = "MJOLNIR::"
+plugin_name = "MANGLE-YAAN::"
 
 class SummaryLogFilter(logging.Filter):
     def filter(self, record):

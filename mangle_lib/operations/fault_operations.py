@@ -12,7 +12,7 @@ from mangle_lib.operations.endpoint_operations import EndpointOperations
 lib_path = os.path.abspath(os.path.join(__file__, '..', '..', '..',
                                         'json_schemas', 'remote_machine'))
 sys.path.append(lib_path)
-import threading
+import threading, datetime
 
 # constant(s)
 VERB_POST = "POST"
@@ -65,7 +65,7 @@ class FaultBase(object):
         # Initialize fault area i.e INFRA or APP
         self.fault_area = fault_area
 
-        self.ep_name = "ep-%s" % self.k8s_endpoint
+        self.ep_name = "%s" % self.k8s_endpoint
         log.debug("%s *** endpoint name is '%s' ***", logger.plugin_name,
                   self.ep_name)
         # set endpoints for fault(s)
@@ -109,7 +109,8 @@ class FaultBase(object):
         # TODO:
         """
         method = self.faultops_dict[self.fault_area][fault_type]
-        getattr(self, method)(**kwargs)
+        return getattr(self, method)(**kwargs)
+
 
     def inject_daemon_fault(self, fault_type, **kwargs):
         """
@@ -137,14 +138,18 @@ class FaultBase(object):
 
         # log the fault injection
         FaultBase._log_fault(fault_area, fault_type, payload)
-        #
+
         ret_val, content = self.mangleapi.send(verb, api_endpoint,
                                                data=json.dumps(payload))
 
         # wait for fault to get completed
         CommonOps.poll_fault_status(self.mangleapi, content['id'])
+
         # log the successful completion of fault
         FaultBase._log_fault(fault_area, fault_type, payload, success_msg=1)
+
+        return content['id']
+
 
 
     @staticmethod
@@ -233,10 +238,10 @@ class InfraFaultOperations(FaultBase):
     """
 
     def __init__(self, mangle_ip, mangle_username, mangle_password, k8s_endpoint,
-                 k8s_credential, k8s_namesapce, fault_area="INFRA"):
+                 k8s_credential, k8s_namespace, fault_area="INFRA"):
         super(InfraFaultOperations, self).__init__(
             mangle_ip, mangle_username, mangle_password, k8s_endpoint,
-            k8s_credential, k8s_namesapce, fault_area)
+            k8s_credential, k8s_namespace, fault_area)
 
     def generate_cpu_fault(self, cpuload, timeout,container_name,label, injection_homedir="/tmp",
                            schedule_epoch_time=None, schedule_cron_exp=None,
@@ -263,7 +268,7 @@ class InfraFaultOperations(FaultBase):
             "tags": None if not bool(tags) else tags
         }
 
-        self.invoke_mangle_api(VERB_POST, self.cpu_endpoint, payload,
+        return self.invoke_mangle_api(VERB_POST, self.cpu_endpoint, payload,
                                fault_area, fault_type)
 
     def generate_memory_fault(
