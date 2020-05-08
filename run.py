@@ -67,9 +67,9 @@ if __name__ == '__main__':
         print ("Will be running the Default [" + type + "] Step")
 
 
-    # cmds.append("python " +
-    #             type + "_scripts/copy_" + type + "_data_for_project_workload.py" +
-    #             " -p " + project_name + " -w " + workload_name + " -r " + run_id)
+    cmds.append("python " +
+                type + "_scripts/copy_" + type + "_data_for_project_workload.py" +
+                " -p " + project_name + " -w " + workload_name + " -r " + run_id)
     rc = 0
     for cmd in cmds:
         rc = rc + run_command(cmd)
