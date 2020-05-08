@@ -4,6 +4,7 @@ Copyright 2017 VMware, Inc. All rights reserved. -- VMware confidential
 from mangle_lib.endpoints import *
 from commons import utilities
 from commons import logger
+import os, sys
 log = logger.setup_logging(__name__)
 
 
@@ -30,7 +31,9 @@ class EndpointOperations(object):
             log.debug("%s *** Endpoint credential %s already exists. Skipping"
                       " creating it ***", logger.plugin_name, k8s_endpoint)
         else:
-            multipart_form_data = [('kubeConfig', open('/Users/bverma/Downloads/scdc1-staging-trace-it-now.yaml','rb'))]
+            kubeconfig_dir = [os.path.join(file + '/config/') for file in sys.path if
+                              file.endswith('mangle-yaan-service')][0]
+            multipart_form_data = [('kubeConfig', open(kubeconfig_dir+ep_name+'.yaml','rb'))]
             status, output = endpoint_credential_obj.create(
                 k8s_credential, multipart_form_data)
             print(output)
