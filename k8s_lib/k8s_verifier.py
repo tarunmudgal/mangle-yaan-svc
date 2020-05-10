@@ -1,0 +1,21 @@
+from kubernetes import client, config
+import os
+from k8s_lib import k8s_opreations
+
+class K8SVerifier(object):
+
+    def verfy_k8s(kube_config_file,namespace):
+
+        verify=k8s_opreations.K8SOperation(kube_config_file,namespace)
+        list_pod  = verify.get_k8s_pod_in_namespace()
+        for i in list_pod.items:
+            try:
+                assert i.status.phase == 'Running',i.metadata.name + ' is Running'
+                print("%s is Running" % (i.metadata.name))
+            except AssertionError as msg:
+                print(msg)
+
+if __name__ == "__main__":
+    kube_config_file = os.environ.get('KUBECONFIG', '/Users/bverma/Downloads/scdc1-staging-trace-it-now.yaml')
+    namespace = 'scdc1-staging-trace-it-now'
+    K8SVerifier.verfy_k8s(kube_config_file,namespace)
