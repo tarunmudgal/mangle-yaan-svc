@@ -1,13 +1,10 @@
-FROM python:3.6-alpine
+FROM vmware-docker-csp-tools.bintray.io/csp-resiliency-tests:latest
 MAINTAINER Csp QE Team "csp-pune-qe@vmware.com"
 
 COPY run.py /
 COPY ./pre_scripts /pre_scripts
 
-COPY requirements.txt /
 WORKDIR /
-
-RUN pip install -r requirements.txt
 
 ENV type pre
 ENV project_name csp_resiliency
