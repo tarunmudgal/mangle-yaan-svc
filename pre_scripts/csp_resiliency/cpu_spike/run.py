@@ -75,7 +75,7 @@ if __name__ == '__main__':
         env_dict['fault_id'] = inject_infra_cpu_fault(env_dict)
         log.info("*** env params %s ***", env_dict)
     env_dict['fault_start_date'] = str(fault_start_date)
-    env_dict['fault_end_timestamp'] = str((fault_start_date + datetime.timedelta(0, env_dict['timeout']/1000)).timestamp())
+    env_dict['fault_end_timestamp'] = str((fault_start_date + datetime.timedelta(0, int(env_dict['timeout'])/1000)).timestamp())
 
     log.info("*** Fault %s is injected with Fault Id %s ***", env_dict['fault_type'], env_dict['fault_id'])
     write_input_file(project_name, workload_name, env_dict, 'fault_cpu.csv')
