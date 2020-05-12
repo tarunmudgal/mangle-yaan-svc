@@ -142,6 +142,9 @@ class FaultBase(object):
         ret_val, content = self.mangleapi.send(verb, api_endpoint,
                                                data=json.dumps(payload))
 
+        print("*****retval and content")
+        print(content)
+
         # wait for fault to get completed
         CommonOps.poll_fault_status(self.mangleapi, content['id'])
 

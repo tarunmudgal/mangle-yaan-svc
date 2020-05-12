@@ -71,9 +71,13 @@ if __name__ == '__main__':
 
     # Injecting cpu fault
     fault_start_date = datetime.datetime.now()
+    print("*******1****")
+    print(env_dict)
     if 'cpuload' in env_dict['fault_type']:
         env_dict['fault_id'] = inject_infra_cpu_fault(env_dict)
         log.info("*** env params %s ***", env_dict)
+        print(" after generating fault")
+        print(env_dict)
     env_dict['fault_start_date'] = str(fault_start_date)
     env_dict['fault_end_timestamp'] = str((fault_start_date + datetime.timedelta(0, int(env_dict['timeout'])/1000)).timestamp())
 
