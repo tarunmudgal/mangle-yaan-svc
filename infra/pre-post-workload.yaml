@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: pre-post-workload-job-ab2
+  name: pre-post-workload-job-resiliency
 spec:
   template:
     spec:
       containers:
-      - name: pre-post-workload-job-ab2
+      - name: pre-post-workload-job-resiliency
         image: vmware-docker-csp-tools.bintray.io/csp-resiliency-workload-wrapper:latest
         env:
           - name: type
