@@ -44,8 +44,8 @@ def get_env_var():
     env_dict['fault_type'] = os.getenv('fault_type', 'cpuload')
     env_dict['fault_percentage'] = os.getenv('fault_percentage', 30)
     env_dict['timeout'] = os.getenv('timeout', 3000)
-    env_dict['container_name'] = os.getenv('container_name', 'csp-data-enrichment')
-    env_dict['container_label'] = os.getenv('container_label', 'app=csp-data-enrichment')
+    env_dict['container_name'] = os.getenv('container_name', 'csp-customer-support')
+    env_dict['container_label'] = os.getenv('container_label', 'app=csp-customer-support')
     env_dict['schedule_cron_exp'] = os.getenv('schedule_cron_exp', None)
     env_dict['schedule_epoch_time'] = os.getenv('schedule_epoch_time', None)
     env_dict['tags'] = os.getenv('tags', None)
@@ -61,7 +61,7 @@ def get_env_var():
 if __name__ == '__main__':
     '''
     Usage:
-    python run.py.py 
+    python run.py -p project_name -w workload_name -r run_id
     '''
 
     project_name, workload_name, run_id = check_arg(sys.argv[1:])
