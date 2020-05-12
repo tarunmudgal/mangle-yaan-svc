@@ -1,0 +1,23 @@
+FROM python:3.6-alpine
+MAINTAINER Csp QE Team "csp-pune-qe@vmware.com"
+
+COPY run.py /
+COPY ./pre_scripts /pre_scripts
+COPY ./post_scripts /post_scripts
+
+COPY requirements.txt /
+WORKDIR /
+
+RUN pip install -r requirements.txt
+
+ENV type pre
+ENV project_name csp_resiliency
+ENV workload_name cpu_spike
+ENV run_id abcd
+ENV fault_type cpu_load
+ENV timeout 30
+ENV fault_percentage 30
+ENV container_name csp-data-enrichment
+ENV container_label app=csp-data-enrichment
+
+CMD [ "sh", "-c", "python run.py -t ${type} -p ${project_name} -w ${workload_name} -r ${run_id} ]
