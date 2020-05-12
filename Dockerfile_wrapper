@@ -3,7 +3,6 @@ MAINTAINER Csp QE Team "csp-pune-qe@vmware.com"
 
 COPY run.py /
 COPY ./pre_scripts /pre_scripts
-COPY ./post_scripts /post_scripts
 
 WORKDIR /
 
