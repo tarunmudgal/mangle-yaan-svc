@@ -28,7 +28,7 @@ def inject_infra_cpu_fault(request):
         tags = request['tags']
 
     return ifo.inject_fault("CPU", cpuload=int(request['fault_percentage']),
-                     timeout=request['timeout'],
+                     timeout=int(request['timeout']),
                      container_name=request['container_name'],
                      label=request['container_label'],
                      schedule_cron_exp=schedule_cron_exp,
