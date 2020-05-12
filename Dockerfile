@@ -13,7 +13,6 @@ WORKDIR /
 
 RUN pip install -r requirements.txt
 
-ENV type pre
 ENV project_name csp_resiliency
 ENV workload_name cpu_spike
 ENV run_id abcd
