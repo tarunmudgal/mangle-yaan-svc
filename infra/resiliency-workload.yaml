@@ -9,8 +9,6 @@ spec:
       - name: csp-resiliency-tests
         image: vmware-docker-csp-tools.bintray.io/csp-resiliency-tests:latest
         env:
-          - name: type
-            value: "pre"
           - name: project_name
             value: "csp_resiliency"
           - name: workload_name
