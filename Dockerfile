@@ -8,6 +8,7 @@ COPY ./config /config
 COPY ./tests /tests
 COPY pytest.ini /
 COPY requirements.txt /
+COPY run_tests.sh /
 
 WORKDIR /
 
