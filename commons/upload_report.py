@@ -12,7 +12,5 @@ print("uploading result file to S3")
 s3 = boto3.client('s3', aws_access_key_id='AKIAUE4JITGQ3LKSAK5E',
                   aws_secret_access_key='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')
 s3_result_file = "maxim-gun/" + project_name + "/" + workload_name + "/" + run_id + "/results/report.html"
-local_file = [os.path.join(file + '/report.html') for file in sys.path if
-              file.endswith('mangle-yaan-service')][0]
-s3.upload_file(local_file, bucket_name, s3_result_file)
+s3.upload_file('report.html', bucket_name, s3_result_file)
 print("uploaded successfully")
