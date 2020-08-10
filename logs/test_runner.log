@@ -1,0 +1,10 @@
+[10-08-2020 01:59:35 AM] [INFO] [root] [210]: [info] logger initialized
+[10-08-2020 01:59:37 AM] [DEBUG] [urllib3.connectionpool] [939]: [_new_conn] Starting new HTTPS connection (1): www.google.com:443
+[10-08-2020 01:59:37 AM] [DEBUG] [urllib3.connectionpool] [433]: [_make_request] https://www.google.com:443 "GET / HTTP/1.1" 200 None
+[10-08-2020 01:59:37 AM] [INFO] [root] [210]: [info] Network Availability Check: OK
+[10-08-2020 01:59:37 AM] [DEBUG] [root] [206]: [debug] MangleClient obj MangleAPI('10.182.50.117', 'admin@mangle.local', 'admin', '/mangle-services') initialized.
+[10-08-2020 02:00:37 AM] [DEBUG] [root] [206]: [debug] func make_call(MangleAPI('10.182.50.117', 'admin@mangle.local', 'admin', '/mangle-services'), 'POST', '/rest/api/v1/endpoints/credentials/k8s', files=[('kubeConfig', <_io.BufferedReader name='/Users/mtarun/vmware/code/mangle-yaan-service/config/csp-app-preview.yaml'>)], params={'id': 'csp-app-preview', 'name': 'csp-app-preview'}) called
+[10-08-2020 02:00:37 AM] [DEBUG] [urllib3.connectionpool] [939]: [_new_conn] Starting new HTTPS connection (1): 10.182.50.117:443
+[10-08-2020 02:00:39 AM] [DEBUG] [urllib3.connectionpool] [433]: [_make_request] https://10.182.50.117:443 "POST //mangle-services//rest/api/v1/endpoints/credentials/k8s?id=csp-app-preview&name=csp-app-preview HTTP/1.1" 401 123
+[10-08-2020 02:02:36 AM] [ERROR] [root] [218]: [error] func call create_credential_k8s_cluster(<lib.mangle.endpoint.EndpointCredential object at 0x10ca16250>, 'csp-app-preview', 'csp-app-preview.yaml') status: FAIL
+[10-08-2020 02:03:24 AM] [DEBUG] [root] [206]: [debug] response: <lib.mangle.mangle_client.MangleResponse object at 0x10ca6da90>
