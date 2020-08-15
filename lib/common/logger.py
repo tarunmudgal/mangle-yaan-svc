@@ -238,7 +238,7 @@ def get_logger(
     formatter = logging.Formatter(params.LOG_FORMAT)
     formatter.converter = time.gmtime  # log UTC timestamps
 
-    log = logging.getLogger()
+    log = logging.getLogger("root")
     log.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler(sys.stdout)

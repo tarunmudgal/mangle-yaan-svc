@@ -35,10 +35,14 @@ APP_FAULTS["SPRING_SERVICE_EXCEPTION"] = "/rest/api/v1/faults/spring-service-exc
 APP_FAULTS["SIMULATE_JAVA_EXCEPTION"] = "/rest/api/v1/faults/simulate-java-exception"
 APP_FAULTS["KILL_JVM"] = "/rest/api/v1/faults/kill-jvm"
 
+OTHER_FAULTS = OrderedDict()
+OTHER_FAULTS["REMEDIATION"] = "/rest/api/v1/faults"
+
 # all faults map
 FAULTS = OrderedDict()
 FAULTS["INFRA"] = INFRA_FAULTS
 FAULTS["APP"] = APP_FAULTS
+FAULTS["OTHER"] = OTHER_FAULTS
 
 # mangle endpoint-controller resources
 EP_CTRLR = OrderedDict()
@@ -46,3 +50,9 @@ EP_CTRLR["ENDPOINTS"] = "/rest/api/v1/endpoints"
 EP_CTRLR["CREDENTIALS"] = "/rest/api/v1/endpoints/credentials"
 EP_CTRLR["K8S_CREDENTIALS"] = "/rest/api/v1/endpoints/credentials/k8s"
 EP_CTRLR["TEST_CONNECTION"] = "/rest/api/v1/endpoints/testConnection"
+EP_CTRLR["TEST_ENDPOINT"] = "/rest/api/v1/endpoints/testEndpoint"
+
+# mangle task-controller resources
+TASK_CTRLR = OrderedDict()
+TASK_CTRLR["TASKS"] = "/rest/api/v1/tasks"
+TASK_CTRLR["TASKS_CLEANUP"] = "/rest/api/v1/tasks/clean-up"

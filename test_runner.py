@@ -8,6 +8,7 @@ import argparse
 import builtins
 import datetime
 import inspect
+import logging
 import os
 import shlex
 import subprocess
@@ -17,7 +18,9 @@ import pytest
 import requests
 
 from lib.common import config_reader, logger
-from lib.mangle import mangle_client, endpoint
+from lib.mangle import endpoint, mangle_client
+from lib.csp import csp_client
+from lib.csp import resources as csp_resources
 
 requests.packages.urllib3.disable_warnings()
 
@@ -31,33 +34,10 @@ if not os.path.exists(LOG_DIR):
     print("creating log directory: %s" % LOG_DIR, flush=True)
     os.makedirs(LOG_DIR)
 
-mylog = logger.Log(logger.get_logger())
+# mylog = logger.Log(logger.get_logger())
+mylog = logger.get_logger()
 builtins.mylog = mylog
 mylog.info("logger initialized")
-
-
-def check_arg(args=None):
-    parser = argparse.ArgumentParser(description="resiliency test runner")
-    parser.add_argument("-t", "--type", help="type", required="True", default="pre")
-    parser.add_argument("-p", "--project_name", help="project name", required="True", default="")
-    parser.add_argument("-w", "--workload_name", help="workload name", required="True", default="")
-    parser.add_argument("-r", "--run_id", help="run_id", required="True", default="")
-
-    results = parser.parse_args(args)
-    return (results.type, results.project_name, results.workload_name, results.run_id)
-
-
-def run_command(command):
-    print("\n-------------\nRunning...." + command)
-    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-    while True:
-        output = process.stdout.readline().decode()
-        if output == "" and process.poll() is not None:
-            break
-        if output:
-            print(output.strip())
-    rc = process.poll()
-    return rc
 
 
 def check_network_availability(
@@ -76,8 +56,9 @@ def check_network_availability(
 def prepare_setup():
     check_network_availability()
 
-    # read mangle-yaan config (my.json)
-    conf_file = CONF_DIR + os.path.sep + "my.json"
+    # read mangle-yaan config (my.json). Looks up in environment vars if set else pick-up the default value
+    conf_file = os.getenv("MYCONFIG", CONF_DIR + os.path.sep + "my.json")
+    mylog.debug("reading config file from path={}".format(conf_file))
     myconfig = config_reader.parse_config(conf_file)
     builtins.myconfig = myconfig
 
@@ -88,49 +69,117 @@ def prepare_setup():
         mangle_conf.get("password"),
         timeout=120,
     )
+    builtins.myclient = myclient
+
+    csp_conf = myconfig.get("csp")
+    cclient = csp_client.CSPClient(csp_conf.get("host"), csp_resources.API_PREFIX,
+                                   csp_conf.get("defaultUser").get("refreshToken"), ssl_verify=False, timeout=120)
+    builtins.cclient = cclient
 
     ep_cred = endpoint.EndpointCredential(myclient)
-    status, response = ep_cred.create_credential_k8s_cluster(myconfig.get('k8sCluster').get('credentialName'),
-                                                             myconfig.get('k8sCluster').get('kubeConfigFileName'))
+    does_cred_exist = False
+    status, response = ep_cred.list_credentials()
     if not status:
-        mylog.error("Failed to create k8s cluster credential for credentialName={}, kubeConfigFileName={}".format(
-            myconfig.get('k8sCluster').get('credentialName'),
-            myconfig.get('k8sCluster').get('kubeConfigFileName')))
+        mylog.error("Failed to fetch credentials from mangle")
         sys.exit(2)
-    mylog.info(
-        "credential '{}' for k8s cluster created successfully".format(myconfig.get('k8sCluster').get('credentialName')))
+    else:
+        for cred in response.json:
+            if cred.get("name") == myconfig.get("k8sCluster").get("credentialName"):
+                does_cred_exist = True
+    if not does_cred_exist:
+        status, response = ep_cred.create_credential_k8s_cluster(
+            myconfig.get("k8sCluster").get("credentialName"),
+            myconfig.get("k8sCluster").get("kubeConfigFileName"),
+        )
+        if not status:
+            mylog.error(
+                "Failed to create k8s cluster credential for credentialName={}, kubeConfigFileName={}".format(
+                    myconfig.get("k8sCluster").get("credentialName"),
+                    myconfig.get("k8sCluster").get("kubeConfigFileName"),
+                )
+            )
+            sys.exit(2)
+        mylog.info(
+            "credential '{}' for k8s cluster created successfully".format(
+                myconfig.get("k8sCluster").get("credentialName")
+            )
+        )
+    else:
+        mylog.info(
+            "credential '{}' for k8s cluster already exist".format(
+                myconfig.get("k8sCluster").get("credentialName")
+            )
+        )
 
-    ep = endpoint.Endpoint(myclient)
-    status, response = ep.create_endpoint_k8s_cluster(myconfig.get('k8sCluster').get('endpointName'),
-                                                      myconfig.get('k8sCluster').get('credentialName'),
-                                                      myconfig.get('k8sCluster').get('namespace'))
+    epoint = endpoint.Endpoint(myclient)
+    does_endpoint_exist = False
+    status, response = epoint.list_endpoints_k8s_cluster()
     if not status:
-        mylog.error("Failed to create k8s cluster endpoint for endpointName={}, credentialName={}, namespace={}".format(
-            myconfig.get('k8sCluster').get('endpointName'),
-            myconfig.get('k8sCluster').get('credentialName'),
-            myconfig.get('k8sCluster').get('namespace')))
+        mylog.error("Failed to fetch endpoints from mangle")
         sys.exit(2)
-    mylog.info(
-        "endpoint '{}' for k8s cluster created successfully".format(myconfig.get('k8sCluster').get('endpointName')))
+    else:
+        for ep in response.json:
+            if ep.get("name") == myconfig.get("k8sCluster").get("endpointName"):
+                does_endpoint_exist = True
+    if not does_endpoint_exist:
+        status, response = epoint.create_endpoint_k8s_cluster(
+            myconfig.get("k8sCluster").get("endpointName"),
+            myconfig.get("k8sCluster").get("credentialName"),
+            myconfig.get("k8sCluster").get("namespace"),
+        )
+        if not status:
+            mylog.error(
+                "Failed to create k8s cluster endpoint for endpointName={}, credentialName={}, namespace={}".format(
+                    myconfig.get("k8sCluster").get("endpointName"),
+                    myconfig.get("k8sCluster").get("credentialName"),
+                    myconfig.get("k8sCluster").get("namespace"),
+                )
+            )
+            sys.exit(2)
+        mylog.info(
+            "endpoint '{}' for k8s cluster created successfully".format(
+                myconfig.get("k8sCluster").get("endpointName")
+            )
+        )
+    else:
+        mylog.info(
+            "Endpoint '{}' for k8s cluster already exist".format(
+                myconfig.get("k8sCluster").get("endpointName")
+            )
+        )
+
+    tc = endpoint.TestConnection(myclient)
+    status, response = tc.test_endpoint(myconfig.get("k8sCluster").get("endpointName"))
+    if not status:
+        mylog.error(
+            "Test connection for endpoint {} failed".format(
+                myconfig.get("k8sCluster").get("endpointName")
+            )
+        )
+        sys.exit(2)
+    else:
+        mylog.info(
+            "Test connection for endpoint {} passed".format(
+                myconfig.get("k8sCluster").get("endpointName")
+            )
+        )
 
     mylog.info("setup is ready to run resiliency tests now")
 
 
-def run_pytest():
-    suite_start_time = datetime.datetime.now()
-    start_stamp = "%s%02d%02d %02d:%02d:%02d,%03d" % (
-        suite_start_time.year,
-        suite_start_time.month,
-        suite_start_time.day,
-        suite_start_time.hour,
-        suite_start_time.minute,
-        suite_start_time.second,
-        int(str(suite_start_time.microsecond)[:3]),
-    )
-    mylog.info("starting test cases execution at %s time" % start_stamp)
+def run_pytest(*args, **kwargs):
+    start_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
+    mylog.info("starting pytest test cases execution at: %s" % start_ts)
+
+    # import pdb; pdb.set_trace()
+    pytest.main(*args, **kwargs)
+
+    end_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
+    mylog.info("pytest test cases execution finished at: %s" % end_ts)
 
 
 if __name__ == "__main__":
-    import pdb;pdb.set_trace()
+    # import pdb;
+    # pdb.set_trace()
     prepare_setup()
-    # pytest.main(sys.argv[1:])
+    run_pytest(sys.argv[1:])

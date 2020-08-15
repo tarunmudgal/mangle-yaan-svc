@@ -17,7 +17,7 @@ class Endpoint(EndPointBase):
     This class contains CRUD methods related to Endpoint
     """
 
-    @utils.verify_status()
+    @utils.verify_status(do_log=False)
     def create_endpoint_k8s_cluster(self, endpoint_name, credential_name, namespace):
         """
         Creates endpoint
@@ -34,7 +34,7 @@ class Endpoint(EndPointBase):
         }
         return self.mangle_client.make_call("POST", resources.EP_CTRLR.get('ENDPOINTS'), json=request_body)
 
-    @utils.verify_status()
+    @utils.verify_status(do_log=False)
     def delete_endpoint_k8s_cluster(self, endpoint_name):
         """
         Deletes Endpoint
@@ -44,7 +44,7 @@ class Endpoint(EndPointBase):
         params = {'endpointNames': endpoint_name}
         return self.mangle_client.make_call("DELETE", resources.EP_CTRLR.get('ENDPOINTS'), params=params)
 
-    @utils.verify_status()
+    @utils.verify_status(do_log=False)
     def get_endpoint_k8s_cluster(self, endpoint_name):
         """
         Gets endpoint details
@@ -52,6 +52,19 @@ class Endpoint(EndPointBase):
         """
         api_resource = resources.EP_CTRLR.get('ENDPOINTS') + '/' + endpoint_name
         return self.mangle_client.make_call("GET", api_resource)
+
+    @utils.verify_status(do_log=False)
+    def list_endpoints_k8s_cluster(self, credential_name=None):
+        """
+        Gets endpoint details
+        :return:
+        """
+        params = None
+        if credential_name:
+            params = {'credentialName': credential_name}
+        api_resource = resources.EP_CTRLR.get('ENDPOINTS')
+
+        return self.mangle_client.make_call("GET", api_resource, params=params)
 
 
 class EndpointCredential(EndPointBase):
@@ -65,13 +78,16 @@ class EndpointCredential(EndPointBase):
         Creates endpoint credentials for kubernetes cluster
         :return:
         """
-        # kubeconfig_filename = myconfig.get('k8sCluster').get('kubeConfigFileName')
         kubeconfig_filepath = ROOT_DIR + os.path.sep + 'config' + os.path.sep + kubeconfig_filename
-        multipart_form_data = [("kubeConfig", open(kubeconfig_filepath, "rb"))]
+        files = [('kubeConfig', open(kubeconfig_filepath, 'rb'))]
         params = {'id': credential_name, 'name': credential_name}
-        import pdb; pdb.set_trace()
-        return self.mangle_client.make_call("POST", resources.EP_CTRLR.get('K8S_CREDENTIALS'),
-                                            files=multipart_form_data, params=params)
+        headers = {'Authorization': 'Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu'}
+        api_resource = resources.EP_CTRLR.get('K8S_CREDENTIALS')
+        # return self.mangle_client.make_call("POST", resources.EP_CTRLR.get('K8S_CREDENTIALS'),
+        #                                     files=multipart_form_data, params=params)
+
+        return self.mangle_client.make_call("POST", api_resource, params=params,
+                                            headers=headers, files=files, data={})
 
     @utils.verify_status()
     def delete_credential(self, credential_name):
@@ -83,7 +99,7 @@ class EndpointCredential(EndPointBase):
         return self.mangle_client.make_call("DELETE", resources.EP_CTRLR.get('CREDENTIALS'), params=params)
 
     @utils.verify_status()
-    def get_credentials(self):
+    def list_credentials(self):
         """
         Gives endpoint credential details
         """
@@ -94,6 +110,23 @@ class TestConnection(EndPointBase):
     """
     This class contains methods related to test connection for endpoint
     """
+
+    @utils.verify_status()
+    def test_endpoint(self, endpoint_name):
+        """
+        Tests connection for endpoint
+        :param payload: payload in dict
+        :return:
+        """
+        epoint = Endpoint(self.mangle_client)
+        status, response = epoint.get_endpoint_k8s_cluster(endpoint_name)
+        if status:
+            rj = response.json
+            payload = {"id": rj.get("id"), "name": rj.get("name"), "endPointType": rj.get("endPointType"),
+                       "credentialsName": rj.get("credentialsName"),
+                       "k8sConnectionProperties": rj.get("k8sConnectionProperties")}
+            params = {'endpointNames': endpoint_name}
+        return self.mangle_client.make_call("POST", resources.EP_CTRLR.get('TEST_ENDPOINT'), json=payload)
 
     @utils.verify_status()
     def test_connection(self, endpoint_name):

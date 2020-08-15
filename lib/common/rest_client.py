@@ -4,6 +4,7 @@
 
 __author__ = "tarun mudgal"
 
+import logging
 import time
 
 import requests
@@ -11,6 +12,10 @@ import urllib3
 from requests.auth import HTTPBasicAuth
 
 from lib import params
+from lib.common import utils
+
+requests.packages.urllib3.disable_warnings()
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
 class RESTClient(object):
@@ -27,12 +32,18 @@ class RESTClient(object):
         if not ssl_verify:
             urllib3.disable_warnings()
 
+    def __repr__(self):
+        return "RESTClient(username={}, password={}, ssl_verify={}, timeout={}, session={})".format(
+            self.__username, self.__password, self.__ssl_verify, self.__timeout, self.__session
+        )
+
     def init_session(self):
         self.__session = requests.Session()
         self.__session.auth = HTTPBasicAuth(self.__username, self.__password)
         self.__session.verify = self.__ssl_verify
 
-    def request(self, method, url, retry_count=0, retry_sleep=5, **kwargs):
+    @utils.log_args
+    def request(self, method, url, retry_count=1, retry_sleep=5, **kwargs):
         """
             Send requests, handles errors and retry requests for connection
             and timeout errors.
@@ -51,22 +62,21 @@ class RESTClient(object):
             try:
                 attempt += 1
                 response = self.__session.request(method, url, **kwargs)
+                return response
             except params.HTTP_RETRIABLE_ERRORS as fault:
                 mylog.debug(
-                    "RESTClient: Failed to send request due to connection error. method=%s, url=%s",
+                    "RESTClient: Failed to send request due to connection error. method=%s, url=%s, error=%s",
                     method,
                     url,
+                    fault
                 )
                 if attempt < retry_count + 1:
-                    mylog.warn("RESTClient: Error: %s", str(fault))
                     mylog.debug("RESTClient: retry(%d) after %d seconds", attempt, retry_sleep)
                     time.sleep(retry_sleep)
                 else:
-                    mylog.traceback(fault)
+                    mylog.exception(fault)
                     raise
             except Exception as fault:
                 mylog.debug("RESTClient: Exception occurred in method=%s, url=%s", method, url)
-                mylog.traceback(fault)
+                mylog.exception(fault)
                 raise
-
-        return response
