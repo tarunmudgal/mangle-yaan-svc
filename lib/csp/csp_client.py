@@ -2,16 +2,11 @@
 # -*- coding: utf-8 -*-
 """ Mangle REST Client """
 
-import functools
-import time
-import abc
 import requests
 
 from lib.common import utils
+from lib.common.rest_client import RESTClient
 from lib.csp import resources
-from lib import params
-
-import urllib3
 
 
 class CSPResponse(object):
@@ -30,76 +25,6 @@ class CSPResponse(object):
         return "CSPResponse(url={} status_code={} headers={} json={} text={})".format(
             self.url, self.status_code, self.headers, self.json, self.text
         )
-
-
-class RESTClient(abc.ABC):
-    """
-        This class prepares REST calls, send requests and handle errors
-    """
-
-    def __init__(self, host, port=443, api_prefix='', ssl_verify=False, timeout=None):
-        self._scheme = 'https://'
-        self._base_url = self._scheme + host + ':' + str(port) + api_prefix
-        self._ssl_verify = ssl_verify
-        self._timeout = timeout
-
-        self._headers = None
-        if not self._ssl_verify:
-            urllib3.disable_warnings()
-
-    # def __repr__(self):
-    #     return "RESTClient(host={}, api_prefix={}, ssl_verify={}, timeout={}, session={})".format(
-    #         self.__host, self.__api_prefix, self.__ssl_verify, self.__timeout, self.__session
-    #     )
-
-    @abc.abstractmethod
-    def init_session(self):
-        pass
-
-    @utils.log_args
-    def request(self, method, api_resource, retry_count=1, retry_sleep=5, **kwargs):
-        """
-            Send requests, handles errors and retry requests for connection
-            and timeout errors.
-        """
-        url = self._base_url + api_resource
-
-        if self._headers is not None:
-            if kwargs.get('headers') is not None:
-                kwargs['headers'].update(self._headers)
-            else:
-                kwargs['headers'] = {}
-                kwargs['headers'].update(self._headers)
-
-        if kwargs.get("timeout") is None:
-            kwargs["timeout"] = self._timeout
-
-        if retry_count < 0:
-            retry_count = 0
-
-        attempt = 0
-        while attempt < retry_count + 1:
-            try:
-                attempt += 1
-                response = self._session.request(method, url, **kwargs)
-                return response
-            except params.HTTP_RETRIABLE_ERRORS as fault:
-                mylog.debug(
-                    "RESTClient: Failed to send request due to connection error. method=%s, url=%s, error=%s",
-                    method,
-                    url,
-                    fault
-                )
-                if attempt < retry_count + 1:
-                    mylog.debug("RESTClient: retry(%d) after %d seconds", attempt, retry_sleep)
-                    time.sleep(retry_sleep)
-                else:
-                    mylog.exception(fault)
-                    raise
-            except Exception as fault:
-                mylog.debug("RESTClient: Exception occurred in method=%s, url=%s", method, url)
-                mylog.exception(fault)
-                raise
 
 
 class CSPClient(RESTClient):
@@ -123,12 +48,7 @@ class CSPClient(RESTClient):
     __single_instance = None
 
     def __init__(
-            self,
-            host,
-            api_prefix,
-            refresh_token,
-            ssl_verify=False,
-            timeout=None,
+        self, host, api_prefix, refresh_token, ssl_verify=False, timeout=None,
     ):
         """Init Mangle API with hostname and login credentials."""
 
@@ -166,8 +86,10 @@ class CSPClient(RESTClient):
             return response.json().get("access_token")
         else:
             mylog.exception(
-                "could not fetch access_token using url={}, headers={}, payload={}".format(access_token_url, headers,
-                                                                                           payload))
+                "could not fetch access_token using url={}, headers={}, payload={}".format(
+                    access_token_url, headers, payload
+                )
+            )
             raise
 
     # @utils.log_args

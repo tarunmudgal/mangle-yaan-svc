@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 """ Mangle REST Client """
 
-import functools
+import base64
 import time
 
 import requests
 
-from lib.common import rest_client, utils
-from lib.mangle import resources
 from lib import params
+from lib.common import utils
+from lib.common.rest_client import RESTClient
+from lib.mangle import resources
 
 
 class MangleResponse(object):
@@ -30,7 +31,7 @@ class MangleResponse(object):
         )
 
 
-class MangleClient(object):
+class MangleClient(RESTClient):
     """
     Wrapper to interact with the Mangle REST API's
 
@@ -66,43 +67,30 @@ class MangleClient(object):
 
         MangleClient.__single_instance = self
 
-        self.host = host
-        self.username = username
-        self.password = password
-        self.api_prefix = api_prefix
-        self.ssl_verify = ssl_verify
-        self.timeout = timeout
-        self.init_rest_client()
+        super().__init__(host, api_prefix=api_prefix, ssl_verify=ssl_verify, timeout=timeout)
+
+        self._user = username
+        self._passwd = password
+        self._session = requests.Session()
+        self.init_session()
 
         mylog.debug("MangleClient obj %s initialized." % self)
 
     def __repr__(self):
-        return (
-            "MangleClient(host={}, username={}, password={}, api_prefix={}, ssl_verify={} timeout={})".format(
-                self.host,
-                self.username,
-                self.password,
-                self.api_prefix,
-                self.ssl_verify,
-                self.timeout,
-            )
-        )
+        return "MangleClient(base_url={})".format(self._base_url)
 
-    def init_rest_client(self):
-        self.mangle_base_url = "https://{host}{prefix}".format(
-            host=self.host, prefix=self.api_prefix
-        )
-        self.rest_client = rest_client.RESTClient(
-            self.username, self.password, ssl_verify=self.ssl_verify, timeout=self.timeout
-        )
+    def init_session(self):
+        user_pass_bytes = "{}:{}".format(self._user, self._passwd).encode()
+        b64e_val = base64.b64encode(user_pass_bytes).decode()
+        self._session.headers = {'Authorization': 'Basic {}'.format(b64e_val)}
+        self._session.verify = self._ssl_verify
 
     # @utils.log_args
     def make_call(self, verb, api_resource, **kwargs):
         """
         # TODO
         """
-        request_url = self.mangle_base_url + api_resource
-        req_resp = self.rest_client.request(verb, request_url, **kwargs)
+        req_resp = self.request(verb, api_resource, **kwargs)
 
         return MangleResponse(req_resp)
 
@@ -115,14 +103,13 @@ class MangleClient(object):
         t_id = ""
         t_status = ""
         _retry = 0
-        request_url = self.mangle_base_url + api_resource
-        req_resp = self.rest_client.request(verb, request_url, **kwargs)
+        req_resp = self.request(verb, api_resource, **kwargs)
         req_resp = MangleResponse(req_resp)
         time.sleep(60)  # give some time to Mangle to create task
         if req_resp.status_code == requests.codes.ok:
             t_id = req_resp.json.get("id")
-            task_url = self.mangle_base_url + resources.TASK_CTRLR["TASKS"] + "/" + t_id
-            task_resp = self.rest_client.request('GET', task_url)
+            task_res = resources.TASK_CTRLR["TASKS"] + "/" + t_id
+            task_resp = self.request('GET', task_res)
             task_resp = MangleResponse(task_resp)
             if task_resp.status_code == requests.codes.ok:
                 while _retry < retry_count:
@@ -146,7 +133,7 @@ class MangleClient(object):
                         t_status = params.MANGLE_TASK_STATUS["NOT_STARTED"]
                     time.sleep(retry_duration)
                     _retry += 1
-                    task_resp = self.rest_client.request('GET', task_url)
+                    task_resp = self.request('GET', task_res)
                     task_resp = MangleResponse(task_resp)
             else:
                 mylog.error(

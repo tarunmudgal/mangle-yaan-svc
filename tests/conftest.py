@@ -36,7 +36,7 @@ bucket_name = "csp-e2e-qe"
 
 
 def pytest_html_report_title(report):
-    report.title = myconfig.get("projectDescription") + "Report"
+    report.title = myconfig.get("projectDescription") + " " + "Report"
 
 
 def download_s3_file():

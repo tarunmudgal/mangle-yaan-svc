@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """ all api resources (endpoints) hosted by CSP """
 
-__author__ = 'tarun mudgal'
+__author__ = "tarun mudgal"
 
 from collections import OrderedDict
 

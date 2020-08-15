@@ -4,12 +4,12 @@
 
 __author__ = "tarun mudgal"
 
+import abc
 import logging
 import time
 
 import requests
 import urllib3
-from requests.auth import HTTPBasicAuth
 
 from lib import params
 from lib.common import utils
@@ -18,41 +18,47 @@ requests.packages.urllib3.disable_warnings()
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
-class RESTClient(object):
+class RESTClient(abc.ABC):
     """
         This class prepares REST calls, send requests and handle errors
     """
 
-    def __init__(self, username, password, ssl_verify=False, timeout=None):
-        self.__username = username
-        self.__password = password
-        self.__ssl_verify = ssl_verify
-        self.__timeout = timeout
-        self.init_session()
-        if not ssl_verify:
+    def __init__(self, host, port=443, api_prefix="", ssl_verify=False, timeout=None):
+        self._scheme = "https://"
+        self._base_url = self._scheme + host + ":" + str(port) + api_prefix
+        self._ssl_verify = ssl_verify
+        self._timeout = timeout
+
+        self._headers = None
+        if not self._ssl_verify:
             urllib3.disable_warnings()
 
-    def __repr__(self):
-        return "RESTClient(username={}, password={}, ssl_verify={}, timeout={}, session={})".format(
-            self.__username, self.__password, self.__ssl_verify, self.__timeout, self.__session
-        )
+    # def __repr__(self):
+    #     return "RESTClient(host={}, api_prefix={}, ssl_verify={}, timeout={}, session={})".format(
+    #         self.__host, self.__api_prefix, self.__ssl_verify, self.__timeout, self.__session
+    #     )
 
+    @abc.abstractmethod
     def init_session(self):
-        self.__session = requests.Session()
-        self.__session.auth = HTTPBasicAuth(self.__username, self.__password)
-        self.__session.verify = self.__ssl_verify
+        pass
 
     @utils.log_args
-    def request(self, method, url, retry_count=1, retry_sleep=5, **kwargs):
+    def request(self, method, api_resource, retry_count=1, retry_sleep=5, **kwargs):
         """
             Send requests, handles errors and retry requests for connection
             and timeout errors.
         """
+        url = self._base_url + api_resource
 
-        if kwargs.get("headers") is None:
-            kwargs["headers"] = {"Content-type": "application/json"}
+        if self._headers is not None:
+            if kwargs.get("headers") is not None:
+                kwargs["headers"].update(self._headers)
+            else:
+                kwargs["headers"] = {}
+                kwargs["headers"].update(self._headers)
+
         if kwargs.get("timeout") is None:
-            kwargs["timeout"] = self.__timeout
+            kwargs["timeout"] = self._timeout
 
         if retry_count < 0:
             retry_count = 0
@@ -61,14 +67,14 @@ class RESTClient(object):
         while attempt < retry_count + 1:
             try:
                 attempt += 1
-                response = self.__session.request(method, url, **kwargs)
+                response = self._session.request(method, url, **kwargs)
                 return response
             except params.HTTP_RETRIABLE_ERRORS as fault:
                 mylog.debug(
                     "RESTClient: Failed to send request due to connection error. method=%s, url=%s, error=%s",
                     method,
                     url,
-                    fault
+                    fault,
                 )
                 if attempt < retry_count + 1:
                     mylog.debug("RESTClient: retry(%d) after %d seconds", attempt, retry_sleep)

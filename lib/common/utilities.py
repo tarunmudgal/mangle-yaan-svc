@@ -531,7 +531,7 @@ def download_support_bundle(target_filename, sourceobj, source_filename):
     mylog.debug("%s *** Downloading support bundle for %s ***", logger.plugin_name, sourceobj.ip)
     command = """/usr/bin/sshpass -p %s
               scp %s:%s %s""" % (
-        sourceobj.password,
+        sourceobj._passwd,
         sourceobj.ip,
         source_filename,
         target_filename,
