@@ -63,20 +63,20 @@ def prepare_setup():
     builtins.myconfig = myconfig
 
     mangle_conf = myconfig.get("mangle")
-    myclient = mangle_client.MangleClient(
+    mclient = mangle_client.MangleClient(
         mangle_conf.get("host"),
         mangle_conf.get("username"),
         mangle_conf.get("password"),
         timeout=120,
     )
-    builtins.myclient = myclient
+    builtins.mclient = mclient
 
     csp_conf = myconfig.get("csp")
     cclient = csp_client.CSPClient(csp_conf.get("host"), csp_resources.API_PREFIX,
                                    csp_conf.get("defaultUser").get("refreshToken"), ssl_verify=False, timeout=120)
     builtins.cclient = cclient
 
-    ep_cred = endpoint.EndpointCredential(myclient)
+    ep_cred = endpoint.EndpointCredential(mclient)
     does_cred_exist = False
     status, response = ep_cred.list_credentials()
     if not status:
@@ -111,7 +111,7 @@ def prepare_setup():
             )
         )
 
-    epoint = endpoint.Endpoint(myclient)
+    epoint = endpoint.Endpoint(mclient)
     does_endpoint_exist = False
     status, response = epoint.list_endpoints_k8s_cluster()
     if not status:
@@ -148,7 +148,7 @@ def prepare_setup():
             )
         )
 
-    tc = endpoint.TestConnection(myclient)
+    tc = endpoint.TestConnection(mclient)
     status, response = tc.test_endpoint(myconfig.get("k8sCluster").get("endpointName"))
     if not status:
         mylog.error(

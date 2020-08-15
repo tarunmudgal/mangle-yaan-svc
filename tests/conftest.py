@@ -6,6 +6,7 @@ __author__ = "tarun mudgal"
 
 import json
 import os
+import time
 
 import boto3
 import pytest
@@ -35,7 +36,7 @@ bucket_name = "csp-e2e-qe"
 
 
 def pytest_html_report_title(report):
-   report.title = myconfig.get("projectDescription") + "Report"
+    report.title = myconfig.get("projectDescription") + "Report"
 
 
 def download_s3_file():
@@ -52,45 +53,41 @@ def get_fault_end_ts():
         fault_vals = json.loads(f.read())
         yield fault_vals["fault_end_timestamp"]
 
-# @pytest.fixture(scope="function")
-# def remediate_fault():
-#     def _remediate_fault(task_id):
-#         api_resource = resources.OTHER_FAULTS.get('REMEDIATION') + "/" + task_id
-#         task_id, task_status = myclient.trigger_fault_task_and_wait_for_completion("DELETE", api_resource)
-#         assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
-#
-#     return _remediate_fault
 
-
-@pytest.fixture(scope="session")
-def update_access_token():
-    api_resource = csp_resources.AM.get("AUTHORIZE")
-    am_resp = myclient.make_call("GET", api_resource)
 
 @pytest.fixture(scope="function")
-def inject_k8s_infra_fault_service_unavailable(request):
-    def _inject_k8s_infra_fault_service_unavailable(endpoint_name, resource_name, random_injection):
-        request_body = {"endpointName": endpoint_name, "resourceName": resource_name,
-                        "randomInjection": random_injection}
-        task_id, task_status = myclient.trigger_fault_task_and_wait_for_completion("POST", resources.INFRA_FAULTS.get(
-            'K8S_SERVICE_UNAVAILABLE'), json=request_body)
+def inject_k8s_infra_fault_service_unavailable():
+    taskid_to_remediate = None
+
+    def _inject_k8s_infra_fault_service_unavailable(
+            endpoint_name, resource_name, random_injection
+    ):
+        nonlocal taskid_to_remediate
+
+        request_body = {
+            "endpointName": endpoint_name,
+            "resourceName": resource_name,
+            "randomInjection": random_injection,
+        }
+
+        task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+            "POST", resources.INFRA_FAULTS.get("K8S_SERVICE_UNAVAILABLE"), json=request_body
+        )
+        mylog.debug(
+            "task for K8S_SERVICE_UNAVAILABLE fault triggered with task_id={}, task_status={}".format(task_id, task_status))
         assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
-        mylog.debug("task_id for remediation is {}".format(task_id))
-        def remediate_fault():
-            global task_id
-            api_resource = resources.OTHER_FAULTS.get('REMEDIATION') + "/" + task_id
-            task_id, task_status = myclient.trigger_fault_task_and_wait_for_completion("DELETE", api_resource)
-            assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
+        taskid_to_remediate = task_id
 
-        request.addfinalizer(remediate_fault)
+        return
 
-        # yield task_id
-        # api_resource = resources.OTHER_FAULTS.get('REMEDIATION') + "/" + task_id
-        # task_id, task_status = myclient.trigger_fault_task_and_wait_for_completion("DELETE", api_resource)
-        # assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
-        return task_id
+    yield _inject_k8s_infra_fault_service_unavailable
 
-    return _inject_k8s_infra_fault_service_unavailable
+    time.sleep(120) # let's give some time before triggering remediation task
 
-
-
+    api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + taskid_to_remediate
+    task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+        "DELETE", api_resource
+    )
+    mylog.debug(
+        "task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}".format(task_id, task_status))
+    assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]

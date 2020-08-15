@@ -149,10 +149,11 @@ class MangleClient(object):
                     task_resp = self.rest_client.request('GET', task_url)
                     task_resp = MangleResponse(task_resp)
             else:
-                mylog.error("could not fetch details for task id={}".format(req_resp.json.get("id")))
+                mylog.error(
+                    "could not fetch details for task id={}. Response={}".format(req_resp.json.get("id"), task_resp))
                 t_status = "TASK_NOT_FETCHED"
         else:
             t_status = "TASK_NOT_TRIGGERED"
-            mylog.error("could not trigger fault task ".format(req_resp))
+            mylog.error("could not trigger fault task. Response={}".format(req_resp))
 
         return t_id, t_status

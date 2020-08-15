@@ -10,23 +10,20 @@ from lib.csp import resources
 
 class TestCommerceDependencyOverAM:
     def test_api_get_billing_engines(
-        self, inject_k8s_infra_fault_service_unavailable
+            self, inject_k8s_infra_fault_service_unavailable
     ):
         expected_response = 200
-        task_id = inject_k8s_infra_fault_service_unavailable(
+        inject_k8s_infra_fault_service_unavailable(
             myconfig.get("k8sCluster").get("endpointName"), "csp-email-management", True
         )
 
         api_resource = (
-            resources.AM.get("ORG_DETAILS") + "/" + myconfig.get("csp").get("defaultOrg").get("id")
+                resources.AM.get("ORG_DETAILS") + "/" + myconfig.get("csp").get("defaultOrg").get("id")
         )
         am_resp = cclient.make_call("GET", api_resource)
 
-        try:
-            assert (
+        assert (
                 am_resp.status_code == expected_response
-            ), "commerce service did not return expected response {}".format(expected_response)
-        finally:
-            # remediate_fault(task_id)
-            pass
+        ), "commerce service did not return expected response {}".format(expected_response)
+
         mylog.debug("test function done")
