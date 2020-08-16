@@ -15,11 +15,14 @@
   "csp": {
     "host": "console-preview.cloud.vmware.com",
     "defaultOrg": {
-      "id": "d8959d3f-ff4c-4597-af4e-73ceab67d1a3"
+      "id": "1c6f6c98-28bd-47b4-83f6-cad067495fce"
+    },
+    "defaultService": {
+      "id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
     },
     "defaultUser": {
       "email": "mtarun@vmware.com",
-      "refreshToken": "kPGkpi1qJSg8YaAlk5R7D28l17STR7JkmqZLhYt1sVIAxduOpCuTKg8ueHpx598J",
+      "refreshToken": "5GcznFtRSQFqUMPFN7ON4jHQUHHhiRY52rS9Qi9Pq1vPSdGWF0N4RvpmpADzfZn6",
       "accessToken": ""
     }
   },

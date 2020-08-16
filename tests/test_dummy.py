@@ -24,17 +24,16 @@ from datetime import datetime
 
 import pytest
 
-def test_example1(create_sut):
-    sut = create_sut(role='some_role')
-    assert sut.role == 'some_role'
+@pytest.mark.usefixtures('create_sut_class')
+class TestDummy():
+    def test_example1(self):
+        print("test_example1 called")
 
+    def test_example2(self):
+        print("test_example2 called")
 
-def test_example2(create_sut):
-    sut = create_sut(name='sut1-uat')
-    assert sut.name == 'sut1-uat'
-
-def test_example3(create_sut):
-    pass
+    def test_example3(self):
+        print("test_example3 called")
 
 @pytest.fixture
 def create_sut():
@@ -46,6 +45,17 @@ def create_sut():
     yield create_sut
     for s in instances:
         s.cleanup()
+
+@pytest.fixture(scope='class')
+def create_sut_class():
+    instances = []
+    s = Sut(p1='v1')
+    instances.append(s)
+    print("create_sut_class setup")
+    yield
+    for s in instances:
+        s.cleanup()
+    print("create_sut_class teardown")
 
 class Sut:
     """

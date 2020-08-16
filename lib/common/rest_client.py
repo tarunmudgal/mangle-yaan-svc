@@ -42,7 +42,7 @@ class RESTClient(abc.ABC):
     def init_session(self):
         pass
 
-    @utils.log_args
+    # @utils.log_args
     def request(self, method, api_resource, retry_count=1, retry_sleep=5, **kwargs):
         """
             Send requests, handles errors and retry requests for connection
@@ -67,13 +67,14 @@ class RESTClient(abc.ABC):
         while attempt < retry_count + 1:
             try:
                 attempt += 1
+                mylog.debug("RESTClient: Sending a request with method=%s, resource=%s", method, api_resource)
                 response = self._session.request(method, url, **kwargs)
                 return response
             except params.HTTP_RETRIABLE_ERRORS as fault:
                 mylog.debug(
-                    "RESTClient: Failed to send request due to connection error. method=%s, url=%s, error=%s",
+                    "RESTClient: Failed to send request due to connection error. method=%s, resource=%s, error=%s",
                     method,
-                    url,
+                    api_resource,
                     fault,
                 )
                 if attempt < retry_count + 1:

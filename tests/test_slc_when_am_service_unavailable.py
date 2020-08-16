@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+""" pytest service unavailability test cases """
+
+__author__ = "tarun mudgal"
+
+from lib.csp import resources
+
+
+class TestSLCDependencyOnAM:
+    def test_api_get_services_for_org(self, inject_k8s_infra_fault_service_unavailable):
+        # expected csp api response (status_code)
+        expected_response = 401
+
+        # inject service unavailable fault
+        inject_k8s_infra_fault_service_unavailable(
+            myconfig.get("k8sCluster").get("endpointName"), "csp-account-management-mvc", False
+        )
+
+        # make csp api call
+        api_resource = (
+            resources.SLC.get("SERVICES").format(orgId=myconfig.get("csp").get("defaultOrg").get("id"))
+        )
+        am_resp = cclient.make_call("GET", api_resource)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            am_resp.status_code == expected_response
+        ), "SLC service did not return expected response {}".format(expected_response)
+
+
+    def test_api_get_service_definition(self, inject_k8s_infra_fault_service_unavailable):
+        # expected csp api response (status_code)
+        expected_response = 401
+
+        # inject service unavailable fault
+        inject_k8s_infra_fault_service_unavailable(
+            myconfig.get("k8sCluster").get("endpointName"), "csp-account-management-mvc", False
+        )
+
+        # make csp api call
+        api_resource = (
+            resources.SLC.get("GET_SVC_DEF").format(id=myconfig.get("csp").get("defaultService").get("id"))
+        )
+        am_resp = cclient.make_call("GET", api_resource)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            am_resp.status_code == expected_response
+        ), "SLC service did not return expected response {}".format(expected_response)
+
+
+    def test_api_get_service_definition_roles(self, inject_k8s_infra_fault_service_unavailable):
+        # expected csp api response (status_code)
+        expected_response = 401
+
+        # inject service unavailable fault
+        inject_k8s_infra_fault_service_unavailable(
+            myconfig.get("k8sCluster").get("endpointName"), "csp-account-management-mvc", False
+        )
+
+        # make csp api call
+        api_resource = (
+            resources.SLC.get("GET_SVC_DEF_ROLES").format(id=myconfig.get("csp").get("defaultService").get("id"))
+        )
+        am_resp = cclient.make_call("GET", api_resource)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            am_resp.status_code == expected_response
+        ), "SLC service did not return expected response {}".format(expected_response)
+
+
+    def test_api_get_service_families(self, inject_k8s_infra_fault_service_unavailable):
+        # expected csp api response (status_code)
+        expected_response = 401
+
+        # inject service unavailable fault
+        inject_k8s_infra_fault_service_unavailable(
+            myconfig.get("k8sCluster").get("endpointName"), "csp-account-management-mvc", False
+        )
+
+        # make csp api call
+        api_resource = (
+            resources.SLC.get("GET_SVC_FAMILIES")
+        )
+        am_resp = cclient.make_call("GET", api_resource)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            am_resp.status_code == expected_response
+        ), "SLC service did not return expected response {}".format(expected_response)

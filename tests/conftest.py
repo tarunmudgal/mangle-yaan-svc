@@ -54,7 +54,6 @@ def get_fault_end_ts():
         yield fault_vals["fault_end_timestamp"]
 
 
-
 @pytest.fixture(scope="function")
 def inject_k8s_infra_fault_service_unavailable():
     taskid_to_remediate = None
@@ -62,7 +61,7 @@ def inject_k8s_infra_fault_service_unavailable():
     def _inject_k8s_infra_fault_service_unavailable(
             endpoint_name, resource_name, random_injection
     ):
-        nonlocal taskid_to_remediate
+        nonlocal taskid_to_remediate  # specifes var to be picked up from nearest outer scope
 
         request_body = {
             "endpointName": endpoint_name,
@@ -74,20 +73,54 @@ def inject_k8s_infra_fault_service_unavailable():
             "POST", resources.INFRA_FAULTS.get("K8S_SERVICE_UNAVAILABLE"), json=request_body
         )
         mylog.debug(
-            "task for K8S_SERVICE_UNAVAILABLE fault triggered with task_id={}, task_status={}".format(task_id, task_status))
+            "task for K8S_SERVICE_UNAVAILABLE fault triggered with task_id={}, task_status={}".format(task_id,
+                                                                                                      task_status))
         assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
         taskid_to_remediate = task_id
 
         return
 
+    # returns this func when fixture is called. Post test case execution, performs post yield section as teardown
     yield _inject_k8s_infra_fault_service_unavailable
 
-    time.sleep(120) # let's give some time before triggering remediation task
+    time.sleep(120)  # let's give some time before triggering remediation task
 
     api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + taskid_to_remediate
     task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
         "DELETE", api_resource
     )
     mylog.debug(
-        "task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}".format(task_id, task_status))
+        "task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}".format(task_id,
+                                                                                                              task_status))
+    assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
+
+
+@pytest.fixture(scope="class")
+def inject_k8s_infra_fault_service_unavailable_for_am():
+
+    request_body = {
+        "endpointName": myconfig.get("k8sCluster").get("endpointName"),
+        "resourceName": "csp-account-management-mvc",
+        "randomInjection": False,
+    }
+
+    task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+        "POST", resources.INFRA_FAULTS.get("K8S_SERVICE_UNAVAILABLE"), json=request_body
+    )
+    mylog.debug(
+        "task for K8S_SERVICE_UNAVAILABLE fault triggered with task_id={}, task_status={}".format(task_id,
+                                                                                                  task_status))
+    assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
+
+    yield
+
+    time.sleep(60)  # let's give some time before triggering remediation task
+
+    api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + task_id
+    task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+        "DELETE", api_resource
+    )
+    mylog.debug(
+        "task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}".format(task_id,
+                                                                                                              task_status))
     assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
