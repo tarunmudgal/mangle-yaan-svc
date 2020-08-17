@@ -18,8 +18,8 @@ class TestSLCDependencyOnAM:
         )
 
         # make csp api call
-        api_resource = (
-            resources.SLC.get("SERVICES").format(orgId=myconfig.get("csp").get("defaultOrg").get("id"))
+        api_resource = resources.SLC.get("SERVICES").format(
+            orgId=myconfig.get("csp").get("defaultOrg").get("id")
         )
         am_resp = cclient.make_call("GET", api_resource)
 
@@ -27,7 +27,6 @@ class TestSLCDependencyOnAM:
         assert (
             am_resp.status_code == expected_response
         ), "SLC service did not return expected response {}".format(expected_response)
-
 
     def test_api_get_service_definition(self, inject_k8s_infra_fault_service_unavailable):
         # expected csp api response (status_code)
@@ -39,8 +38,8 @@ class TestSLCDependencyOnAM:
         )
 
         # make csp api call
-        api_resource = (
-            resources.SLC.get("GET_SVC_DEF").format(id=myconfig.get("csp").get("defaultService").get("id"))
+        api_resource = resources.SLC.get("GET_SVC_DEF").format(
+            id=myconfig.get("csp").get("defaultService").get("id")
         )
         am_resp = cclient.make_call("GET", api_resource)
 
@@ -48,7 +47,6 @@ class TestSLCDependencyOnAM:
         assert (
             am_resp.status_code == expected_response
         ), "SLC service did not return expected response {}".format(expected_response)
-
 
     def test_api_get_service_definition_roles(self, inject_k8s_infra_fault_service_unavailable):
         # expected csp api response (status_code)
@@ -60,8 +58,8 @@ class TestSLCDependencyOnAM:
         )
 
         # make csp api call
-        api_resource = (
-            resources.SLC.get("GET_SVC_DEF_ROLES").format(id=myconfig.get("csp").get("defaultService").get("id"))
+        api_resource = resources.SLC.get("GET_SVC_DEF_ROLES").format(
+            id=myconfig.get("csp").get("defaultService").get("id")
         )
         am_resp = cclient.make_call("GET", api_resource)
 
@@ -69,7 +67,6 @@ class TestSLCDependencyOnAM:
         assert (
             am_resp.status_code == expected_response
         ), "SLC service did not return expected response {}".format(expected_response)
-
 
     def test_api_get_service_families(self, inject_k8s_infra_fault_service_unavailable):
         # expected csp api response (status_code)
@@ -81,9 +78,7 @@ class TestSLCDependencyOnAM:
         )
 
         # make csp api call
-        api_resource = (
-            resources.SLC.get("GET_SVC_FAMILIES")
-        )
+        api_resource = resources.SLC.get("GET_SVC_FAMILIES")
         am_resp = cclient.make_call("GET", api_resource)
 
         # verify csp api actual status_code with expected status code when fault is present

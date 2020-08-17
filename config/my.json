@@ -1,6 +1,9 @@
 {
   "projectName": "csp_resiliency",
   "projectDescription": "CSP Resiliency Test Suite",
+  "mangleYaan": {
+    "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html"
+  },
   "mangle": {
     "host": "10.182.50.117",
     "username": "admin@mangle.local",
@@ -28,9 +31,10 @@
   },
   "aws": {
     "s3": {
-      "bucket_name": "csp-e2e-qe",
-      "aws_access_key_id": "AKIAUE4JITGQ3LKSAK5E",
-      "aws_secret_access_key": "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"
+      "bucketName": "csp-e2e-qe",
+      "testReportPath": "mangle-yaan/results/",
+      "awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
+      "awsSecretAccessKey": "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"
     }
   }
 }

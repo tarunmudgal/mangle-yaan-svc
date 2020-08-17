@@ -14,13 +14,14 @@ import shlex
 import subprocess
 import sys
 
+import boto3
 import pytest
 import requests
 
 from lib.common import config_reader, logger
-from lib.mangle import endpoint, mangle_client
 from lib.csp import csp_client
 from lib.csp import resources as csp_resources
+from lib.mangle import endpoint, mangle_client
 
 requests.packages.urllib3.disable_warnings()
 
@@ -41,7 +42,7 @@ mylog.info("logger initialized")
 
 
 def check_network_availability(
-        request_url="https://www.google.com", resp_code_exp=requests.codes.ok
+    request_url="https://www.google.com", resp_code_exp=requests.codes.ok
 ):
     try:
         resp = requests.get(request_url, verify=False)
@@ -72,8 +73,13 @@ def prepare_setup():
     builtins.mclient = mclient
 
     csp_conf = myconfig.get("csp")
-    cclient = csp_client.CSPClient(csp_conf.get("host"), csp_resources.API_PREFIX,
-                                   csp_conf.get("defaultUser").get("refreshToken"), ssl_verify=False, timeout=120)
+    cclient = csp_client.CSPClient(
+        csp_conf.get("host"),
+        csp_resources.API_PREFIX,
+        csp_conf.get("defaultUser").get("refreshToken"),
+        ssl_verify=False,
+        timeout=120,
+    )
     builtins.cclient = cclient
 
     ep_cred = endpoint.EndpointCredential(mclient)
@@ -164,18 +170,66 @@ def prepare_setup():
             )
         )
 
+    # test_runner cache to maintain states
+    mycache = {}
+    builtins.mycache = mycache
+
     mylog.info("setup is ready to run resiliency tests now")
 
 
 def run_pytest(*args, **kwargs):
-    start_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
+    # start_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
+    start_ts = datetime.datetime.now().strftime("%d%b%Y_%H:%M:%S.%f")
+    mycache.update({"test_start_timestamp": start_ts})
     mylog.info("starting pytest test cases execution at: %s" % start_ts)
 
-    # import pdb; pdb.set_trace()
     pytest.main(*args, **kwargs)
 
-    end_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
+    # end_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
+    end_ts = datetime.datetime.now().strftime("%d%b%Y_%H:%M:%S.%f")
+    mycache.update({"test_start_timestamp": end_ts})
     mylog.info("pytest test cases execution finished at: %s" % end_ts)
+
+
+def post_run_activities():
+    # import pdb; pdb.set_trace()
+    copied_successfully, failed_to_copy = copy_files_on_s3(
+        bucket_name=myconfig.get("aws").get("s3").get("bucketName"),
+        file_paths=[myconfig.get("mangleYaan").get("testReportPath")],
+    )
+    if failed_to_copy:
+        mylog.error("test reports = {} could not be copied over S3".format(failed_to_copy))
+    else:
+        mylog.info("test reports = {} copied successfully over S3".format(copied_successfully))
+
+
+def copy_files_on_s3(bucket_name, file_paths=None):
+    if file_paths:
+        s3_conf = myconfig.get("aws").get("s3")
+        s3_client = boto3.client(
+            "s3",
+            aws_access_key_id=s3_conf.get("awsAccessKeyID"),
+            aws_secret_access_key=s3_conf.get("awsSecretAccessKey"),
+        )
+
+        copied_successfully = []
+        failed_to_copy = []
+        for fpath in file_paths:
+            fname = os.path.basename(fpath)
+            try:
+                s3_client.upload_file(
+                    Filename=fpath,
+                    Bucket=bucket_name,
+                    Key="{}{}".format(s3_conf.get("testReportPath"), fname),
+                )
+                copied_successfully.append(fpath)
+            except Exception as fault:
+                failed_to_copy.append(fpath)
+                mylog.debug("file {} could not be copied on S3. Error={}".format(fpath, fault))
+
+        return copied_successfully, failed_to_copy
+
+    mylog.debug("nothing to copy on S3")
 
 
 if __name__ == "__main__":
@@ -183,3 +237,4 @@ if __name__ == "__main__":
     # pdb.set_trace()
     prepare_setup()
     run_pytest(sys.argv[1:])
+    post_run_activities()

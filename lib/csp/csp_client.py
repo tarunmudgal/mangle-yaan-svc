@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ Mangle REST Client """
 
+import typing
+
 import requests
 
 from lib.common import utils
@@ -93,7 +95,9 @@ class CSPClient(RESTClient):
             raise
 
     # @utils.log_args
-    def make_call(self, verb, api_resource, **kwargs):
+    def make_call(
+        self, verb: str, api_resource: str, **kwargs: str
+    ) -> typing.NewType('CSPResponse' ,CSPResponse):
         """
         # TODO
         """

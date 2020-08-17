@@ -7,6 +7,7 @@ __author__ = "tarun mudgal"
 import abc
 import logging
 import time
+import typing
 
 import requests
 import urllib3
@@ -43,7 +44,14 @@ class RESTClient(abc.ABC):
         pass
 
     # @utils.log_args
-    def request(self, method, api_resource, retry_count=1, retry_sleep=5, **kwargs):
+    def request(
+        self,
+        method: str,
+        api_resource: str,
+        retry_count: int = 1,
+        retry_sleep: int = 5,
+        **kwargs: str,
+    ) -> typing.NewType('Response' ,requests.Response):
         """
             Send requests, handles errors and retry requests for connection
             and timeout errors.
@@ -67,7 +75,11 @@ class RESTClient(abc.ABC):
         while attempt < retry_count + 1:
             try:
                 attempt += 1
-                mylog.debug("RESTClient: Sending a request with method=%s, resource=%s", method, api_resource)
+                mylog.debug(
+                    "RESTClient: Sending a request with method=%s, resource=%s",
+                    method,
+                    api_resource,
+                )
                 response = self._session.request(method, url, **kwargs)
                 return response
             except params.HTTP_RETRIABLE_ERRORS as fault:
