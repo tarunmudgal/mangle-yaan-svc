@@ -1,20 +1,17 @@
 FROM python:3.6-alpine
-MAINTAINER Csp QE Team "csp-pune-qe@vmware.com"
+MAINTAINER CSP QE Team "csp-pune-qe@vmware.com"
 
-COPY ../lib/common /commons
-COPY ../lib/mangle /mangle_lib
-COPY ../lib/k8s /k8s_lib
-COPY ../config /config
-COPY ../tests /tests
-COPY ../pytest.ini /
-COPY ../requirements.txt /
-COPY ../run_tests.sh /
+RUN apk add build-base
 
-WORKDIR /
+COPY . /mangle-yaan/
 
-RUN pip install -r requirements.txt
+WORKDIR /mangle-yaan
+
+RUN pip install -r /mangle-yaan/dev-requirements.txt
 
 ENV project_name csp_resiliency
 ENV workload_name cpu_spike
 ENV run_id abcd
-CMD ["sh", "run_tests.sh"]
+ENV TESTRUNNER_PARAMS /mangle-yaan/tests/test_dummy.py
+
+CMD python /mangle-yaan/test_runner.py ${TESTRUNNER_PARAMS}

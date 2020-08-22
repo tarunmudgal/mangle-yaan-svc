@@ -81,6 +81,12 @@ class RESTClient(abc.ABC):
                     api_resource,
                 )
                 response = self._session.request(method, url, **kwargs)
+                mylog.debug(
+                    "RESTClient: request with method=%s, resource=%s succeeded in (%d) attempt(s)",
+                    method,
+                    api_resource,
+                    attempt
+                )
                 return response
             except params.HTTP_RETRIABLE_ERRORS as fault:
                 mylog.debug(

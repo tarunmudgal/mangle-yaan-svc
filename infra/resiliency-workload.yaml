@@ -7,7 +7,8 @@ spec:
     spec:
       containers:
       - name: csp-resiliency-tests
-        image: vmware-docker-csp-tools.bintray.io/csp-resiliency-tests:latest
+        image: mangle-yaan:latest
+        imagePullPolicy: IfNotPresent
         env:
           - name: project_name
             value: "csp_resiliency"
@@ -15,9 +16,11 @@ spec:
             value: "cpu_spike"
           - name: run_id
             value: "abcd"
+          - name: TESTRUNNER_PARAMS
+            value: "/mangle-yaan/tests/test_dummy.py"
         resources:
           limits:
-            memory: "4Gi"
+            memory: "1Gi"
       restartPolicy: "Never"
       imagePullSecrets:
       - name: maxim-bintray

@@ -10,7 +10,7 @@ from lib.csp import resources
 class TestSLCDependencyOnAM:
     def test_api_get_services_for_org(self, inject_k8s_infra_fault_service_unavailable):
         # expected csp api response (status_code)
-        expected_response = 401
+        expected_response = 200
 
         # inject service unavailable fault
         inject_k8s_infra_fault_service_unavailable(
@@ -30,7 +30,7 @@ class TestSLCDependencyOnAM:
 
     def test_api_get_service_definition(self, inject_k8s_infra_fault_service_unavailable):
         # expected csp api response (status_code)
-        expected_response = 401
+        expected_response = 200
 
         # inject service unavailable fault
         inject_k8s_infra_fault_service_unavailable(
@@ -50,7 +50,7 @@ class TestSLCDependencyOnAM:
 
     def test_api_get_service_definition_roles(self, inject_k8s_infra_fault_service_unavailable):
         # expected csp api response (status_code)
-        expected_response = 401
+        expected_response = 200
 
         # inject service unavailable fault
         inject_k8s_infra_fault_service_unavailable(
@@ -70,7 +70,7 @@ class TestSLCDependencyOnAM:
 
     def test_api_get_service_families(self, inject_k8s_infra_fault_service_unavailable):
         # expected csp api response (status_code)
-        expected_response = 401
+        expected_response = 200
 
         # inject service unavailable fault
         inject_k8s_infra_fault_service_unavailable(

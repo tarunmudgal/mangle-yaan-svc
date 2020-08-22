@@ -10,6 +10,7 @@ Welcome to Mangle Yaan's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   apidoc/modules.rst
 
 
 Indices and tables

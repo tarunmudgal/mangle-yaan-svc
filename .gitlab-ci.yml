@@ -10,7 +10,7 @@ build-and-deploy:
   image: docker:18.09
   script:
     - echo "Running Build and Deploy Script"
-    - sh ./build_deploy.sh
+    - sh ./scripts/build_deploy.sh
   only:
     - master
   when: on_success

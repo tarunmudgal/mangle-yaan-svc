@@ -25,3 +25,7 @@ SLC["SERVICES"] = "/slc/api/v2/orgs/{orgId}/services"
 SLC["GET_SVC_DEF"] = "/slc/api/definitions/external/{id}"
 SLC["GET_SVC_DEF_ROLES"] = "/slc/api/definitions/external/{id}/service-roles"
 SLC["GET_SVC_FAMILIES"] = "/slc/api/family"
+
+# OS resources
+OS = OrderedDict()
+OS["ONBOARDING_CONTEXTS"] = "/os/api/service-definitions/{serviceDefinitionId}/onboarding-contexts"

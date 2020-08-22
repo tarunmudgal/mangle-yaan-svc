@@ -4,14 +4,10 @@
 
 __author__ = "tarun mudgal"
 
-import argparse
 import builtins
 import datetime
 import inspect
-import logging
 import os
-import shlex
-import subprocess
 import sys
 
 import boto3
@@ -25,6 +21,7 @@ from lib.mangle import endpoint, mangle_client
 
 requests.packages.urllib3.disable_warnings()
 
+# constants initialization
 ROOT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 builtins.ROOT_DIR = ROOT_DIR
 
@@ -42,7 +39,7 @@ mylog.info("logger initialized")
 
 
 def check_network_availability(
-    request_url="https://www.google.com", resp_code_exp=requests.codes.ok
+        request_url="https://www.google.com", resp_code_exp=requests.codes.ok
 ):
     try:
         resp = requests.get(request_url, verify=False)
