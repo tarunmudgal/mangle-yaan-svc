@@ -13,7 +13,7 @@ from lib.csp import resources
 class TestOSDependencyOnAM:
     def test_api_create_onboarding_context(self):
         # expected csp api response (status_code)
-        expected_response = requests.codes.ok
+        expected_response = 201
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS").format(
@@ -24,9 +24,81 @@ class TestOSDependencyOnAM:
             "description": "test onboarding"
         }
 
-        am_resp = cclient.make_call("POST", api_resource, json=request_body)
+        os_resp = cclient.make_call("POST", api_resource, json=request_body)
+
+        # add a value in cache dict to use it in other test cases
+        mycache["onboarding_context_id"] = os_resp.json.get("onboardingContextId")
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                am_resp.status_code == expected_response
+                os_resp.status_code == expected_response
+        ), "Onboarding service did not return expected response {}".format(expected_response)
+
+    def test_api_get_onboarding_context_using_id(self):
+        # expected csp api response (status_code)
+        expected_response = requests.codes.ok
+
+        # make csp api call
+        api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
+            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            onboardingContextId=mycache["onboarding_context_id"])
+
+        os_resp = cclient.make_call("GET", api_resource)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+                os_resp.status_code == expected_response
+        ), "Onboarding service did not return expected response {}".format(expected_response)
+
+    def test_api_get_onboarding_contexts(self):
+        # expected csp api response (status_code)
+        expected_response = requests.codes.ok
+
+        # make csp api call
+        api_resource = resources.OS.get("ONBOARDING_CONTEXTS").format(
+            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+        )
+
+        os_resp = cclient.make_call("GET", api_resource)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+                os_resp.status_code == expected_response
+        ), "Onboarding service did not return expected response {}".format(expected_response)
+
+    def test_api_patch_onboarding_context_using_id(self):
+        # expected csp api response (status_code)
+        expected_response = requests.codes.ok
+
+        # make csp api call
+        api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
+            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            onboardingContextId=mycache["onboarding_context_id"])
+
+        request_body = {
+            "title": "new test onboarding",
+            "description": "new test onboarding"
+        }
+
+        os_resp = cclient.make_call("PATCH", api_resource, json=request_body)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+                os_resp.status_code == expected_response
+        ), "Onboarding service did not return expected response {}".format(expected_response)
+
+    def test_api_get_faq_topics(self):
+        # expected csp api response (status_code)
+        expected_response = requests.codes.ok
+
+        # make csp api call
+        api_resource = resources.OS.get("FAQ_TOPICS").format(
+            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+        )
+
+        os_resp = cclient.make_call("GET", api_resource)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+                os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
