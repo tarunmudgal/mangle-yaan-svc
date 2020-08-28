@@ -1,0 +1,18 @@
+{
+    "test_commerce_api_when_am_down": {
+        "description": "commerce api test cases while account management service is down",
+        "path": "tests/test_commerce_when_am_service_unavailable.py"
+    },
+    "test_onboarding_api_when_am_down": {
+        "description": "onboarding api test cases while account management service is down",
+        "path": "tests/test_os_when_am_service_unavailable.py"
+    },
+    "test_slc_api_when_am_down": {
+        "description": "service life cycle api test cases while account management service is down",
+        "path": "tests/test_slc_when_am_service_unavailable.py"
+    },
+    "test_dummy": {
+        "description": "dummy test cases",
+        "path": "tests/test_dummy.py"
+    }
+}

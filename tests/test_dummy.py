@@ -31,6 +31,7 @@ class TestDummy():
 
     def test_example2(self):
         print("test_example2 called")
+        assert 0 == 1
 
     def test_example3(self):
         print("test_example3 called")

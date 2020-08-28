@@ -8,10 +8,10 @@ import json
 import os
 
 
-def parse_config(file_path):
+def parse_json(file_path):
     if not os.path.exists(file_path):
-        raise FileNotFoundError("config file '%s' does not exist" % file_path)
-    with open(file_path) as conf_file:
-        conf_data = json.load(conf_file)
+        raise FileNotFoundError("json file '%s' does not exist" % file_path)
+    with open(file_path) as json_file:
+        json_data = json.load(json_file)
 
-    return conf_data
+    return json_data

@@ -87,6 +87,33 @@ class TestOSDependencyOnAM:
                 os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
 
+    def test_api_create_faq_topics(self):
+        # expected csp api response (status_code)
+        expected_response = requests.codes.ok
+
+        # make csp api call
+        api_resource = resources.OS.get("FAQ_TOPICS").format(
+            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+        )
+
+        request_body = {
+            "linkUrl": "https://dummyurl.com",
+            "title": "dummy faq topic",
+
+            "linkTitle": "dummy faq topic",
+            "onboardingContextIds": [
+                "{}".format(mycache["onboarding_context_id"])
+            ],
+            "text": "dummy faq topic"
+        }
+
+        os_resp = cclient.make_call("POST", api_resource, json=request_body)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+                os_resp.status_code == expected_response
+        ), "Onboarding service did not return expected response {}".format(expected_response)
+
     def test_api_get_faq_topics(self):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
