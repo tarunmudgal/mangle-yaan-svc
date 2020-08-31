@@ -1,0 +1,43 @@
+{
+  "projectName": "csp_resiliency",
+  "projectDescription": "CSP Resiliency Test Suite",
+  "mangleYaan": {
+    "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html"
+  },
+  "mangle": {
+    "host": "10.182.50.117",
+    "username": "admin@mangle.local",
+    "password": "admin"
+  },
+  "maximGun": {
+    "host": "maxim-gun-ui.svc-stage.eng.vmware.com"
+  },
+  "k8sCluster": {
+    "endpointName": "csp-app-preview",
+    "credentialName": "csp-app-preview",
+    "namespace": "csp-app-preview",
+    "kubeConfigFileName": "csp-app-preview.yaml"
+  },
+  "csp": {
+    "host": "console-preview.cloud.vmware.com",
+    "defaultOrg": {
+      "id": "f09537d7-633a-4204-891e-2fe6e58265a7"
+    },
+    "defaultService": {
+      "id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
+    },
+    "defaultUser": {
+      "email": "mtarun@vmware.com",
+      "refreshToken": "5GcznFtRSQFqUMPFN7ON4jHQUHHhiRY52rS9Qi9Pq1vPSdGWF0N4RvpmpADzfZn6",
+      "accessToken": ""
+    }
+  },
+  "aws": {
+    "s3": {
+      "bucketName": "csp-e2e-qe",
+      "testReportPath": "mangle-yaan/results/",
+      "awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
+      "awsSecretAccessKey": "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"
+    }
+  }
+}
