@@ -18,6 +18,8 @@ import pytest
 import requests
 
 from lib.common import config_reader, logger
+from lib.common import resources as common_resources
+from lib.common import rest_client
 from lib.csp import csp_client
 from lib.csp import resources as csp_resources
 from lib.mangle import endpoint, mangle_client
@@ -64,13 +66,17 @@ def check_network_availability() -> None:
         sys.exit(1)
 
 
-def prepare_setup(myconf_file: str = None) -> None:
+def prepare_setup(
+    myconf_file: str = None, project_name: str = None, workload_name: str = None
+) -> None:
     """Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
     config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
     and endpoint for CSP K8S cluster etc.
 
     Args:
       myconf_file: mangle-yaan configuration (json) file. If provided, It overrides default config file config/my.json
+      project_name: project name created on maxim-gun UI
+      workload_name: workload name created on maxim-gun UI
 
     Returns:
       None
@@ -80,12 +86,41 @@ def prepare_setup(myconf_file: str = None) -> None:
     # read mangle-yaan config (my.json). Looks up in environment vars if set else pick-up the default value
     # conf_file = os.getenv("MYCONFIG", CONF_DIR + os.path.sep + "my.json")
 
-    conf_file = CONF_DIR + os.path.sep + "my.json"
+    # read static config
+    my_json = CONF_DIR + os.path.sep + "my.json"
+    my_json = config_reader.parse_json(my_json)
+
+    myconfig = None
+    # read mangle-yaan config from command line
     if myconf_file is not None:
         conf_file = myconf_file
+        mylog.debug("reading config locally from path={}".format(conf_file))
+        myconfig = config_reader.parse_json(conf_file)
 
-    mylog.debug("reading config file from path={}".format(conf_file))
-    myconfig = config_reader.parse_json(conf_file)
+    # read mangle-yaan config from maxim-gun api (from maxim_gun.workload table)
+    else:
+        mg_base_url = (
+            "http://" + my_json.get("maximGun").get("host") + common_resources.MAXIMGUN_API_PREFIX
+        )
+        api_resource = common_resources.MAXIMGUN.get("MANGLEYAAN_CONFIG")
+        myconfig_url = mg_base_url + api_resource
+        params = {"workload_name": workload_name}
+
+        mylog.debug("reading config from maxim-gun app. url={}".format(myconfig_url))
+
+        response = rest_client.request(
+            "GET", myconfig_url, retry_count=1, retry_sleep=5, params=params
+        )
+        if response.status_code == requests.codes.ok:
+            res_json = response.json()
+            myconfig = res_json.get("mangle_yaan_conf")
+            # mylog.debug("maxim-gun api json response={}".format(res_json))
+        else:
+            mylog.error(
+                "failed to read config from maxim-gun app. Request(url={}, params={}). Response(status={}, text={})".format(
+                    myconfig_url, params, response.status_code, response.text
+                )
+            )
     builtins.myconfig = myconfig
 
     mangle_conf = myconfig.get("mangle")
@@ -278,20 +313,24 @@ def copy_files_on_s3(bucket_name: str, file_paths: typing.List[str] = None) -> t
     return copied_successfully, failed_to_copy
 
 
-def get_test_modules_from_testsuite_names(testsuite_names: typing.List[str]) -> typing.List[str]:
+def get_test_modules_from_testsuite_names(testsuite_names: str) -> typing.List[str]:
     """verifies test-suites exist in testsuites_info.json and returns corresponding test-module file-paths.
     test-suites are a bit user-friendly names. They are mapped with test-modules in testsuites_info.json file.
 
     Note: All test-modules should have an mapping (test-suite->test-module) in testsuites_info.json file.
 
     Args:
-      testsuite_names: list of test_suite names
+      testsuite_names: comma separated list of test_suite names
 
     Returns:
       testmodule_paths: list of test-module paths
     """
     testsuites_info_file = TESTLIB_DIR + os.path.sep + "testsuites_info.json"
     testsuites_info = config_reader.parse_json(testsuites_info_file)
+
+    # removes empty-string/white-spaces-only test-suite names if any
+    testsuite_names = testsuite_names.split(",")
+    testsuite_names = [ts for ts in testsuite_names if ts.strip() != ""]
 
     testmodule_paths = []
     for ts_name in testsuite_names:
@@ -324,8 +363,14 @@ def print_testsuite_info() -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="""resiliency test suite execution driver""")
     parser.add_argument(
+        "--project_name", action="store", type=str, help="project name created on maxim-gun UI",
+    )
+    parser.add_argument(
+        "--workload_name", action="store", type=str, help="workload name created on maxim-gun UI",
+    )
+    parser.add_argument(
         "--testsuite_names",
-        nargs="+",
+        # nargs="+",
         action="store",
         type=str,
         help="Specify list of space separated testsuite names",
@@ -341,6 +386,7 @@ if __name__ == "__main__":
         "--pytest_args",
         action="store",
         type=str,
+        default="",
         help="pytest args that will be passed to pytest as it is. All pytest args should be passed in one string",
     )
     parser.add_argument(
@@ -348,11 +394,25 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+    mylog.debug("test_runner args={}".format(args))
 
     if args.list_testsuite_names:
         print_testsuite_info()
         sys.exit(0)
-    if args.testsuite_names is None:
+
+    if args.project_name is None or args.project_name == "":
+        print(
+            "--project_name is required to trigger test execution. It will be used to fetch mangle-yaan configuration"
+        )
+        sys.exit(1)
+
+    if args.workload_name is None or args.workload_name == "":
+        print(
+            "--workload_name is required to trigger test execution. It will be used to fetch mangle-yaan configuration"
+        )
+        sys.exit(1)
+
+    if args.testsuite_names is None or args.testsuite_names == "":
         print(
             "--testsuite_names is required to trigger test execution. If you are not sure about testsuite name, "
             "please use --list_testsuite_names to get the list of available testsuites"
@@ -361,12 +421,19 @@ if __name__ == "__main__":
 
     pytest_cmdline = []
     if args.pytest_args is not None:
+        # removes leading and trailing single/double quotes, white-spaces from args.pytest_args
+        args.pytest_args = args.pytest_args.strip()
+        args.pytest_args = args.pytest_args.strip("'")
+        args.pytest_args = args.pytest_args.strip('"')
+
         pytest_cmdline += args.pytest_args.split()
 
     testsuite_paths = get_test_modules_from_testsuite_names(args.testsuite_names)
     pytest_cmdline += testsuite_paths
 
-    prepare_setup(myconf_file=args.myconfig)
+    prepare_setup(
+        myconf_file=args.myconfig, project_name=args.project_name, workload_name=args.workload_name
+    )
     pytest_status = run_pytest(pytest_cmdline)
 
     # don't copy logs to S3 for pytest usage error. seems incorrect --pytest_args are passed

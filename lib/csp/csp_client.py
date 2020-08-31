@@ -6,8 +6,7 @@ import typing
 
 import requests
 
-from lib.common import utils
-from lib.common.rest_client import RESTClient
+from lib.common import rest_client, utils
 from lib.csp import resources
 
 
@@ -21,7 +20,7 @@ class CSPResponse(object):
         try:
             self.json = response.json()
         except ValueError as fault:
-            self.content = response.text
+            self.text = response.text
 
     def __repr__(self):
         return "CSPResponse(url={} status_code={} headers={} json={} text={})".format(
@@ -29,7 +28,7 @@ class CSPResponse(object):
         )
 
 
-class CSPClient(RESTClient):
+class CSPClient(rest_client.RESTClient):
     """
     Wrapper to interact with the Mangle REST API's
 
@@ -82,22 +81,24 @@ class CSPClient(RESTClient):
         payload = "refresh_token={}".format(self._refresh_token)
 
         mylog.debug("fetching access_token for CSP API calls")
-        response = requests.request("POST", access_token_url, headers=headers, data=payload)
+        # response = requests.request("POST", access_token_url, headers=headers, data=payload)
+        response = rest_client.request(
+            "POST", access_token_url, retry_count=1, retry_sleep=5, headers=headers, data=payload
+        )
 
         if response.status_code == requests.codes.ok:
             return response.json().get("access_token")
         else:
-            mylog.exception(
-                "could not fetch access_token using url={}, headers={}, payload={}".format(
-                    access_token_url, headers, payload
+            raise Exception(
+                "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})".format(
+                    access_token_url, headers, payload, response.status_code, response.text
                 )
             )
-            raise
 
     # @utils.log_args
     def make_call(
         self, verb: str, api_resource: str, **kwargs: str
-    ) -> typing.NewType('CSPResponse' ,CSPResponse):
+    ) -> typing.NewType("CSPResponse", CSPResponse):
         """
         # TODO
         """

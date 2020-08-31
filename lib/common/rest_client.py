@@ -45,16 +45,23 @@ class RESTClient(abc.ABC):
 
     # @utils.log_args
     def request(
-        self,
-        method: str,
-        api_resource: str,
-        retry_count: int = 1,
-        retry_sleep: int = 5,
-        **kwargs: str,
-    ) -> typing.NewType('Response' ,requests.Response):
-        """
-            Send requests, handles errors and retry requests for connection
-            and timeout errors.
+            self,
+            method: str,
+            api_resource: str,
+            retry_count: int = 1,
+            retry_sleep: int = 5,
+            **kwargs: str,
+    ) -> typing.NewType('Response', requests.Response):
+        """sends HTTP request for RESTClient
+
+        Args:
+          method: request verb e.g. GET, POST, PUT, DELETE etc.
+          api_resource: api resource of the client
+          retry_count: maxium number of retries allowed
+          retry_sleep: sleep (in seconds) in between retries
+
+        Returns:
+          requests.Response
         """
         url = self._base_url + api_resource
 
@@ -105,3 +112,54 @@ class RESTClient(abc.ABC):
                 mylog.debug("RESTClient: Exception occurred in method=%s, url=%s", method, url)
                 mylog.exception(fault)
                 raise
+
+
+def request(method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str) -> requests.Response:
+    """thin wrapper over requests.request API with retry logic implemented
+
+    Args:
+      method: request verb e.g. GET, POST, PUT, DELETE etc.
+      url: request url including api resource
+      retry_count: maxium number of retries allowed
+      retry_sleep: sleep (in seconds) in between retries
+
+    Returns:
+      requests.Response
+    """
+    if retry_count < 0:
+        retry_count = 0
+
+    attempt = 0
+    while attempt < retry_count + 1:
+        try:
+            attempt += 1
+            mylog.debug(
+                "Sending a request with method=%s, url=%s",
+                method,
+                url,
+            )
+            response = requests.request(method, url, **kwargs)
+            mylog.debug(
+                "Request with method=%s, url=%s succeeded in (%d) attempt(s)",
+                method,
+                url,
+                attempt
+            )
+            return response
+        except params.HTTP_RETRIABLE_ERRORS as fault:
+            mylog.debug(
+                "Failed to send request due to connection error. method=%s, url=%s, error=%s",
+                method,
+                url,
+                fault,
+            )
+            if attempt < retry_count + 1:
+                mylog.debug("retry(%d) after %d seconds", attempt, retry_sleep)
+                time.sleep(retry_sleep)
+            else:
+                mylog.exception(fault)
+                raise
+        except Exception as fault:
+            mylog.debug("Exception occurred in method=%s, url=%s", method, url)
+            mylog.exception(fault)
+            raise

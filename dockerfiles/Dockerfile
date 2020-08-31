@@ -9,8 +9,14 @@ WORKDIR /mangle-yaan
 
 RUN pip install -r /mangle-yaan/dev-requirements.txt
 
-ENV run_id abcd
-ENV MYCONFIG /mangle-yaan/config/my.json
-ENV TESTRUNNER_PARAMS /mangle-yaan/tests/test_dummy.py
+ENV run_id=''
+ENV PROJECT_NAME=''
+ENV WORKLOAD_NAME=''
+ENV TESTSUITE_NAMES=''
+ENV PYTEST_ARGS='""'
 
-CMD python /mangle-yaan/test_runner.py ${TESTRUNNER_PARAMS}
+CMD python /mangle-yaan/test_runner.py \
+    --project_name ${PROJECT_NAME} \
+    --workload_name ${WORKLOAD_NAME} \
+    --testsuite_names ${TESTSUITE_NAMES} \
+    --pytest_args ${PYTEST_ARGS}

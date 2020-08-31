@@ -24,7 +24,7 @@ class MangleResponse(object):
         try:
             self.json = response.json()
         except ValueError as fault:
-            self.content = response.text
+            self.text = response.text
 
     def __repr__(self):
         return "MangleResponse(url={} status_code={} headers={} json={} text={})".format(
