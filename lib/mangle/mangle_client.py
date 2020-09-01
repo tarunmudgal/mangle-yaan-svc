@@ -7,14 +7,22 @@ import time
 import typing
 
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 from lib import params
 from lib.common import utils
 from lib.common.rest_client import RESTClient
 from lib.mangle import resources
 
+# http://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html
+DEFAULT_RETRY_OBJ = Retry(
+    total=3, status_forcelist=[429, 500, 502, 503, 504], method_whitelist=False
+)
+
 
 class MangleResponse(object):
+    """MangleClient Response Wrapper"""
     def __init__(self, response):
         self.url = response.url
         self.status_code = response.status_code
@@ -34,34 +42,39 @@ class MangleResponse(object):
 
 class MangleClient(RESTClient):
     """
-    Wrapper to interact with the Mangle REST API's
-
-    Parameters
-    ----------
-    host: string
-        IP Address or FQDN to Mangle
-    username: string
-        Mangle username
-    password: string
-        Mangle password
-    api_prefix: string
-        API prefix (will be append to the hostname)
-    ssl_verify: bool, optional
-        Perform SSL host verification (default=False)
+    MangleClient (HTTP Client) that interacts with Mangle REST APIs
     """
 
     __single_instance = None
 
     def __init__(
         self,
-        host,
-        username,
-        password,
-        api_prefix=resources.API_PREFIX,
-        ssl_verify=False,
-        timeout=None,
-    ):
-        """Init Mangle API with hostname and login credentials."""
+        host: str,
+        username: str,
+        password: str,
+        api_prefix: str = resources.API_PREFIX,
+        scheme: str = "https://",
+        retry_obj: Retry = DEFAULT_RETRY_OBJ,
+        ssl_verify: bool = False,
+        timeout: int = None,
+    ) -> None:
+        """Initializes singleton MangleClient that is used to make Mangle API calls
+        Args:
+            host: Mangle service hostname
+            username: Mangle user-name
+            password: Mangle password
+            api_prefix: Mangle API Prefix
+            scheme: it should be either 'http://' or 'https://'
+            retry_obj: requests.packages.urllib3.util.retry.Retry object used to enable retries on specific status_code(s)
+            ssl_verify: True if SSL needs to be enabled else False
+            timeout: maximum time to wait (for connect and read) before raising Timeout exception
+        Raises:
+            None
+        Returns:
+            MangleClient object
+        """
+
+        adapter = HTTPAdapter(max_retries=retry_obj)
 
         if MangleClient.__single_instance is not None:
             raise Exception(
@@ -70,11 +83,12 @@ class MangleClient(RESTClient):
 
         MangleClient.__single_instance = self
 
-        super().__init__(host, api_prefix=api_prefix, ssl_verify=ssl_verify, timeout=timeout)
+        super().__init__(host=host, api_prefix=api_prefix, ssl_verify=ssl_verify, timeout=timeout)
 
         self._user = username
         self._passwd = password
         self._session = requests.Session()
+        self._session.mount(scheme, adapter)
         self.init_session()
 
         mylog.debug("MangleClient obj %s initialized." % self)
@@ -91,9 +105,15 @@ class MangleClient(RESTClient):
     # @utils.log_args
     def make_call(
         self, verb: str, api_resource: str, **kwargs: str
-    ) -> typing.NewType('MangleResponse' ,MangleResponse):
+    ) -> typing.NewType("MangleResponse", MangleResponse):
         """
-        # TODO
+        makes a HTTP call using RESTClient.request API
+        Args:
+            verb: request verb e.g. GET, POST, PUT, DELETE etc.
+            api_resource: api resource handle
+            kwargs: kwargs that are supported by requests.request. In addition, retry_count and retry_sleep are also supported
+        Returns:
+            MangleResponse obj
         """
         req_resp = self.request(verb, api_resource, **kwargs)
 

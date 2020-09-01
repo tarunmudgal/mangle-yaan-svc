@@ -24,9 +24,10 @@ class RESTClient(abc.ABC):
         This class prepares REST calls, send requests and handle errors
     """
 
-    def __init__(self, host, port=443, api_prefix="", ssl_verify=False, timeout=None):
-        self._scheme = "https://"
-        self._base_url = self._scheme + host + ":" + str(port) + api_prefix
+    def __init__(
+        self, scheme="https://", host="", port=443, api_prefix="", ssl_verify=False, timeout=None
+    ):
+        self._base_url = scheme + host + ":" + str(port) + api_prefix
         self._ssl_verify = ssl_verify
         self._timeout = timeout
 
@@ -45,13 +46,13 @@ class RESTClient(abc.ABC):
 
     # @utils.log_args
     def request(
-            self,
-            method: str,
-            api_resource: str,
-            retry_count: int = 1,
-            retry_sleep: int = 5,
-            **kwargs: str,
-    ) -> typing.NewType('Response', requests.Response):
+        self,
+        method: str,
+        api_resource: str,
+        retry_count: int = 1,
+        retry_sleep: int = 5,
+        **kwargs: str,
+    ) -> typing.NewType("Response", requests.Response):
         """sends HTTP request for RESTClient
 
         Args:
@@ -92,7 +93,7 @@ class RESTClient(abc.ABC):
                     "RESTClient: request with method=%s, resource=%s succeeded in (%d) attempt(s)",
                     method,
                     api_resource,
-                    attempt
+                    attempt,
                 )
                 return response
             except params.HTTP_RETRIABLE_ERRORS as fault:
@@ -114,9 +115,10 @@ class RESTClient(abc.ABC):
                 raise
 
 
-def request(method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str) -> requests.Response:
+def request(
+    method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str
+) -> requests.Response:
     """thin wrapper over requests.request API with retry logic implemented
-
     Args:
       method: request verb e.g. GET, POST, PUT, DELETE etc.
       url: request url including api resource
@@ -134,16 +136,11 @@ def request(method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, *
         try:
             attempt += 1
             mylog.debug(
-                "Sending a request with method=%s, url=%s",
-                method,
-                url,
+                "Sending a request with method=%s, url=%s", method, url,
             )
             response = requests.request(method, url, **kwargs)
             mylog.debug(
-                "Request with method=%s, url=%s succeeded in (%d) attempt(s)",
-                method,
-                url,
-                attempt
+                "Request with method=%s, url=%s succeeded in (%d) attempt(s)", method, url, attempt
             )
             return response
         except params.HTTP_RETRIABLE_ERRORS as fault:

@@ -122,7 +122,6 @@ def prepare_setup(
                 )
             )
     builtins.myconfig = myconfig
-
     mangle_conf = myconfig.get("mangle")
     mclient = mangle_client.MangleClient(
         mangle_conf.get("host"),
@@ -135,9 +134,7 @@ def prepare_setup(
     csp_conf = myconfig.get("csp")
     cclient = csp_client.CSPClient(
         csp_conf.get("host"),
-        csp_resources.API_PREFIX,
         csp_conf.get("defaultUser").get("refreshToken"),
-        ssl_verify=False,
         timeout=120,
     )
     builtins.cclient = cclient

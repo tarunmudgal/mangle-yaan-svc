@@ -5,12 +5,21 @@
 import typing
 
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 from lib.common import rest_client, utils
 from lib.csp import resources
 
+# http://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html
+DEFAULT_RETRY_OBJ = Retry(
+    total=3, status_forcelist=[429, 500, 502, 503, 504], method_whitelist=False
+)
+
 
 class CSPResponse(object):
+    """CSPClient Response Wrapper"""
+
     def __init__(self, response):
         self.url = response.url
         self.status_code = response.status_code
@@ -30,38 +39,50 @@ class CSPResponse(object):
 
 class CSPClient(rest_client.RESTClient):
     """
-    Wrapper to interact with the Mangle REST API's
-
-    Parameters
-    ----------
-    host: string
-        IP Address or FQDN to Mangle
-    username: string
-        Mangle username
-    password: string
-        Mangle password
-    api_prefix: string
-        API prefix (will be append to the hostname)
-    ssl_verify: bool, optional
-        Perform SSL host verification (default=False)
+    CSPClient (HTTP Client) that interacts with CSP REST APIs
     """
 
     __single_instance = None
 
     def __init__(
-        self, host, api_prefix, refresh_token, ssl_verify=False, timeout=None,
-    ):
-        """Init Mangle API with hostname and login credentials."""
+        self,
+        host: str,
+        refresh_token: str,
+        api_prefix: str = resources.API_PREFIX,
+        scheme: str = "https://",
+        retry_obj: Retry = DEFAULT_RETRY_OBJ,
+        ssl_verify: bool = False,
+        timeout: int = None,
+    ) -> None:
+        """Initializes singleton CSPClient that is used to make CSP API calls
+        Args:
+            host: CSP hostname
+            refresh_token: CSP refresh token that is used to fetch access token
+            api_prefix: CSP API Prefix
+            scheme: it should be either 'http://' or 'https://'
+            retry_obj: requests.packages.urllib3.util.retry.Retry object used to enable retries on specific status_code(s)
+            ssl_verify: True if SSL needs to be enabled else False
+            timeout: maximum time to wait (for connect and read) before raising Timeout exception
+        Raises:
+            None
+        Returns:
+            CSPClient object
+        """
+
+        adapter = HTTPAdapter(max_retries=retry_obj)
 
         if CSPClient.__single_instance is not None:
             raise Exception("CSPClient is a singleton class and cannot have more than one objects")
 
         CSPClient.__single_instance = self
 
-        super().__init__(host, api_prefix=api_prefix, ssl_verify=ssl_verify, timeout=timeout)
+        super().__init__(
+            scheme=scheme, host=host, api_prefix=api_prefix, ssl_verify=ssl_verify, timeout=timeout
+        )
 
         self._refresh_token = refresh_token
         self._session = requests.Session()
+        self._session.mount(scheme, adapter)
         self.init_session()
 
         mylog.debug("CSPClient obj %s initialized." % self)
@@ -100,7 +121,13 @@ class CSPClient(rest_client.RESTClient):
         self, verb: str, api_resource: str, **kwargs: str
     ) -> typing.NewType("CSPResponse", CSPResponse):
         """
-        # TODO
+        makes a HTTP call using RESTClient.request API
+        Args:
+            verb: request verb e.g. GET, POST, PUT, DELETE etc.
+            api_resource: api resource handle
+            kwargs: kwargs that are supported by requests.request. In addition, retry_count and retry_sleep are also supported
+        Returns:
+            CSPResponse obj
         """
         req_resp = self.request(verb, api_resource, **kwargs)
         if req_resp.status_code == 401:

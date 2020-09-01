@@ -36,6 +36,7 @@ pyasn1==0.4.8             # via pyasn1-modules, rsa
 pycodestyle==2.6.0        # via -r dev-requirements.txt, flake8
 pyflakes==2.2.0           # via -r dev-requirements.txt, flake8
 pyparsing==2.4.7          # via -r dev-requirements.txt, packaging
+pytest-dependency==0.5.1
 pytest-cov==2.10.0        # via -r dev-requirements.txt
 pytest-html==2.1.1        # via -r dev-requirements.txt
 pytest-metadata==1.10.0   # via -r dev-requirements.txt, pytest-html

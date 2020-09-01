@@ -10,7 +10,9 @@ from lib.csp import resources
 
 
 @pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_am")
-class TestOSDependencyOnAM:
+class TestOSDependencyOnAM(object):
+
+    @pytest.mark.dependency()
     def test_api_create_onboarding_context(self):
         # expected csp api response (status_code)
         expected_response = 201
@@ -34,6 +36,7 @@ class TestOSDependencyOnAM:
                 os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
 
+    @pytest.mark.dependency(depends=["TestOSDependencyOnAM::test_api_create_onboarding_context"])
     def test_api_get_onboarding_context_using_id(self):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
@@ -66,6 +69,7 @@ class TestOSDependencyOnAM:
                 os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
 
+    @pytest.mark.dependency(depends=["TestOSDependencyOnAM::test_api_create_onboarding_context"])
     def test_api_patch_onboarding_context_using_id(self):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
@@ -87,9 +91,10 @@ class TestOSDependencyOnAM:
                 os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
 
+    @pytest.mark.dependency(depends=["TestOSDependencyOnAM::test_api_create_onboarding_context"])
     def test_api_create_faq_topics(self):
         # expected csp api response (status_code)
-        expected_response = requests.codes.ok
+        expected_response = 201
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPICS").format(
