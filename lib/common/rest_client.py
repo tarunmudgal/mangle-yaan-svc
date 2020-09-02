@@ -16,7 +16,7 @@ from lib import params
 from lib.common import utils
 
 requests.packages.urllib3.disable_warnings()
-logging.getLogger("urllib3").setLevel(logging.WARNING)
+# logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
 class RESTClient(abc.ABC):
@@ -88,6 +88,7 @@ class RESTClient(abc.ABC):
                     method,
                     api_resource,
                 )
+
                 response = self._session.request(method, url, **kwargs)
                 mylog.debug(
                     "RESTClient: request with method=%s, resource=%s succeeded in (%d) attempt(s)",

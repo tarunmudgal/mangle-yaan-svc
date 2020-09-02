@@ -17,12 +17,16 @@ from lib.mangle import resources
 
 # http://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html
 DEFAULT_RETRY_OBJ = Retry(
-    total=3, status_forcelist=[429, 500, 502, 503, 504], method_whitelist=False
+    total=params.MCLIENT_MAX_RETRIES,
+    status_forcelist=params.MCLIENT_STATUS_FORCELIST,
+    method_whitelist=params.MCLIENT_METHOD_WHITELIST,
+    backoff_factor=params.MCLIENT_BACKOFF_FACTOR,
 )
 
 
 class MangleResponse(object):
     """MangleClient Response Wrapper"""
+
     def __init__(self, response):
         self.url = response.url
         self.status_code = response.status_code
@@ -105,7 +109,7 @@ class MangleClient(RESTClient):
     # @utils.log_args
     def make_call(
         self, verb: str, api_resource: str, **kwargs: str
-    ) -> typing.NewType("MangleResponse", MangleResponse):
+    ) -> MangleResponse:
         """
         makes a HTTP call using RESTClient.request API
         Args:

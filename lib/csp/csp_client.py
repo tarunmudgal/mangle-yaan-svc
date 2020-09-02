@@ -8,12 +8,16 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
+from lib import params
 from lib.common import rest_client, utils
 from lib.csp import resources
 
 # http://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html
 DEFAULT_RETRY_OBJ = Retry(
-    total=3, status_forcelist=[429, 500, 502, 503, 504], method_whitelist=False
+    total=params.CCLIENT_MAX_RETRIES,
+    status_forcelist=params.CCLIENT_STATUS_FORCELIST,
+    method_whitelist=params.CCLIENT_METHOD_WHITELIST,
+    backoff_factor=params.CCLIENT_BACKOFF_FACTOR,
 )
 
 
@@ -119,7 +123,7 @@ class CSPClient(rest_client.RESTClient):
     # @utils.log_args
     def make_call(
         self, verb: str, api_resource: str, **kwargs: str
-    ) -> typing.NewType("CSPResponse", CSPResponse):
+    ) -> CSPResponse:
         """
         makes a HTTP call using RESTClient.request API
         Args:

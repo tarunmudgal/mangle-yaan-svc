@@ -9,8 +9,11 @@ import requests
 from lib.csp import resources
 
 
-@pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_am")
+@pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
 class TestCommerceDependencyOnAM:
+
+    inject_fault_svc = "csp-account-management-mvc"
+
     def test_api_get_billing_accounts(self):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok

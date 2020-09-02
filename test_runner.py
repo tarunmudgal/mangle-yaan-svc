@@ -8,6 +8,7 @@ import argparse
 import builtins
 import datetime
 import inspect
+import logging
 import os
 import pprint
 import sys
@@ -25,6 +26,7 @@ from lib.csp import resources as csp_resources
 from lib.mangle import endpoint, mangle_client
 
 requests.packages.urllib3.disable_warnings()
+# logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 # constants initialization
 ROOT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
