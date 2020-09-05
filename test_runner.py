@@ -123,6 +123,8 @@ def prepare_setup(
                     myconfig_url, params, response.status_code, response.text
                 )
             )
+            sys.exit(2)
+
     builtins.myconfig = myconfig
     mangle_conf = myconfig.get("mangle")
     mclient = mangle_client.MangleClient(
@@ -232,6 +234,10 @@ def prepare_setup(
     # test_runner cache to maintain states
     mycache = {}
     builtins.mycache = mycache
+
+    # adding project_name and workload_name into mycache to use them in pytest-html greport generation
+    mycache["project_name"] = project_name
+    mycache["workload_name"] = workload_name
 
     mylog.info("setup is ready to run resiliency tests now")
 

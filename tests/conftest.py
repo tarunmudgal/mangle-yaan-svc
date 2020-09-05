@@ -15,15 +15,15 @@ from lib import params
 from lib.mangle import resources
 
 
-AM_SERVICE = "csp-account-management-mvc"
-SLC_SERVICE = "csp-service-lifecycle"
-COMMERCE_SERVICE = "csp-commerce"
-ONBOARDING_SERVICE = "csp-onboarding"
-ALL_SERVICES_LIST = [AM_SERVICE, SLC_SERVICE, ONBOARDING_SERVICE, COMMERCE_SERVICE]
-
-
 def pytest_html_report_title(report):
     report.title = myconfig.get("projectDescription") + " " + "Report"
+
+
+def pytest_html_results_summary(prefix, summary, postfix):
+    from py.xml import html
+
+    prefix.extend([html.p("PROJECT_NAME: {}".format(mycache["project_name"]))])
+    prefix.extend([html.p("WORKLOAD_NAME: {}".format(mycache["workload_name"]))])
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -89,10 +89,9 @@ def inject_k8s_infra_fault_service_unavailable():
     assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
 
 
-@pytest.fixture(scope="class", params=set(ALL_SERVICES_LIST)-set([AM_SERVICE, SLC_SERVICE]))
+@pytest.fixture(scope="class")
 def inject_k8s_infra_fault_service_unavailable_for_class(request):
 
-    # faulty_svc_name = request.cls.inject_fault_svc
     faulty_svc_name = request.param
 
     request_body = {
@@ -111,7 +110,7 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
     )
     assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
 
-    yield  # post yield runs as the part of teardown
+    yield faulty_svc_name # post yield runs as the part of teardown
 
     mylog.debug(
         "let's give some time to mangle before triggering remediation task. waiting for 60 secs"
