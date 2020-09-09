@@ -94,7 +94,7 @@ def prepare_setup(
 
     myconfig = None
     # read mangle-yaan config from command line
-    if myconf_file is not None:
+    if myconf_file is not None and myconf_file != "":
         conf_file = myconf_file
         mylog.debug("reading config locally from path={}".format(conf_file))
         myconfig = config_reader.parse_json(conf_file)
@@ -384,6 +384,7 @@ if __name__ == "__main__":
         "--myconfig",
         action="store",
         type=str,
+        default="",
         help="mangle-yaan config file path. If this option is used, "
         "it will ovverride default config file config/my.json",
     )
@@ -435,6 +436,12 @@ if __name__ == "__main__":
 
     testsuite_paths = get_test_modules_from_testsuite_names(args.testsuite_names)
     pytest_cmdline += testsuite_paths
+
+    if args.myconfig is not None:
+        # removes leading and trailing single/double quotes, white-spaces from args.pytest_args
+        args.myconfig = args.myconfig.strip()
+        args.myconfig = args.myconfig.strip("'")
+        args.myconfig = args.myconfig.strip('"')
 
     prepare_setup(
         myconf_file=args.myconfig, project_name=args.project_name, workload_name=args.workload_name

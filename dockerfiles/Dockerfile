@@ -14,11 +14,11 @@ ENV PROJECT_NAME=''
 ENV WORKLOAD_NAME=''
 ENV TESTSUITE_NAMES=''
 ENV PYTEST_ARGS='""'
-ENV OTHER_ARGS='""'
+ENV MYCONFIG='""'
 
 CMD python /mangle-yaan/test_runner.py \
     --project_name ${PROJECT_NAME} \
     --workload_name ${WORKLOAD_NAME} \
     --testsuite_names ${TESTSUITE_NAMES} \
     --pytest_args ${PYTEST_ARGS:-' '} \
-    ${OTHER_ARGS:-' '}
+    --myconfig ${MYCONFIG:-' '}

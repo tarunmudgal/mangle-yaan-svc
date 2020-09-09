@@ -20,8 +20,8 @@ spec:
             value: "test_dummy"
           - name: PYTEST_ARGS
             value: ""
-          - name: OTHER_ARGS
-            value: "--myconfig config/sample_config.json"
+          - name: MYCONFIG
+            value: ""
         resources:
           requests:
             memory: "1Gi"
