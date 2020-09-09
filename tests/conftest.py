@@ -10,6 +10,7 @@ import time
 
 import boto3
 import pytest
+from py.xml import html
 
 from lib import params
 from lib.mangle import resources
@@ -20,10 +21,12 @@ def pytest_html_report_title(report):
 
 
 def pytest_html_results_summary(prefix, summary, postfix):
-    from py.xml import html
-
-    prefix.extend([html.p("PROJECT_NAME: {}".format(mycache["project_name"]))])
-    prefix.extend([html.p("WORKLOAD_NAME: {}".format(mycache["workload_name"]))])
+    class myhtml(html):
+        class p(html.p):
+            style = html.Style(font_weight="bold")
+    prefix.extend([myhtml.p("{:<30}{}".format("PROJECT NAME:", mycache["project_name"]))])
+    prefix.extend([myhtml.p("{:<30}{}".format("WORKLOAD NAME:", mycache["workload_name"]))])
+    prefix.extend([myhtml.p("{:<30}{}".format("Test Start Timestamp:", mycache["test_start_timestamp"]))])
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -73,9 +76,9 @@ def inject_k8s_infra_fault_service_unavailable():
     yield _inject_k8s_infra_fault_service_unavailable
 
     mylog.debug(
-        "let's give some time to mangle before triggering remediation task. waiting for 120 secs"
+        "let's give some time to mangle before triggering remediation task. waiting for 60 secs"
     )
-    time.sleep(120)
+    time.sleep(60)
 
     api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + taskid_to_remediate
     task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(

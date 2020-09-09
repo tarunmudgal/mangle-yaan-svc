@@ -102,7 +102,7 @@ def prepare_setup(
     # read mangle-yaan config from maxim-gun api (from maxim_gun.workload table)
     else:
         mg_base_url = (
-            "http://" + my_json.get("maximGun").get("host") + common_resources.MAXIMGUN_API_PREFIX
+            "http://" + my_json.get("maximGun").get("host") + common_resources.MAXIMGUN_RES_API_PREFIX
         )
         api_resource = common_resources.MAXIMGUN.get("MANGLEYAAN_CONFIG")
         myconfig_url = mg_base_url + api_resource
@@ -252,7 +252,7 @@ def run_pytest(*args, **kwargs):
 
     # end_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
     end_ts = datetime.datetime.now().strftime("%d%b%Y_%H:%M:%S.%f")
-    mycache.update({"test_start_timestamp": end_ts})
+    mycache.update({"test_end_timestamp": end_ts})
     mylog.info("pytest test cases execution finished at: %s" % end_ts)
 
     return status

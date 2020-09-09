@@ -21,11 +21,12 @@ from datetime import datetime
 #     print("in test_after_cpu_fault_injected_1")
 
 
-
 import pytest
 
-@pytest.mark.usefixtures('create_sut_class')
+# from tests import conftest
+
 class TestDummy():
+
     def test_example1(self):
         print("test_example1 called")
 
@@ -36,16 +37,20 @@ class TestDummy():
     def test_example3(self):
         print("test_example3 called")
 
+
 @pytest.fixture
 def create_sut():
     instances = []
+
     def create_sut(**kwargs):
         s = Sut(**kwargs)
         instances.append(s)
         return s
+
     yield create_sut
     for s in instances:
         s.cleanup()
+
 
 @pytest.fixture(scope='class')
 def create_sut_class():
@@ -58,12 +63,14 @@ def create_sut_class():
         s.cleanup()
     print("create_sut_class teardown")
 
+
 class Sut:
     """
     Represents system under test
 
     Provides high-level methods for interaction
     """
+
     def __init__(self, **kwargs):
         print('DO SETUP')
         self.__dict__.update(kwargs)

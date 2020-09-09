@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 # maxim-gun resources
 # CSP API prefix
-MAXIMGUN_API_PREFIX = "/api/runtest"
+MAXIMGUN_RES_API_PREFIX = "/api/res/runtest"
 
 MAXIMGUN = OrderedDict()
 MAXIMGUN["MANGLEYAAN_CONFIG"] = "/mangle-yaan/config"

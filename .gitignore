@@ -4,3 +4,4 @@ __pycache__/
 .Python
 .pytest_cache
 .tox
+/logs/

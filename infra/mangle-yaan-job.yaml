@@ -8,14 +8,20 @@ spec:
       containers:
       - name: mangle-yaan-job
         image: vmware-docker-csp-tools.bintray.io/mangle-yaan:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
           - name: run_id
-            value: "abcd"
-          - name: MYCONFIG
-            value: "/mangle-yaan/config/my.json"
-          - name: TESTRUNNER_PARAMS
-            value: "/mangle-yaan/tests/test_dummy.py"
+            value: "dummy_run_id"
+          - name: PROJECT_NAME
+            value: "MANGLE_YAAN_TEST"
+          - name: WORKLOAD_NAME
+            value: "RESILIENCY_WORKLOAD"
+          - name: TESTSUITE_NAMES
+            value: "test_dummy"
+          - name: PYTEST_ARGS
+            value: ""
+          - name: OTHER_ARGS
+            value: "--myconfig config/sample_config.json"
         resources:
           requests:
             memory: "1Gi"

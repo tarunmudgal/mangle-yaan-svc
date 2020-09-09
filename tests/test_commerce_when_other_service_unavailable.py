@@ -8,15 +8,21 @@ import pytest
 import requests
 from lib.csp import resources
 
+@pytest.mark.parametrize(
+    "inject_k8s_infra_fault_service_unavailable_for_class",
+    ["csp-account-management-mvc", "csp-onboarding"],
+    indirect=True,
+)
+# @pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
+class TestCommerceDependencyOnDifferentServices:
 
-@pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
-class TestCommerceDependencyOnAM:
-
-    inject_fault_svc = "csp-account-management-mvc"
-
-    def test_api_get_billing_accounts(self):
+    def test_api_get_billing_accounts(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
-        expected_response = requests.codes.ok
+        expected_response = 200
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = 200
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
+            expected_response = 200
 
         # make csp api call
         api_resource = resources.COMMERCE.get("BILLING_ACCOUNTS").format(
@@ -33,7 +39,7 @@ class TestCommerceDependencyOnAM:
                 com_resp.status_code == expected_response
         ), "Commerce service did not return expected response {}".format(expected_response)
 
-    def test_api_get_billing_account_using_id(self):
+    def test_api_get_billing_account_using_id(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
 
@@ -49,7 +55,7 @@ class TestCommerceDependencyOnAM:
                 com_resp.status_code == expected_response
         ), "Commerce service did not return expected response {}".format(expected_response)
 
-    def test_api_get_payment_methods(self):
+    def test_api_get_payment_methods(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
 
@@ -65,7 +71,7 @@ class TestCommerceDependencyOnAM:
                 com_resp.status_code == expected_response
         ), "Commerce service did not return expected response {}".format(expected_response)
 
-    def test_api_get_current_costs(self):
+    def test_api_get_current_costs(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
 
@@ -81,7 +87,7 @@ class TestCommerceDependencyOnAM:
                 com_resp.status_code == expected_response
         ), "Commerce service did not return expected response {}".format(expected_response)
 
-    def test_api_get_promotions(self):
+    def test_api_get_promotions(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
 

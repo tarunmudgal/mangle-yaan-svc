@@ -1,17 +1,17 @@
 {
-  "test_commerce_api_when_am_down": {
+  "test_commerce_api_when_a_service_down": {
     "description": "'commerce' api test cases while 'account management' service is down",
-    "path": "tests/test_commerce_when_am_service_unavailable.py"
+    "path": "tests/test_commerce_when_other_service_unavailable.py"
   },
-  "test_onboarding_api_when_am_down": {
+  "test_onboarding_api_when_a_service_down": {
     "description": "'onboarding' api test cases while 'account management' service is down",
-    "path": "tests/test_os_when_am_service_unavailable.py"
+    "path": "tests/test_os_when_other_service_unavailable.py"
   },
-  "test_slc_api_when_am_down": {
+  "test_slc_api_when_a_service_down": {
     "description": "'service life cycle' api test cases while 'account management' service is down",
-    "path": "tests/test_slc_when_am_service_unavailable.py"
+    "path": "tests/test_slc_when_other_service_unavailable.py"
   },
-  "test_am_api_when_other_services_down": {
+  "test_am_api_when_a_service_down": {
     "description": "'account management' api test cases while some other service is down (one service down at a time)",
     "path": "tests/test_am_when_other_service_unavailable.py"
   },

@@ -1,0 +1,39 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: mangle-yaan-cron-job
+spec:
+  schedule: "0 3 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mangle-yaan-job
+            image: vmware-docker-csp-tools.bintray.io/mangle-yaan:latest
+            imagePullPolicy: Always
+            env:
+              - name: run_id
+                value: "dummy_run_id"
+              - name: PROJECT_NAME
+                value: "MANGLE_YAAN_TEST"
+              - name: WORKLOAD_NAME
+                value: "RESILIENCY_WORKLOAD"
+              - name: TESTSUITE_NAMES
+                value: "test_commerce_api_when_a_service_down,test_onboarding_api_when_a_service_down,test_slc_api_when_a_service_down,test_am_api_when_a_service_down"
+              - name: PYTEST_ARGS
+                value: ""
+              - name: OTHER_ARGS
+                value: "--myconfig config/sample_config.json"
+            resources:
+              requests:
+                memory: "1Gi"
+                cpu: "500m"
+              limits:
+                memory: "2Gi"
+                cpu: "1000m"
+          restartPolicy: "Never"
+          imagePullSecrets:
+          - name: mangle-yaan-secret
+      backoffLimit: 3
