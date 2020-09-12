@@ -10,8 +10,6 @@ spec:
         image: vmware-docker-csp-tools.bintray.io/mangle-yaan:latest
         imagePullPolicy: Always
         env:
-          - name: run_id
-            value: "dummy_run_id"
           - name: PROJECT_NAME
             value: "MANGLE_YAAN_TEST"
           - name: WORKLOAD_NAME
@@ -21,6 +19,8 @@ spec:
           - name: PYTEST_ARGS
             value: ""
           - name: MYCONFIG
+            value: ""
+          - name: run_id
             value: ""
         resources:
           requests:

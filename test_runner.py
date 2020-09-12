@@ -18,12 +18,14 @@ import boto3
 import pytest
 import requests
 
-from lib.common import config_reader, logger
-from lib.common import resources as common_resources
-from lib.common import rest_client
+from lib import params as lib_params
+from lib.common import config_reader, logger, rest_client
 from lib.csp import csp_client
 from lib.csp import resources as csp_resources
 from lib.mangle import endpoint, mangle_client
+from lib.maximgun import agent as mg_agent
+from lib.maximgun import maximgun_client
+from lib.maximgun import resources as mg_resources
 
 requests.packages.urllib3.disable_warnings()
 # logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -68,30 +70,73 @@ def check_network_availability() -> None:
         sys.exit(1)
 
 
-def prepare_setup(
-    myconf_file: str = None, project_name: str = None, workload_name: str = None
-) -> None:
-    """Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
-    config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
-    and endpoint for CSP K8S cluster etc.
-
+def create_maxim_gun_client(timeout: int = 120) -> maximgun_client.MGClient:
+    """
+    creates maxim-gun REST client
     Args:
-      myconf_file: mangle-yaan configuration (json) file. If provided, It overrides default config file config/my.json
-      project_name: project name created on maxim-gun UI
-      workload_name: workload name created on maxim-gun UI
+        timeout: timeout used for REST requests
 
     Returns:
-      None
+        MGClient instance
     """
-    check_network_availability()
-
-    # read mangle-yaan config (my.json). Looks up in environment vars if set else pick-up the default value
-    # conf_file = os.getenv("MYCONFIG", CONF_DIR + os.path.sep + "my.json")
-
     # read static config
     my_json = CONF_DIR + os.path.sep + "my.json"
     my_json = config_reader.parse_json(my_json)
 
+    # maxim-gun client
+    mg_conf = my_json.get("maximGun")
+    mgclient = maximgun_client.MGClient(mg_conf.get("host"), timeout=timeout, )
+
+    return mgclient
+
+
+def create_mangle_client(timeout: int = 120) -> mangle_client.MangleClient:
+    """
+    creates mangle REST client
+    Args:
+        timeout: timeout used for REST requests
+
+    Returns:
+        MangleClient instance
+    """
+    mangle_conf = myconfig.get("mangle")
+    mclient = mangle_client.MangleClient(
+        mangle_conf.get("host"),
+        mangle_conf.get("username"),
+        mangle_conf.get("password"),
+        timeout=timeout,
+    )
+
+    return mclient
+
+
+def create_csp_client(timeout: int = 120) -> csp_client.CSPClient:
+    """
+    creates CSP REST client
+    Args:
+        timeout: timeout used for REST requests
+
+    Returns:
+       CSPClient instance
+    """
+    csp_conf = myconfig.get("csp")
+    cclient = csp_client.CSPClient(
+        csp_conf.get("host"), csp_conf.get("defaultUser").get("refreshToken"), timeout=timeout,
+    )
+
+    return cclient
+
+
+def get_mangle_yaan_config(myconf_file: str = None, workload_name: str = None) -> typing.Dict:
+    """
+    reads mangle-yaan config from myconf_file locally (if specified) or maxim-gun workload
+    Args:
+        myconf_file: mangle-yaan config file path (local)
+        workload_name: workload name, required to read mangle-yaan config from maxim-gun
+
+    Returns:
+
+    """
     myconfig = None
     # read mangle-yaan config from command line
     if myconf_file is not None and myconf_file != "":
@@ -101,48 +146,31 @@ def prepare_setup(
 
     # read mangle-yaan config from maxim-gun api (from maxim_gun.workload table)
     else:
-        mg_base_url = (
-            "http://" + my_json.get("maximGun").get("host") + common_resources.MAXIMGUN_RES_API_PREFIX
-        )
-        api_resource = common_resources.MAXIMGUN.get("MANGLEYAAN_CONFIG")
-        myconfig_url = mg_base_url + api_resource
+        api_resource = mg_resources.MAXIMGUN.get("MANGLEYAAN_CONFIG")
         params = {"workload_name": workload_name}
 
-        mylog.debug("reading config from maxim-gun app. url={}".format(myconfig_url))
-
-        response = rest_client.request(
-            "GET", myconfig_url, retry_count=1, retry_sleep=5, params=params
+        mylog.debug("reading config from maxim-gun app. resource={}".format(api_resource))
+        response = mgclient.make_call(
+            "GET", api_resource, retry_count=1, retry_sleep=5, params=params
         )
         if response.status_code == requests.codes.ok:
-            res_json = response.json()
-            myconfig = res_json.get("mangle_yaan_conf")
+            myconfig = response.json.get("mangle_yaan_conf")
             # mylog.debug("maxim-gun api json response={}".format(res_json))
         else:
             mylog.error(
-                "failed to read config from maxim-gun app. Request(url={}, params={}). Response(status={}, text={})".format(
-                    myconfig_url, params, response.status_code, response.text
+                "failed to read config from maxim-gun app. Request(resource={}, params={}). Response(status={}, text={})".format(
+                    api_resource, params, response.status_code, response.text
                 )
             )
             sys.exit(2)
 
-    builtins.myconfig = myconfig
-    mangle_conf = myconfig.get("mangle")
-    mclient = mangle_client.MangleClient(
-        mangle_conf.get("host"),
-        mangle_conf.get("username"),
-        mangle_conf.get("password"),
-        timeout=120,
-    )
-    builtins.mclient = mclient
+    return myconfig
 
-    csp_conf = myconfig.get("csp")
-    cclient = csp_client.CSPClient(
-        csp_conf.get("host"),
-        csp_conf.get("defaultUser").get("refreshToken"),
-        timeout=120,
-    )
-    builtins.cclient = cclient
 
+def setup_mangle_infra() -> None:
+    """
+    takes care of mangle infra setup e.g. CSP endpoint creation and connectivity with CSP K8S check
+    """
     ep_cred = endpoint.EndpointCredential(mclient)
     does_cred_exist = False
     status, response = ep_cred.list_credentials()
@@ -231,6 +259,50 @@ def prepare_setup(
             )
         )
 
+
+def prepare_setup(
+        myconf_file: str = None,
+        project_name: str = None,
+        workload_name: str = None,
+        run_id: str = None,
+) -> None:
+    """Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
+    config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
+    and endpoint for CSP K8S cluster etc.
+
+    Args:
+      myconf_file: mangle-yaan configuration (json) file. If provided, It overrides default config file config/my.json
+      project_name: project name created on maxim-gun UI
+      workload_name: workload name created on maxim-gun UI
+      run_id: run id received from maxim-gun
+
+    Returns:
+      None
+    """
+    check_network_availability()
+
+    # creates maxim-gun REST client
+    builtins.mgclient = create_maxim_gun_client()
+
+    # update maxim-gun task status if run_id exists
+    mg_agent.update_task(run_id, status=lib_params.MG_TASK_STATUS["STARTED"])
+
+    # read mangle-yaan config and add it in builtins
+    myconfig = get_mangle_yaan_config(myconf_file=myconf_file, workload_name=workload_name)
+    if myconfig is None:
+        mylog.error("failed to read mangle-yaan config file")
+        sys.exit(2)
+    builtins.myconfig = myconfig
+
+    # creates mangle REST client
+    builtins.mclient = create_mangle_client()
+
+    # creates csp REST client
+    builtins.cclient = create_csp_client()
+
+    # creates mangle endpoint and confirms its connectivity
+    setup_mangle_infra()
+
     # test_runner cache to maintain states
     mycache = {}
     builtins.mycache = mycache
@@ -242,11 +314,14 @@ def prepare_setup(
     mylog.info("setup is ready to run resiliency tests now")
 
 
-def run_pytest(*args, **kwargs):
+def run_pytest(*args: str, run_id: str = None, **kwargs: str) -> int:
     # start_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
     start_ts = datetime.datetime.now().strftime("%d%b%Y_%H:%M:%S.%f")
     mycache.update({"test_start_timestamp": start_ts})
     mylog.info("starting pytest test cases execution at: %s" % start_ts)
+
+    # update maxim-gun task status if run_id exists
+    mg_agent.update_task(run_id, status=lib_params.MG_TASK_STATUS["IN_PROGRESS"])
 
     status = pytest.main(*args, **kwargs)
 
@@ -258,64 +333,58 @@ def run_pytest(*args, **kwargs):
     return status
 
 
-def post_run_activities(copy_results: bool = True) -> None:
+def post_run_activities(copy_results: bool = True) -> str:
     """Tasks to be performed after pytest test-suites execution
 
     Args:
       copy_results: flag for enabling/disabling pytest test results copy on S3 bucket
 
     Returns:
-      None
+      s3 key (file-path) where file is copied
     """
+    s3_key = None
     if copy_results:
-        copied_successfully, failed_to_copy = copy_files_on_s3(
+        s3_key = copy_file_on_s3(
             bucket_name=myconfig.get("aws").get("s3").get("bucketName"),
-            file_paths=[myconfig.get("mangleYaan").get("testReportPath")],
+            file_path=myconfig.get("mangleYaan").get("testReportPath"),
         )
-        if failed_to_copy:
-            mylog.error("test reports = {} could not be copied over S3".format(failed_to_copy))
-        else:
-            mylog.info("test reports = {} copied successfully over S3".format(copied_successfully))
+
+    return s3_key
 
 
-def copy_files_on_s3(bucket_name: str, file_paths: typing.List[str] = None) -> typing.List[str]:
-    """copies files on S3 bucket
+def copy_file_on_s3(bucket_name: str, file_path: str = None) -> str:
+    """copies file on S3 bucket
 
     Args:
       bucket_name: S3 bucket name
-      file_paths: list of file-paths that need to be copied to S3 bucket
+      file_path: file-path that need to be copied to S3 bucket
 
     Returns:
-      copied_successfully: list of file-paths that copied successfully
-      failed_to_copy: list of file-paths that failed to copy
+        s3 key (file-path) where file is copied
     """
-    copied_successfully = []
-    failed_to_copy = []
-
-    if file_paths:
+    s3_key = None
+    if file_path:
         s3_conf = myconfig.get("aws").get("s3")
         s3_client = boto3.client(
             "s3",
             aws_access_key_id=s3_conf.get("awsAccessKeyID"),
             aws_secret_access_key=s3_conf.get("awsSecretAccessKey"),
         )
-        for fpath in file_paths:
-            fname = os.path.basename(fpath)
-            try:
-                s3_client.upload_file(
-                    Filename=fpath,
-                    Bucket=bucket_name,
-                    Key="{}{}".format(s3_conf.get("testReportPath"), fname),
-                )
-                copied_successfully.append(fpath)
-            except Exception as fault:
-                failed_to_copy.append(fpath)
-                mylog.debug("file {} could not be copied on S3. Error={}".format(fpath, fault))
 
+        fname = os.path.basename(file_path)
+        s3_key = "{}{}".format(s3_conf.get("testReportPath"), fname)
+        try:
+            s3_client.upload_file(
+                Filename=file_path, Bucket=bucket_name, Key=s3_key,
+            )
+        except Exception as fault:
+            mylog.error("file {} could not be copied on S3. Error={}".format(file_path, fault))
+            mylog.exception(fault)
+            s3_key = None
     else:
         mylog.debug("nothing to copy on S3")
 
-    return copied_successfully, failed_to_copy
+    return s3_key
 
 
 def get_test_modules_from_testsuite_names(testsuite_names: str) -> typing.List[str]:
@@ -386,7 +455,7 @@ if __name__ == "__main__":
         type=str,
         default="",
         help="mangle-yaan config file path. If this option is used, "
-        "it will ovverride default config file config/my.json",
+             "it will ovverride default config file config/my.json",
     )
     parser.add_argument(
         "--pytest_args",
@@ -394,6 +463,13 @@ if __name__ == "__main__":
         type=str,
         default="",
         help="pytest args that will be passed to pytest as it is. All pytest args should be passed in one string",
+    )
+    parser.add_argument(
+        "--run_id",
+        action="store",
+        type=str,
+        default="",
+        help="run_id of the job triggered at Maxim-Gun",
     )
     parser.add_argument(
         "--list_testsuite_names", action="store_true", help="list of available testsuites",
@@ -443,13 +519,37 @@ if __name__ == "__main__":
         args.myconfig = args.myconfig.strip("'")
         args.myconfig = args.myconfig.strip('"')
 
-    prepare_setup(
-        myconf_file=args.myconfig, project_name=args.project_name, workload_name=args.workload_name
-    )
-    pytest_status = run_pytest(pytest_cmdline)
+    if args.run_id is not None:
+        # removes leading and trailing single/double quotes, white-spaces from args.pytest_args
+        args.run_id = args.run_id.strip()
+        args.run_id = args.run_id.strip("'")
+        args.run_id = args.run_id.strip('"')
 
-    # don't copy logs to S3 for pytest usage error. seems incorrect --pytest_args are passed
+    prepare_setup(
+        myconf_file=args.myconfig,
+        project_name=args.project_name,
+        workload_name=args.workload_name,
+        run_id=args.run_id,
+    )
+    pytest_status = run_pytest(pytest_cmdline, run_id=args.run_id)
+
+    # don't copy logs to S3 for pytest usage error. seems incorrect --pytest_args are passed. Also, update task status as FAILED
     copy_results = True
+    mg_task_status = True  # maxim-gun task status
     if pytest_status == 4:
         copy_results = False
-    post_run_activities(copy_results=copy_results)
+        mg_task_status = False
+    s3_path = post_run_activities(copy_results=copy_results)
+
+    end_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    if mg_task_status:
+        mg_agent.update_task(
+            args.run_id,
+            status=lib_params.MG_TASK_STATUS["COMPLETED"],
+            end_time=end_time,
+            report_url=s3_path,
+        )
+    else:
+        mg_agent.update_task(
+            args.run_id, status=lib_params.MG_TASK_STATUS["FAILED"], end_time=end_time
+        )
