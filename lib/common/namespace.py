@@ -1,7 +1,4 @@
-try:
-    import basestring
-except NameError:  # py3
-    basestring = unicode = str
+basestring = unicode = str
 
 
 class Namespace(object):

@@ -1,0 +1,1195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>test_runner API documentation</title>
+<meta name="description" content="resiliency test runner" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>test_runner</code></h1>
+</header>
+<section id="section-intro">
+<p>resiliency test runner</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+&#34;&#34;&#34; resiliency test runner &#34;&#34;&#34;
+
+__author__ = &#34;tarun mudgal&#34;
+
+import argparse
+import builtins
+import datetime
+import inspect
+import logging
+import os
+import pprint
+import sys
+import typing
+
+import boto3
+import pytest
+import requests
+
+from lib import params as lib_params
+from lib.common import config_reader, logger, rest_client
+from lib.csp import csp_client
+from lib.csp import resources as csp_resources
+from lib.mangle import endpoint, mangle_client
+from lib.maximgun import agent as mg_agent
+from lib.maximgun import maximgun_client
+from lib.maximgun import resources as mg_resources
+
+requests.packages.urllib3.disable_warnings()
+# logging.getLogger(&#34;urllib3&#34;).setLevel(logging.WARNING)
+
+# constants initialization
+ROOT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+builtins.ROOT_DIR = ROOT_DIR
+
+LOG_DIR = ROOT_DIR + os.path.sep + &#34;logs&#34;
+CONF_DIR = ROOT_DIR + os.path.sep + &#34;config&#34;
+TESTSUITES_DIR = ROOT_DIR + os.path.sep + &#34;tests&#34;
+SRC_DIR = ROOT_DIR + os.path.sep + &#34;src&#34;
+TESTLIB_DIR = ROOT_DIR + os.path.sep + &#34;src&#34; + os.path.sep + &#34;testlib&#34;
+
+# create logs dir if not exist
+if not os.path.exists(LOG_DIR):
+    print(&#34;creating log directory: %s&#34; % LOG_DIR, flush=True)
+    os.makedirs(LOG_DIR)
+
+# mylog = logger.Log(logger.get_logger())
+mylog = logger.get_logger()
+builtins.mylog = mylog
+mylog.info(&#34;logger initialized&#34;)
+
+
+def check_network_availability() -&gt; None:
+    &#34;&#34;&#34;Performs network availability check by making a call to google.com
+
+    Returns:
+      None
+    &#34;&#34;&#34;
+    request_url = &#34;https://www.google.com&#34;
+    resp_code_exp = requests.codes.ok
+
+    try:
+        resp = requests.get(request_url, verify=False)
+        assert resp.status_code == resp_code_exp
+        mylog.info(&#34;Network Availability Check: OK&#34;)
+    except Exception as fault:
+        mylog.error(&#34;Network Availability Check: Failed&#34;)
+        mylog.error(&#34;Error: %s. Exiting %s&#34; % (fault, sys.argv[0]))
+        sys.exit(1)
+
+
+def create_maxim_gun_client(timeout: int = 120) -&gt; maximgun_client.MGClient:
+    &#34;&#34;&#34;
+    creates maxim-gun REST client
+    Args:
+        timeout: timeout used for REST requests
+
+    Returns:
+        MGClient instance
+    &#34;&#34;&#34;
+    # read static config
+    my_json = CONF_DIR + os.path.sep + &#34;my.json&#34;
+    my_json = config_reader.parse_json(my_json)
+
+    # maxim-gun client
+    mg_conf = my_json.get(&#34;maximGun&#34;)
+    mgclient = maximgun_client.MGClient(mg_conf.get(&#34;host&#34;), timeout=timeout, )
+
+    return mgclient
+
+
+def create_mangle_client(timeout: int = 120) -&gt; mangle_client.MangleClient:
+    &#34;&#34;&#34;
+    creates mangle REST client
+    Args:
+        timeout: timeout used for REST requests
+
+    Returns:
+        MangleClient instance
+    &#34;&#34;&#34;
+    mangle_conf = myconfig.get(&#34;mangle&#34;)
+    mclient = mangle_client.MangleClient(
+        mangle_conf.get(&#34;host&#34;),
+        mangle_conf.get(&#34;username&#34;),
+        mangle_conf.get(&#34;password&#34;),
+        timeout=timeout,
+    )
+
+    return mclient
+
+
+def create_csp_client(timeout: int = 120) -&gt; csp_client.CSPClient:
+    &#34;&#34;&#34;
+    creates CSP REST client
+    Args:
+        timeout: timeout used for REST requests
+
+    Returns:
+       CSPClient instance
+    &#34;&#34;&#34;
+    csp_conf = myconfig.get(&#34;csp&#34;)
+    cclient = csp_client.CSPClient(
+        csp_conf.get(&#34;host&#34;), csp_conf.get(&#34;defaultUser&#34;).get(&#34;refreshToken&#34;), timeout=timeout,
+    )
+
+    return cclient
+
+
+def get_mangle_yaan_config(myconf_file: str = None, workload_name: str = None) -&gt; typing.Dict:
+    &#34;&#34;&#34;
+    reads mangle-yaan config from myconf_file locally (if specified) or maxim-gun workload
+    Args:
+        myconf_file: mangle-yaan config file path (local)
+        workload_name: workload name, required to read mangle-yaan config from maxim-gun
+
+    Returns:
+
+    &#34;&#34;&#34;
+    myconfig = None
+    # read mangle-yaan config from command line
+    if myconf_file is not None and myconf_file != &#34;&#34;:
+        conf_file = myconf_file
+        mylog.debug(&#34;reading config locally from path={}&#34;.format(conf_file))
+        myconfig = config_reader.parse_json(conf_file)
+
+    # read mangle-yaan config from maxim-gun api (from maxim_gun.workload table)
+    else:
+        api_resource = mg_resources.MAXIMGUN.get(&#34;MANGLEYAAN_CONFIG&#34;)
+        params = {&#34;workload_name&#34;: workload_name}
+
+        mylog.debug(&#34;reading config from maxim-gun app. resource={}&#34;.format(api_resource))
+        response = mgclient.make_call(
+            &#34;GET&#34;, api_resource, retry_count=1, retry_sleep=5, params=params
+        )
+        if response.status_code == requests.codes.ok:
+            myconfig = response.json.get(&#34;mangle_yaan_conf&#34;)
+            # mylog.debug(&#34;maxim-gun api json response={}&#34;.format(res_json))
+        else:
+            mylog.error(
+                &#34;failed to read config from maxim-gun app. Request(resource={}, params={}). Response(status={}, text={})&#34;.format(
+                    api_resource, params, response.status_code, response.text
+                )
+            )
+            sys.exit(2)
+
+    return myconfig
+
+
+def setup_mangle_infra() -&gt; None:
+    &#34;&#34;&#34;
+    takes care of mangle infra setup e.g. CSP endpoint creation and connectivity with CSP K8S check
+    &#34;&#34;&#34;
+    ep_cred = endpoint.EndpointCredential(mclient)
+    does_cred_exist = False
+    status, response = ep_cred.list_credentials()
+    if not status:
+        mylog.error(&#34;Failed to fetch credentials from mangle&#34;)
+        sys.exit(2)
+    else:
+        for cred in response.json:
+            if cred.get(&#34;name&#34;) == myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;):
+                does_cred_exist = True
+    if not does_cred_exist:
+        status, response = ep_cred.create_credential_k8s_cluster(
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;kubeConfigFileName&#34;),
+        )
+        if not status:
+            mylog.error(
+                &#34;Failed to create k8s cluster credential for credentialName={}, kubeConfigFileName={}&#34;.format(
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;kubeConfigFileName&#34;),
+                )
+            )
+            sys.exit(2)
+        mylog.info(
+            &#34;credential &#39;{}&#39; for k8s cluster created successfully&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;)
+            )
+        )
+    else:
+        mylog.info(
+            &#34;credential &#39;{}&#39; for k8s cluster already exist&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;)
+            )
+        )
+
+    epoint = endpoint.Endpoint(mclient)
+    does_endpoint_exist = False
+    status, response = epoint.list_endpoints_k8s_cluster()
+    if not status:
+        mylog.error(&#34;Failed to fetch endpoints from mangle&#34;)
+        sys.exit(2)
+    else:
+        for ep in response.json:
+            if ep.get(&#34;name&#34;) == myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;):
+                does_endpoint_exist = True
+    if not does_endpoint_exist:
+        status, response = epoint.create_endpoint_k8s_cluster(
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;),
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;namespace&#34;),
+        )
+        if not status:
+            mylog.error(
+                &#34;Failed to create k8s cluster endpoint for endpointName={}, credentialName={}, namespace={}&#34;.format(
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;),
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;namespace&#34;),
+                )
+            )
+            sys.exit(2)
+        mylog.info(
+            &#34;endpoint &#39;{}&#39; for k8s cluster created successfully&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;)
+            )
+        )
+    else:
+        mylog.info(
+            &#34;Endpoint &#39;{}&#39; for k8s cluster already exist&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;)
+            )
+        )
+
+    tc = endpoint.TestConnection(mclient)
+    status, response = tc.test_endpoint(myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;))
+    if not status:
+        mylog.error(
+            &#34;Test connection for endpoint {} failed&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;)
+            )
+        )
+        sys.exit(2)
+    else:
+        mylog.info(
+            &#34;Test connection for endpoint {} passed&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;)
+            )
+        )
+
+
+def prepare_setup(
+        myconf_file: str = None,
+        project_name: str = None,
+        workload_name: str = None,
+        run_id: str = None,
+) -&gt; None:
+    &#34;&#34;&#34;Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
+    config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
+    and endpoint for CSP K8S cluster etc.
+
+    Args:
+      myconf_file: mangle-yaan configuration (json) file. If provided, It overrides default config file config/my.json
+      project_name: project name created on maxim-gun UI
+      workload_name: workload name created on maxim-gun UI
+      run_id: run id received from maxim-gun
+
+    Returns:
+      None
+    &#34;&#34;&#34;
+    check_network_availability()
+
+    # creates maxim-gun REST client
+    builtins.mgclient = create_maxim_gun_client()
+
+    # update maxim-gun task status if run_id exists
+    mg_agent.update_task(run_id, status=lib_params.MG_TASK_STATUS[&#34;STARTED&#34;])
+
+    # read mangle-yaan config and add it in builtins
+    myconfig = get_mangle_yaan_config(myconf_file=myconf_file, workload_name=workload_name)
+    if myconfig is None:
+        mylog.error(&#34;failed to read mangle-yaan config file&#34;)
+        sys.exit(2)
+    builtins.myconfig = myconfig
+
+    # creates mangle REST client
+    builtins.mclient = create_mangle_client()
+
+    # creates csp REST client
+    builtins.cclient = create_csp_client()
+
+    # creates mangle endpoint and confirms its connectivity
+    setup_mangle_infra()
+
+    # test_runner cache to maintain states
+    mycache = {}
+    builtins.mycache = mycache
+
+    # adding project_name and workload_name into mycache to use them in pytest-html greport generation
+    mycache[&#34;project_name&#34;] = project_name
+    mycache[&#34;workload_name&#34;] = workload_name
+
+    mylog.info(&#34;setup is ready to run resiliency tests now&#34;)
+
+
+def run_pytest(*args: str, run_id: str = None, **kwargs: str) -&gt; int:
+    # start_ts = datetime.datetime.now().strftime(&#34;%d/%m/%Y, %I:%M:%S.%f %p&#34;)
+    start_ts = datetime.datetime.now().strftime(&#34;%d%b%Y_%H:%M:%S.%f&#34;)
+    mycache.update({&#34;test_start_timestamp&#34;: start_ts})
+    mylog.info(&#34;starting pytest test cases execution at: %s&#34; % start_ts)
+
+    # update maxim-gun task status if run_id exists
+    mg_agent.update_task(run_id, status=lib_params.MG_TASK_STATUS[&#34;IN_PROGRESS&#34;])
+
+    status = pytest.main(*args, **kwargs)
+
+    # end_ts = datetime.datetime.now().strftime(&#34;%d/%m/%Y, %I:%M:%S.%f %p&#34;)
+    end_ts = datetime.datetime.now().strftime(&#34;%d%b%Y_%H:%M:%S.%f&#34;)
+    mycache.update({&#34;test_end_timestamp&#34;: end_ts})
+    mylog.info(&#34;pytest test cases execution finished at: %s&#34; % end_ts)
+
+    return status
+
+
+def post_run_activities(copy_results: bool = True) -&gt; str:
+    &#34;&#34;&#34;Tasks to be performed after pytest test-suites execution
+
+    Args:
+      copy_results: flag for enabling/disabling pytest test results copy on S3 bucket
+
+    Returns:
+      s3 key (file-path) where file is copied
+    &#34;&#34;&#34;
+    s3_key = None
+    if copy_results:
+        s3_key = copy_file_on_s3(
+            bucket_name=myconfig.get(&#34;aws&#34;).get(&#34;s3&#34;).get(&#34;bucketName&#34;),
+            file_path=myconfig.get(&#34;mangleYaan&#34;).get(&#34;testReportPath&#34;),
+        )
+
+    return s3_key
+
+
+def copy_file_on_s3(bucket_name: str, file_path: str = None) -&gt; str:
+    &#34;&#34;&#34;copies file on S3 bucket
+
+    Args:
+      bucket_name: S3 bucket name
+      file_path: file-path that need to be copied to S3 bucket
+
+    Returns:
+        s3 key (file-path) where file is copied
+    &#34;&#34;&#34;
+    s3_key = None
+    if file_path:
+        s3_conf = myconfig.get(&#34;aws&#34;).get(&#34;s3&#34;)
+        s3_client = boto3.client(
+            &#34;s3&#34;,
+            aws_access_key_id=s3_conf.get(&#34;awsAccessKeyID&#34;),
+            aws_secret_access_key=s3_conf.get(&#34;awsSecretAccessKey&#34;),
+        )
+
+        fname = os.path.basename(file_path)
+        s3_key = &#34;{}{}&#34;.format(s3_conf.get(&#34;testReportPath&#34;), fname)
+        try:
+            s3_client.upload_file(
+                Filename=file_path, Bucket=bucket_name, Key=s3_key,
+            )
+        except Exception as fault:
+            mylog.error(&#34;file {} could not be copied on S3. Error={}&#34;.format(file_path, fault))
+            mylog.exception(fault)
+            s3_key = None
+    else:
+        mylog.debug(&#34;nothing to copy on S3&#34;)
+
+    return s3_key
+
+
+def get_test_modules_from_testsuite_names(testsuite_names: str) -&gt; typing.List[str]:
+    &#34;&#34;&#34;verifies test-suites exist in testsuites_info.json and returns corresponding test-module file-paths.
+    test-suites are a bit user-friendly names. They are mapped with test-modules in testsuites_info.json file.
+
+    Note: All test-modules should have an mapping (test-suite-&gt;test-module) in testsuites_info.json file.
+
+    Args:
+      testsuite_names: comma separated list of test_suite names
+
+    Returns:
+      testmodule_paths: list of test-module paths
+    &#34;&#34;&#34;
+    testsuites_info_file = TESTLIB_DIR + os.path.sep + &#34;testsuites_info.json&#34;
+    testsuites_info = config_reader.parse_json(testsuites_info_file)
+
+    # removes empty-string/white-spaces-only test-suite names if any
+    testsuite_names = testsuite_names.split(&#34;,&#34;)
+    testsuite_names = [ts for ts in testsuite_names if ts.strip() != &#34;&#34;]
+
+    testmodule_paths = []
+    for ts_name in testsuite_names:
+        if ts_name in testsuites_info:
+            testmodule_paths.append(testsuites_info.get(ts_name).get(&#34;path&#34;))
+        else:
+            mylog.error(
+                &#34;testsuite name {} does not exist. Available testsuite names are {}&#34;.format(
+                    ts_name, testsuites_info.keys()
+                )
+            )
+            sys.exit(1)
+
+    return testmodule_paths
+
+
+def print_testsuite_info() -&gt; None:
+    &#34;&#34;&#34;prints available testsuites names
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    testsuites_info_file = TESTLIB_DIR + os.path.sep + &#34;testsuites_info.json&#34;
+    testsuites_info = config_reader.parse_json(testsuites_info_file)
+
+    testsuite_names = pprint.pformat(list(testsuites_info.keys()))
+    print(&#34;Available testsuites are:\n{}\n&#34;.format(testsuite_names))
+
+
+if __name__ == &#34;__main__&#34;:
+    parser = argparse.ArgumentParser(description=&#34;&#34;&#34;resiliency test suite execution driver&#34;&#34;&#34;)
+    parser.add_argument(
+        &#34;--project_name&#34;, action=&#34;store&#34;, type=str, help=&#34;project name created on maxim-gun UI&#34;,
+    )
+    parser.add_argument(
+        &#34;--workload_name&#34;, action=&#34;store&#34;, type=str, help=&#34;workload name created on maxim-gun UI&#34;,
+    )
+    parser.add_argument(
+        &#34;--testsuite_names&#34;,
+        # nargs=&#34;+&#34;,
+        action=&#34;store&#34;,
+        type=str,
+        help=&#34;Specify list of space separated testsuite names&#34;,
+    )
+    parser.add_argument(
+        &#34;--myconfig&#34;,
+        action=&#34;store&#34;,
+        type=str,
+        default=&#34;&#34;,
+        help=&#34;mangle-yaan config file path. If this option is used, &#34;
+             &#34;it will ovverride default config file config/my.json&#34;,
+    )
+    parser.add_argument(
+        &#34;--pytest_args&#34;,
+        action=&#34;store&#34;,
+        type=str,
+        default=&#34;&#34;,
+        help=&#34;pytest args that will be passed to pytest as it is. All pytest args should be passed in one string&#34;,
+    )
+    parser.add_argument(
+        &#34;--run_id&#34;,
+        action=&#34;store&#34;,
+        type=str,
+        default=&#34;&#34;,
+        help=&#34;run_id of the job triggered at Maxim-Gun&#34;,
+    )
+    parser.add_argument(
+        &#34;--list_testsuite_names&#34;, action=&#34;store_true&#34;, help=&#34;list of available testsuites&#34;,
+    )
+
+    args = parser.parse_args()
+    mylog.debug(&#34;test_runner args={}&#34;.format(args))
+
+    if args.list_testsuite_names:
+        print_testsuite_info()
+        sys.exit(0)
+
+    if args.project_name is None or args.project_name == &#34;&#34;:
+        print(
+            &#34;--project_name is required to trigger test execution. It will be used to fetch mangle-yaan configuration&#34;
+        )
+        sys.exit(1)
+
+    if args.workload_name is None or args.workload_name == &#34;&#34;:
+        print(
+            &#34;--workload_name is required to trigger test execution. It will be used to fetch mangle-yaan configuration&#34;
+        )
+        sys.exit(1)
+
+    if args.testsuite_names is None or args.testsuite_names == &#34;&#34;:
+        print(
+            &#34;--testsuite_names is required to trigger test execution. If you are not sure about testsuite name, &#34;
+            &#34;please use --list_testsuite_names to get the list of available testsuites&#34;
+        )
+        sys.exit(1)
+
+    pytest_cmdline = []
+    if args.pytest_args is not None:
+        # removes leading and trailing single/double quotes, white-spaces from args.pytest_args
+        args.pytest_args = args.pytest_args.strip()
+        args.pytest_args = args.pytest_args.strip(&#34;&#39;&#34;)
+        args.pytest_args = args.pytest_args.strip(&#39;&#34;&#39;)
+
+        pytest_cmdline += args.pytest_args.split()
+
+    testsuite_paths = get_test_modules_from_testsuite_names(args.testsuite_names)
+    pytest_cmdline += testsuite_paths
+
+    if args.myconfig is not None:
+        # removes leading and trailing single/double quotes, white-spaces from args.pytest_args
+        args.myconfig = args.myconfig.strip()
+        args.myconfig = args.myconfig.strip(&#34;&#39;&#34;)
+        args.myconfig = args.myconfig.strip(&#39;&#34;&#39;)
+
+    if args.run_id is not None:
+        # removes leading and trailing single/double quotes, white-spaces from args.pytest_args
+        args.run_id = args.run_id.strip()
+        args.run_id = args.run_id.strip(&#34;&#39;&#34;)
+        args.run_id = args.run_id.strip(&#39;&#34;&#39;)
+
+    prepare_setup(
+        myconf_file=args.myconfig,
+        project_name=args.project_name,
+        workload_name=args.workload_name,
+        run_id=args.run_id,
+    )
+    pytest_status = run_pytest(pytest_cmdline, run_id=args.run_id)
+
+    # don&#39;t copy logs to S3 for pytest usage error. seems incorrect --pytest_args are passed. Also, update task status as FAILED
+    copy_results = True
+    mg_task_status = True  # maxim-gun task status
+    if pytest_status == 4:
+        copy_results = False
+        mg_task_status = False
+    s3_path = post_run_activities(copy_results=copy_results)
+
+    end_time = datetime.datetime.now().strftime(&#34;%Y-%m-%d %H:%M:%S.%f&#34;)
+    if mg_task_status:
+        mg_agent.update_task(
+            args.run_id,
+            status=lib_params.MG_TASK_STATUS[&#34;COMPLETED&#34;],
+            end_time=end_time,
+            report_url=s3_path,
+        )
+    else:
+        mg_agent.update_task(
+            args.run_id, status=lib_params.MG_TASK_STATUS[&#34;FAILED&#34;], end_time=end_time
+        )</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="test_runner.check_network_availability"><code class="name flex">
+<span>def <span class="ident">check_network_availability</span></span>(<span>) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Performs network availability check by making a call to google.com</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_network_availability() -&gt; None:
+    &#34;&#34;&#34;Performs network availability check by making a call to google.com
+
+    Returns:
+      None
+    &#34;&#34;&#34;
+    request_url = &#34;https://www.google.com&#34;
+    resp_code_exp = requests.codes.ok
+
+    try:
+        resp = requests.get(request_url, verify=False)
+        assert resp.status_code == resp_code_exp
+        mylog.info(&#34;Network Availability Check: OK&#34;)
+    except Exception as fault:
+        mylog.error(&#34;Network Availability Check: Failed&#34;)
+        mylog.error(&#34;Error: %s. Exiting %s&#34; % (fault, sys.argv[0]))
+        sys.exit(1)</code></pre>
+</details>
+</dd>
+<dt id="test_runner.copy_file_on_s3"><code class="name flex">
+<span>def <span class="ident">copy_file_on_s3</span></span>(<span>bucket_name: str, file_path: str = None) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>copies file on S3 bucket</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>bucket_name</code></strong></dt>
+<dd>S3 bucket name</dd>
+<dt><strong><code>file_path</code></strong></dt>
+<dd>file-path that need to be copied to S3 bucket</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>s3 key (file-path) where file is copied</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy_file_on_s3(bucket_name: str, file_path: str = None) -&gt; str:
+    &#34;&#34;&#34;copies file on S3 bucket
+
+    Args:
+      bucket_name: S3 bucket name
+      file_path: file-path that need to be copied to S3 bucket
+
+    Returns:
+        s3 key (file-path) where file is copied
+    &#34;&#34;&#34;
+    s3_key = None
+    if file_path:
+        s3_conf = myconfig.get(&#34;aws&#34;).get(&#34;s3&#34;)
+        s3_client = boto3.client(
+            &#34;s3&#34;,
+            aws_access_key_id=s3_conf.get(&#34;awsAccessKeyID&#34;),
+            aws_secret_access_key=s3_conf.get(&#34;awsSecretAccessKey&#34;),
+        )
+
+        fname = os.path.basename(file_path)
+        s3_key = &#34;{}{}&#34;.format(s3_conf.get(&#34;testReportPath&#34;), fname)
+        try:
+            s3_client.upload_file(
+                Filename=file_path, Bucket=bucket_name, Key=s3_key,
+            )
+        except Exception as fault:
+            mylog.error(&#34;file {} could not be copied on S3. Error={}&#34;.format(file_path, fault))
+            mylog.exception(fault)
+            s3_key = None
+    else:
+        mylog.debug(&#34;nothing to copy on S3&#34;)
+
+    return s3_key</code></pre>
+</details>
+</dd>
+<dt id="test_runner.create_csp_client"><code class="name flex">
+<span>def <span class="ident">create_csp_client</span></span>(<span>timeout: int = 120) ‑> <a title="lib.csp.csp_client.CSPClient" href="lib/csp/csp_client.html#lib.csp.csp_client.CSPClient">CSPClient</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>creates CSP REST client</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>timeout</code></strong></dt>
+<dd>timeout used for REST requests</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>CSPClient instance</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_csp_client(timeout: int = 120) -&gt; csp_client.CSPClient:
+    &#34;&#34;&#34;
+    creates CSP REST client
+    Args:
+        timeout: timeout used for REST requests
+
+    Returns:
+       CSPClient instance
+    &#34;&#34;&#34;
+    csp_conf = myconfig.get(&#34;csp&#34;)
+    cclient = csp_client.CSPClient(
+        csp_conf.get(&#34;host&#34;), csp_conf.get(&#34;defaultUser&#34;).get(&#34;refreshToken&#34;), timeout=timeout,
+    )
+
+    return cclient</code></pre>
+</details>
+</dd>
+<dt id="test_runner.create_mangle_client"><code class="name flex">
+<span>def <span class="ident">create_mangle_client</span></span>(<span>timeout: int = 120) ‑> <a title="lib.mangle.mangle_client.MangleClient" href="lib/mangle/mangle_client.html#lib.mangle.mangle_client.MangleClient">MangleClient</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>creates mangle REST client</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>timeout</code></strong></dt>
+<dd>timeout used for REST requests</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>MangleClient instance</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_mangle_client(timeout: int = 120) -&gt; mangle_client.MangleClient:
+    &#34;&#34;&#34;
+    creates mangle REST client
+    Args:
+        timeout: timeout used for REST requests
+
+    Returns:
+        MangleClient instance
+    &#34;&#34;&#34;
+    mangle_conf = myconfig.get(&#34;mangle&#34;)
+    mclient = mangle_client.MangleClient(
+        mangle_conf.get(&#34;host&#34;),
+        mangle_conf.get(&#34;username&#34;),
+        mangle_conf.get(&#34;password&#34;),
+        timeout=timeout,
+    )
+
+    return mclient</code></pre>
+</details>
+</dd>
+<dt id="test_runner.create_maxim_gun_client"><code class="name flex">
+<span>def <span class="ident">create_maxim_gun_client</span></span>(<span>timeout: int = 120) ‑> <a title="lib.maximgun.maximgun_client.MGClient" href="lib/maximgun/maximgun_client.html#lib.maximgun.maximgun_client.MGClient">MGClient</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>creates maxim-gun REST client</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>timeout</code></strong></dt>
+<dd>timeout used for REST requests</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>MGClient instance</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_maxim_gun_client(timeout: int = 120) -&gt; maximgun_client.MGClient:
+    &#34;&#34;&#34;
+    creates maxim-gun REST client
+    Args:
+        timeout: timeout used for REST requests
+
+    Returns:
+        MGClient instance
+    &#34;&#34;&#34;
+    # read static config
+    my_json = CONF_DIR + os.path.sep + &#34;my.json&#34;
+    my_json = config_reader.parse_json(my_json)
+
+    # maxim-gun client
+    mg_conf = my_json.get(&#34;maximGun&#34;)
+    mgclient = maximgun_client.MGClient(mg_conf.get(&#34;host&#34;), timeout=timeout, )
+
+    return mgclient</code></pre>
+</details>
+</dd>
+<dt id="test_runner.get_mangle_yaan_config"><code class="name flex">
+<span>def <span class="ident">get_mangle_yaan_config</span></span>(<span>myconf_file: str = None, workload_name: str = None) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>reads mangle-yaan config from myconf_file locally (if specified) or maxim-gun workload</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>myconf_file</code></strong></dt>
+<dd>mangle-yaan config file path (local)</dd>
+<dt><strong><code>workload_name</code></strong></dt>
+<dd>workload name, required to read mangle-yaan config from maxim-gun</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_mangle_yaan_config(myconf_file: str = None, workload_name: str = None) -&gt; typing.Dict:
+    &#34;&#34;&#34;
+    reads mangle-yaan config from myconf_file locally (if specified) or maxim-gun workload
+    Args:
+        myconf_file: mangle-yaan config file path (local)
+        workload_name: workload name, required to read mangle-yaan config from maxim-gun
+
+    Returns:
+
+    &#34;&#34;&#34;
+    myconfig = None
+    # read mangle-yaan config from command line
+    if myconf_file is not None and myconf_file != &#34;&#34;:
+        conf_file = myconf_file
+        mylog.debug(&#34;reading config locally from path={}&#34;.format(conf_file))
+        myconfig = config_reader.parse_json(conf_file)
+
+    # read mangle-yaan config from maxim-gun api (from maxim_gun.workload table)
+    else:
+        api_resource = mg_resources.MAXIMGUN.get(&#34;MANGLEYAAN_CONFIG&#34;)
+        params = {&#34;workload_name&#34;: workload_name}
+
+        mylog.debug(&#34;reading config from maxim-gun app. resource={}&#34;.format(api_resource))
+        response = mgclient.make_call(
+            &#34;GET&#34;, api_resource, retry_count=1, retry_sleep=5, params=params
+        )
+        if response.status_code == requests.codes.ok:
+            myconfig = response.json.get(&#34;mangle_yaan_conf&#34;)
+            # mylog.debug(&#34;maxim-gun api json response={}&#34;.format(res_json))
+        else:
+            mylog.error(
+                &#34;failed to read config from maxim-gun app. Request(resource={}, params={}). Response(status={}, text={})&#34;.format(
+                    api_resource, params, response.status_code, response.text
+                )
+            )
+            sys.exit(2)
+
+    return myconfig</code></pre>
+</details>
+</dd>
+<dt id="test_runner.get_test_modules_from_testsuite_names"><code class="name flex">
+<span>def <span class="ident">get_test_modules_from_testsuite_names</span></span>(<span>testsuite_names: str) ‑> List[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>verifies test-suites exist in testsuites_info.json and returns corresponding test-module file-paths.
+test-suites are a bit user-friendly names. They are mapped with test-modules in testsuites_info.json file.</p>
+<p>Note: All test-modules should have an mapping (test-suite-&gt;test-module) in testsuites_info.json file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>testsuite_names</code></strong></dt>
+<dd>comma separated list of test_suite names</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>testmodule_paths</code></dt>
+<dd>list of test-module paths</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_test_modules_from_testsuite_names(testsuite_names: str) -&gt; typing.List[str]:
+    &#34;&#34;&#34;verifies test-suites exist in testsuites_info.json and returns corresponding test-module file-paths.
+    test-suites are a bit user-friendly names. They are mapped with test-modules in testsuites_info.json file.
+
+    Note: All test-modules should have an mapping (test-suite-&gt;test-module) in testsuites_info.json file.
+
+    Args:
+      testsuite_names: comma separated list of test_suite names
+
+    Returns:
+      testmodule_paths: list of test-module paths
+    &#34;&#34;&#34;
+    testsuites_info_file = TESTLIB_DIR + os.path.sep + &#34;testsuites_info.json&#34;
+    testsuites_info = config_reader.parse_json(testsuites_info_file)
+
+    # removes empty-string/white-spaces-only test-suite names if any
+    testsuite_names = testsuite_names.split(&#34;,&#34;)
+    testsuite_names = [ts for ts in testsuite_names if ts.strip() != &#34;&#34;]
+
+    testmodule_paths = []
+    for ts_name in testsuite_names:
+        if ts_name in testsuites_info:
+            testmodule_paths.append(testsuites_info.get(ts_name).get(&#34;path&#34;))
+        else:
+            mylog.error(
+                &#34;testsuite name {} does not exist. Available testsuite names are {}&#34;.format(
+                    ts_name, testsuites_info.keys()
+                )
+            )
+            sys.exit(1)
+
+    return testmodule_paths</code></pre>
+</details>
+</dd>
+<dt id="test_runner.post_run_activities"><code class="name flex">
+<span>def <span class="ident">post_run_activities</span></span>(<span>copy_results: bool = True) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Tasks to be performed after pytest test-suites execution</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>copy_results</code></strong></dt>
+<dd>flag for enabling/disabling pytest test results copy on S3 bucket</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>s3 key (file-path) where file is copied</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def post_run_activities(copy_results: bool = True) -&gt; str:
+    &#34;&#34;&#34;Tasks to be performed after pytest test-suites execution
+
+    Args:
+      copy_results: flag for enabling/disabling pytest test results copy on S3 bucket
+
+    Returns:
+      s3 key (file-path) where file is copied
+    &#34;&#34;&#34;
+    s3_key = None
+    if copy_results:
+        s3_key = copy_file_on_s3(
+            bucket_name=myconfig.get(&#34;aws&#34;).get(&#34;s3&#34;).get(&#34;bucketName&#34;),
+            file_path=myconfig.get(&#34;mangleYaan&#34;).get(&#34;testReportPath&#34;),
+        )
+
+    return s3_key</code></pre>
+</details>
+</dd>
+<dt id="test_runner.prepare_setup"><code class="name flex">
+<span>def <span class="ident">prepare_setup</span></span>(<span>myconf_file: str = None, project_name: str = None, workload_name: str = None, run_id: str = None) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
+config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
+and endpoint for CSP K8S cluster etc.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>myconf_file</code></strong></dt>
+<dd>mangle-yaan configuration (json) file. If provided, It overrides default config file config/my.json</dd>
+<dt><strong><code>project_name</code></strong></dt>
+<dd>project name created on maxim-gun UI</dd>
+<dt><strong><code>workload_name</code></strong></dt>
+<dd>workload name created on maxim-gun UI</dd>
+<dt><strong><code>run_id</code></strong></dt>
+<dd>run id received from maxim-gun</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare_setup(
+        myconf_file: str = None,
+        project_name: str = None,
+        workload_name: str = None,
+        run_id: str = None,
+) -&gt; None:
+    &#34;&#34;&#34;Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
+    config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
+    and endpoint for CSP K8S cluster etc.
+
+    Args:
+      myconf_file: mangle-yaan configuration (json) file. If provided, It overrides default config file config/my.json
+      project_name: project name created on maxim-gun UI
+      workload_name: workload name created on maxim-gun UI
+      run_id: run id received from maxim-gun
+
+    Returns:
+      None
+    &#34;&#34;&#34;
+    check_network_availability()
+
+    # creates maxim-gun REST client
+    builtins.mgclient = create_maxim_gun_client()
+
+    # update maxim-gun task status if run_id exists
+    mg_agent.update_task(run_id, status=lib_params.MG_TASK_STATUS[&#34;STARTED&#34;])
+
+    # read mangle-yaan config and add it in builtins
+    myconfig = get_mangle_yaan_config(myconf_file=myconf_file, workload_name=workload_name)
+    if myconfig is None:
+        mylog.error(&#34;failed to read mangle-yaan config file&#34;)
+        sys.exit(2)
+    builtins.myconfig = myconfig
+
+    # creates mangle REST client
+    builtins.mclient = create_mangle_client()
+
+    # creates csp REST client
+    builtins.cclient = create_csp_client()
+
+    # creates mangle endpoint and confirms its connectivity
+    setup_mangle_infra()
+
+    # test_runner cache to maintain states
+    mycache = {}
+    builtins.mycache = mycache
+
+    # adding project_name and workload_name into mycache to use them in pytest-html greport generation
+    mycache[&#34;project_name&#34;] = project_name
+    mycache[&#34;workload_name&#34;] = workload_name
+
+    mylog.info(&#34;setup is ready to run resiliency tests now&#34;)</code></pre>
+</details>
+</dd>
+<dt id="test_runner.print_testsuite_info"><code class="name flex">
+<span>def <span class="ident">print_testsuite_info</span></span>(<span>) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>prints available testsuites names</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_testsuite_info() -&gt; None:
+    &#34;&#34;&#34;prints available testsuites names
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    testsuites_info_file = TESTLIB_DIR + os.path.sep + &#34;testsuites_info.json&#34;
+    testsuites_info = config_reader.parse_json(testsuites_info_file)
+
+    testsuite_names = pprint.pformat(list(testsuites_info.keys()))
+    print(&#34;Available testsuites are:\n{}\n&#34;.format(testsuite_names))</code></pre>
+</details>
+</dd>
+<dt id="test_runner.run_pytest"><code class="name flex">
+<span>def <span class="ident">run_pytest</span></span>(<span>*args: str, run_id: str = None, **kwargs: str) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_pytest(*args: str, run_id: str = None, **kwargs: str) -&gt; int:
+    # start_ts = datetime.datetime.now().strftime(&#34;%d/%m/%Y, %I:%M:%S.%f %p&#34;)
+    start_ts = datetime.datetime.now().strftime(&#34;%d%b%Y_%H:%M:%S.%f&#34;)
+    mycache.update({&#34;test_start_timestamp&#34;: start_ts})
+    mylog.info(&#34;starting pytest test cases execution at: %s&#34; % start_ts)
+
+    # update maxim-gun task status if run_id exists
+    mg_agent.update_task(run_id, status=lib_params.MG_TASK_STATUS[&#34;IN_PROGRESS&#34;])
+
+    status = pytest.main(*args, **kwargs)
+
+    # end_ts = datetime.datetime.now().strftime(&#34;%d/%m/%Y, %I:%M:%S.%f %p&#34;)
+    end_ts = datetime.datetime.now().strftime(&#34;%d%b%Y_%H:%M:%S.%f&#34;)
+    mycache.update({&#34;test_end_timestamp&#34;: end_ts})
+    mylog.info(&#34;pytest test cases execution finished at: %s&#34; % end_ts)
+
+    return status</code></pre>
+</details>
+</dd>
+<dt id="test_runner.setup_mangle_infra"><code class="name flex">
+<span>def <span class="ident">setup_mangle_infra</span></span>(<span>) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>takes care of mangle infra setup e.g. CSP endpoint creation and connectivity with CSP K8S check</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setup_mangle_infra() -&gt; None:
+    &#34;&#34;&#34;
+    takes care of mangle infra setup e.g. CSP endpoint creation and connectivity with CSP K8S check
+    &#34;&#34;&#34;
+    ep_cred = endpoint.EndpointCredential(mclient)
+    does_cred_exist = False
+    status, response = ep_cred.list_credentials()
+    if not status:
+        mylog.error(&#34;Failed to fetch credentials from mangle&#34;)
+        sys.exit(2)
+    else:
+        for cred in response.json:
+            if cred.get(&#34;name&#34;) == myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;):
+                does_cred_exist = True
+    if not does_cred_exist:
+        status, response = ep_cred.create_credential_k8s_cluster(
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;kubeConfigFileName&#34;),
+        )
+        if not status:
+            mylog.error(
+                &#34;Failed to create k8s cluster credential for credentialName={}, kubeConfigFileName={}&#34;.format(
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;kubeConfigFileName&#34;),
+                )
+            )
+            sys.exit(2)
+        mylog.info(
+            &#34;credential &#39;{}&#39; for k8s cluster created successfully&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;)
+            )
+        )
+    else:
+        mylog.info(
+            &#34;credential &#39;{}&#39; for k8s cluster already exist&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;)
+            )
+        )
+
+    epoint = endpoint.Endpoint(mclient)
+    does_endpoint_exist = False
+    status, response = epoint.list_endpoints_k8s_cluster()
+    if not status:
+        mylog.error(&#34;Failed to fetch endpoints from mangle&#34;)
+        sys.exit(2)
+    else:
+        for ep in response.json:
+            if ep.get(&#34;name&#34;) == myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;):
+                does_endpoint_exist = True
+    if not does_endpoint_exist:
+        status, response = epoint.create_endpoint_k8s_cluster(
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;),
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
+            myconfig.get(&#34;k8sCluster&#34;).get(&#34;namespace&#34;),
+        )
+        if not status:
+            mylog.error(
+                &#34;Failed to create k8s cluster endpoint for endpointName={}, credentialName={}, namespace={}&#34;.format(
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;),
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
+                    myconfig.get(&#34;k8sCluster&#34;).get(&#34;namespace&#34;),
+                )
+            )
+            sys.exit(2)
+        mylog.info(
+            &#34;endpoint &#39;{}&#39; for k8s cluster created successfully&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;)
+            )
+        )
+    else:
+        mylog.info(
+            &#34;Endpoint &#39;{}&#39; for k8s cluster already exist&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;)
+            )
+        )
+
+    tc = endpoint.TestConnection(mclient)
+    status, response = tc.test_endpoint(myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;))
+    if not status:
+        mylog.error(
+            &#34;Test connection for endpoint {} failed&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;)
+            )
+        )
+        sys.exit(2)
+    else:
+        mylog.info(
+            &#34;Test connection for endpoint {} passed&#34;.format(
+                myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;)
+            )
+        )</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="test_runner.check_network_availability" href="#test_runner.check_network_availability">check_network_availability</a></code></li>
+<li><code><a title="test_runner.copy_file_on_s3" href="#test_runner.copy_file_on_s3">copy_file_on_s3</a></code></li>
+<li><code><a title="test_runner.create_csp_client" href="#test_runner.create_csp_client">create_csp_client</a></code></li>
+<li><code><a title="test_runner.create_mangle_client" href="#test_runner.create_mangle_client">create_mangle_client</a></code></li>
+<li><code><a title="test_runner.create_maxim_gun_client" href="#test_runner.create_maxim_gun_client">create_maxim_gun_client</a></code></li>
+<li><code><a title="test_runner.get_mangle_yaan_config" href="#test_runner.get_mangle_yaan_config">get_mangle_yaan_config</a></code></li>
+<li><code><a title="test_runner.get_test_modules_from_testsuite_names" href="#test_runner.get_test_modules_from_testsuite_names">get_test_modules_from_testsuite_names</a></code></li>
+<li><code><a title="test_runner.post_run_activities" href="#test_runner.post_run_activities">post_run_activities</a></code></li>
+<li><code><a title="test_runner.prepare_setup" href="#test_runner.prepare_setup">prepare_setup</a></code></li>
+<li><code><a title="test_runner.print_testsuite_info" href="#test_runner.print_testsuite_info">print_testsuite_info</a></code></li>
+<li><code><a title="test_runner.run_pytest" href="#test_runner.run_pytest">run_pytest</a></code></li>
+<li><code><a title="test_runner.setup_mangle_infra" href="#test_runner.setup_mangle_infra">setup_mangle_infra</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>
