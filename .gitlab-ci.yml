@@ -19,7 +19,7 @@ buildanddeploy:
     - mv ./kubectl /usr/local/bin/kubectl
     - echo "Kubectl Installed"
     - echo "Running Build and Deploy Script"
-    - sh ./build_and_deploy.sh
+    - sh ./buildAndDeploy.sh
   only:
     - master
   when: on_success
