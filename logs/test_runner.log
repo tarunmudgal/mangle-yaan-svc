@@ -1,28 +1,37 @@
-[16-08-2020 02:07:24 AM] [INFO] [test_runner.py] [40]: [<module>] logger initialized
-[16-08-2020 02:07:25 AM] [INFO] [test_runner.py] [49]: [check_network_availability] Network Availability Check: OK
-[16-08-2020 02:07:25 AM] [DEBUG] [test_runner.py] [61]: [prepare_setup] reading config file from path=/Users/mtarun/vmware/code/mangle-yaan-service/config/my.json
-[16-08-2020 02:07:25 AM] [DEBUG] [mangle_client.py] [79]: [__init__] MangleClient obj MangleClient(base_url=https://10.182.50.117:443/mangle-services) initialized.
-[16-08-2020 02:07:25 AM] [DEBUG] [csp_client.py] [95]: [get_access_token] fetching access_token for CSP API calls
-[16-08-2020 02:07:27 AM] [DEBUG] [csp_client.py] [79]: [__init__] CSPClient obj CSPClient(base_url=https://console-preview.cloud.vmware.com:443/csp/gateway) initialized.
-[16-08-2020 02:07:27 AM] [DEBUG] [utils.py] [18]: [_log_args] func request(MangleClient(base_url=https://10.182.50.117:443/mangle-services), 'GET', '/rest/api/v1/endpoints/credentials') called
-[16-08-2020 02:07:29 AM] [DEBUG] [utils.py] [36]: [func_wrapper] func list_credentials(<lib.mangle.endpoint.EndpointCredential object at 0x1022b1af0>) status: PASS
-[16-08-2020 02:07:29 AM] [INFO] [test_runner.py] [108]: [prepare_setup] credential 'csp-app-preview' for k8s cluster already exist
-[16-08-2020 02:07:29 AM] [DEBUG] [utils.py] [18]: [_log_args] func request(MangleClient(base_url=https://10.182.50.117:443/mangle-services), 'GET', '/rest/api/v1/endpoints', params=None) called
-[16-08-2020 02:07:30 AM] [INFO] [test_runner.py] [145]: [prepare_setup] Endpoint 'csp-app-preview' for k8s cluster already exist
-[16-08-2020 02:07:30 AM] [DEBUG] [utils.py] [18]: [_log_args] func request(MangleClient(base_url=https://10.182.50.117:443/mangle-services), 'GET', '/rest/api/v1/endpoints/csp-app-preview') called
-[16-08-2020 02:07:31 AM] [DEBUG] [utils.py] [18]: [_log_args] func request(MangleClient(base_url=https://10.182.50.117:443/mangle-services), 'POST', '/rest/api/v1/endpoints/testEndpoint', json={'id': 'cbdf1c5c-0bcf-4d34-a30e-59ba7f505740', 'name': 'csp-app-preview', 'endPointType': 'K8S_CLUSTER', 'credentialsName': 'csp-app-preview', 'k8sConnectionProperties': {'namespace': 'csp-app-preview'}}) called
-[16-08-2020 02:07:32 AM] [DEBUG] [utils.py] [36]: [func_wrapper] func test_endpoint(<lib.mangle.endpoint.TestConnection object at 0x1022b1940>, 'csp-app-preview') status: PASS
-[16-08-2020 02:07:32 AM] [INFO] [test_runner.py] [161]: [prepare_setup] Test connection for endpoint csp-app-preview passed
-[16-08-2020 02:07:32 AM] [INFO] [test_runner.py] [167]: [prepare_setup] setup is ready to run resiliency tests now
-[16-08-2020 02:07:32 AM] [INFO] [test_runner.py] [172]: [run_pytest] starting pytest test cases execution at: 16/08/2020, 02:07:32.688114 AM
-[16-08-2020 02:07:32 AM] [DEBUG] [utils.py] [18]: [_log_args] func request(MangleClient(base_url=https://10.182.50.117:443/mangle-services), 'POST', '/rest/api/v1/faults/k8s/service-unavailable', json={'endpointName': 'csp-app-preview', 'resourceName': 'csp-email-management', 'randomInjection': True}) called
-[16-08-2020 02:08:33 AM] [DEBUG] [utils.py] [18]: [_log_args] func request(MangleClient(base_url=https://10.182.50.117:443/mangle-services), 'GET', '/rest/api/v1/tasks/ff0042b0-96c3-4095-b828-537a55471242') called
-[16-08-2020 02:08:34 AM] [DEBUG] [mangle_client.py] [119]: [trigger_fault_task_and_wait_for_completion] task id=ff0042b0-96c3-4095-b828-537a55471242 is completed successfully
-[16-08-2020 02:08:34 AM] [DEBUG] [conftest.py] [76]: [_inject_k8s_infra_fault_service_unavailable] task for K8S_SERVICE_UNAVAILABLE fault triggered with task_id=ff0042b0-96c3-4095-b828-537a55471242, task_status=COMPLETED
-[16-08-2020 02:08:34 AM] [DEBUG] [utils.py] [18]: [_log_args] func request(CSPClient(base_url=https://console-preview.cloud.vmware.com:443/csp/gateway), 'GET', '/am/api/orgs/d8959d3f-ff4c-4597-af4e-73ceab67d1a3') called
-[16-08-2020 02:08:36 AM] [DEBUG] [test_commerce_when_am_service_unavailable.py] [29]: [test_api_get_billing_engines] test function done
-[16-08-2020 02:10:36 AM] [DEBUG] [utils.py] [18]: [_log_args] func request(MangleClient(base_url=https://10.182.50.117:443/mangle-services), 'DELETE', '/rest/api/v1/faults/ff0042b0-96c3-4095-b828-537a55471242') called
-[16-08-2020 02:11:38 AM] [DEBUG] [utils.py] [18]: [_log_args] func request(MangleClient(base_url=https://10.182.50.117:443/mangle-services), 'GET', '/rest/api/v1/tasks/491750dc-20df-45df-8bf8-1ebfc7249cfb') called
-[16-08-2020 02:11:38 AM] [DEBUG] [mangle_client.py] [119]: [trigger_fault_task_and_wait_for_completion] task id=491750dc-20df-45df-8bf8-1ebfc7249cfb is completed successfully
-[16-08-2020 02:11:38 AM] [DEBUG] [conftest.py] [91]: [inject_k8s_infra_fault_service_unavailable] task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id=491750dc-20df-45df-8bf8-1ebfc7249cfb, task_status=COMPLETED
-[16-08-2020 02:11:38 AM] [INFO] [test_runner.py] [178]: [run_pytest] pytest test cases execution finished at: 16/08/2020, 02:11:38.811250 AM
+[13-09-2020 02:59:11 AM] [INFO] [test_runner.py] [51]: [<module>] logger initialized
+[13-09-2020 02:59:11 AM] [DEBUG] [test_runner.py] [479]: [<module>] test_runner args=Namespace(list_testsuite_names=False, myconfig=' ', project_name='test_project', pytest_args=' ', run_id='12640631-1b6b-4409-8704-8e504574dacd', testsuite_names='test_dummy', workload_name='Test-workload')
+[13-09-2020 02:59:11 AM] [INFO] [test_runner.py] [66]: [check_network_availability] Network Availability Check: OK
+[13-09-2020 02:59:11 AM] [DEBUG] [maximgun_client.py] [91]: [__init__] MGClient obj MGClient(base_url=https://maxim-gun-ui.svc-stage.eng.vmware.com:443/api/res) initialized.
+[13-09-2020 02:59:11 AM] [DEBUG] [rest_client.py] [86]: [request] RESTClient: Sending a request with method=POST, resource=/history/status
+[13-09-2020 02:59:18 AM] [DEBUG] [rest_client.py] [93]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
+[13-09-2020 02:59:18 AM] [INFO] [agent.py] [37]: [update_task] maxim-gun job run_id=12640631-1b6b-4409-8704-8e504574dacd updated
+[13-09-2020 02:59:18 AM] [DEBUG] [test_runner.py] [152]: [get_mangle_yaan_config] reading config from maxim-gun app. resource=/runtest/mangle-yaan/config
+[13-09-2020 02:59:18 AM] [DEBUG] [rest_client.py] [86]: [request] RESTClient: Sending a request with method=GET, resource=/runtest/mangle-yaan/config
+[13-09-2020 02:59:18 AM] [DEBUG] [rest_client.py] [93]: [request] RESTClient: request with method=GET, resource=/runtest/mangle-yaan/config succeeded in (1) attempt(s)
+[13-09-2020 02:59:18 AM] [DEBUG] [mangle_client.py] [98]: [__init__] MangleClient obj MangleClient(base_url=https://10.182.50.117:443/mangle-services) initialized.
+[13-09-2020 02:59:18 AM] [DEBUG] [csp_client.py] [108]: [get_access_token] fetching access_token for CSP API calls
+[13-09-2020 02:59:18 AM] [DEBUG] [rest_client.py] [139]: [request] Sending a request with method=POST, url=https://console-preview.cloud.vmware.com:443/csp/gateway/am/api/auth/api-tokens/authorize
+[13-09-2020 02:59:20 AM] [DEBUG] [rest_client.py] [143]: [request] Request with method=POST, url=https://console-preview.cloud.vmware.com:443/csp/gateway/am/api/auth/api-tokens/authorize succeeded in (1) attempt(s)
+[13-09-2020 02:59:20 AM] [DEBUG] [csp_client.py] [92]: [__init__] CSPClient obj CSPClient(base_url=https://console-preview.cloud.vmware.com:443/csp/gateway) initialized.
+[13-09-2020 02:59:20 AM] [DEBUG] [rest_client.py] [86]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints/credentials
+[13-09-2020 02:59:22 AM] [DEBUG] [rest_client.py] [93]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints/credentials succeeded in (1) attempt(s)
+[13-09-2020 02:59:22 AM] [DEBUG] [utils.py] [36]: [func_wrapper] func list_credentials(<lib.mangle.endpoint.EndpointCredential object at 0x10e15cf40>) status: PASS
+[13-09-2020 02:59:22 AM] [INFO] [test_runner.py] [203]: [setup_mangle_infra] credential 'csp-app-preview' for k8s cluster already exist
+[13-09-2020 02:59:22 AM] [DEBUG] [rest_client.py] [86]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints
+[13-09-2020 02:59:22 AM] [DEBUG] [rest_client.py] [93]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints succeeded in (1) attempt(s)
+[13-09-2020 02:59:22 AM] [INFO] [test_runner.py] [240]: [setup_mangle_infra] Endpoint 'csp-app-preview' for k8s cluster already exist
+[13-09-2020 02:59:22 AM] [DEBUG] [rest_client.py] [86]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints/csp-app-preview
+[13-09-2020 02:59:22 AM] [DEBUG] [rest_client.py] [93]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints/csp-app-preview succeeded in (1) attempt(s)
+[13-09-2020 02:59:22 AM] [DEBUG] [rest_client.py] [86]: [request] RESTClient: Sending a request with method=POST, resource=/rest/api/v1/endpoints/testEndpoint
+[13-09-2020 02:59:25 AM] [DEBUG] [rest_client.py] [93]: [request] RESTClient: request with method=POST, resource=/rest/api/v1/endpoints/testEndpoint succeeded in (1) attempt(s)
+[13-09-2020 02:59:25 AM] [DEBUG] [utils.py] [36]: [func_wrapper] func test_endpoint(<lib.mangle.endpoint.TestConnection object at 0x10e15cd30>, 'csp-app-preview') status: PASS
+[13-09-2020 02:59:25 AM] [INFO] [test_runner.py] [256]: [setup_mangle_infra] Test connection for endpoint csp-app-preview passed
+[13-09-2020 02:59:25 AM] [INFO] [test_runner.py] [314]: [prepare_setup] setup is ready to run resiliency tests now
+[13-09-2020 02:59:25 AM] [INFO] [test_runner.py] [321]: [run_pytest] starting pytest test cases execution at: 13Sep2020_02:59:25.381630
+[13-09-2020 02:59:25 AM] [DEBUG] [rest_client.py] [86]: [request] RESTClient: Sending a request with method=POST, resource=/history/status
+[13-09-2020 02:59:26 AM] [DEBUG] [rest_client.py] [93]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
+[13-09-2020 02:59:26 AM] [INFO] [agent.py] [37]: [update_task] maxim-gun job run_id=12640631-1b6b-4409-8704-8e504574dacd updated
+[13-09-2020 02:59:27 AM] [INFO] [test_runner.py] [331]: [run_pytest] pytest test cases execution finished at: 13Sep2020_02:59:27.381484
+[13-09-2020 02:59:32 AM] [DEBUG] [rest_client.py] [86]: [request] RESTClient: Sending a request with method=POST, resource=/history/status
+[13-09-2020 02:59:33 AM] [DEBUG] [rest_client.py] [93]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
+[13-09-2020 02:59:33 AM] [INFO] [agent.py] [37]: [update_task] maxim-gun job run_id=12640631-1b6b-4409-8704-8e504574dacd updated
