@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: e2e-qe-selenium-hub-service-dev
+  namespace: scdc1-staging-mangle-yaan
+  labels:
+    app: e2e-qe-selenium-hub-dev
+spec:
+  type: NodePort
+  ports:
+  - name: e2e-qe-selenium-hub-port-dev
+    port: 4444
+    targetPort: 4444
+    nodePort: 31001
+  selector:
+    app: e2e-qe-selenium-hub-dev
+    environment: auto
+  sessionAffinity: None

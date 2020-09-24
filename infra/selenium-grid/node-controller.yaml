@@ -1,0 +1,48 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: e2e-qe-selenium-node-chrome-dev
+  namespace: scdc1-staging-mangle-yaan
+  labels:
+    app: e2e-qe-selenium-node-chrome-dev
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: e2e-qe-selenium-node-chrome-dev
+        environment: auto
+  template:
+    metadata:
+      labels:
+        app: e2e-qe-selenium-node-chrome-dev
+        environment: auto
+    spec:
+      containers:
+      - name: e2e-qe-selenium-node-chrome-dev
+        image: selenium/node-chrome-debug:3.141
+        imagePullPolicy: "Always"
+        ports:
+          - containerPort: 5900
+        resources:
+          requests:
+            memory: "2048M"
+            cpu: "1000m"
+          limits:
+            memory: "2048M"
+            cpu: "1000m"
+        env:
+          - name: HUB_PORT_4444_TCP_ADDR
+            value: "e2e-qe-selenium-hub-service-dev"
+          - name: HUB_PORT_4444_TCP_PORT
+            value: "4444"
+          - name: NODE_MAX_INSTANCES
+            value: "5"
+          - name: NODE_MAX_SESSION
+            value: "5"
+        volumeMounts:
+          - mountPath: /dev/shm
+            name: dshm
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory

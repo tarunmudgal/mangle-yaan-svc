@@ -1,0 +1,61 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: e2e-qe-selenium-hub-dev
+  namespace: scdc1-staging-mangle-yaan
+  labels:
+    app: e2e-qe-selenium-hub-dev
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: e2e-qe-selenium-hub-dev
+        environment: auto
+  template:
+    metadata:
+      labels:
+        app: e2e-qe-selenium-hub-dev
+        environment: auto
+    spec:
+      containers:
+      - name: e2e-qe-selenium-hub-dev
+        image: selenium/hub:3.14
+        imagePullPolicy: "Always"
+        ports:
+          - containerPort: 4444
+        resources:
+          requests:
+            memory: "2048M"
+            cpu: "1000m"
+          limits:
+            memory: "2048M"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /grid/console
+            port: 4444
+          initialDelaySeconds: 300
+          timeoutSeconds: 20
+          periodSeconds: 60
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /grid/console
+            port: 4444
+          initialDelaySeconds: 10
+          timeoutSeconds: 20
+          periodSeconds: 10
+        env:
+          - name: GRID_BROWSER_TIMEOUT
+            value: "100000"
+          - name: GRID_TIMEOUT
+            value: "90000"
+          - name: GRID_MAX_SESSION
+            value: "80"
+        volumeMounts:
+          - mountPath: /dev/shm
+            name: dshm
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
