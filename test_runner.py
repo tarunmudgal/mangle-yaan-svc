@@ -181,6 +181,7 @@ def setup_mangle_infra() -> None:
         for cred in response.json:
             if cred.get("name") == myconfig.get("k8sCluster").get("credentialName"):
                 does_cred_exist = True
+                break
     if not does_cred_exist:
         status, response = ep_cred.create_credential_k8s_cluster(
             myconfig.get("k8sCluster").get("credentialName"),
@@ -216,6 +217,7 @@ def setup_mangle_infra() -> None:
         for ep in response.json:
             if ep.get("name") == myconfig.get("k8sCluster").get("endpointName"):
                 does_endpoint_exist = True
+                break
     if not does_endpoint_exist:
         status, response = epoint.create_endpoint_k8s_cluster(
             myconfig.get("k8sCluster").get("endpointName"),

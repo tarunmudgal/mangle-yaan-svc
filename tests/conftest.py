@@ -45,16 +45,16 @@ def pytest_configure(config):
 
 
 @pytest.fixture(scope="function")
-def inject_k8s_infra_fault_service_unavailable():
+def inject_k8s_infra_fault_service_unavailable_for_func():
     taskid_to_remediate = None
 
-    def _inject_k8s_infra_fault_service_unavailable(
-        endpoint_name, resource_name, random_injection
+    def _inject_k8s_infra_fault_service_unavailable_for_func(
+        resource_name, random_injection
     ):
         nonlocal taskid_to_remediate  # specifes var to be picked up from nearest outer scope
 
         request_body = {
-            "endpointName": endpoint_name,
+            "endpointName": myconfig.get("k8sCluster").get("endpointName"),
             "resourceName": resource_name,
             "randomInjection": random_injection,
         }
@@ -73,7 +73,7 @@ def inject_k8s_infra_fault_service_unavailable():
         return
 
     # returns this func when fixture is called. Post test case execution, performs post yield section as teardown
-    yield _inject_k8s_infra_fault_service_unavailable
+    yield _inject_k8s_infra_fault_service_unavailable_for_func
 
     mylog.debug(
         "let's give some time to mangle before triggering remediation task. waiting for 60 secs"

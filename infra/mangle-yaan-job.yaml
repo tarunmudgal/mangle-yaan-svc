@@ -13,9 +13,9 @@ spec:
           - name: PROJECT_NAME
             value: "MANGLE_YAAN_TEST"
           - name: WORKLOAD_NAME
-            value: "RESILIENCY_WORKLOAD"
+            value: "Test-workload"
           - name: TESTSUITE_NAMES
-            value: "test_dummy"
+            value: "test_commerce_api_when_a_service_down,test_onboarding_api_when_a_service_down"
           - name: PYTEST_ARGS
             value: ""
           - name: MYCONFIG

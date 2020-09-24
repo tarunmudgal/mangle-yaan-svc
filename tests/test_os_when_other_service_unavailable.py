@@ -11,7 +11,7 @@ from lib.csp import resources
 
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_service_unavailable_for_class",
-    ["csp-account-management-mvc", "csp-onboarding"],
+    ["csp-account-management-mvc", "csp-commerce"],
     indirect=True,
 )
 # @pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
