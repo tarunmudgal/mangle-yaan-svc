@@ -14,9 +14,9 @@ COMMERCE = OrderedDict()
 COMMERCE["BILLING_ENGINES"] = "/commerce/api/v1/orgs/billing-engines"
 COMMERCE["BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts"
 COMMERCE["BILLING_ACCOUNT_BY_ID"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}"
-COMMERCE["PAYMENT_METHODS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/payment-methods"
+COMMERCE["PAYMENT_METHODS"] = "/commerce/api/v1/orgs/{orgId}/payment-methods"
 COMMERCE["CURRENT_COSTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/current-costs"
-COMMERCE["PROMOTIONS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/promotions"
+COMMERCE["PROMOTIONS"] = "/commerce/api/v1/orgs/{orgId}/promotions"
 
 # AM resources
 AM = OrderedDict()

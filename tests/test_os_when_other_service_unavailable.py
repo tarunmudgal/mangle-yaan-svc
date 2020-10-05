@@ -6,19 +6,22 @@ __author__ = "tarun mudgal"
 
 import pytest
 import requests
+
 from lib.csp import resources
+from src.testlib.pytest import utils
+
+LIST_DEPENDENT_SERVICES = ["csp-commerce"]
 
 
 @pytest.mark.parametrize(
-    "inject_k8s_infra_fault_service_unavailable_for_class",
-    ["csp-account-management-mvc", "csp-commerce"],
-    indirect=True,
+    "inject_k8s_infra_fault_service_unavailable_for_class", LIST_DEPENDENT_SERVICES, indirect=True,
 )
 # @pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
 class TestOSDependencyOnDifferentServices(object):
-
     @pytest.mark.dependency()
-    def test_api_create_onboarding_context(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_create_onboarding_context(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 201
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
@@ -30,10 +33,7 @@ class TestOSDependencyOnDifferentServices(object):
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS").format(
             serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
         )
-        request_body = {
-            "title": "test onboarding",
-            "description": "test onboarding"
-        }
+        request_body = {"title": "test onboarding", "description": "test onboarding"}
 
         os_resp = cclient.make_call("POST", api_resource, json=request_body)
 
@@ -42,27 +42,37 @@ class TestOSDependencyOnDifferentServices(object):
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                os_resp.status_code == expected_response
+            os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
 
-    @pytest.mark.dependency(depends=["TestOSDependencyOnAM::test_api_create_onboarding_context"])
-    def test_api_get_onboarding_context_using_id(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    @pytest.mark.dependency(
+        depends=utils.get_testcase_names(
+            "TestOSDependencyOnDifferentServices::test_api_create_onboarding_context",
+            LIST_DEPENDENT_SERVICES,
+        )
+    )
+    def test_api_get_onboarding_context_using_id(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
             serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
-            onboardingContextId=mycache["onboarding_context_id"])
+            onboardingContextId=mycache["onboarding_context_id"],
+        )
 
         os_resp = cclient.make_call("GET", api_resource)
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                os_resp.status_code == expected_response
+            os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
 
-    def test_api_get_onboarding_contexts(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_onboarding_contexts(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
 
@@ -75,32 +85,42 @@ class TestOSDependencyOnDifferentServices(object):
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                os_resp.status_code == expected_response
+            os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
 
-    @pytest.mark.dependency(depends=["TestOSDependencyOnAM::test_api_create_onboarding_context"])
-    def test_api_patch_onboarding_context_using_id(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    @pytest.mark.dependency(
+        depends=utils.get_testcase_names(
+            "TestOSDependencyOnDifferentServices::test_api_create_onboarding_context",
+            LIST_DEPENDENT_SERVICES,
+        )
+    )
+    def test_api_patch_onboarding_context_using_id(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
             serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
-            onboardingContextId=mycache["onboarding_context_id"])
+            onboardingContextId=mycache["onboarding_context_id"],
+        )
 
-        request_body = {
-            "title": "new test onboarding",
-            "description": "new test onboarding"
-        }
+        request_body = {"title": "new test onboarding", "description": "new test onboarding"}
 
         os_resp = cclient.make_call("PATCH", api_resource, json=request_body)
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                os_resp.status_code == expected_response
+            os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
 
-    @pytest.mark.dependency(depends=["TestOSDependencyOnAM::test_api_create_onboarding_context"])
+    @pytest.mark.dependency(
+        depends=utils.get_testcase_names(
+            "TestOSDependencyOnDifferentServices::test_api_create_onboarding_context",
+            LIST_DEPENDENT_SERVICES,
+        )
+    )
     def test_api_create_faq_topics(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = 201
@@ -113,19 +133,16 @@ class TestOSDependencyOnDifferentServices(object):
         request_body = {
             "linkUrl": "https://dummyurl.com",
             "title": "dummy faq topic",
-
             "linkTitle": "dummy faq topic",
-            "onboardingContextIds": [
-                "{}".format(mycache["onboarding_context_id"])
-            ],
-            "text": "dummy faq topic"
+            "onboardingContextIds": ["{}".format(mycache["onboarding_context_id"])],
+            "text": "dummy faq topic",
         }
 
         os_resp = cclient.make_call("POST", api_resource, json=request_body)
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                os_resp.status_code == expected_response
+            os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)
 
     def test_api_get_faq_topics(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -141,5 +158,5 @@ class TestOSDependencyOnDifferentServices(object):
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                os_resp.status_code == expected_response
+            os_resp.status_code == expected_response
         ), "Onboarding service did not return expected response {}".format(expected_response)

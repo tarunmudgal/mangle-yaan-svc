@@ -7,9 +7,12 @@ __author__ = "tarun mudgal"
 import pytest
 from lib.csp import resources
 
+LIST_DEPENDENT_SERVICES = ["csp-onboarding"]
+
+
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_service_unavailable_for_class",
-    ["csp-account-management-mvc", "csp-onboarding"],
+    LIST_DEPENDENT_SERVICES,
     indirect=True,
 )
 # @pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
@@ -30,7 +33,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "SLC service did not return expected response {}".format(expected_response)
 
     def test_api_get_service_definition(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -45,7 +48,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "SLC service did not return expected response {}".format(expected_response)
 
     def test_api_get_service_definition_roles(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -60,7 +63,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "SLC service did not return expected response {}".format(expected_response)
 
     def test_api_get_service_families(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -73,5 +76,5 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "SLC service did not return expected response {}".format(expected_response)
