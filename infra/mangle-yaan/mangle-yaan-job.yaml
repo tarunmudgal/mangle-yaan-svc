@@ -15,7 +15,7 @@ spec:
           - name: WORKLOAD_NAME
             value: "Test-workload"
           - name: TESTSUITE_NAMES
-            value: "test_commerce_api_when_a_service_down,test_onboarding_api_when_a_service_down"
+            value: "test_onboarding_api_when_a_service_down"
           - name: PYTEST_ARGS
             value: ""
           - name: MYCONFIG

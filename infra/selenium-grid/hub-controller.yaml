@@ -47,11 +47,11 @@ spec:
           periodSeconds: 10
         env:
           - name: GRID_BROWSER_TIMEOUT
-            value: "100000"
+            value: "600"
           - name: GRID_TIMEOUT
-            value: "90000"
+            value: "300"
           - name: GRID_MAX_SESSION
-            value: "80"
+            value: "5"
         volumeMounts:
           - mountPath: /dev/shm
             name: dshm

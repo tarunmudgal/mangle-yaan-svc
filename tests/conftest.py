@@ -12,8 +12,12 @@ import boto3
 import pytest
 from py.xml import html
 
-from lib import params
+from lib import params as lib_params
 from lib.mangle import resources
+
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from src.testlib import params as testlib_params
 
 
 def pytest_html_report_title(report):
@@ -24,6 +28,7 @@ def pytest_html_results_summary(prefix, summary, postfix):
     class myhtml(html):
         class p(html.p):
             style = html.Style(font_weight="bold")
+
     prefix.extend([myhtml.p("{:<30}{}".format("PROJECT NAME:", mycache["project_name"]))])
     prefix.extend([myhtml.p("{:<30}{}".format("WORKLOAD NAME:", mycache["workload_name"]))])
     prefix.extend([myhtml.p("{:<30}{}".format("Test Start Timestamp:", mycache["test_start_timestamp"]))])
@@ -35,8 +40,8 @@ def pytest_configure(config):
     if not config.option.htmlpath:
         config.option.htmlpath = (
             myconfig.get("mangleYaan")
-            .get("testReportPath")
-            .format(timeStamp=mycache.get("test_start_timestamp"))
+                .get("testReportPath")
+                .format(timeStamp=mycache.get("test_start_timestamp"))
         )
         config.option.self_contained_html = True
 
@@ -49,7 +54,7 @@ def inject_k8s_infra_fault_service_unavailable_for_func():
     taskid_to_remediate = None
 
     def _inject_k8s_infra_fault_service_unavailable_for_func(
-        resource_name, random_injection
+            resource_name, random_injection
     ):
         nonlocal taskid_to_remediate  # specifes var to be picked up from nearest outer scope
 
@@ -67,7 +72,7 @@ def inject_k8s_infra_fault_service_unavailable_for_func():
                 task_id, task_status
             )
         )
-        assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
+        assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
         taskid_to_remediate = task_id
 
         return
@@ -89,12 +94,11 @@ def inject_k8s_infra_fault_service_unavailable_for_func():
             task_id, task_status
         )
     )
-    assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
+    assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
 
 
 @pytest.fixture(scope="class")
 def inject_k8s_infra_fault_service_unavailable_for_class(request):
-
     faulty_svc_name = request.param
 
     request_body = {
@@ -111,9 +115,9 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
             task_id, task_status
         )
     )
-    assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
+    assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
 
-    yield faulty_svc_name # post yield runs as the part of teardown
+    yield faulty_svc_name  # post yield runs as the part of teardown
 
     mylog.debug(
         "let's give some time to mangle before triggering remediation task. waiting for 60 secs"
@@ -129,4 +133,15 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
             task_id, task_status
         )
     )
-    assert task_status == params.MANGLE_TASK_STATUS["COMPLETED"]
+    assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
+
+
+@pytest.fixture(scope="class")
+def init_chrome_driver(request):
+    # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub', desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
+    selenium_hub_fqdn = "http://" + testlib_params.SELENIUM_GRID_HOST + ":" + testlib_params.SELENIUM_GRID_PORT + testlib_params.SELENIUM_HUB_URI
+    driver = webdriver.Remote(command_executor=selenium_hub_fqdn,
+                              desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
+    request.cls.driver = driver
+    yield
+    driver.close()
