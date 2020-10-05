@@ -15,6 +15,14 @@
     "description": "'account management' api test cases while some other service is down (one service down at a time)",
     "path": "tests/test_am_when_other_service_unavailable.py"
   },
+  "test_paginated_api_when_one_service_instance_down": {
+    "description": "paginated APIs test cases while one service instance(pod) is down",
+    "path": "tests/test_paginated_apis.py"
+  },
+  "test_csp_login_ui": {
+    "description": "dummy test cases",
+    "path": "tests/ui/test_csp_login.py"
+  },
   "test_dummy": {
     "description": "dummy test cases",
     "path": "tests/test_dummy.py"
