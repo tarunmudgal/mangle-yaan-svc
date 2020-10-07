@@ -5,6 +5,5 @@ __pycache__/
 .pytest_cache
 .tox
 /extras/
-/infra/
 /logs/
 /docs/

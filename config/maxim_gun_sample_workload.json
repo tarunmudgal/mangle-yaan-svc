@@ -1,18 +1,16 @@
 {
-	"project_id": "H6RoJ7xQ93Jg8nzJjkEEvy",
-	"description": "Dummy Resiliency Workload for Testing",
+	"project_id": "7yxPBvgGBuRW7rMcCine8E",
+	"description": "Workload for SLC APIs whan a service down",
 	"sut_details": {
-		"csp_host": "console-dev.cloud.vmware.com",
+		"csp_host": "console-preview.cloud.vmware.com",
 		"csp_protocol": "https"
 	},
 	"service_tags": [
-		"a",
-		"b",
-		"c"
+		"csp-service-lifecycle "
 	],
-	"workload_name": "Test-workload",
+	"workload_name": "Test-slc-api-when-a-service-down",
 	"workload_type": "res",
-	"workload_image": "vmware-docker-csp-tools.bintray.io/csp-workloads",
+	"workload_image": "vmware-docker-csp-tools.bintray.io/mangle-yaan",
 	"wavefront_links": [
 		{
 			"wavefront_link": "https://vmwareprod.wavefront.com/dashboards/csp1#_v01(g:(d:7200,ls:!f,s:1590120124,w:'2h'),p:(csp_micro_service:(d:Label_2,f:TAG_KEY,k:app,l:'Csp%20Micro%20Service',m:(Label_10:csp-customer-support,Label_2:csp-account-management-mvc),q:'ts(http.server.requests.seconds.max)',s:Label_10),kubernetes_namespace:(d:Label_2,f:TAG_KEY,k:kubernetes_namespace,l:kubernetes_namespace,m:(Label_2:csp-app-dev),q:'ts(http.server.requests.seconds.count)'),region:(d:'01%20-%20%20us-west-2',l:Region,m:('01%20-%20%20us-west-2':us-west-2,'02%20-%20us-east-1':us-east-1),vo:!('02%20-%20us-east-1','01%20-%20%20us-west-2'))))",
@@ -64,7 +62,7 @@
 		"mangleYaan": {
 			"testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html"
 		},
-		"projectName": "csp_resiliency",
+		"projectName": "Test_SLC_whan_a_service_down",
 		"projectDescription": "CSP Resiliency Test Suite"
 	},
 	"workload_profile": {
@@ -78,5 +76,5 @@
 	},
 	"pre_workload_image": null,
 	"post_workload_image": null,
-	"workload_testsuites": "test_dummy"
+	"workload_testsuites": "test_slc_api_when_a_service_down"
 }

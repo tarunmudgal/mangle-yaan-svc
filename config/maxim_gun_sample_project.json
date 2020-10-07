@@ -1,42 +1,18 @@
 {
 	"confluence_links": [
 		{
-			"confluence_attachment_id": "sdfffdsfds",
-			"confluence_link": "https://confluence.eng.vmware.com/pages/viewpage.action?spaceKey=CSP&title=Weekly+Performance+Report",
-			"confluence_link_name": "Weekly_Performance_Report",
-			"confluence_page_id": "sdfffdsfds"
-		},
-		{
-			"confluence_attachment_id": "sdfffdsfds",
-			"confluence_link": "https://confluence.eng.vmware.com/pages/viewpage.action?spaceKey=CSP&title=Weekly+Performance+Report",
-			"confluence_link_name": "Ad_Hoc_Experiments",
-			"confluence_page_id": "sdfffdsfds"
-		},
-		{
-			"confluence_attachment_id": "sdfffdsfds",
-			"confluence_link": "https://confluence.eng.vmware.com/pages/viewpage.action?spaceKey=CSP&title=Weekly+Performance+Report",
-			"confluence_name": "Preview_",
-			"confluence_page_id": "sdfffdsfds"
+			"confluence_attachment_id": "",
+			"confluence_link": "",
+			"confluence_link_name": "",
+			"confluence_page_id": ""
 		}
 	],
-	"project_name": "csp_resiliency",
+	"project_name": "Test-SLC-whan-a-service-down",
 	"project_type": "res",
 	"wavefront_links": [
 		{
-			"wavefront_link": "https://vmwareprod.wavefront.com/dashboards/tutorial-intro#_v01(g:(d:7200,ls:!t,s:1586151453,w:'2h'))",
-			"waverfront_link_name": "CSP_WF_Dashboard"
-		},
-		{
-			"wavefront_link": "https://vmwareprod.wavefront.com/dashboards/tutorial-intro#_v01(g:(d:7200,ls:!t,s:1586151453,w:'2h'))",
-			"waverfront_link_name": "CSP_WF_Dashboard"
-		},
-		{
-			"wavefront_link": "https://vmwareprod.wavefront.com/dashboards/tutorial-intro#_v01(g:(d:7200,ls:!t,s:1586151453,w:'2h'))",
-			"waverfront_link_name": "CSP_WF_Dashboard"
-		},
-		{
-			"wavefront_link": "https://vmwareprod.wavefront.com/dashboards/tutorial-intro#_v01(g:(d:7200,ls:!t,s:1586151453,w:'2h'))",
-			"waverfront_link_name": "CSP_WF_Dashboard"
+			"wavefront_link": "",
+			"waverfront_link_name": ""
 		}
 	]
 }
