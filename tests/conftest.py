@@ -31,7 +31,9 @@ def pytest_html_results_summary(prefix, summary, postfix):
 
     prefix.extend([myhtml.p("{:<30}{}".format("PROJECT NAME:", mycache["project_name"]))])
     prefix.extend([myhtml.p("{:<30}{}".format("WORKLOAD NAME:", mycache["workload_name"]))])
-    prefix.extend([myhtml.p("{:<30}{}".format("Test Start Timestamp:", mycache["test_start_timestamp"]))])
+    prefix.extend(
+        [myhtml.p("{:<30}{}".format("Test Start Timestamp:", mycache["test_start_timestamp"]))]
+    )
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -40,8 +42,8 @@ def pytest_configure(config):
     if not config.option.htmlpath:
         config.option.htmlpath = (
             myconfig.get("mangleYaan")
-                .get("testReportPath")
-                .format(timeStamp=mycache.get("test_start_timestamp"))
+            .get("testReportPath")
+            .format(timeStamp=mycache.get("test_start_timestamp"))
         )
         config.option.self_contained_html = True
 
@@ -53,9 +55,7 @@ def pytest_configure(config):
 def inject_k8s_infra_fault_service_unavailable_for_func():
     taskid_to_remediate = None
 
-    def _inject_k8s_infra_fault_service_unavailable_for_func(
-            resource_name, random_injection
-    ):
+    def _inject_k8s_infra_fault_service_unavailable_for_func(resource_name, random_injection):
         nonlocal taskid_to_remediate  # specifes var to be picked up from nearest outer scope
 
         request_body = {
@@ -137,11 +137,40 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
 
 
 @pytest.fixture(scope="class")
+def inject_k8s_infra_fault_block_egress_traffic_for_class(request):
+    network_policy_filename = request.param
+
+    mylog.debug("creating a network policy using {} file".format(network_policy_filename))
+    response_create = ckclient.create_network_policy(network_policy_filename)
+    assert response_create.metadata
+    mylog.debug(
+        "network policy {} created successfully using {} file".format(
+            response_create.metadata.name, network_policy_filename
+        )
+    )
+
+    yield network_policy_filename  # post yield runs as the part of teardown
+
+    mylog.debug("deleting network policy {}".format(response_create.metadata.name))
+    response_delete = ckclient.delete_network_policy(response_create.metadata.name)
+    assert response_delete.status == "Success"
+    mylog.debug("network policy {} deleted successfully".format(response_delete.details.name))
+
+
+@pytest.fixture(scope="class")
 def init_chrome_driver(request):
     # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub', desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
-    selenium_hub_fqdn = "http://" + testlib_params.SELENIUM_GRID_HOST + ":" + testlib_params.SELENIUM_GRID_PORT + testlib_params.SELENIUM_HUB_URI
-    driver = webdriver.Remote(command_executor=selenium_hub_fqdn,
-                              desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
+    selenium_hub_fqdn = (
+        "http://"
+        + testlib_params.SELENIUM_GRID_HOST
+        + ":"
+        + testlib_params.SELENIUM_GRID_PORT
+        + testlib_params.SELENIUM_HUB_URI
+    )
+    driver = webdriver.Remote(
+        command_executor=selenium_hub_fqdn,
+        desired_capabilities=getattr(DesiredCapabilities, "CHROME"),
+    )
     request.cls.driver = driver
     yield
     driver.close()

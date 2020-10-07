@@ -1,13 +1,13 @@
 import os
 
-from lib.k8s import k8s_opreations
+from lib.k8s import k8s_client
 
 
 class K8SVerifier(object):
     def verfy_k8s(kube_config_file, namespace):
 
-        verify = k8s_opreations.K8SOperation(kube_config_file, namespace)
-        list_pod = verify.get_k8s_pod_in_namespace()
+        verify = k8s_client.K8SClient(kube_config_file, namespace)
+        list_pod = verify.get_pods()
         for i in list_pod.items:
             try:
                 assert i.status.phase == "Running", i.metadata.name + " is Running"

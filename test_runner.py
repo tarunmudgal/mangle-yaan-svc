@@ -21,6 +21,7 @@ import requests
 from lib import params as lib_params
 from lib.common import config_reader, logger, rest_client
 from lib.csp import csp_client
+from lib.k8s import k8s_client
 from lib.csp import resources as csp_resources
 from lib.mangle import endpoint, mangle_client
 from lib.maximgun import agent as mg_agent
@@ -39,6 +40,7 @@ CONF_DIR = ROOT_DIR + os.path.sep + "config"
 TESTSUITES_DIR = ROOT_DIR + os.path.sep + "tests"
 SRC_DIR = ROOT_DIR + os.path.sep + "src"
 TESTLIB_DIR = ROOT_DIR + os.path.sep + "src" + os.path.sep + "testlib"
+
 
 # create logs dir if not exist
 if not os.path.exists(LOG_DIR):
@@ -125,6 +127,21 @@ def create_csp_client(timeout: int = 120) -> csp_client.CSPClient:
     )
 
     return cclient
+
+
+def create_csp_k8s_client(kubeconfig_filename: str, namespace: str) -> k8s_client.K8SClient:
+    """
+    creates CSP Kubernetes client
+    Args:
+        #TODO
+
+    Returns:
+       #TODO
+    """
+
+    csp_k8s_client = k8s_client.K8SClient(kubeconfig_filename, namespace)
+
+    return csp_k8s_client
 
 
 def get_mangle_yaan_config(myconf_file: str = None, workload_name: str = None) -> typing.Dict:
@@ -301,6 +318,10 @@ def prepare_setup(
 
     # creates csp REST client
     builtins.cclient = create_csp_client()
+
+    # creates csp kubernetes client
+    csp_k8s_info = myconfig.get("k8sCluster")
+    builtins.ckclient = create_csp_k8s_client(csp_k8s_info.get("kubeConfigFileName"), csp_k8s_info.get("namespace"))
 
     # creates mangle endpoint and confirms its connectivity
     setup_mangle_infra()
