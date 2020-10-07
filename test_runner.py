@@ -133,10 +133,11 @@ def create_csp_k8s_client(kubeconfig_filename: str, namespace: str) -> k8s_clien
     """
     creates CSP Kubernetes client
     Args:
-        #TODO
+        kubeconfig_filename: kubeconfig file-name for CSP kubernetes cluster
+        namespace: namespace for CSP kubernetes cluster
 
     Returns:
-       #TODO
+       K8SClient instance
     """
 
     csp_k8s_client = k8s_client.K8SClient(kubeconfig_filename, namespace)
