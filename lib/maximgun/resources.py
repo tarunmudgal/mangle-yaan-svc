@@ -7,8 +7,8 @@ __author__ = "tarun mudgal"
 from collections import OrderedDict
 
 # MaximGun API prefix
-MAXIMGUN_RES_API_PREFIX = "/api/res"
+MAXIMGUN_RES_API_PREFIX = "/api"
 
 MAXIMGUN = OrderedDict()
-MAXIMGUN["MANGLEYAAN_CONFIG"] = "/runtest/mangle-yaan/config"
+MAXIMGUN["MANGLEYAAN_CONFIG"] = "/res/runtest/mangle-yaan/config"
 MAXIMGUN["TASK_STATUS_UPDATE"] = "/history/status"
