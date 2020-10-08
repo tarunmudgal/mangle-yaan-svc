@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: onboarding-deny-external-egress
+spec:
+  podSelector:
+    matchLabels:
+      app: csp-onboarding
+  policyTypes:
+  - Egress
+  egress:
+  - ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+    - port: 8060
+      protocol: TCP
+#    - port: 8110
+#      protocol: TCP
+    to:
+    - namespaceSelector: {}
