@@ -56,9 +56,8 @@ MANGLE_TASK_STATUS["FAILED"] = "FAILED"
 MG_TASK_STATUS = OrderedDict()
 MG_TASK_STATUS["STARTED"] = "Started"
 MG_TASK_STATUS["IN_PROGRESS"] = "Running"
-MG_TASK_STATUS["COMPLETED"] = "Done"
+MG_TASK_STATUS["COMPLETED"] = "Completed"
 MG_TASK_STATUS["FAILED"] = "Failed"
-MG_TASK_STATUS["CANCELLING"]="Cancelling"
 MG_TASK_STATUS["CANCELLED"] = "Cancelled"
 
 # MangleYaan Task Error Status
