@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: onboarding-deny-external-egress
+  name: slc-deny-external-egress
 spec:
   podSelector:
     matchLabels:
-      app: csp-onboarding
+      app: csp-service-lifecycle
   policyTypes:
   - Egress
   egress:
@@ -78,7 +78,7 @@ spec:
       protocol: TCP
     - port: 8370        #CSP_MULTI_CLOUD_MANAGEMENT_URL
       protocol: TCP
-#    - port: 8110        #CSP_SERVICE_LIFECYCLE_MVC_URL
-#      protocol: TCP
+    - port: 8110        #CSP_SERVICE_LIFECYCLE_MVC_URL
+      protocol: TCP
     to:
     - namespaceSelector: {}
