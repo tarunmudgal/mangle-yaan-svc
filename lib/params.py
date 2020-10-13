@@ -54,11 +54,12 @@ MANGLE_TASK_STATUS["FAILED"] = "FAILED"
 
 # Maxim-Gun task staus
 MG_TASK_STATUS = OrderedDict()
-MG_TASK_STATUS["STARTED"] = "Test started"
-MG_TASK_STATUS["IN_PROGRESS"] = "Test running"
+MG_TASK_STATUS["STARTED"] = "Started"
+MG_TASK_STATUS["IN_PROGRESS"] = "Running"
 MG_TASK_STATUS["COMPLETED"] = "Done"
-MG_TASK_STATUS["FAILED"] = "Test Failed"
-MG_TASK_STATUS["CANCELLED"] = "Test Cancelled"
+MG_TASK_STATUS["FAILED"] = "Failed"
+MG_TASK_STATUS["CANCELLING"]="Cancelling"
+MG_TASK_STATUS["CANCELLED"] = "Cancelled"
 
 # MangleYaan Task Error Status
 MANGLEYAAN_TASK_STATUS = OrderedDict()

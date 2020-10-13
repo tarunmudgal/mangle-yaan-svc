@@ -334,6 +334,7 @@ def prepare_setup(
     # adding project_name and workload_name into mycache to use them in pytest-html greport generation
     mycache["project_name"] = project_name
     mycache["workload_name"] = workload_name
+    mycache["run_id"] = run_id
 
     mylog.info("setup is ready to run resiliency tests now")
 
