@@ -2,6 +2,7 @@ import os
 import typing
 
 import yaml
+import time
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 
@@ -17,6 +18,7 @@ class K8SClient(object):
         self.core_v1_api_client = client.CoreV1Api()
         self.api_client = client.ApiClient()
         self.networking_v1_api = client.NetworkingV1Api(self.api_client)
+        self.apps_v1_api = client.AppsV1Api(self.api_client)
 
     def get_pods(self) -> typing.List[str]:
         mylog.info("listing all pods in {} namespace".format(self.namespace))
@@ -39,7 +41,7 @@ class K8SClient(object):
         Deploys a deployment
         """
         deployment_filepath = (
-            self.csp_k8s_dir + os.path.sep + "deployment" + os.path.sep + deployment_fname
+                self.csp_k8s_dir + os.path.sep + "deployment" + os.path.sep + deployment_fname
         )
         mylog.info("deployment started using {} deployment file".format(deployment_filepath))
 
@@ -47,7 +49,7 @@ class K8SClient(object):
             payload = yaml.load(f)
 
         try:
-            api_response = self.core_v1_api_client.create_namespaced_deployment(
+            api_response = self.apps_v1_api.read_namespaced_deployment(
                 self.namespace, payload, pretty=True
             )
             mylog.info(api_response)
@@ -59,13 +61,69 @@ class K8SClient(object):
 
         return payload["spec"]["template"]["spec"]["containers"][0]["ports"][0]["containerPort"]
 
+    def get_deployment(self, deployment_name):
+        """
+        reads a deployment details
+        """
+
+        mylog.info("reading deployment details for deployment name={}".format(deployment_name))
+
+        response = None
+        try:
+            response = self.apps_v1_api.read_namespaced_deployment(
+                deployment_name, self.namespace, pretty="true"
+            )
+            # mylog.info(response)
+        except ApiException as fault:
+            mylog.exception(
+                "exception occurred while reading deployment details for deployment name={}. Exception={}".format(
+                    deployment_name, fault)
+            )
+
+        return response
+
+    def scale_deployment(self, deployment_name, new_replica_count, timeout=360, sleep_interval=10):
+        """
+        updates a deployment replica count
+        """
+
+        deployment_info = self.get_deployment(deployment_name)
+        deployment_info.spec.replicas = new_replica_count
+
+        try:
+            self.apps_v1_api.patch_namespaced_deployment_scale(
+                deployment_name, self.namespace, deployment_info, pretty="true"
+            )
+            # mylog.info(response)
+        except ApiException as fault:
+            mylog.exception(
+                "exception occurred while reading deployment details for deployment name={}. Exception={}".format(
+                    deployment_name, fault)
+            )
+
+        available_replicas = -1
+        start_time = curr_time = time.time()
+        while available_replicas != new_replica_count and curr_time < start_time + timeout:
+            deployment_info = self.get_deployment(deployment_name)
+            available_replicas = deployment_info.status.available_replicas
+            mylog.info("deployment {} got {} available replicas currently".format(deployment_name, available_replicas))
+
+            if available_replicas == new_replica_count:
+                mylog.info("deployment {} updated with {} available_replicas".format(deployment_name, new_replica_count))
+                return True
+
+            time.sleep(sleep_interval)
+            curr_time = time.time()
+
+        return False
+
     def create_network_policy(self, network_policy_fname):
         network_policy_fpath = (
-            self.csp_k8s_dir
-            + os.path.sep
-            + "networkpolicy"
-            + os.path.sep
-            + network_policy_fname
+                self.csp_k8s_dir
+                + os.path.sep
+                + "networkpolicy"
+                + os.path.sep
+                + network_policy_fname
         )
         with open(network_policy_fpath) as fh:
             network_policy_fdata = yaml.load(fh, Loader=yaml.FullLoader)
