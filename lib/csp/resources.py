@@ -17,6 +17,7 @@ COMMERCE["BILLING_ACCOUNT_BY_ID"] = "/commerce/api/v3/orgs/{orgId}/billing-accou
 COMMERCE["PAYMENT_METHODS"] = "/commerce/api/v1/orgs/{orgId}/payment-methods"
 COMMERCE["CURRENT_COSTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/current-costs"
 COMMERCE["PROMOTIONS"] = "/commerce/api/v1/orgs/{orgId}/promotions"
+COMMERCE["ESTIMATED_CHARGES"] = "/commerce/api/v1/orgs/{orgId}/estimated-charges"
 
 # AM resources
 AM = OrderedDict()

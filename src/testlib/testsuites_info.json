@@ -1,27 +1,31 @@
 {
   "test_commerce_api_when_a_service_down": {
     "description": "'commerce' api test cases while 'account management' service is down",
-    "path": "tests/test_commerce_when_other_service_unavailable.py"
+    "path": "tests/internal_dependencies/test_commerce_when_other_service_unavailable.py"
   },
   "test_onboarding_api_when_a_service_down": {
     "description": "'onboarding' api test cases while 'account management' service is down",
-    "path": "tests/test_os_when_other_service_unavailable.py"
+    "path": "tests/internal_dependencies/test_os_when_other_service_unavailable.py"
   },
   "test_slc_api_when_a_service_down": {
     "description": "'service life cycle' api test cases while 'account management' service is down",
-    "path": "tests/test_slc_when_other_service_unavailable.py"
+    "path": "tests/internal_dependencies/test_slc_when_other_service_unavailable.py"
   },
   "test_am_api_when_a_service_down": {
     "description": "'account management' api test cases while some other service is down (one service down at a time)",
-    "path": "tests/test_am_when_other_service_unavailable.py"
+    "path": "tests/internal_dependencies/test_am_when_other_service_unavailable.py"
   },
   "test_paginated_api_when_one_service_instance_down": {
     "description": "paginated APIs test cases while one service instance(pod) is down",
     "path": "tests/test_paginated_apis.py"
   },
-  "test_translation_api_when_vip_service_down": {
+  "test_csp_apis_when_vip_not_reachable": {
     "description": "paginated APIs test cases while one service instance(pod) is down",
-    "path": "tests/test_translation_api_when_VIP_calls_are_blocked.py"
+    "path": "tests/external_dependencies/test_csp_apis_when_vip_not_reachable.py"
+  },
+  "test_csp_apis_when_it_not_reachable": {
+    "description": "paginated APIs test cases while one service instance(pod) is down",
+    "path": "tests/external_dependencies/test_csp_apis_when_it_not_reachable.py"
   },
   "test_csp_login_ui": {
     "description": "dummy test cases",
