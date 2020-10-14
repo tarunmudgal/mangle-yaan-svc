@@ -66,9 +66,14 @@ class K8SClient(object):
 
         return payload["spec"]["template"]["spec"]["containers"][0]["ports"][0]["containerPort"]
 
-    def get_deployment(self, deployment_name):
+    def get_deployment(self, deployment_name: str) -> client.V1Deployment:
         """
         reads a deployment details
+        Args:
+            deployment_name: deployment name for which details are required
+
+        Returns:
+            client.V1Deployment object
         """
 
         mylog.info("reading deployment details for deployment name={}".format(deployment_name))
@@ -88,9 +93,23 @@ class K8SClient(object):
 
         return response
 
-    def scale_deployment(self, deployment_name, new_replica_count, timeout=360, sleep_interval=10):
+    def scale_deployment(
+        self,
+        deployment_name: str,
+        new_replica_count: int,
+        timeout: int = 360,
+        sleep_interval: int = 10,
+    ) -> bool:
         """
         updates a deployment replica count
+        Args:
+            deployment_name: deployment name for which details are required
+            new_replica_count: new replica count to be set for the deployment_name. It can be used to scale up/down a deployment
+            timeout: timeout in seconds to wait for deployement to adapt new_replica_count
+            sleep_interval: polling interval to check replicas count if deployment adapted new_replica_count
+
+        Returns:
+            True if deployment reached to new_replica_count before timeout period else False
         """
 
         deployment_info = self.get_deployment(deployment_name)

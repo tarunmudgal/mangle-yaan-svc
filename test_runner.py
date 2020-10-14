@@ -12,6 +12,7 @@ import logging
 import os
 import pprint
 import sys
+import time
 import typing
 
 import boto3
@@ -21,8 +22,8 @@ import requests
 from lib import params as lib_params
 from lib.common import config_reader, logger, rest_client
 from lib.csp import csp_client
-from lib.k8s import k8s_client
 from lib.csp import resources as csp_resources
+from lib.k8s import k8s_client
 from lib.mangle import endpoint, mangle_client
 from lib.maximgun import agent as mg_agent
 from lib.maximgun import maximgun_client
@@ -40,7 +41,6 @@ CONF_DIR = ROOT_DIR + os.path.sep + "config"
 TESTSUITES_DIR = ROOT_DIR + os.path.sep + "tests"
 SRC_DIR = ROOT_DIR + os.path.sep + "src"
 TESTLIB_DIR = ROOT_DIR + os.path.sep + "src" + os.path.sep + "testlib"
-
 
 # create logs dir if not exist
 if not os.path.exists(LOG_DIR):
@@ -87,7 +87,7 @@ def create_maxim_gun_client(timeout: int = 120) -> maximgun_client.MGClient:
 
     # maxim-gun client
     mg_conf = my_json.get("maximGun")
-    mgclient = maximgun_client.MGClient(mg_conf.get("host"), timeout=timeout, )
+    mgclient = maximgun_client.MGClient(mg_conf.get("host"), timeout=timeout,)
 
     return mgclient
 
@@ -280,11 +280,43 @@ def setup_mangle_infra() -> None:
         )
 
 
+def cleanup_old_reports(log_dir: str, days: int = 15) -> None:
+    """
+    deletes mangle-yaan-test-reports present under logs/ dir which are older than specified number of days
+    Args:
+        log_dir: log directory path
+        days: number of days
+
+    Returns:
+        None
+    """
+    mylog.info("deleting mangle-yaan-test-reports older than {} days".format(days))
+    time_in_secs = time.time() - (days * 24 * 60 * 60)
+    for root, dirs, files in os.walk(log_dir, topdown=False):
+        for file_ in files:
+            fpath = os.path.join(root, file_)
+            my_report_path = myconfig.get("mangleYaan").get("testReportPath")
+            my_report_name_expr = my_report_path.replace("logs/", "").replace(
+                "-{timeStamp}.html", ""
+            )
+            if (
+                os.path.exists(fpath)
+                and os.path.isfile(fpath)
+                and file_.startswith(my_report_name_expr)
+            ):
+                stat = os.stat(fpath)
+                if stat.st_mtime <= time_in_secs:
+                    try:
+                        os.remove(fpath)
+                    except OSError as fault:
+                        mylog.error("could not delete file {}. Exception={}".format(fpath, fault))
+
+
 def prepare_setup(
-        myconf_file: str = None,
-        project_name: str = None,
-        workload_name: str = None,
-        run_id: str = None,
+    myconf_file: str = None,
+    project_name: str = None,
+    workload_name: str = None,
+    run_id: str = None,
 ) -> None:
     """Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
     config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
@@ -322,16 +354,21 @@ def prepare_setup(
 
     # creates csp kubernetes client
     csp_k8s_info = myconfig.get("k8sCluster")
-    builtins.ckclient = create_csp_k8s_client(csp_k8s_info.get("kubeConfigFileName"), csp_k8s_info.get("namespace"))
+    builtins.ckclient = create_csp_k8s_client(
+        csp_k8s_info.get("kubeConfigFileName"), csp_k8s_info.get("namespace")
+    )
 
     # creates mangle endpoint and confirms its connectivity
     setup_mangle_infra()
+
+    # cleanup older mangle-yaan-test-reports
+    cleanup_old_reports(LOG_DIR, days=15)
 
     # test_runner cache to maintain states
     mycache = {}
     builtins.mycache = mycache
 
-    # adding project_name and workload_name into mycache to use them in pytest-html greport generation
+    # adding project_name and workload_name into mycache to use them in pytest-html report generation
     mycache["project_name"] = project_name
     mycache["workload_name"] = workload_name
     mycache["run_id"] = run_id
@@ -480,7 +517,7 @@ if __name__ == "__main__":
         type=str,
         default="",
         help="mangle-yaan config file path. If this option is used, "
-             "it will ovverride default config file config/my.json",
+        "it will ovverride default config file config/my.json",
     )
     parser.add_argument(
         "--pytest_args",
