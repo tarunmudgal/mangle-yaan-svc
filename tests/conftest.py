@@ -60,10 +60,8 @@ def inject_k8s():
         "run_id": mycache["run_id"]
     }
     am_resp = mgclient.make_call("GET", maxim_gun_resources.MAXIMGUN.get("GET_TASK_STATUS"), params=params)
-    print(am_resp.json['status'])
-    if am_resp.json['status']== lib_params.MG_TASK_STATUS["CANCELLING"]:
-        pytest.exit("Pytest Cancelled by User")
-        mg_agent.update_task(mycache["run_id"], status=lib_params.MG_TASK_STATUS["CANCELLED"])
+    if am_resp.json['status']== lib_params.MG_TASK_STATUS["CANCELLED"]:
+        pytest.exit(msg="Pytest Cancelled by User",returncode=2)
 
 
 @pytest.fixture(scope="function")
