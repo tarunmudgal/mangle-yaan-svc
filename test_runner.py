@@ -87,7 +87,7 @@ def create_maxim_gun_client(timeout: int = 120) -> maximgun_client.MGClient:
 
     # maxim-gun client
     mg_conf = my_json.get("maximGun")
-    mgclient = maximgun_client.MGClient(mg_conf.get("host"), timeout=timeout,)
+    mgclient = maximgun_client.MGClient(mg_conf.get("host"), timeout=timeout, )
 
     return mgclient
 
@@ -300,9 +300,9 @@ def cleanup_old_reports(log_dir: str, days: int = 15) -> None:
                 "-{timeStamp}.html", ""
             )
             if (
-                os.path.exists(fpath)
-                and os.path.isfile(fpath)
-                and file_.startswith(my_report_name_expr)
+                    os.path.exists(fpath)
+                    and os.path.isfile(fpath)
+                    and file_.startswith(my_report_name_expr)
             ):
                 stat = os.stat(fpath)
                 if stat.st_mtime <= time_in_secs:
@@ -313,10 +313,10 @@ def cleanup_old_reports(log_dir: str, days: int = 15) -> None:
 
 
 def prepare_setup(
-    myconf_file: str = None,
-    project_name: str = None,
-    workload_name: str = None,
-    run_id: str = None,
+        myconf_file: str = None,
+        project_name: str = None,
+        workload_name: str = None,
+        run_id: str = None,
 ) -> None:
     """Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
     config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
@@ -390,7 +390,7 @@ def run_pytest(*args: str, run_id: str = None, **kwargs: str) -> int:
     # end_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
     end_ts = datetime.datetime.now().strftime("%d%b%Y_%H:%M:%S.%f")
     mycache.update({"test_end_timestamp": end_ts})
-    mylog.info("pytest test cases execution finished at: %s" % end_ts)
+    mylog.info("pytest test cases execution finished at {} with status={}".format(end_ts, status))
 
     return status
 
@@ -439,6 +439,7 @@ def copy_file_on_s3(bucket_name: str, file_path: str = None) -> str:
             s3_client.upload_file(
                 Filename=file_path, Bucket=bucket_name, Key=s3_key,
             )
+            mylog.info("file {} successfully copied on s3".format(file_path))
         except Exception as fault:
             mylog.error("file {} could not be copied on S3. Error={}".format(file_path, fault))
             mylog.exception(fault)
@@ -517,7 +518,7 @@ if __name__ == "__main__":
         type=str,
         default="",
         help="mangle-yaan config file path. If this option is used, "
-        "it will ovverride default config file config/my.json",
+             "it will ovverride default config file config/my.json",
     )
     parser.add_argument(
         "--pytest_args",
@@ -603,7 +604,7 @@ if __name__ == "__main__":
             args.run_id, status=lib_params.MG_TASK_STATUS["FAILED"], end_time=end_time
         )
     if pytest_status == 2:
-       copy_results = False
+        copy_results = False
     if copy_results:
         s3_path = post_run_activities(copy_results=copy_results)
         mg_agent.update_task(
