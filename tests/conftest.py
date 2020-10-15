@@ -14,6 +14,10 @@ from py.xml import html
 
 from lib import params as lib_params
 from lib.mangle import resources
+from lib.maximgun import resources as maxim_gun_resources
+from lib import params as lib_params
+from lib.maximgun import agent as mg_agent
+from lib.maximgun import maximgun_client as maxim_client
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -49,6 +53,14 @@ def pytest_configure(config):
 
         # updating final htmlpath to my.json
         myconfig["mangleYaan"]["testReportPath"] = config.option.htmlpath
+
+@pytest.fixture(scope="function",autouse=True)
+def check_if_user_cancelled_execution():
+    if mycache["run_id"] != '':
+        params = {"run_id": mycache["run_id"]}
+        am_resp = mgclient.make_call("GET", maxim_gun_resources.MAXIMGUN.get("GET_TASK_STATUS"), params=params)
+        if am_resp.json['status']== lib_params.MG_TASK_STATUS["CANCELLED"]:
+            pytest.exit(msg="Pytest Cancelled by User",returncode=2)
 
 
 @pytest.fixture(scope="function")

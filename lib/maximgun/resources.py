@@ -12,3 +12,4 @@ MAXIMGUN_RES_API_PREFIX = "/api"
 MAXIMGUN = OrderedDict()
 MAXIMGUN["MANGLEYAAN_CONFIG"] = "/res/runtest/mangle-yaan/config"
 MAXIMGUN["TASK_STATUS_UPDATE"] = "/history/status"
+MAXIMGUN["GET_TASK_STATUS"] = "/history/status"

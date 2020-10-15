@@ -594,24 +594,21 @@ if __name__ == "__main__":
         run_id=args.run_id,
     )
     pytest_status = run_pytest(pytest_cmdline, run_id=args.run_id)
-
     # don't copy logs to S3 for pytest usage error. seems incorrect --pytest_args are passed. Also, update task status as FAILED
     copy_results = True
-    mg_task_status = True  # maxim-gun task status
+    end_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     if pytest_status == 4:
         copy_results = False
-        mg_task_status = False
-    s3_path = post_run_activities(copy_results=copy_results)
-
-    end_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-    if mg_task_status:
+        mg_agent.update_task(
+            args.run_id, status=lib_params.MG_TASK_STATUS["FAILED"], end_time=end_time
+        )
+    if pytest_status == 2:
+       copy_results = False
+    if copy_results:
+        s3_path = post_run_activities(copy_results=copy_results)
         mg_agent.update_task(
             args.run_id,
             status=lib_params.MG_TASK_STATUS["COMPLETED"],
             end_time=end_time,
             report_url=s3_path,
-        )
-    else:
-        mg_agent.update_task(
-            args.run_id, status=lib_params.MG_TASK_STATUS["FAILED"], end_time=end_time
         )
