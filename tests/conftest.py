@@ -56,7 +56,6 @@ def pytest_configure(config):
 
 @pytest.fixture(scope="function",autouse=True)
 def check_if_user_cancelled_execution():
-    print(mycache["run_id"])
     if mycache["run_id"] != '':
         params = {"run_id": mycache["run_id"]}
         am_resp = mgclient.make_call("GET", maxim_gun_resources.MAXIMGUN.get("GET_TASK_STATUS"), params=params)
