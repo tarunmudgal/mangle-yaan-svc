@@ -55,13 +55,13 @@ def pytest_configure(config):
         myconfig["mangleYaan"]["testReportPath"] = config.option.htmlpath
 
 @pytest.fixture(scope="function",autouse=True)
-def inject_k8s():
-    params = {
-        "run_id": mycache["run_id"]
-    }
-    am_resp = mgclient.make_call("GET", maxim_gun_resources.MAXIMGUN.get("GET_TASK_STATUS"), params=params)
-    if am_resp.json['status']== lib_params.MG_TASK_STATUS["CANCELLED"]:
-        pytest.exit(msg="Pytest Cancelled by User",returncode=2)
+def check_if_user_cancelled_execution():
+    print(mycache["run_id"])
+    if mycache["run_id"] != '':
+        params = {"run_id": mycache["run_id"]}
+        am_resp = mgclient.make_call("GET", maxim_gun_resources.MAXIMGUN.get("GET_TASK_STATUS"), params=params)
+        if am_resp.json['status']== lib_params.MG_TASK_STATUS["CANCELLED"]:
+            pytest.exit(msg="Pytest Cancelled by User",returncode=2)
 
 
 @pytest.fixture(scope="function")
