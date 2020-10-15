@@ -10,6 +10,7 @@ import time
 
 import boto3
 import pytest
+import requests
 from py.xml import html
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -57,11 +58,14 @@ def pytest_configure(config):
 def check_if_user_cancelled_execution():
     if mycache["run_id"]:
         params = {"run_id": mycache["run_id"]}
-        am_resp = mgclient.make_call(
+        resp = mgclient.make_call(
             "GET", maxim_gun_resources.MAXIMGUN.get("GET_TASK_STATUS"), params=params
         )
-        if am_resp.json["status"] == lib_params.MG_TASK_STATUS["CANCELLED"]:
-            pytest.exit(msg="Pytest Cancelled by User", returncode=2)
+        if resp.status_code == requests.codes.ok:
+            if resp.json["status"] == lib_params.MG_TASK_STATUS["CANCELLED"]:
+                pytest.exit(msg="Pytest Cancelled by User", returncode=2)
+        else:
+            mylog.error("maxim-gun GET_TASK_STATUS API failed with status_code={}".format(resp.status_code))
 
 
 @pytest.fixture(scope="function")

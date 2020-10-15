@@ -45,7 +45,7 @@ class TestCSPAPIsWhenVIPServiceNotReachable(object):
                         },
                         "description": "patched description",
                         "title": "Single Host",
-                        "globalizationKey": uuid.uuid4()
+                        "globalizationKey": str(uuid.uuid4())
                         }
 
         # verify csp api raises exception for 'too many 504 error responses'
@@ -76,7 +76,7 @@ class TestCSPAPIsWhenVIPServiceNotReachable(object):
             "onboardingContextIds": [
                 "3c0e2fd2-4dc8-4a01-a356-1ecf2dcd4fbd"
             ],
-            "globalizationKey": uuid.uuid4()
+            "globalizationKey": str(uuid.uuid4())
         }
 
         # verify csp api raises exception for 'too many 504 error responses'
