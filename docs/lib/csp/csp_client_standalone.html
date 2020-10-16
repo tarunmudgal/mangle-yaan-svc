@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>lib.csp.csp_client_standalone API documentation</title>
+<meta name="description" content="Mangle REST Client" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>lib.csp.csp_client_standalone</code></h1>
+</header>
+<section id="section-intro">
+<p>Mangle REST Client</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+&#34;&#34;&#34; Mangle REST Client &#34;&#34;&#34;
+
+import abc
+import logging
+import time
+import typing
+
+import requests
+import urllib3
+
+requests.packages.urllib3.disable_warnings()
+
+from requests.adapters import HTTPAdapter
+from requests.exceptions import (ConnectionError, ConnectTimeout,
+                                 ReadTimeout, SSLError, Timeout)
+from requests.packages.urllib3.exceptions import ConnectTimeoutError
+from requests.packages.urllib3.util.retry import Retry
+
+mylog = logging.getLogger(&#34;root&#34;)
+mylog.setLevel(logging.DEBUG)
+mylog.addHandler(logging.StreamHandler())
+
+
+HTTP_RETRIABLE_ERRORS = (
+    ConnectionError,
+    ConnectTimeout,
+    ConnectTimeoutError,
+    ReadTimeout,
+    SSLError,
+    Timeout,
+)
+
+# http://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html
+DEFAULT_RETRY_OBJ = Retry(
+    total=3,
+    status_forcelist=[429, 500, 502, 503, 504],
+    method_whitelist=[
+        &#34;GET&#34;,
+        &#34;POST&#34;,
+        &#34;PUT&#34;,
+        &#34;DELETE&#34;,
+        &#34;OPTIONS&#34;,
+        &#34;PUT&#34;,
+        &#34;HEAD&#34;,
+        &#34;TRACE&#34;,
+    ],
+    backoff_factor=1,
+)
+
+
+def rest_request(
+    method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str
+) -&gt; requests.Response:
+    &#34;&#34;&#34;thin wrapper over requests.request API with retry logic implemented
+    Args:
+      method: request verb e.g. GET, POST, PUT, DELETE etc.
+      url: request url including api resource
+      retry_count: maxium number of retries allowed
+      retry_sleep: sleep (in seconds) in between retries
+
+    Returns:
+      requests.Response
+    &#34;&#34;&#34;
+    if retry_count &lt; 0:
+        retry_count = 0
+
+    attempt = 0
+    while attempt &lt; retry_count + 1:
+        try:
+            attempt += 1
+            mylog.debug(
+                &#34;Sending a request with method=%s, url=%s&#34;, method, url,
+            )
+            response = requests.request(method, url, **kwargs)
+            mylog.debug(
+                &#34;Request with method=%s, url=%s succeeded in (%d) attempt(s)&#34;,
+                method,
+                url,
+                attempt,
+            )
+            return response
+        except HTTP_RETRIABLE_ERRORS as fault:
+            mylog.debug(
+                &#34;Failed to send request due to connection error. method=%s, url=%s, error=%s&#34;,
+                method,
+                url,
+                fault,
+            )
+            if attempt &lt; retry_count + 1:
+                mylog.debug(&#34;retry(%d) after %d seconds&#34;, attempt, retry_sleep)
+                time.sleep(retry_sleep)
+            else:
+                mylog.exception(fault)
+                raise
+        except Exception as fault:
+            mylog.debug(&#34;Exception occurred in method=%s, url=%s&#34;, method, url)
+            mylog.exception(fault)
+            raise
+
+
+class RESTClient(abc.ABC):
+    &#34;&#34;&#34;
+        This class prepares REST calls, send requests and handle errors
+    &#34;&#34;&#34;
+
+    def __init__(
+        self,
+        scheme=&#34;https://&#34;,
+        host=&#34;&#34;,
+        port=443,
+        api_prefix=&#34;&#34;,
+        ssl_verify=False,
+        timeout=None,
+    ):
+        self._base_url = scheme + host + &#34;:&#34; + str(port) + api_prefix
+        self._ssl_verify = ssl_verify
+        self._timeout = timeout
+
+        self._headers = None
+        if not self._ssl_verify:
+            urllib3.disable_warnings()
+
+    # def __repr__(self):
+    #     return &#34;RESTClient(host={}, api_prefix={}, ssl_verify={}, timeout={}, session={})&#34;.format(
+    #         self.__host, self.__api_prefix, self.__ssl_verify, self.__timeout, self.__session
+    #     )
+
+    @abc.abstractmethod
+    def init_session(self):
+        pass
+
+    # @utils.log_args
+    def request(
+        self,
+        method: str,
+        api_resource: str,
+        retry_count: int = 1,
+        retry_sleep: int = 5,
+        **kwargs: str,
+    ) -&gt; typing.NewType(&#34;Response&#34;, requests.Response):
+        &#34;&#34;&#34;sends HTTP request for RESTClient
+
+        Args:
+          method: request verb e.g. GET, POST, PUT, DELETE etc.
+          api_resource: api resource of the client
+          retry_count: maxium number of retries allowed
+          retry_sleep: sleep (in seconds) in between retries
+
+        Returns:
+          requests.Response
+        &#34;&#34;&#34;
+        url = self._base_url + api_resource
+
+        if self._headers is not None:
+            if kwargs.get(&#34;headers&#34;) is not None:
+                kwargs[&#34;headers&#34;].update(self._headers)
+            else:
+                kwargs[&#34;headers&#34;] = {}
+                kwargs[&#34;headers&#34;].update(self._headers)
+
+        if kwargs.get(&#34;timeout&#34;) is None:
+            kwargs[&#34;timeout&#34;] = self._timeout
+
+        if retry_count &lt; 0:
+            retry_count = 0
+
+        attempt = 0
+        while attempt &lt; retry_count + 1:
+            try:
+                attempt += 1
+                mylog.debug(
+                    &#34;RESTClient: Sending a request with method=%s, resource=%s&#34;,
+                    method,
+                    api_resource,
+                )
+
+                response = self._session.request(method, url, **kwargs)
+                mylog.debug(
+                    &#34;RESTClient: request with method=%s, resource=%s succeeded in (%d) attempt(s)&#34;,
+                    method,
+                    api_resource,
+                    attempt,
+                )
+                return response
+            except HTTP_RETRIABLE_ERRORS as fault:
+                mylog.debug(
+                    &#34;RESTClient: Failed to send request due to connection error. method=%s, resource=%s, error=%s&#34;,
+                    method,
+                    api_resource,
+                    fault,
+                )
+                if attempt &lt; retry_count + 1:
+                    mylog.debug(
+                        &#34;RESTClient: retry(%d) after %d seconds&#34;, attempt, retry_sleep
+                    )
+                    time.sleep(retry_sleep)
+                else:
+                    mylog.exception(fault)
+                    raise
+            except Exception as fault:
+                mylog.debug(
+                    &#34;RESTClient: Exception occurred in method=%s, url=%s&#34;, method, url
+                )
+                mylog.exception(fault)
+                raise
+
+
+class CSPResponse(object):
+    &#34;&#34;&#34;CSPClient Response Wrapper&#34;&#34;&#34;
+
+    def __init__(self, response):
+        self.url = response.url
+        self.status_code = response.status_code
+        self.resp_time = response.elapsed.total_seconds()
+        self.headers = response.headers
+        self.json = None
+        self.text = None
+        try:
+            self.json = response.json()
+        except ValueError as fault:
+            breakpoint()
+            self.text = response.text
+
+    def __repr__(self):
+        return &#34;CSPResponse(url={} status_code={} headers={} json={} text={})&#34;.format(
+            self.url, self.status_code, self.headers, self.json, self.text
+        )
+
+
+class CSPClient(RESTClient):
+    &#34;&#34;&#34;
+    CSPClient (HTTP Client) that interacts with CSP REST APIs
+    &#34;&#34;&#34;
+
+    __single_instance = None
+
+    def __init__(
+        self,
+        host: str,
+        refresh_token: str,
+        api_prefix: str = &#34;/csp/gateway&#34;,
+        scheme: str = &#34;https://&#34;,
+        retry_obj: Retry = DEFAULT_RETRY_OBJ,
+        ssl_verify: bool = False,
+        timeout: int = None,
+    ) -&gt; None:
+        &#34;&#34;&#34;Initializes singleton CSPClient that is used to make CSP API calls
+        Args:
+            host: CSP hostname
+            refresh_token: CSP refresh token that is used to fetch access token
+            api_prefix: CSP API Prefix
+            scheme: it should be either &#39;http://&#39; or &#39;https://&#39;
+            retry_obj: requests.packages.urllib3.util.retry.Retry object used to enable retries on specific status_code(s)
+            ssl_verify: True if SSL needs to be enabled else False
+            timeout: maximum time to wait (for connect and read) before raising Timeout exception
+        Raises:
+            None
+        Returns:
+            CSPClient object
+        &#34;&#34;&#34;
+
+        adapter = HTTPAdapter(max_retries=retry_obj)
+
+        if CSPClient.__single_instance is not None:
+            raise Exception(
+                &#34;CSPClient is a singleton class and cannot have more than one objects&#34;
+            )
+
+        CSPClient.__single_instance = self
+
+        super().__init__(
+            scheme=scheme,
+            host=host,
+            api_prefix=api_prefix,
+            ssl_verify=ssl_verify,
+            timeout=timeout,
+        )
+
+        self._refresh_token = refresh_token
+        self._session = requests.Session()
+        self._session.mount(scheme, adapter)
+        self.init_session()
+
+        mylog.debug(&#34;CSPClient obj %s initialized.&#34; % self)
+
+    def __repr__(self):
+        return &#34;CSPClient(base_url={})&#34;.format(self._base_url)
+
+    def init_session(self):
+        self._access_token = self.get_access_token()
+
+        self._session.headers = {&#34;csp-auth-token&#34;: self._access_token}
+        self._session.verify = self._ssl_verify
+
+    def get_access_token(self):
+        access_token_url = self._base_url + &#34;/am/api/auth/api-tokens/authorize&#34;
+        headers = {&#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;,
+                   &#34;Cookie&#34;: &#34;visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==&#34;}
+        payload = &#34;refresh_token={}&#34;.format(self._refresh_token)
+
+        mylog.debug(&#34;fetching access_token for CSP API calls&#34;)
+        # response = requests.request(&#34;POST&#34;, access_token_url, headers=headers, data=payload)
+        response = rest_request(
+            &#34;POST&#34;,
+            access_token_url,
+            retry_count=1,
+            retry_sleep=5,
+            headers=headers,
+            data=payload,
+        )
+
+        if response.status_code == requests.codes.ok:
+            return response.json().get(&#34;access_token&#34;)
+        else:
+            raise Exception(
+                &#34;could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})&#34;.format(
+                    access_token_url,
+                    headers,
+                    payload,
+                    response.status_code,
+                    response.text,
+                )
+            )
+
+    # @utils.log_args
+    def make_call(self, verb: str, api_resource: str, **kwargs: str) -&gt; CSPResponse:
+        &#34;&#34;&#34;
+        makes a HTTP call using RESTClient.request API
+        Args:
+            verb: request verb e.g. GET, POST, PUT, DELETE etc.
+            api_resource: api resource handle
+            kwargs: kwargs that are supported by requests.request. In addition, retry_count and retry_sleep are also supported
+        Returns:
+            CSPResponse obj
+        &#34;&#34;&#34;
+        req_resp = self.request(verb, api_resource, **kwargs)
+        if req_resp.status_code == 401:
+            mylog.debug(
+                &#34;Authorization error occurred for CSP API call. Updating access_token&#34;
+            )
+            self.init_session()
+            req_resp = self.request(verb, api_resource, **kwargs)
+        return CSPResponse(req_resp)
+
+
+if __name__ == &#34;__main__&#34;:
+    import pdb
+
+    # pdb.set_trace()
+    cclient = CSPClient(
+        &#34;console-preview.cloud.vmware.com&#34;,
+        &#34;5GcznFtRSQFqUMPFN7ON4jHQUHHhiRY52rS9Qi9Pq1vPSdGWF0N4RvpmpADzfZn6&#34;,
+        timeout=120,
+    )
+
+    api_resource = &#34;/am/api/orgs/f09537d7-633a-4204-891e-2fe6e58265a7/oauth-apps&#34;
+    payload = {
+            &#34;refreshTokenTTL&#34;: None,
+            &#34;accessTokenTTL&#34;: 1800,
+            &#34;grantTypes&#34;: [
+                &#34;client_credentials&#34;
+            ],
+            &#34;description&#34;: &#34;Test2&#34;,
+            &#34;displayName&#34;: &#34;res_oauth_app_2&#34;,
+            &#34;publicClient&#34;: False,
+            &#34;allowedScopes&#34;: {
+                &#34;generalScopes&#34;: [],
+                &#34;allRoles&#34;: False,
+                &#34;servicesScopes&#34;: [
+                    {
+                        &#34;allRoles&#34;: False,
+                        &#34;serviceDefinitionId&#34;: &#34;514b6d89-b22b-482a-96fb-cfcab3137ccf&#34;,
+                        &#34;roles&#34;: [
+                            {
+                                &#34;resource&#34;: None,
+                                &#34;name&#34;: &#34;srv_name:user&#34;
+                            },
+                            {
+                                &#34;resource&#34;: None,
+                                &#34;name&#34;: &#34;srv_name:admin&#34;,
+                                &#34;selected&#34;:1
+                            }
+                        ]
+                    }
+                ],
+                &#34;organizationScopes&#34;: {
+                    &#34;allRoles&#34;: False,
+                    &#34;roles&#34;: [
+                        {
+                            &#34;name&#34;: &#34;org_owner&#34;
+                        },
+                        {
+                            &#34;name&#34;: &#34;support_user&#34;
+                        },
+                        {
+                            &#34;name&#34;: &#34;project_admin&#34;
+                        }
+                    ]
+                }
+            },
+            &#34;redirectUris&#34;: []
+        }
+
+    call_count_start = 11
+    call_count_end = 100
+    for cnt in range(call_count_start, call_count_end+1):
+        mylog.info(&#34;call has been made for cnt={}&#34;.format(cnt))
+        payload.update(description=&#34;Test_OAuth_{}&#34;.format(cnt))
+        payload.update(displayName=&#34;resiliency_oauth_app_{}&#34;.format(cnt))
+        am_resp = cclient.make_call(&#34;POST&#34;, api_resource, json=payload)
+        mylog.info(&#34;am_resp={}&#34;.format(am_resp))
+        if am_resp.status_code != 200:
+            mylog.error(&#34;call failed for cnt={}&#34;.format(cnt))</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="lib.csp.csp_client_standalone.rest_request"><code class="name flex">
+<span>def <span class="ident">rest_request</span></span>(<span>method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str) ‑> requests.models.Response</span>
+</code></dt>
+<dd>
+<div class="desc"><p>thin wrapper over requests.request API with retry logic implemented</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>method</code></strong></dt>
+<dd>request verb e.g. GET, POST, PUT, DELETE etc.</dd>
+<dt><strong><code>url</code></strong></dt>
+<dd>request url including api resource</dd>
+<dt><strong><code>retry_count</code></strong></dt>
+<dd>maxium number of retries allowed</dd>
+<dt><strong><code>retry_sleep</code></strong></dt>
+<dd>sleep (in seconds) in between retries</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>requests.Response</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rest_request(
+    method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str
+) -&gt; requests.Response:
+    &#34;&#34;&#34;thin wrapper over requests.request API with retry logic implemented
+    Args:
+      method: request verb e.g. GET, POST, PUT, DELETE etc.
+      url: request url including api resource
+      retry_count: maxium number of retries allowed
+      retry_sleep: sleep (in seconds) in between retries
+
+    Returns:
+      requests.Response
+    &#34;&#34;&#34;
+    if retry_count &lt; 0:
+        retry_count = 0
+
+    attempt = 0
+    while attempt &lt; retry_count + 1:
+        try:
+            attempt += 1
+            mylog.debug(
+                &#34;Sending a request with method=%s, url=%s&#34;, method, url,
+            )
+            response = requests.request(method, url, **kwargs)
+            mylog.debug(
+                &#34;Request with method=%s, url=%s succeeded in (%d) attempt(s)&#34;,
+                method,
+                url,
+                attempt,
+            )
+            return response
+        except HTTP_RETRIABLE_ERRORS as fault:
+            mylog.debug(
+                &#34;Failed to send request due to connection error. method=%s, url=%s, error=%s&#34;,
+                method,
+                url,
+                fault,
+            )
+            if attempt &lt; retry_count + 1:
+                mylog.debug(&#34;retry(%d) after %d seconds&#34;, attempt, retry_sleep)
+                time.sleep(retry_sleep)
+            else:
+                mylog.exception(fault)
+                raise
+        except Exception as fault:
+            mylog.debug(&#34;Exception occurred in method=%s, url=%s&#34;, method, url)
+            mylog.exception(fault)
+            raise</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="lib.csp.csp_client_standalone.CSPClient"><code class="flex name class">
+<span>class <span class="ident">CSPClient</span></span>
+<span>(</span><span>host: str, refresh_token: str, api_prefix: str = '/csp/gateway', scheme: str = 'https://', retry_obj: urllib3.util.retry.Retry = Retry(total=3, connect=None, read=None, redirect=None, status=None), ssl_verify: bool = False, timeout: int = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>CSPClient (HTTP Client) that interacts with CSP REST APIs</p>
+<p>Initializes singleton CSPClient that is used to make CSP API calls</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>host</code></strong></dt>
+<dd>CSP hostname</dd>
+<dt><strong><code>refresh_token</code></strong></dt>
+<dd>CSP refresh token that is used to fetch access token</dd>
+<dt><strong><code>api_prefix</code></strong></dt>
+<dd>CSP API Prefix</dd>
+<dt><strong><code>scheme</code></strong></dt>
+<dd>it should be either 'http://' or 'https://'</dd>
+<dt><strong><code>retry_obj</code></strong></dt>
+<dd>requests.packages.urllib3.util.retry.Retry object used to enable retries on specific status_code(s)</dd>
+<dt><strong><code>ssl_verify</code></strong></dt>
+<dd>True if SSL needs to be enabled else False</dd>
+<dt><strong><code>timeout</code></strong></dt>
+<dd>maximum time to wait (for connect and read) before raising Timeout exception</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>CSPClient object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CSPClient(RESTClient):
+    &#34;&#34;&#34;
+    CSPClient (HTTP Client) that interacts with CSP REST APIs
+    &#34;&#34;&#34;
+
+    __single_instance = None
+
+    def __init__(
+        self,
+        host: str,
+        refresh_token: str,
+        api_prefix: str = &#34;/csp/gateway&#34;,
+        scheme: str = &#34;https://&#34;,
+        retry_obj: Retry = DEFAULT_RETRY_OBJ,
+        ssl_verify: bool = False,
+        timeout: int = None,
+    ) -&gt; None:
+        &#34;&#34;&#34;Initializes singleton CSPClient that is used to make CSP API calls
+        Args:
+            host: CSP hostname
+            refresh_token: CSP refresh token that is used to fetch access token
+            api_prefix: CSP API Prefix
+            scheme: it should be either &#39;http://&#39; or &#39;https://&#39;
+            retry_obj: requests.packages.urllib3.util.retry.Retry object used to enable retries on specific status_code(s)
+            ssl_verify: True if SSL needs to be enabled else False
+            timeout: maximum time to wait (for connect and read) before raising Timeout exception
+        Raises:
+            None
+        Returns:
+            CSPClient object
+        &#34;&#34;&#34;
+
+        adapter = HTTPAdapter(max_retries=retry_obj)
+
+        if CSPClient.__single_instance is not None:
+            raise Exception(
+                &#34;CSPClient is a singleton class and cannot have more than one objects&#34;
+            )
+
+        CSPClient.__single_instance = self
+
+        super().__init__(
+            scheme=scheme,
+            host=host,
+            api_prefix=api_prefix,
+            ssl_verify=ssl_verify,
+            timeout=timeout,
+        )
+
+        self._refresh_token = refresh_token
+        self._session = requests.Session()
+        self._session.mount(scheme, adapter)
+        self.init_session()
+
+        mylog.debug(&#34;CSPClient obj %s initialized.&#34; % self)
+
+    def __repr__(self):
+        return &#34;CSPClient(base_url={})&#34;.format(self._base_url)
+
+    def init_session(self):
+        self._access_token = self.get_access_token()
+
+        self._session.headers = {&#34;csp-auth-token&#34;: self._access_token}
+        self._session.verify = self._ssl_verify
+
+    def get_access_token(self):
+        access_token_url = self._base_url + &#34;/am/api/auth/api-tokens/authorize&#34;
+        headers = {&#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;,
+                   &#34;Cookie&#34;: &#34;visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==&#34;}
+        payload = &#34;refresh_token={}&#34;.format(self._refresh_token)
+
+        mylog.debug(&#34;fetching access_token for CSP API calls&#34;)
+        # response = requests.request(&#34;POST&#34;, access_token_url, headers=headers, data=payload)
+        response = rest_request(
+            &#34;POST&#34;,
+            access_token_url,
+            retry_count=1,
+            retry_sleep=5,
+            headers=headers,
+            data=payload,
+        )
+
+        if response.status_code == requests.codes.ok:
+            return response.json().get(&#34;access_token&#34;)
+        else:
+            raise Exception(
+                &#34;could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})&#34;.format(
+                    access_token_url,
+                    headers,
+                    payload,
+                    response.status_code,
+                    response.text,
+                )
+            )
+
+    # @utils.log_args
+    def make_call(self, verb: str, api_resource: str, **kwargs: str) -&gt; CSPResponse:
+        &#34;&#34;&#34;
+        makes a HTTP call using RESTClient.request API
+        Args:
+            verb: request verb e.g. GET, POST, PUT, DELETE etc.
+            api_resource: api resource handle
+            kwargs: kwargs that are supported by requests.request. In addition, retry_count and retry_sleep are also supported
+        Returns:
+            CSPResponse obj
+        &#34;&#34;&#34;
+        req_resp = self.request(verb, api_resource, **kwargs)
+        if req_resp.status_code == 401:
+            mylog.debug(
+                &#34;Authorization error occurred for CSP API call. Updating access_token&#34;
+            )
+            self.init_session()
+            req_resp = self.request(verb, api_resource, **kwargs)
+        return CSPResponse(req_resp)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="lib.csp.csp_client_standalone.RESTClient" href="#lib.csp.csp_client_standalone.RESTClient">RESTClient</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.csp.csp_client_standalone.CSPClient.get_access_token"><code class="name flex">
+<span>def <span class="ident">get_access_token</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_access_token(self):
+    access_token_url = self._base_url + &#34;/am/api/auth/api-tokens/authorize&#34;
+    headers = {&#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;,
+               &#34;Cookie&#34;: &#34;visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==&#34;}
+    payload = &#34;refresh_token={}&#34;.format(self._refresh_token)
+
+    mylog.debug(&#34;fetching access_token for CSP API calls&#34;)
+    # response = requests.request(&#34;POST&#34;, access_token_url, headers=headers, data=payload)
+    response = rest_request(
+        &#34;POST&#34;,
+        access_token_url,
+        retry_count=1,
+        retry_sleep=5,
+        headers=headers,
+        data=payload,
+    )
+
+    if response.status_code == requests.codes.ok:
+        return response.json().get(&#34;access_token&#34;)
+    else:
+        raise Exception(
+            &#34;could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})&#34;.format(
+                access_token_url,
+                headers,
+                payload,
+                response.status_code,
+                response.text,
+            )
+        )</code></pre>
+</details>
+</dd>
+<dt id="lib.csp.csp_client_standalone.CSPClient.init_session"><code class="name flex">
+<span>def <span class="ident">init_session</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init_session(self):
+    self._access_token = self.get_access_token()
+
+    self._session.headers = {&#34;csp-auth-token&#34;: self._access_token}
+    self._session.verify = self._ssl_verify</code></pre>
+</details>
+</dd>
+<dt id="lib.csp.csp_client_standalone.CSPClient.make_call"><code class="name flex">
+<span>def <span class="ident">make_call</span></span>(<span>self, verb: str, api_resource: str, **kwargs: str) ‑> <a title="lib.csp.csp_client_standalone.CSPResponse" href="#lib.csp.csp_client_standalone.CSPResponse">CSPResponse</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>makes a HTTP call using RESTClient.request API</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>verb</code></strong></dt>
+<dd>request verb e.g. GET, POST, PUT, DELETE etc.</dd>
+<dt><strong><code>api_resource</code></strong></dt>
+<dd>api resource handle</dd>
+<dt><strong><code>kwargs</code></strong></dt>
+<dd>kwargs that are supported by requests.request. In addition, retry_count and retry_sleep are also supported</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>CSPResponse obj</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_call(self, verb: str, api_resource: str, **kwargs: str) -&gt; CSPResponse:
+    &#34;&#34;&#34;
+    makes a HTTP call using RESTClient.request API
+    Args:
+        verb: request verb e.g. GET, POST, PUT, DELETE etc.
+        api_resource: api resource handle
+        kwargs: kwargs that are supported by requests.request. In addition, retry_count and retry_sleep are also supported
+    Returns:
+        CSPResponse obj
+    &#34;&#34;&#34;
+    req_resp = self.request(verb, api_resource, **kwargs)
+    if req_resp.status_code == 401:
+        mylog.debug(
+            &#34;Authorization error occurred for CSP API call. Updating access_token&#34;
+        )
+        self.init_session()
+        req_resp = self.request(verb, api_resource, **kwargs)
+    return CSPResponse(req_resp)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="lib.csp.csp_client_standalone.RESTClient" href="#lib.csp.csp_client_standalone.RESTClient">RESTClient</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.csp.csp_client_standalone.RESTClient.request" href="#lib.csp.csp_client_standalone.RESTClient.request">request</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="lib.csp.csp_client_standalone.CSPResponse"><code class="flex name class">
+<span>class <span class="ident">CSPResponse</span></span>
+<span>(</span><span>response)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>CSPClient Response Wrapper</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CSPResponse(object):
+    &#34;&#34;&#34;CSPClient Response Wrapper&#34;&#34;&#34;
+
+    def __init__(self, response):
+        self.url = response.url
+        self.status_code = response.status_code
+        self.resp_time = response.elapsed.total_seconds()
+        self.headers = response.headers
+        self.json = None
+        self.text = None
+        try:
+            self.json = response.json()
+        except ValueError as fault:
+            breakpoint()
+            self.text = response.text
+
+    def __repr__(self):
+        return &#34;CSPResponse(url={} status_code={} headers={} json={} text={})&#34;.format(
+            self.url, self.status_code, self.headers, self.json, self.text
+        )</code></pre>
+</details>
+</dd>
+<dt id="lib.csp.csp_client_standalone.RESTClient"><code class="flex name class">
+<span>class <span class="ident">RESTClient</span></span>
+<span>(</span><span>scheme='https://', host='', port=443, api_prefix='', ssl_verify=False, timeout=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This class prepares REST calls, send requests and handle errors</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RESTClient(abc.ABC):
+    &#34;&#34;&#34;
+        This class prepares REST calls, send requests and handle errors
+    &#34;&#34;&#34;
+
+    def __init__(
+        self,
+        scheme=&#34;https://&#34;,
+        host=&#34;&#34;,
+        port=443,
+        api_prefix=&#34;&#34;,
+        ssl_verify=False,
+        timeout=None,
+    ):
+        self._base_url = scheme + host + &#34;:&#34; + str(port) + api_prefix
+        self._ssl_verify = ssl_verify
+        self._timeout = timeout
+
+        self._headers = None
+        if not self._ssl_verify:
+            urllib3.disable_warnings()
+
+    # def __repr__(self):
+    #     return &#34;RESTClient(host={}, api_prefix={}, ssl_verify={}, timeout={}, session={})&#34;.format(
+    #         self.__host, self.__api_prefix, self.__ssl_verify, self.__timeout, self.__session
+    #     )
+
+    @abc.abstractmethod
+    def init_session(self):
+        pass
+
+    # @utils.log_args
+    def request(
+        self,
+        method: str,
+        api_resource: str,
+        retry_count: int = 1,
+        retry_sleep: int = 5,
+        **kwargs: str,
+    ) -&gt; typing.NewType(&#34;Response&#34;, requests.Response):
+        &#34;&#34;&#34;sends HTTP request for RESTClient
+
+        Args:
+          method: request verb e.g. GET, POST, PUT, DELETE etc.
+          api_resource: api resource of the client
+          retry_count: maxium number of retries allowed
+          retry_sleep: sleep (in seconds) in between retries
+
+        Returns:
+          requests.Response
+        &#34;&#34;&#34;
+        url = self._base_url + api_resource
+
+        if self._headers is not None:
+            if kwargs.get(&#34;headers&#34;) is not None:
+                kwargs[&#34;headers&#34;].update(self._headers)
+            else:
+                kwargs[&#34;headers&#34;] = {}
+                kwargs[&#34;headers&#34;].update(self._headers)
+
+        if kwargs.get(&#34;timeout&#34;) is None:
+            kwargs[&#34;timeout&#34;] = self._timeout
+
+        if retry_count &lt; 0:
+            retry_count = 0
+
+        attempt = 0
+        while attempt &lt; retry_count + 1:
+            try:
+                attempt += 1
+                mylog.debug(
+                    &#34;RESTClient: Sending a request with method=%s, resource=%s&#34;,
+                    method,
+                    api_resource,
+                )
+
+                response = self._session.request(method, url, **kwargs)
+                mylog.debug(
+                    &#34;RESTClient: request with method=%s, resource=%s succeeded in (%d) attempt(s)&#34;,
+                    method,
+                    api_resource,
+                    attempt,
+                )
+                return response
+            except HTTP_RETRIABLE_ERRORS as fault:
+                mylog.debug(
+                    &#34;RESTClient: Failed to send request due to connection error. method=%s, resource=%s, error=%s&#34;,
+                    method,
+                    api_resource,
+                    fault,
+                )
+                if attempt &lt; retry_count + 1:
+                    mylog.debug(
+                        &#34;RESTClient: retry(%d) after %d seconds&#34;, attempt, retry_sleep
+                    )
+                    time.sleep(retry_sleep)
+                else:
+                    mylog.exception(fault)
+                    raise
+            except Exception as fault:
+                mylog.debug(
+                    &#34;RESTClient: Exception occurred in method=%s, url=%s&#34;, method, url
+                )
+                mylog.exception(fault)
+                raise</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="lib.csp.csp_client_standalone.CSPClient" href="#lib.csp.csp_client_standalone.CSPClient">CSPClient</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.csp.csp_client_standalone.RESTClient.init_session"><code class="name flex">
+<span>def <span class="ident">init_session</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abc.abstractmethod
+def init_session(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="lib.csp.csp_client_standalone.RESTClient.request"><code class="name flex">
+<span>def <span class="ident">request</span></span>(<span>self, method: str, api_resource: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str) ‑> <function NewType.<locals>.new_type at 0x10d95d430></span>
+</code></dt>
+<dd>
+<div class="desc"><p>sends HTTP request for RESTClient</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>method</code></strong></dt>
+<dd>request verb e.g. GET, POST, PUT, DELETE etc.</dd>
+<dt><strong><code>api_resource</code></strong></dt>
+<dd>api resource of the client</dd>
+<dt><strong><code>retry_count</code></strong></dt>
+<dd>maxium number of retries allowed</dd>
+<dt><strong><code>retry_sleep</code></strong></dt>
+<dd>sleep (in seconds) in between retries</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>requests.Response</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def request(
+    self,
+    method: str,
+    api_resource: str,
+    retry_count: int = 1,
+    retry_sleep: int = 5,
+    **kwargs: str,
+) -&gt; typing.NewType(&#34;Response&#34;, requests.Response):
+    &#34;&#34;&#34;sends HTTP request for RESTClient
+
+    Args:
+      method: request verb e.g. GET, POST, PUT, DELETE etc.
+      api_resource: api resource of the client
+      retry_count: maxium number of retries allowed
+      retry_sleep: sleep (in seconds) in between retries
+
+    Returns:
+      requests.Response
+    &#34;&#34;&#34;
+    url = self._base_url + api_resource
+
+    if self._headers is not None:
+        if kwargs.get(&#34;headers&#34;) is not None:
+            kwargs[&#34;headers&#34;].update(self._headers)
+        else:
+            kwargs[&#34;headers&#34;] = {}
+            kwargs[&#34;headers&#34;].update(self._headers)
+
+    if kwargs.get(&#34;timeout&#34;) is None:
+        kwargs[&#34;timeout&#34;] = self._timeout
+
+    if retry_count &lt; 0:
+        retry_count = 0
+
+    attempt = 0
+    while attempt &lt; retry_count + 1:
+        try:
+            attempt += 1
+            mylog.debug(
+                &#34;RESTClient: Sending a request with method=%s, resource=%s&#34;,
+                method,
+                api_resource,
+            )
+
+            response = self._session.request(method, url, **kwargs)
+            mylog.debug(
+                &#34;RESTClient: request with method=%s, resource=%s succeeded in (%d) attempt(s)&#34;,
+                method,
+                api_resource,
+                attempt,
+            )
+            return response
+        except HTTP_RETRIABLE_ERRORS as fault:
+            mylog.debug(
+                &#34;RESTClient: Failed to send request due to connection error. method=%s, resource=%s, error=%s&#34;,
+                method,
+                api_resource,
+                fault,
+            )
+            if attempt &lt; retry_count + 1:
+                mylog.debug(
+                    &#34;RESTClient: retry(%d) after %d seconds&#34;, attempt, retry_sleep
+                )
+                time.sleep(retry_sleep)
+            else:
+                mylog.exception(fault)
+                raise
+        except Exception as fault:
+            mylog.debug(
+                &#34;RESTClient: Exception occurred in method=%s, url=%s&#34;, method, url
+            )
+            mylog.exception(fault)
+            raise</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="lib.csp" href="index.html">lib.csp</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="lib.csp.csp_client_standalone.rest_request" href="#lib.csp.csp_client_standalone.rest_request">rest_request</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="lib.csp.csp_client_standalone.CSPClient" href="#lib.csp.csp_client_standalone.CSPClient">CSPClient</a></code></h4>
+<ul class="">
+<li><code><a title="lib.csp.csp_client_standalone.CSPClient.get_access_token" href="#lib.csp.csp_client_standalone.CSPClient.get_access_token">get_access_token</a></code></li>
+<li><code><a title="lib.csp.csp_client_standalone.CSPClient.init_session" href="#lib.csp.csp_client_standalone.CSPClient.init_session">init_session</a></code></li>
+<li><code><a title="lib.csp.csp_client_standalone.CSPClient.make_call" href="#lib.csp.csp_client_standalone.CSPClient.make_call">make_call</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lib.csp.csp_client_standalone.CSPResponse" href="#lib.csp.csp_client_standalone.CSPResponse">CSPResponse</a></code></h4>
+</li>
+<li>
+<h4><code><a title="lib.csp.csp_client_standalone.RESTClient" href="#lib.csp.csp_client_standalone.RESTClient">RESTClient</a></code></h4>
+<ul class="">
+<li><code><a title="lib.csp.csp_client_standalone.RESTClient.init_session" href="#lib.csp.csp_client_standalone.RESTClient.init_session">init_session</a></code></li>
+<li><code><a title="lib.csp.csp_client_standalone.RESTClient.request" href="#lib.csp.csp_client_standalone.RESTClient.request">request</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>
