@@ -77,7 +77,7 @@ class TestCommerceDependencyOnDifferentServices:
         expected_response = requests.codes.ok
 
         # make csp api call
-        api_resource = resources.COMMERCE.get("PAYMENT_METHODS").format(
+        api_resource = resources.COMMERCE.get("ORG_PAYMENT_METHODS").format(
             orgId=myconfig.get("csp").get("defaultOrg").get("id")
         )
 
