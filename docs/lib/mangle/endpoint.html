@@ -57,11 +57,11 @@ class Endpoint(EndPointBase):
             &#34;name&#34;: endpoint_name,
             &#34;endPointType&#34;: &#34;K8S_CLUSTER&#34;,
             &#34;credentialsName&#34;: credential_name,
-            &#34;k8sConnectionProperties&#34;: {
-                &#34;namespace&#34;: namespace
-            }
+            &#34;k8sConnectionProperties&#34;: {&#34;namespace&#34;: namespace},
         }
-        return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;), json=request_body)
+        return self.mangle_client.make_call(
+            &#34;POST&#34;, resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;), json=request_body
+        )
 
     @utils.verify_status(do_log=False)
     def delete_endpoint_k8s_cluster(self, endpoint_name):
@@ -70,8 +70,10 @@ class Endpoint(EndPointBase):
         :param endpoint_name: name of the endpoint to delete
         :return:
         &#34;&#34;&#34;
-        params = {&#39;endpointNames&#39;: endpoint_name}
-        return self.mangle_client.make_call(&#34;DELETE&#34;, resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;), params=params)
+        params = {&#34;endpointNames&#34;: endpoint_name}
+        return self.mangle_client.make_call(
+            &#34;DELETE&#34;, resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;), params=params
+        )
 
     @utils.verify_status(do_log=False)
     def get_endpoint_k8s_cluster(self, endpoint_name):
@@ -79,7 +81,7 @@ class Endpoint(EndPointBase):
         Gets endpoint details
         :return:
         &#34;&#34;&#34;
-        api_resource = resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;) + &#39;/&#39; + endpoint_name
+        api_resource = resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;) + &#34;/&#34; + endpoint_name
         return self.mangle_client.make_call(&#34;GET&#34;, api_resource)
 
     @utils.verify_status(do_log=False)
@@ -90,8 +92,8 @@ class Endpoint(EndPointBase):
         &#34;&#34;&#34;
         params = None
         if credential_name:
-            params = {&#39;credentialName&#39;: credential_name}
-        api_resource = resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;)
+            params = {&#34;credentialName&#34;: credential_name}
+        api_resource = resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;)
 
         return self.mangle_client.make_call(&#34;GET&#34;, api_resource, params=params)
 
@@ -107,16 +109,17 @@ class EndpointCredential(EndPointBase):
         Creates endpoint credentials for kubernetes cluster
         :return:
         &#34;&#34;&#34;
-        kubeconfig_filepath = ROOT_DIR + os.path.sep + &#39;config&#39; + os.path.sep + kubeconfig_filename
-        files = [(&#39;kubeConfig&#39;, open(kubeconfig_filepath, &#39;rb&#39;))]
-        params = {&#39;id&#39;: credential_name, &#39;name&#39;: credential_name}
-        headers = {&#39;Authorization&#39;: &#39;Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu&#39;}
-        api_resource = resources.EP_CTRLR.get(&#39;K8S_CREDENTIALS&#39;)
+        kubeconfig_filepath = ROOT_DIR + os.path.sep + &#34;config&#34; + os.path.sep + kubeconfig_filename
+        files = [(&#34;kubeConfig&#34;, open(kubeconfig_filepath, &#34;rb&#34;))]
+        params = {&#34;id&#34;: credential_name, &#34;name&#34;: credential_name}
+        headers = {&#34;Authorization&#34;: &#34;Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu&#34;}
+        api_resource = resources.EP_CTRLR.get(&#34;K8S_CREDENTIALS&#34;)
         # return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;K8S_CREDENTIALS&#39;),
         #                                     files=multipart_form_data, params=params)
 
-        return self.mangle_client.make_call(&#34;POST&#34;, api_resource, params=params,
-                                            headers=headers, files=files, data={})
+        return self.mangle_client.make_call(
+            &#34;POST&#34;, api_resource, params=params, headers=headers, files=files, data={}
+        )
 
     @utils.verify_status()
     def delete_credential(self, credential_name):
@@ -124,15 +127,17 @@ class EndpointCredential(EndPointBase):
         Deletes endpoint credentials for kubernetes cluster
         :return:
         &#34;&#34;&#34;
-        params = {&#39;credentialNames&#39;: credential_name}
-        return self.mangle_client.make_call(&#34;DELETE&#34;, resources.EP_CTRLR.get(&#39;CREDENTIALS&#39;), params=params)
+        params = {&#34;credentialNames&#34;: credential_name}
+        return self.mangle_client.make_call(
+            &#34;DELETE&#34;, resources.EP_CTRLR.get(&#34;CREDENTIALS&#34;), params=params
+        )
 
     @utils.verify_status()
     def list_credentials(self):
         &#34;&#34;&#34;
         Gives endpoint credential details
         &#34;&#34;&#34;
-        return self.mangle_client.make_call(&#34;GET&#34;, resources.EP_CTRLR.get(&#39;CREDENTIALS&#39;))
+        return self.mangle_client.make_call(&#34;GET&#34;, resources.EP_CTRLR.get(&#34;CREDENTIALS&#34;))
 
 
 class TestConnection(EndPointBase):
@@ -151,11 +156,17 @@ class TestConnection(EndPointBase):
         status, response = epoint.get_endpoint_k8s_cluster(endpoint_name)
         if status:
             rj = response.json
-            payload = {&#34;id&#34;: rj.get(&#34;id&#34;), &#34;name&#34;: rj.get(&#34;name&#34;), &#34;endPointType&#34;: rj.get(&#34;endPointType&#34;),
-                       &#34;credentialsName&#34;: rj.get(&#34;credentialsName&#34;),
-                       &#34;k8sConnectionProperties&#34;: rj.get(&#34;k8sConnectionProperties&#34;)}
-            params = {&#39;endpointNames&#39;: endpoint_name}
-        return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;TEST_ENDPOINT&#39;), json=payload)
+            payload = {
+                &#34;id&#34;: rj.get(&#34;id&#34;),
+                &#34;name&#34;: rj.get(&#34;name&#34;),
+                &#34;endPointType&#34;: rj.get(&#34;endPointType&#34;),
+                &#34;credentialsName&#34;: rj.get(&#34;credentialsName&#34;),
+                &#34;k8sConnectionProperties&#34;: rj.get(&#34;k8sConnectionProperties&#34;),
+            }
+            params = {&#34;endpointNames&#34;: endpoint_name}
+        return self.mangle_client.make_call(
+            &#34;POST&#34;, resources.EP_CTRLR.get(&#34;TEST_ENDPOINT&#34;), json=payload
+        )
 
     @utils.verify_status()
     def test_connection(self, endpoint_name):
@@ -164,8 +175,10 @@ class TestConnection(EndPointBase):
         :param payload: payload in dict
         :return:
         &#34;&#34;&#34;
-        params = {&#39;endpointNames&#39;: endpoint_name}
-        return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;TEST_CONNECTION&#39;), params=params)</code></pre>
+        params = {&#34;endpointNames&#34;: endpoint_name}
+        return self.mangle_client.make_call(
+            &#34;POST&#34;, resources.EP_CTRLR.get(&#34;TEST_CONNECTION&#34;), params=params
+        )</code></pre>
 </details>
 </section>
 <section>
@@ -224,11 +237,11 @@ class TestConnection(EndPointBase):
             &#34;name&#34;: endpoint_name,
             &#34;endPointType&#34;: &#34;K8S_CLUSTER&#34;,
             &#34;credentialsName&#34;: credential_name,
-            &#34;k8sConnectionProperties&#34;: {
-                &#34;namespace&#34;: namespace
-            }
+            &#34;k8sConnectionProperties&#34;: {&#34;namespace&#34;: namespace},
         }
-        return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;), json=request_body)
+        return self.mangle_client.make_call(
+            &#34;POST&#34;, resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;), json=request_body
+        )
 
     @utils.verify_status(do_log=False)
     def delete_endpoint_k8s_cluster(self, endpoint_name):
@@ -237,8 +250,10 @@ class TestConnection(EndPointBase):
         :param endpoint_name: name of the endpoint to delete
         :return:
         &#34;&#34;&#34;
-        params = {&#39;endpointNames&#39;: endpoint_name}
-        return self.mangle_client.make_call(&#34;DELETE&#34;, resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;), params=params)
+        params = {&#34;endpointNames&#34;: endpoint_name}
+        return self.mangle_client.make_call(
+            &#34;DELETE&#34;, resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;), params=params
+        )
 
     @utils.verify_status(do_log=False)
     def get_endpoint_k8s_cluster(self, endpoint_name):
@@ -246,7 +261,7 @@ class TestConnection(EndPointBase):
         Gets endpoint details
         :return:
         &#34;&#34;&#34;
-        api_resource = resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;) + &#39;/&#39; + endpoint_name
+        api_resource = resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;) + &#34;/&#34; + endpoint_name
         return self.mangle_client.make_call(&#34;GET&#34;, api_resource)
 
     @utils.verify_status(do_log=False)
@@ -257,8 +272,8 @@ class TestConnection(EndPointBase):
         &#34;&#34;&#34;
         params = None
         if credential_name:
-            params = {&#39;credentialName&#39;: credential_name}
-        api_resource = resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;)
+            params = {&#34;credentialName&#34;: credential_name}
+        api_resource = resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;)
 
         return self.mangle_client.make_call(&#34;GET&#34;, api_resource, params=params)</code></pre>
 </details>
@@ -290,11 +305,11 @@ def create_endpoint_k8s_cluster(self, endpoint_name, credential_name, namespace)
         &#34;name&#34;: endpoint_name,
         &#34;endPointType&#34;: &#34;K8S_CLUSTER&#34;,
         &#34;credentialsName&#34;: credential_name,
-        &#34;k8sConnectionProperties&#34;: {
-            &#34;namespace&#34;: namespace
-        }
+        &#34;k8sConnectionProperties&#34;: {&#34;namespace&#34;: namespace},
     }
-    return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;), json=request_body)</code></pre>
+    return self.mangle_client.make_call(
+        &#34;POST&#34;, resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;), json=request_body
+    )</code></pre>
 </details>
 </dd>
 <dt id="lib.mangle.endpoint.Endpoint.delete_endpoint_k8s_cluster"><code class="name flex">
@@ -315,8 +330,10 @@ def delete_endpoint_k8s_cluster(self, endpoint_name):
     :param endpoint_name: name of the endpoint to delete
     :return:
     &#34;&#34;&#34;
-    params = {&#39;endpointNames&#39;: endpoint_name}
-    return self.mangle_client.make_call(&#34;DELETE&#34;, resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;), params=params)</code></pre>
+    params = {&#34;endpointNames&#34;: endpoint_name}
+    return self.mangle_client.make_call(
+        &#34;DELETE&#34;, resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;), params=params
+    )</code></pre>
 </details>
 </dd>
 <dt id="lib.mangle.endpoint.Endpoint.get_endpoint_k8s_cluster"><code class="name flex">
@@ -335,7 +352,7 @@ def get_endpoint_k8s_cluster(self, endpoint_name):
     Gets endpoint details
     :return:
     &#34;&#34;&#34;
-    api_resource = resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;) + &#39;/&#39; + endpoint_name
+    api_resource = resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;) + &#34;/&#34; + endpoint_name
     return self.mangle_client.make_call(&#34;GET&#34;, api_resource)</code></pre>
 </details>
 </dd>
@@ -357,8 +374,8 @@ def list_endpoints_k8s_cluster(self, credential_name=None):
     &#34;&#34;&#34;
     params = None
     if credential_name:
-        params = {&#39;credentialName&#39;: credential_name}
-    api_resource = resources.EP_CTRLR.get(&#39;ENDPOINTS&#39;)
+        params = {&#34;credentialName&#34;: credential_name}
+    api_resource = resources.EP_CTRLR.get(&#34;ENDPOINTS&#34;)
 
     return self.mangle_client.make_call(&#34;GET&#34;, api_resource, params=params)</code></pre>
 </details>
@@ -386,16 +403,17 @@ def list_endpoints_k8s_cluster(self, credential_name=None):
         Creates endpoint credentials for kubernetes cluster
         :return:
         &#34;&#34;&#34;
-        kubeconfig_filepath = ROOT_DIR + os.path.sep + &#39;config&#39; + os.path.sep + kubeconfig_filename
-        files = [(&#39;kubeConfig&#39;, open(kubeconfig_filepath, &#39;rb&#39;))]
-        params = {&#39;id&#39;: credential_name, &#39;name&#39;: credential_name}
-        headers = {&#39;Authorization&#39;: &#39;Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu&#39;}
-        api_resource = resources.EP_CTRLR.get(&#39;K8S_CREDENTIALS&#39;)
+        kubeconfig_filepath = ROOT_DIR + os.path.sep + &#34;config&#34; + os.path.sep + kubeconfig_filename
+        files = [(&#34;kubeConfig&#34;, open(kubeconfig_filepath, &#34;rb&#34;))]
+        params = {&#34;id&#34;: credential_name, &#34;name&#34;: credential_name}
+        headers = {&#34;Authorization&#34;: &#34;Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu&#34;}
+        api_resource = resources.EP_CTRLR.get(&#34;K8S_CREDENTIALS&#34;)
         # return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;K8S_CREDENTIALS&#39;),
         #                                     files=multipart_form_data, params=params)
 
-        return self.mangle_client.make_call(&#34;POST&#34;, api_resource, params=params,
-                                            headers=headers, files=files, data={})
+        return self.mangle_client.make_call(
+            &#34;POST&#34;, api_resource, params=params, headers=headers, files=files, data={}
+        )
 
     @utils.verify_status()
     def delete_credential(self, credential_name):
@@ -403,15 +421,17 @@ def list_endpoints_k8s_cluster(self, credential_name=None):
         Deletes endpoint credentials for kubernetes cluster
         :return:
         &#34;&#34;&#34;
-        params = {&#39;credentialNames&#39;: credential_name}
-        return self.mangle_client.make_call(&#34;DELETE&#34;, resources.EP_CTRLR.get(&#39;CREDENTIALS&#39;), params=params)
+        params = {&#34;credentialNames&#34;: credential_name}
+        return self.mangle_client.make_call(
+            &#34;DELETE&#34;, resources.EP_CTRLR.get(&#34;CREDENTIALS&#34;), params=params
+        )
 
     @utils.verify_status()
     def list_credentials(self):
         &#34;&#34;&#34;
         Gives endpoint credential details
         &#34;&#34;&#34;
-        return self.mangle_client.make_call(&#34;GET&#34;, resources.EP_CTRLR.get(&#39;CREDENTIALS&#39;))</code></pre>
+        return self.mangle_client.make_call(&#34;GET&#34;, resources.EP_CTRLR.get(&#34;CREDENTIALS&#34;))</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -435,16 +455,17 @@ def create_credential_k8s_cluster(self, credential_name, kubeconfig_filename):
     Creates endpoint credentials for kubernetes cluster
     :return:
     &#34;&#34;&#34;
-    kubeconfig_filepath = ROOT_DIR + os.path.sep + &#39;config&#39; + os.path.sep + kubeconfig_filename
-    files = [(&#39;kubeConfig&#39;, open(kubeconfig_filepath, &#39;rb&#39;))]
-    params = {&#39;id&#39;: credential_name, &#39;name&#39;: credential_name}
-    headers = {&#39;Authorization&#39;: &#39;Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu&#39;}
-    api_resource = resources.EP_CTRLR.get(&#39;K8S_CREDENTIALS&#39;)
+    kubeconfig_filepath = ROOT_DIR + os.path.sep + &#34;config&#34; + os.path.sep + kubeconfig_filename
+    files = [(&#34;kubeConfig&#34;, open(kubeconfig_filepath, &#34;rb&#34;))]
+    params = {&#34;id&#34;: credential_name, &#34;name&#34;: credential_name}
+    headers = {&#34;Authorization&#34;: &#34;Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu&#34;}
+    api_resource = resources.EP_CTRLR.get(&#34;K8S_CREDENTIALS&#34;)
     # return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;K8S_CREDENTIALS&#39;),
     #                                     files=multipart_form_data, params=params)
 
-    return self.mangle_client.make_call(&#34;POST&#34;, api_resource, params=params,
-                                        headers=headers, files=files, data={})</code></pre>
+    return self.mangle_client.make_call(
+        &#34;POST&#34;, api_resource, params=params, headers=headers, files=files, data={}
+    )</code></pre>
 </details>
 </dd>
 <dt id="lib.mangle.endpoint.EndpointCredential.delete_credential"><code class="name flex">
@@ -463,8 +484,10 @@ def delete_credential(self, credential_name):
     Deletes endpoint credentials for kubernetes cluster
     :return:
     &#34;&#34;&#34;
-    params = {&#39;credentialNames&#39;: credential_name}
-    return self.mangle_client.make_call(&#34;DELETE&#34;, resources.EP_CTRLR.get(&#39;CREDENTIALS&#39;), params=params)</code></pre>
+    params = {&#34;credentialNames&#34;: credential_name}
+    return self.mangle_client.make_call(
+        &#34;DELETE&#34;, resources.EP_CTRLR.get(&#34;CREDENTIALS&#34;), params=params
+    )</code></pre>
 </details>
 </dd>
 <dt id="lib.mangle.endpoint.EndpointCredential.list_credentials"><code class="name flex">
@@ -481,7 +504,7 @@ def list_credentials(self):
     &#34;&#34;&#34;
     Gives endpoint credential details
     &#34;&#34;&#34;
-    return self.mangle_client.make_call(&#34;GET&#34;, resources.EP_CTRLR.get(&#39;CREDENTIALS&#39;))</code></pre>
+    return self.mangle_client.make_call(&#34;GET&#34;, resources.EP_CTRLR.get(&#34;CREDENTIALS&#34;))</code></pre>
 </details>
 </dd>
 </dl>
@@ -512,11 +535,17 @@ def list_credentials(self):
         status, response = epoint.get_endpoint_k8s_cluster(endpoint_name)
         if status:
             rj = response.json
-            payload = {&#34;id&#34;: rj.get(&#34;id&#34;), &#34;name&#34;: rj.get(&#34;name&#34;), &#34;endPointType&#34;: rj.get(&#34;endPointType&#34;),
-                       &#34;credentialsName&#34;: rj.get(&#34;credentialsName&#34;),
-                       &#34;k8sConnectionProperties&#34;: rj.get(&#34;k8sConnectionProperties&#34;)}
-            params = {&#39;endpointNames&#39;: endpoint_name}
-        return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;TEST_ENDPOINT&#39;), json=payload)
+            payload = {
+                &#34;id&#34;: rj.get(&#34;id&#34;),
+                &#34;name&#34;: rj.get(&#34;name&#34;),
+                &#34;endPointType&#34;: rj.get(&#34;endPointType&#34;),
+                &#34;credentialsName&#34;: rj.get(&#34;credentialsName&#34;),
+                &#34;k8sConnectionProperties&#34;: rj.get(&#34;k8sConnectionProperties&#34;),
+            }
+            params = {&#34;endpointNames&#34;: endpoint_name}
+        return self.mangle_client.make_call(
+            &#34;POST&#34;, resources.EP_CTRLR.get(&#34;TEST_ENDPOINT&#34;), json=payload
+        )
 
     @utils.verify_status()
     def test_connection(self, endpoint_name):
@@ -525,8 +554,10 @@ def list_credentials(self):
         :param payload: payload in dict
         :return:
         &#34;&#34;&#34;
-        params = {&#39;endpointNames&#39;: endpoint_name}
-        return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;TEST_CONNECTION&#39;), params=params)</code></pre>
+        params = {&#34;endpointNames&#34;: endpoint_name}
+        return self.mangle_client.make_call(
+            &#34;POST&#34;, resources.EP_CTRLR.get(&#34;TEST_CONNECTION&#34;), params=params
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -552,8 +583,10 @@ def test_connection(self, endpoint_name):
     :param payload: payload in dict
     :return:
     &#34;&#34;&#34;
-    params = {&#39;endpointNames&#39;: endpoint_name}
-    return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;TEST_CONNECTION&#39;), params=params)</code></pre>
+    params = {&#34;endpointNames&#34;: endpoint_name}
+    return self.mangle_client.make_call(
+        &#34;POST&#34;, resources.EP_CTRLR.get(&#34;TEST_CONNECTION&#34;), params=params
+    )</code></pre>
 </details>
 </dd>
 <dt id="lib.mangle.endpoint.TestConnection.test_endpoint"><code class="name flex">
@@ -578,11 +611,17 @@ def test_endpoint(self, endpoint_name):
     status, response = epoint.get_endpoint_k8s_cluster(endpoint_name)
     if status:
         rj = response.json
-        payload = {&#34;id&#34;: rj.get(&#34;id&#34;), &#34;name&#34;: rj.get(&#34;name&#34;), &#34;endPointType&#34;: rj.get(&#34;endPointType&#34;),
-                   &#34;credentialsName&#34;: rj.get(&#34;credentialsName&#34;),
-                   &#34;k8sConnectionProperties&#34;: rj.get(&#34;k8sConnectionProperties&#34;)}
-        params = {&#39;endpointNames&#39;: endpoint_name}
-    return self.mangle_client.make_call(&#34;POST&#34;, resources.EP_CTRLR.get(&#39;TEST_ENDPOINT&#39;), json=payload)</code></pre>
+        payload = {
+            &#34;id&#34;: rj.get(&#34;id&#34;),
+            &#34;name&#34;: rj.get(&#34;name&#34;),
+            &#34;endPointType&#34;: rj.get(&#34;endPointType&#34;),
+            &#34;credentialsName&#34;: rj.get(&#34;credentialsName&#34;),
+            &#34;k8sConnectionProperties&#34;: rj.get(&#34;k8sConnectionProperties&#34;),
+        }
+        params = {&#34;endpointNames&#34;: endpoint_name}
+    return self.mangle_client.make_call(
+        &#34;POST&#34;, resources.EP_CTRLR.get(&#34;TEST_ENDPOINT&#34;), json=payload
+    )</code></pre>
 </details>
 </dd>
 </dl>

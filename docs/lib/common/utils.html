@@ -33,9 +33,14 @@
 
 __author__ = &#34;tarun mudgal&#34;
 
+import datetime
 import functools
-import sys
 import logging
+import sys
+from pprint import pprint
+
+import boto3
+from dateutil.tz import tzutc
 
 
 def log_args(func):
@@ -74,7 +79,38 @@ def verify_status(do_log=True, return_status=True, success_status_range=(200, 29
 
         return func_wrapper
 
-    return _verify_response</code></pre>
+    return _verify_response
+
+
+def purge_old_reports_from_s3(
+    aws_key=&#34;AKIAUE4JITGQ3LKSAK5E&#34;,
+    aws_secret=&#34;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&#34;,
+    bucket_name=&#34;csp-e2e-qe&#34;,
+    s3_key_prefix=&#34;mangle-yaan/results/mangle-yaan-test-report&#34;,
+    days_before=60,
+):
+    s3_client = boto3.client(&#34;s3&#34;, aws_access_key_id=aws_key, aws_secret_access_key=aws_secret,)
+    report_objects = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=s3_key_prefix)
+    # pprint(report_objects[&#34;Contents&#34;])
+
+    cur_time = datetime.datetime.now(tz=tzutc())
+    for rp_obj in report_objects[&#34;Contents&#34;]:
+        # breakpoint()
+        datetime_diff = cur_time - rp_obj[&#34;LastModified&#34;]
+        if datetime_diff.days &gt; days_before:
+            try:
+                print(&#34;deleting file {} from bucket {}&#34;.format(rp_obj[&#34;Key&#34;], bucket_name))
+                s3_client.delete_object(Bucket=bucket_name, Key=rp_obj[&#34;Key&#34;])
+            except Exception as fault:
+                print(
+                    &#34;file {} could not be deleted from bucket {}. Error={}&#34;.format(
+                        rp_obj[&#34;Key&#34;], bucket_name, fault
+                    )
+                )
+
+
+if __name__ == &#34;__main__&#34;:
+    purge_old_reports_from_s3(days_before=30)</code></pre>
 </details>
 </section>
 <section>
@@ -103,6 +139,42 @@ def verify_status(do_log=True, return_status=True, success_status_range=(200, 29
         return func(*args, **kwargs)
 
     return _log_args</code></pre>
+</details>
+</dd>
+<dt id="lib.common.utils.purge_old_reports_from_s3"><code class="name flex">
+<span>def <span class="ident">purge_old_reports_from_s3</span></span>(<span>aws_key='AKIAUE4JITGQ3LKSAK5E', aws_secret='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', bucket_name='csp-e2e-qe', s3_key_prefix='mangle-yaan/results/mangle-yaan-test-report', days_before=60)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def purge_old_reports_from_s3(
+    aws_key=&#34;AKIAUE4JITGQ3LKSAK5E&#34;,
+    aws_secret=&#34;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&#34;,
+    bucket_name=&#34;csp-e2e-qe&#34;,
+    s3_key_prefix=&#34;mangle-yaan/results/mangle-yaan-test-report&#34;,
+    days_before=60,
+):
+    s3_client = boto3.client(&#34;s3&#34;, aws_access_key_id=aws_key, aws_secret_access_key=aws_secret,)
+    report_objects = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=s3_key_prefix)
+    # pprint(report_objects[&#34;Contents&#34;])
+
+    cur_time = datetime.datetime.now(tz=tzutc())
+    for rp_obj in report_objects[&#34;Contents&#34;]:
+        # breakpoint()
+        datetime_diff = cur_time - rp_obj[&#34;LastModified&#34;]
+        if datetime_diff.days &gt; days_before:
+            try:
+                print(&#34;deleting file {} from bucket {}&#34;.format(rp_obj[&#34;Key&#34;], bucket_name))
+                s3_client.delete_object(Bucket=bucket_name, Key=rp_obj[&#34;Key&#34;])
+            except Exception as fault:
+                print(
+                    &#34;file {} could not be deleted from bucket {}. Error={}&#34;.format(
+                        rp_obj[&#34;Key&#34;], bucket_name, fault
+                    )
+                )</code></pre>
 </details>
 </dd>
 <dt id="lib.common.utils.verify_status"><code class="name flex">
@@ -160,6 +232,7 @@ def verify_status(do_log=True, return_status=True, success_status_range=(200, 29
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="lib.common.utils.log_args" href="#lib.common.utils.log_args">log_args</a></code></li>
+<li><code><a title="lib.common.utils.purge_old_reports_from_s3" href="#lib.common.utils.purge_old_reports_from_s3">purge_old_reports_from_s3</a></code></li>
 <li><code><a title="lib.common.utils.verify_status" href="#lib.common.utils.verify_status">verify_status</a></code></li>
 </ul>
 </li>

@@ -43,9 +43,12 @@ COMMERCE = OrderedDict()
 COMMERCE[&#34;BILLING_ENGINES&#34;] = &#34;/commerce/api/v1/orgs/billing-engines&#34;
 COMMERCE[&#34;BILLING_ACCOUNTS&#34;] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts&#34;
 COMMERCE[&#34;BILLING_ACCOUNT_BY_ID&#34;] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}&#34;
-COMMERCE[&#34;PAYMENT_METHODS&#34;] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/payment-methods&#34;
+COMMERCE[&#34;ORG_PAYMENT_METHODS&#34;] = &#34;/commerce/api/v1/orgs/{orgId}/payment-methods&#34;
+COMMERCE[&#34;USER_PAYMENT_METHODS&#34;] = &#34;/commerce/api/v1/users/{userEmail}/payment-methods&#34;
 COMMERCE[&#34;CURRENT_COSTS&#34;] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/current-costs&#34;
-COMMERCE[&#34;PROMOTIONS&#34;] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/promotions&#34;
+COMMERCE[&#34;PROMOTIONS&#34;] = &#34;/commerce/api/v1/orgs/{orgId}/promotions&#34;
+COMMERCE[&#34;ESTIMATED_CHARGES&#34;] = &#34;/commerce/api/v1/orgs/{orgId}/estimated-charges&#34;
+COMMERCE[&#34;OFFERS&#34;] = &#34;/commerce/api/v1/service-definitions/{serviceDefinitionId}/offers&#34;
 
 # AM resources
 AM = OrderedDict()

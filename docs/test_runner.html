@@ -41,6 +41,7 @@ import logging
 import os
 import pprint
 import sys
+import time
 import typing
 
 import boto3
@@ -51,6 +52,7 @@ from lib import params as lib_params
 from lib.common import config_reader, logger, rest_client
 from lib.csp import csp_client
 from lib.csp import resources as csp_resources
+from lib.k8s import k8s_client
 from lib.mangle import endpoint, mangle_client
 from lib.maximgun import agent as mg_agent
 from lib.maximgun import maximgun_client
@@ -156,6 +158,22 @@ def create_csp_client(timeout: int = 120) -&gt; csp_client.CSPClient:
     return cclient
 
 
+def create_csp_k8s_client(kubeconfig_filename: str, namespace: str) -&gt; k8s_client.K8SClient:
+    &#34;&#34;&#34;
+    creates CSP Kubernetes client
+    Args:
+        kubeconfig_filename: kubeconfig file-name for CSP kubernetes cluster
+        namespace: namespace for CSP kubernetes cluster
+
+    Returns:
+       K8SClient instance
+    &#34;&#34;&#34;
+
+    csp_k8s_client = k8s_client.K8SClient(kubeconfig_filename, namespace)
+
+    return csp_k8s_client
+
+
 def get_mangle_yaan_config(myconf_file: str = None, workload_name: str = None) -&gt; typing.Dict:
     &#34;&#34;&#34;
     reads mangle-yaan config from myconf_file locally (if specified) or maxim-gun workload
@@ -210,6 +228,7 @@ def setup_mangle_infra() -&gt; None:
         for cred in response.json:
             if cred.get(&#34;name&#34;) == myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;):
                 does_cred_exist = True
+                break
     if not does_cred_exist:
         status, response = ep_cred.create_credential_k8s_cluster(
             myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
@@ -245,6 +264,7 @@ def setup_mangle_infra() -&gt; None:
         for ep in response.json:
             if ep.get(&#34;name&#34;) == myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;):
                 does_endpoint_exist = True
+                break
     if not does_endpoint_exist:
         status, response = epoint.create_endpoint_k8s_cluster(
             myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;),
@@ -289,6 +309,38 @@ def setup_mangle_infra() -&gt; None:
         )
 
 
+def cleanup_old_reports(log_dir: str, days: int = 15) -&gt; None:
+    &#34;&#34;&#34;
+    deletes mangle-yaan-test-reports present under logs/ dir which are older than specified number of days
+    Args:
+        log_dir: log directory path
+        days: number of days
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    mylog.info(&#34;deleting mangle-yaan-test-reports older than {} days&#34;.format(days))
+    time_in_secs = time.time() - (days * 24 * 60 * 60)
+    for root, dirs, files in os.walk(log_dir, topdown=False):
+        for file_ in files:
+            fpath = os.path.join(root, file_)
+            my_report_path = myconfig.get(&#34;mangleYaan&#34;).get(&#34;testReportPath&#34;)
+            my_report_name_expr = my_report_path.replace(&#34;logs/&#34;, &#34;&#34;).replace(
+                &#34;-{timeStamp}.html&#34;, &#34;&#34;
+            )
+            if (
+                    os.path.exists(fpath)
+                    and os.path.isfile(fpath)
+                    and file_.startswith(my_report_name_expr)
+            ):
+                stat = os.stat(fpath)
+                if stat.st_mtime &lt;= time_in_secs:
+                    try:
+                        os.remove(fpath)
+                    except OSError as fault:
+                        mylog.error(&#34;could not delete file {}. Exception={}&#34;.format(fpath, fault))
+
+
 def prepare_setup(
         myconf_file: str = None,
         project_name: str = None,
@@ -329,16 +381,26 @@ def prepare_setup(
     # creates csp REST client
     builtins.cclient = create_csp_client()
 
+    # creates csp kubernetes client
+    csp_k8s_info = myconfig.get(&#34;k8sCluster&#34;)
+    builtins.ckclient = create_csp_k8s_client(
+        csp_k8s_info.get(&#34;kubeConfigFileName&#34;), csp_k8s_info.get(&#34;namespace&#34;)
+    )
+
     # creates mangle endpoint and confirms its connectivity
     setup_mangle_infra()
+
+    # cleanup older mangle-yaan-test-reports
+    cleanup_old_reports(LOG_DIR, days=15)
 
     # test_runner cache to maintain states
     mycache = {}
     builtins.mycache = mycache
 
-    # adding project_name and workload_name into mycache to use them in pytest-html greport generation
+    # adding project_name and workload_name into mycache to use them in pytest-html report generation
     mycache[&#34;project_name&#34;] = project_name
     mycache[&#34;workload_name&#34;] = workload_name
+    mycache[&#34;run_id&#34;] = run_id
 
     mylog.info(&#34;setup is ready to run resiliency tests now&#34;)
 
@@ -357,7 +419,7 @@ def run_pytest(*args: str, run_id: str = None, **kwargs: str) -&gt; int:
     # end_ts = datetime.datetime.now().strftime(&#34;%d/%m/%Y, %I:%M:%S.%f %p&#34;)
     end_ts = datetime.datetime.now().strftime(&#34;%d%b%Y_%H:%M:%S.%f&#34;)
     mycache.update({&#34;test_end_timestamp&#34;: end_ts})
-    mylog.info(&#34;pytest test cases execution finished at: %s&#34; % end_ts)
+    mylog.info(&#34;pytest test cases execution finished at {} with status={}&#34;.format(end_ts, status))
 
     return status
 
@@ -406,6 +468,7 @@ def copy_file_on_s3(bucket_name: str, file_path: str = None) -&gt; str:
             s3_client.upload_file(
                 Filename=file_path, Bucket=bucket_name, Key=s3_key,
             )
+            mylog.info(&#34;file {} successfully copied on s3&#34;.format(file_path))
         except Exception as fault:
             mylog.error(&#34;file {} could not be copied on S3. Error={}&#34;.format(file_path, fault))
             mylog.exception(fault)
@@ -561,26 +624,23 @@ if __name__ == &#34;__main__&#34;:
         run_id=args.run_id,
     )
     pytest_status = run_pytest(pytest_cmdline, run_id=args.run_id)
-
     # don&#39;t copy logs to S3 for pytest usage error. seems incorrect --pytest_args are passed. Also, update task status as FAILED
     copy_results = True
-    mg_task_status = True  # maxim-gun task status
+    end_time = datetime.datetime.now().strftime(&#34;%Y-%m-%d %H:%M:%S.%f&#34;)
     if pytest_status == 4:
         copy_results = False
-        mg_task_status = False
-    s3_path = post_run_activities(copy_results=copy_results)
-
-    end_time = datetime.datetime.now().strftime(&#34;%Y-%m-%d %H:%M:%S.%f&#34;)
-    if mg_task_status:
+        mg_agent.update_task(
+            args.run_id, status=lib_params.MG_TASK_STATUS[&#34;FAILED&#34;], end_time=end_time
+        )
+    if pytest_status == 2:
+        copy_results = False
+    if copy_results:
+        s3_path = post_run_activities(copy_results=copy_results)
         mg_agent.update_task(
             args.run_id,
             status=lib_params.MG_TASK_STATUS[&#34;COMPLETED&#34;],
             end_time=end_time,
             report_url=s3_path,
-        )
-    else:
-        mg_agent.update_task(
-            args.run_id, status=lib_params.MG_TASK_STATUS[&#34;FAILED&#34;], end_time=end_time
         )</code></pre>
 </details>
 </section>
@@ -619,6 +679,56 @@ if __name__ == &#34;__main__&#34;:
         mylog.error(&#34;Network Availability Check: Failed&#34;)
         mylog.error(&#34;Error: %s. Exiting %s&#34; % (fault, sys.argv[0]))
         sys.exit(1)</code></pre>
+</details>
+</dd>
+<dt id="test_runner.cleanup_old_reports"><code class="name flex">
+<span>def <span class="ident">cleanup_old_reports</span></span>(<span>log_dir: str, days: int = 15) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>deletes mangle-yaan-test-reports present under logs/ dir which are older than specified number of days</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>log_dir</code></strong></dt>
+<dd>log directory path</dd>
+<dt><strong><code>days</code></strong></dt>
+<dd>number of days</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cleanup_old_reports(log_dir: str, days: int = 15) -&gt; None:
+    &#34;&#34;&#34;
+    deletes mangle-yaan-test-reports present under logs/ dir which are older than specified number of days
+    Args:
+        log_dir: log directory path
+        days: number of days
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    mylog.info(&#34;deleting mangle-yaan-test-reports older than {} days&#34;.format(days))
+    time_in_secs = time.time() - (days * 24 * 60 * 60)
+    for root, dirs, files in os.walk(log_dir, topdown=False):
+        for file_ in files:
+            fpath = os.path.join(root, file_)
+            my_report_path = myconfig.get(&#34;mangleYaan&#34;).get(&#34;testReportPath&#34;)
+            my_report_name_expr = my_report_path.replace(&#34;logs/&#34;, &#34;&#34;).replace(
+                &#34;-{timeStamp}.html&#34;, &#34;&#34;
+            )
+            if (
+                    os.path.exists(fpath)
+                    and os.path.isfile(fpath)
+                    and file_.startswith(my_report_name_expr)
+            ):
+                stat = os.stat(fpath)
+                if stat.st_mtime &lt;= time_in_secs:
+                    try:
+                        os.remove(fpath)
+                    except OSError as fault:
+                        mylog.error(&#34;could not delete file {}. Exception={}&#34;.format(fpath, fault))</code></pre>
 </details>
 </dd>
 <dt id="test_runner.copy_file_on_s3"><code class="name flex">
@@ -664,6 +774,7 @@ if __name__ == &#34;__main__&#34;:
             s3_client.upload_file(
                 Filename=file_path, Bucket=bucket_name, Key=s3_key,
             )
+            mylog.info(&#34;file {} successfully copied on s3&#34;.format(file_path))
         except Exception as fault:
             mylog.error(&#34;file {} could not be copied on S3. Error={}&#34;.format(file_path, fault))
             mylog.exception(fault)
@@ -705,6 +816,40 @@ if __name__ == &#34;__main__&#34;:
     )
 
     return cclient</code></pre>
+</details>
+</dd>
+<dt id="test_runner.create_csp_k8s_client"><code class="name flex">
+<span>def <span class="ident">create_csp_k8s_client</span></span>(<span>kubeconfig_filename: str, namespace: str) ‑> <a title="lib.k8s.k8s_client.K8SClient" href="lib/k8s/k8s_client.html#lib.k8s.k8s_client.K8SClient">K8SClient</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>creates CSP Kubernetes client</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>kubeconfig_filename</code></strong></dt>
+<dd>kubeconfig file-name for CSP kubernetes cluster</dd>
+<dt><strong><code>namespace</code></strong></dt>
+<dd>namespace for CSP kubernetes cluster</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>K8SClient instance</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_csp_k8s_client(kubeconfig_filename: str, namespace: str) -&gt; k8s_client.K8SClient:
+    &#34;&#34;&#34;
+    creates CSP Kubernetes client
+    Args:
+        kubeconfig_filename: kubeconfig file-name for CSP kubernetes cluster
+        namespace: namespace for CSP kubernetes cluster
+
+    Returns:
+       K8SClient instance
+    &#34;&#34;&#34;
+
+    csp_k8s_client = k8s_client.K8SClient(kubeconfig_filename, namespace)
+
+    return csp_k8s_client</code></pre>
 </details>
 </dd>
 <dt id="test_runner.create_mangle_client"><code class="name flex">
@@ -990,16 +1135,26 @@ and endpoint for CSP K8S cluster etc.</p>
     # creates csp REST client
     builtins.cclient = create_csp_client()
 
+    # creates csp kubernetes client
+    csp_k8s_info = myconfig.get(&#34;k8sCluster&#34;)
+    builtins.ckclient = create_csp_k8s_client(
+        csp_k8s_info.get(&#34;kubeConfigFileName&#34;), csp_k8s_info.get(&#34;namespace&#34;)
+    )
+
     # creates mangle endpoint and confirms its connectivity
     setup_mangle_infra()
+
+    # cleanup older mangle-yaan-test-reports
+    cleanup_old_reports(LOG_DIR, days=15)
 
     # test_runner cache to maintain states
     mycache = {}
     builtins.mycache = mycache
 
-    # adding project_name and workload_name into mycache to use them in pytest-html greport generation
+    # adding project_name and workload_name into mycache to use them in pytest-html report generation
     mycache[&#34;project_name&#34;] = project_name
     mycache[&#34;workload_name&#34;] = workload_name
+    mycache[&#34;run_id&#34;] = run_id
 
     mylog.info(&#34;setup is ready to run resiliency tests now&#34;)</code></pre>
 </details>
@@ -1051,7 +1206,7 @@ and endpoint for CSP K8S cluster etc.</p>
     # end_ts = datetime.datetime.now().strftime(&#34;%d/%m/%Y, %I:%M:%S.%f %p&#34;)
     end_ts = datetime.datetime.now().strftime(&#34;%d%b%Y_%H:%M:%S.%f&#34;)
     mycache.update({&#34;test_end_timestamp&#34;: end_ts})
-    mylog.info(&#34;pytest test cases execution finished at: %s&#34; % end_ts)
+    mylog.info(&#34;pytest test cases execution finished at {} with status={}&#34;.format(end_ts, status))
 
     return status</code></pre>
 </details>
@@ -1079,6 +1234,7 @@ and endpoint for CSP K8S cluster etc.</p>
         for cred in response.json:
             if cred.get(&#34;name&#34;) == myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;):
                 does_cred_exist = True
+                break
     if not does_cred_exist:
         status, response = ep_cred.create_credential_k8s_cluster(
             myconfig.get(&#34;k8sCluster&#34;).get(&#34;credentialName&#34;),
@@ -1114,6 +1270,7 @@ and endpoint for CSP K8S cluster etc.</p>
         for ep in response.json:
             if ep.get(&#34;name&#34;) == myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;):
                 does_endpoint_exist = True
+                break
     if not does_endpoint_exist:
         status, response = epoint.create_endpoint_k8s_cluster(
             myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;),
@@ -1172,8 +1329,10 @@ and endpoint for CSP K8S cluster etc.</p>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="test_runner.check_network_availability" href="#test_runner.check_network_availability">check_network_availability</a></code></li>
+<li><code><a title="test_runner.cleanup_old_reports" href="#test_runner.cleanup_old_reports">cleanup_old_reports</a></code></li>
 <li><code><a title="test_runner.copy_file_on_s3" href="#test_runner.copy_file_on_s3">copy_file_on_s3</a></code></li>
 <li><code><a title="test_runner.create_csp_client" href="#test_runner.create_csp_client">create_csp_client</a></code></li>
+<li><code><a title="test_runner.create_csp_k8s_client" href="#test_runner.create_csp_k8s_client">create_csp_k8s_client</a></code></li>
 <li><code><a title="test_runner.create_mangle_client" href="#test_runner.create_mangle_client">create_mangle_client</a></code></li>
 <li><code><a title="test_runner.create_maxim_gun_client" href="#test_runner.create_maxim_gun_client">create_maxim_gun_client</a></code></li>
 <li><code><a title="test_runner.get_mangle_yaan_config" href="#test_runner.get_mangle_yaan_config">get_mangle_yaan_config</a></code></li>

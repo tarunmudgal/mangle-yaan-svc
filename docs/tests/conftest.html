@@ -39,10 +39,17 @@ import time
 
 import boto3
 import pytest
+import requests
 from py.xml import html
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from lib import params
+from lib import params as lib_params
 from lib.mangle import resources
+from lib.maximgun import agent as mg_agent
+from lib.maximgun import maximgun_client as maxim_client
+from lib.maximgun import resources as maxim_gun_resources
+from src.testlib import params as testlib_params
 
 
 def pytest_html_report_title(report):
@@ -53,9 +60,12 @@ def pytest_html_results_summary(prefix, summary, postfix):
     class myhtml(html):
         class p(html.p):
             style = html.Style(font_weight=&#34;bold&#34;)
+
     prefix.extend([myhtml.p(&#34;{:&lt;30}{}&#34;.format(&#34;PROJECT NAME:&#34;, mycache[&#34;project_name&#34;]))])
     prefix.extend([myhtml.p(&#34;{:&lt;30}{}&#34;.format(&#34;WORKLOAD NAME:&#34;, mycache[&#34;workload_name&#34;]))])
-    prefix.extend([myhtml.p(&#34;{:&lt;30}{}&#34;.format(&#34;Test Start Timestamp:&#34;, mycache[&#34;test_start_timestamp&#34;]))])
+    prefix.extend(
+        [myhtml.p(&#34;{:&lt;30}{}&#34;.format(&#34;Test Start Timestamp:&#34;, mycache[&#34;test_start_timestamp&#34;]))]
+    )
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -73,17 +83,29 @@ def pytest_configure(config):
         myconfig[&#34;mangleYaan&#34;][&#34;testReportPath&#34;] = config.option.htmlpath
 
 
+@pytest.fixture(scope=&#34;function&#34;, autouse=True)
+def check_if_user_cancelled_execution():
+    if mycache[&#34;run_id&#34;]:
+        params = {&#34;run_id&#34;: mycache[&#34;run_id&#34;]}
+        resp = mgclient.make_call(
+            &#34;GET&#34;, maxim_gun_resources.MAXIMGUN.get(&#34;GET_TASK_STATUS&#34;), params=params
+        )
+        if resp.status_code == requests.codes.ok:
+            if resp.json[&#34;status&#34;] == lib_params.MG_TASK_STATUS[&#34;CANCELLED&#34;]:
+                pytest.exit(msg=&#34;Pytest Cancelled by User&#34;, returncode=2)
+        else:
+            mylog.error(&#34;maxim-gun GET_TASK_STATUS API failed with status_code={}&#34;.format(resp.status_code))
+
+
 @pytest.fixture(scope=&#34;function&#34;)
-def inject_k8s_infra_fault_service_unavailable():
+def inject_k8s_infra_fault_service_unavailable_for_func():
     taskid_to_remediate = None
 
-    def _inject_k8s_infra_fault_service_unavailable(
-        endpoint_name, resource_name, random_injection
-    ):
+    def _inject_k8s_infra_fault_service_unavailable_for_func(resource_name, random_injection):
         nonlocal taskid_to_remediate  # specifes var to be picked up from nearest outer scope
 
         request_body = {
-            &#34;endpointName&#34;: endpoint_name,
+            &#34;endpointName&#34;: myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;),
             &#34;resourceName&#34;: resource_name,
             &#34;randomInjection&#34;: random_injection,
         }
@@ -96,13 +118,13 @@ def inject_k8s_infra_fault_service_unavailable():
                 task_id, task_status
             )
         )
-        assert task_status == params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
+        assert task_status == lib_params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
         taskid_to_remediate = task_id
 
         return
 
     # returns this func when fixture is called. Post test case execution, performs post yield section as teardown
-    yield _inject_k8s_infra_fault_service_unavailable
+    yield _inject_k8s_infra_fault_service_unavailable_for_func
 
     mylog.debug(
         &#34;let&#39;s give some time to mangle before triggering remediation task. waiting for 60 secs&#34;
@@ -118,12 +140,11 @@ def inject_k8s_infra_fault_service_unavailable():
             task_id, task_status
         )
     )
-    assert task_status == params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
+    assert task_status == lib_params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
 
 
 @pytest.fixture(scope=&#34;class&#34;)
 def inject_k8s_infra_fault_service_unavailable_for_class(request):
-
     faulty_svc_name = request.param
 
     request_body = {
@@ -140,9 +161,9 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
             task_id, task_status
         )
     )
-    assert task_status == params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
+    assert task_status == lib_params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
 
-    yield faulty_svc_name # post yield runs as the part of teardown
+    yield faulty_svc_name  # post yield runs as the part of teardown
 
     mylog.debug(
         &#34;let&#39;s give some time to mangle before triggering remediation task. waiting for 60 secs&#34;
@@ -158,7 +179,47 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
             task_id, task_status
         )
     )
-    assert task_status == params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]</code></pre>
+    assert task_status == lib_params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
+
+
+@pytest.fixture(scope=&#34;class&#34;)
+def inject_k8s_infra_fault_block_egress_traffic_for_class(request):
+    network_policy_filename = request.param
+
+    mylog.debug(&#34;creating a network policy using {} file&#34;.format(network_policy_filename))
+    response_create = ckclient.create_network_policy(network_policy_filename)
+    assert response_create.metadata
+    mylog.debug(
+        &#34;network policy {} created successfully using {} file&#34;.format(
+            response_create.metadata.name, network_policy_filename
+        )
+    )
+
+    yield network_policy_filename  # post yield runs as the part of teardown
+
+    mylog.debug(&#34;deleting network policy {}&#34;.format(response_create.metadata.name))
+    response_delete = ckclient.delete_network_policy(response_create.metadata.name)
+    assert response_delete.status == &#34;Success&#34;
+    mylog.debug(&#34;network policy {} deleted successfully&#34;.format(response_delete.details.name))
+
+
+@pytest.fixture(scope=&#34;class&#34;)
+def init_chrome_driver(request):
+    # driver = webdriver.Remote(command_executor=&#39;http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub&#39;, desired_capabilities=getattr(DesiredCapabilities, &#34;CHROME&#34;))
+    selenium_hub_fqdn = (
+        &#34;http://&#34;
+        + testlib_params.SELENIUM_GRID_HOST
+        + &#34;:&#34;
+        + testlib_params.SELENIUM_GRID_PORT
+        + testlib_params.SELENIUM_HUB_URI
+    )
+    driver = webdriver.Remote(
+        command_executor=selenium_hub_fqdn,
+        desired_capabilities=getattr(DesiredCapabilities, &#34;CHROME&#34;),
+    )
+    request.cls.driver = driver
+    yield
+    driver.close()</code></pre>
 </details>
 </section>
 <section>
@@ -168,8 +229,8 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="tests.conftest.inject_k8s_infra_fault_service_unavailable"><code class="name flex">
-<span>def <span class="ident">inject_k8s_infra_fault_service_unavailable</span></span>(<span>)</span>
+<dt id="tests.conftest.check_if_user_cancelled_execution"><code class="name flex">
+<span>def <span class="ident">check_if_user_cancelled_execution</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -177,52 +238,76 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@pytest.fixture(scope=&#34;function&#34;)
-def inject_k8s_infra_fault_service_unavailable():
-    taskid_to_remediate = None
-
-    def _inject_k8s_infra_fault_service_unavailable(
-        endpoint_name, resource_name, random_injection
-    ):
-        nonlocal taskid_to_remediate  # specifes var to be picked up from nearest outer scope
-
-        request_body = {
-            &#34;endpointName&#34;: endpoint_name,
-            &#34;resourceName&#34;: resource_name,
-            &#34;randomInjection&#34;: random_injection,
-        }
-
-        task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
-            &#34;POST&#34;, resources.INFRA_FAULTS.get(&#34;K8S_SERVICE_UNAVAILABLE&#34;), json=request_body
+<pre><code class="python">@pytest.fixture(scope=&#34;function&#34;, autouse=True)
+def check_if_user_cancelled_execution():
+    if mycache[&#34;run_id&#34;]:
+        params = {&#34;run_id&#34;: mycache[&#34;run_id&#34;]}
+        resp = mgclient.make_call(
+            &#34;GET&#34;, maxim_gun_resources.MAXIMGUN.get(&#34;GET_TASK_STATUS&#34;), params=params
         )
-        mylog.debug(
-            &#34;task for K8S_SERVICE_UNAVAILABLE fault triggered with task_id={}, task_status={}&#34;.format(
-                task_id, task_status
-            )
-        )
-        assert task_status == params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
-        taskid_to_remediate = task_id
+        if resp.status_code == requests.codes.ok:
+            if resp.json[&#34;status&#34;] == lib_params.MG_TASK_STATUS[&#34;CANCELLED&#34;]:
+                pytest.exit(msg=&#34;Pytest Cancelled by User&#34;, returncode=2)
+        else:
+            mylog.error(&#34;maxim-gun GET_TASK_STATUS API failed with status_code={}&#34;.format(resp.status_code))</code></pre>
+</details>
+</dd>
+<dt id="tests.conftest.init_chrome_driver"><code class="name flex">
+<span>def <span class="ident">init_chrome_driver</span></span>(<span>request)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.fixture(scope=&#34;class&#34;)
+def init_chrome_driver(request):
+    # driver = webdriver.Remote(command_executor=&#39;http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub&#39;, desired_capabilities=getattr(DesiredCapabilities, &#34;CHROME&#34;))
+    selenium_hub_fqdn = (
+        &#34;http://&#34;
+        + testlib_params.SELENIUM_GRID_HOST
+        + &#34;:&#34;
+        + testlib_params.SELENIUM_GRID_PORT
+        + testlib_params.SELENIUM_HUB_URI
+    )
+    driver = webdriver.Remote(
+        command_executor=selenium_hub_fqdn,
+        desired_capabilities=getattr(DesiredCapabilities, &#34;CHROME&#34;),
+    )
+    request.cls.driver = driver
+    yield
+    driver.close()</code></pre>
+</details>
+</dd>
+<dt id="tests.conftest.inject_k8s_infra_fault_block_egress_traffic_for_class"><code class="name flex">
+<span>def <span class="ident">inject_k8s_infra_fault_block_egress_traffic_for_class</span></span>(<span>request)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.fixture(scope=&#34;class&#34;)
+def inject_k8s_infra_fault_block_egress_traffic_for_class(request):
+    network_policy_filename = request.param
 
-        return
-
-    # returns this func when fixture is called. Post test case execution, performs post yield section as teardown
-    yield _inject_k8s_infra_fault_service_unavailable
-
+    mylog.debug(&#34;creating a network policy using {} file&#34;.format(network_policy_filename))
+    response_create = ckclient.create_network_policy(network_policy_filename)
+    assert response_create.metadata
     mylog.debug(
-        &#34;let&#39;s give some time to mangle before triggering remediation task. waiting for 60 secs&#34;
-    )
-    time.sleep(60)
-
-    api_resource = resources.OTHER_FAULTS.get(&#34;REMEDIATION&#34;) + &#34;/&#34; + taskid_to_remediate
-    task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
-        &#34;DELETE&#34;, api_resource
-    )
-    mylog.debug(
-        &#34;task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}&#34;.format(
-            task_id, task_status
+        &#34;network policy {} created successfully using {} file&#34;.format(
+            response_create.metadata.name, network_policy_filename
         )
     )
-    assert task_status == params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]</code></pre>
+
+    yield network_policy_filename  # post yield runs as the part of teardown
+
+    mylog.debug(&#34;deleting network policy {}&#34;.format(response_create.metadata.name))
+    response_delete = ckclient.delete_network_policy(response_create.metadata.name)
+    assert response_delete.status == &#34;Success&#34;
+    mylog.debug(&#34;network policy {} deleted successfully&#34;.format(response_delete.details.name))</code></pre>
 </details>
 </dd>
 <dt id="tests.conftest.inject_k8s_infra_fault_service_unavailable_for_class"><code class="name flex">
@@ -236,7 +321,6 @@ def inject_k8s_infra_fault_service_unavailable():
 </summary>
 <pre><code class="python">@pytest.fixture(scope=&#34;class&#34;)
 def inject_k8s_infra_fault_service_unavailable_for_class(request):
-
     faulty_svc_name = request.param
 
     request_body = {
@@ -253,9 +337,9 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
             task_id, task_status
         )
     )
-    assert task_status == params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
+    assert task_status == lib_params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
 
-    yield faulty_svc_name # post yield runs as the part of teardown
+    yield faulty_svc_name  # post yield runs as the part of teardown
 
     mylog.debug(
         &#34;let&#39;s give some time to mangle before triggering remediation task. waiting for 60 secs&#34;
@@ -271,7 +355,62 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
             task_id, task_status
         )
     )
-    assert task_status == params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]</code></pre>
+    assert task_status == lib_params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]</code></pre>
+</details>
+</dd>
+<dt id="tests.conftest.inject_k8s_infra_fault_service_unavailable_for_func"><code class="name flex">
+<span>def <span class="ident">inject_k8s_infra_fault_service_unavailable_for_func</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.fixture(scope=&#34;function&#34;)
+def inject_k8s_infra_fault_service_unavailable_for_func():
+    taskid_to_remediate = None
+
+    def _inject_k8s_infra_fault_service_unavailable_for_func(resource_name, random_injection):
+        nonlocal taskid_to_remediate  # specifes var to be picked up from nearest outer scope
+
+        request_body = {
+            &#34;endpointName&#34;: myconfig.get(&#34;k8sCluster&#34;).get(&#34;endpointName&#34;),
+            &#34;resourceName&#34;: resource_name,
+            &#34;randomInjection&#34;: random_injection,
+        }
+
+        task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+            &#34;POST&#34;, resources.INFRA_FAULTS.get(&#34;K8S_SERVICE_UNAVAILABLE&#34;), json=request_body
+        )
+        mylog.debug(
+            &#34;task for K8S_SERVICE_UNAVAILABLE fault triggered with task_id={}, task_status={}&#34;.format(
+                task_id, task_status
+            )
+        )
+        assert task_status == lib_params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]
+        taskid_to_remediate = task_id
+
+        return
+
+    # returns this func when fixture is called. Post test case execution, performs post yield section as teardown
+    yield _inject_k8s_infra_fault_service_unavailable_for_func
+
+    mylog.debug(
+        &#34;let&#39;s give some time to mangle before triggering remediation task. waiting for 60 secs&#34;
+    )
+    time.sleep(60)
+
+    api_resource = resources.OTHER_FAULTS.get(&#34;REMEDIATION&#34;) + &#34;/&#34; + taskid_to_remediate
+    task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+        &#34;DELETE&#34;, api_resource
+    )
+    mylog.debug(
+        &#34;task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}&#34;.format(
+            task_id, task_status
+        )
+    )
+    assert task_status == lib_params.MANGLE_TASK_STATUS[&#34;COMPLETED&#34;]</code></pre>
 </details>
 </dd>
 <dt id="tests.conftest.pytest_configure"><code class="name flex">
@@ -324,9 +463,12 @@ def pytest_configure(config):
     class myhtml(html):
         class p(html.p):
             style = html.Style(font_weight=&#34;bold&#34;)
+
     prefix.extend([myhtml.p(&#34;{:&lt;30}{}&#34;.format(&#34;PROJECT NAME:&#34;, mycache[&#34;project_name&#34;]))])
     prefix.extend([myhtml.p(&#34;{:&lt;30}{}&#34;.format(&#34;WORKLOAD NAME:&#34;, mycache[&#34;workload_name&#34;]))])
-    prefix.extend([myhtml.p(&#34;{:&lt;30}{}&#34;.format(&#34;Test Start Timestamp:&#34;, mycache[&#34;test_start_timestamp&#34;]))])</code></pre>
+    prefix.extend(
+        [myhtml.p(&#34;{:&lt;30}{}&#34;.format(&#34;Test Start Timestamp:&#34;, mycache[&#34;test_start_timestamp&#34;]))]
+    )</code></pre>
 </details>
 </dd>
 </dl>
@@ -347,8 +489,11 @@ def pytest_configure(config):
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="tests.conftest.inject_k8s_infra_fault_service_unavailable" href="#tests.conftest.inject_k8s_infra_fault_service_unavailable">inject_k8s_infra_fault_service_unavailable</a></code></li>
+<li><code><a title="tests.conftest.check_if_user_cancelled_execution" href="#tests.conftest.check_if_user_cancelled_execution">check_if_user_cancelled_execution</a></code></li>
+<li><code><a title="tests.conftest.init_chrome_driver" href="#tests.conftest.init_chrome_driver">init_chrome_driver</a></code></li>
+<li><code><a title="tests.conftest.inject_k8s_infra_fault_block_egress_traffic_for_class" href="#tests.conftest.inject_k8s_infra_fault_block_egress_traffic_for_class">inject_k8s_infra_fault_block_egress_traffic_for_class</a></code></li>
 <li><code><a title="tests.conftest.inject_k8s_infra_fault_service_unavailable_for_class" href="#tests.conftest.inject_k8s_infra_fault_service_unavailable_for_class">inject_k8s_infra_fault_service_unavailable_for_class</a></code></li>
+<li><code><a title="tests.conftest.inject_k8s_infra_fault_service_unavailable_for_func" href="#tests.conftest.inject_k8s_infra_fault_service_unavailable_for_func">inject_k8s_infra_fault_service_unavailable_for_func</a></code></li>
 <li><code><a title="tests.conftest.pytest_configure" href="#tests.conftest.pytest_configure">pytest_configure</a></code></li>
 <li><code><a title="tests.conftest.pytest_html_report_title" href="#tests.conftest.pytest_html_report_title">pytest_html_report_title</a></code></li>
 <li><code><a title="tests.conftest.pytest_html_results_summary" href="#tests.conftest.pytest_html_results_summary">pytest_html_results_summary</a></code></li>

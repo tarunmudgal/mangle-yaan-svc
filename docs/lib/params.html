@@ -33,6 +33,7 @@
 
 __author__ = &#34;tarun mudgal&#34;
 
+import os
 from collections import OrderedDict
 
 from requests.exceptions import (ConnectionError, ConnectTimeout,
@@ -82,11 +83,11 @@ MANGLE_TASK_STATUS[&#34;FAILED&#34;] = &#34;FAILED&#34;
 
 # Maxim-Gun task staus
 MG_TASK_STATUS = OrderedDict()
-MG_TASK_STATUS[&#34;STARTED&#34;] = &#34;Test started&#34;
-MG_TASK_STATUS[&#34;IN_PROGRESS&#34;] = &#34;Test running&#34;
-MG_TASK_STATUS[&#34;COMPLETED&#34;] = &#34;Done&#34;
-MG_TASK_STATUS[&#34;FAILED&#34;] = &#34;Test Failed&#34;
-MG_TASK_STATUS[&#34;CANCELLED&#34;] = &#34;Test Cancelled&#34;
+MG_TASK_STATUS[&#34;STARTED&#34;] = &#34;Started&#34;
+MG_TASK_STATUS[&#34;IN_PROGRESS&#34;] = &#34;Running&#34;
+MG_TASK_STATUS[&#34;COMPLETED&#34;] = &#34;Completed&#34;
+MG_TASK_STATUS[&#34;FAILED&#34;] = &#34;Failed&#34;
+MG_TASK_STATUS[&#34;CANCELLED&#34;] = &#34;Cancelled&#34;
 
 # MangleYaan Task Error Status
 MANGLEYAAN_TASK_STATUS = OrderedDict()
