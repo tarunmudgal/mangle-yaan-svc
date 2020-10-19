@@ -13,7 +13,15 @@ class K8SClient(object):
     Refer kubernetes-client API doc here- https://github.com/kubernetes-client/python/tree/master/kubernetes
     """
 
+    __single_instance = None
+
     def __init__(self, kubeconfig_filename, namespace):
+
+        if K8SClient.__single_instance is not None:
+            raise Exception("K8SClient is a singleton class and cannot have more than one objects")
+
+        K8SClient.__single_instance = self
+
         kubeconfig_dir = ROOT_DIR + os.path.sep + "config" + os.path.sep + "kubeconfigs"
         self.kubeconfig_filepath = kubeconfig_dir + os.path.sep + kubeconfig_filename
         self.csp_k8s_dir = ROOT_DIR + os.path.sep + "infra" + os.path.sep + "csp_k8s"

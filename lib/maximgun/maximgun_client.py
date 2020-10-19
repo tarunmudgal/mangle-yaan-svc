@@ -73,8 +73,6 @@ class MGClient(rest_client.RESTClient):
             MGClient object
         """
 
-        adapter = HTTPAdapter(max_retries=retry_obj)
-
         if MGClient.__single_instance is not None:
             raise Exception("MGClient is a singleton class and cannot have more than one objects")
 
@@ -84,18 +82,25 @@ class MGClient(rest_client.RESTClient):
             scheme=scheme, host=host, api_prefix=api_prefix, ssl_verify=ssl_verify, timeout=timeout
         )
 
-        self._session = requests.Session()
-        self._session.mount(scheme, adapter)
-        self.init_session()
+        self._scheme = scheme
+        self._retry_obj = retry_obj
+        self.init_session(self._scheme, self._retry_obj)
+        self.init_session_without_retry()
 
         mylog.debug("MGClient obj %s initialized." % self)
 
     def __repr__(self):
         return "MGClient(base_url={})".format(self._base_url)
 
-    def init_session(self):
+    def init_session(self, scheme, retry_obj):
+        self._session = requests.Session()
+        adapter = HTTPAdapter(max_retries=retry_obj)
+        self._session.mount(scheme, adapter)
         self._session.verify = self._ssl_verify
 
+    def init_session_without_retry(self):
+        self._session_no_retry = requests.Session()
+        self._session_no_retry.verify = self._ssl_verify
 
     # @utils.log_args
     def make_call(

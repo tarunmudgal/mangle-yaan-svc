@@ -26,7 +26,6 @@ def update_task(run_id: str, end_time: str = None, status: str = None,
         get_task_api_resource = mg_resources.MAXIMGUN.get("GET_TASK_DETAILS").format(run_id=run_id)
         get_task_response = mgclient.make_call("GET", get_task_api_resource)
         if get_task_response.status_code == requests.codes.ok:
-            breakpoint()
             task_info = get_task_response.json.get("result")[0]
             update_task_info["run_id"] = run_id
             update_task_info["end_time"] = end_time if end_time else task_info["end_time"]

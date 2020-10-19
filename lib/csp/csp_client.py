@@ -49,14 +49,14 @@ class CSPClient(rest_client.RESTClient):
     __single_instance = None
 
     def __init__(
-        self,
-        host: str,
-        refresh_token: str,
-        api_prefix: str = resources.API_PREFIX,
-        scheme: str = "https://",
-        retry_obj: Retry = DEFAULT_RETRY_OBJ,
-        ssl_verify: bool = False,
-        timeout: int = None,
+            self,
+            host: str,
+            refresh_token: str,
+            api_prefix: str = resources.API_PREFIX,
+            scheme: str = "https://",
+            retry_obj: Retry = DEFAULT_RETRY_OBJ,
+            ssl_verify: bool = False,
+            timeout: int = None,
     ) -> None:
         """Initializes singleton CSPClient that is used to make CSP API calls
         Args:
@@ -73,8 +73,6 @@ class CSPClient(rest_client.RESTClient):
             CSPClient object
         """
 
-        adapter = HTTPAdapter(max_retries=retry_obj)
-
         if CSPClient.__single_instance is not None:
             raise Exception("CSPClient is a singleton class and cannot have more than one objects")
 
@@ -84,21 +82,36 @@ class CSPClient(rest_client.RESTClient):
             scheme=scheme, host=host, api_prefix=api_prefix, ssl_verify=ssl_verify, timeout=timeout
         )
 
+        self._scheme = scheme
+        self._retry_obj = retry_obj
         self._refresh_token = refresh_token
-        self._session = requests.Session()
-        self._session.mount(scheme, adapter)
-        self.init_session()
+        self._access_token = None
+
+        self.init_session(self._scheme, self._retry_obj)
+        self.init_session_without_retry()
 
         mylog.debug("CSPClient obj %s initialized." % self)
 
     def __repr__(self):
         return "CSPClient(base_url={})".format(self._base_url)
 
-    def init_session(self):
-        self._access_token = self.get_access_token()
+    def init_session(self, scheme, retry_obj, force_renew_access_token=False):
+        adapter = HTTPAdapter(max_retries=retry_obj)
+        self._session = requests.Session()
+        self._session.mount(scheme, adapter)
+        if self._access_token is None or force_renew_access_token:
+            self._access_token = self.get_access_token()
 
         self._session.headers = {"csp-auth-token": self._access_token}
         self._session.verify = self._ssl_verify
+
+    def init_session_without_retry(self, force_renew_access_token=False):
+        self._session_no_retry = requests.Session()
+        if self._access_token is None or force_renew_access_token:
+            self._access_token = self.get_access_token()
+
+        self._session_no_retry.headers = {"csp-auth-token": self._access_token}
+        self._session_no_retry.verify = self._ssl_verify
 
     def get_access_token(self):
         access_token_url = self._base_url + resources.AM.get("AUTHORIZE")
@@ -122,7 +135,7 @@ class CSPClient(rest_client.RESTClient):
 
     # @utils.log_args
     def make_call(
-        self, verb: str, api_resource: str, **kwargs: str
+            self, verb: str, api_resource: str, **kwargs: str
     ) -> CSPResponse:
         """
         makes a HTTP call using RESTClient.request API
@@ -136,6 +149,7 @@ class CSPClient(rest_client.RESTClient):
         req_resp = self.request(verb, api_resource, **kwargs)
         if req_resp.status_code == 401:
             mylog.debug("Authorization error occurred for CSP API call. Updating access_token")
-            self.init_session()
+            self.init_session(self._scheme, self._retry_obj, force_renew_access_token=True)
+            self.init_session_without_retry()
             req_resp = self.request(verb, api_resource, **kwargs)
         return CSPResponse(req_resp)
