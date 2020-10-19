@@ -8,36 +8,44 @@ import requests
 from lib.maximgun import resources as mg_resources
 
 
-def update_task(run_id: str, cancel: int = 0, end_time: str = "", status: str = "", report_url: str = "") -> None:
+def update_task(run_id: str, end_time: str = None, status: str = None,
+                report_url: str = None, cancel: int = None) -> bool:
     """
     updates maxim-gun task status (maxim_gun.run_test table)
     Args:
         run_id: task run id received from maxim-gun
-        cancel:
-        end_time: task finish end time
-        status:
-        report_url:
-
+        end_time: task end time
+        status: status to be updated. Valid entries are 'Started', 'Running', 'Completed', 'Failed', 'Cancelled'
+        report_url: test report url which is copied on s3
+        cancel: flag to set if task is failed. Valid entries are 0, 1
     Returns:
-
+        status
     """
     if run_id:
+        update_task_info = {}
+        get_task_api_resource = mg_resources.MAXIMGUN.get("GET_TASK_DETAILS").format(run_id=run_id)
+        get_task_response = mgclient.make_call("GET", get_task_api_resource)
+        if get_task_response.status_code == requests.codes.ok:
+            breakpoint()
+            task_info = get_task_response.json.get("result")[0]
+            update_task_info["run_id"] = run_id
+            update_task_info["end_time"] = end_time if end_time else task_info["end_time"]
+            update_task_info["status"] = status if status else task_info["status"]
+            update_task_info["report_url"] = report_url if report_url else task_info["report_url"]
+            update_task_info["cancel"] = cancel if cancel else 0#task_info["cancel"]
+        else:
+            mylog.error("failed to fetch maxim-gun task details for run_id={}. Cannot update task.".format(run_id))
+            return False
+
         api_resource = mg_resources.MAXIMGUN.get("TASK_STATUS_UPDATE")
-        request_body = {
-            "run_id": run_id,
-            "cancel": cancel,
-            "end_time": end_time,
-            "status": status,
-            "report_url": report_url
-        }
         response = mgclient.make_call(
-            "POST", api_resource, json=request_body
+            "POST", api_resource, json=update_task_info
         )
         if response.status_code == requests.codes.ok:
-            mylog.info("maxim-gun job run_id={} updated".format(run_id))
+            mylog.info("maxim-gun job run_id={} updated successfully".format(run_id))
         else:
             mylog.error(
-                "failed to update maxim-gun job run_id={} where cancel={}, end_time={}, status={}, report_url={}".format(
-                    run_id, cancel, end_time, status, report_url))
+                "failed to update maxim-gun job run_id={} where end_time={}, status={}, report_url={}, cancel={}".format(
+                    run_id, end_time, status, report_url, cancel))
     else:
-        mylog.error("invalid run_id found. Ignore if running locally")
+        mylog.error("invalid run_id found. Ignore if execution is running locally")

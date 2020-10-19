@@ -3,8 +3,8 @@ Copyright 2017 VMware, Inc. All rights reserved. -- VMware confidential
 """
 import os
 
-from lib.mangle import resources
 from lib.common import utils
+from lib.mangle import resources
 
 
 class EndPointBase(object):
@@ -80,7 +80,15 @@ class EndpointCredential(EndPointBase):
         Creates endpoint credentials for kubernetes cluster
         :return:
         """
-        kubeconfig_filepath = ROOT_DIR + os.path.sep + "config" + os.path.sep + kubeconfig_filename
+        kubeconfig_filepath = (
+            ROOT_DIR
+            + os.path.sep
+            + "config"
+            + os.path.sep
+            + "kubeconfigs"
+            + os.path.sep
+            + kubeconfig_filename
+        )
         files = [("kubeConfig", open(kubeconfig_filepath, "rb"))]
         params = {"id": credential_name, "name": credential_name}
         headers = {"Authorization": "Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu"}

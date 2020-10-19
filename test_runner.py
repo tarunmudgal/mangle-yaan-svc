@@ -604,7 +604,11 @@ if __name__ == "__main__":
             args.run_id, status=lib_params.MG_TASK_STATUS["FAILED"], end_time=end_time
         )
     if pytest_status == 2:
+        mylog.error("Pytest execution terminated by user")
         copy_results = False
+        mg_agent.update_task(
+            args.run_id, end_time=end_time
+        )
     if copy_results:
         s3_path = post_run_activities(copy_results=copy_results)
         mg_agent.update_task(
