@@ -1,0 +1,317 @@
+{
+  "101": {
+    "name": "Unknown Module",
+    "type": "UNKNOWN",
+    "path": null
+  },
+  "100": {
+    "name": "Public Api",
+    "type": "PUBLIC_API",
+    "path": null
+  },
+  "110": {
+    "name": "Email Management",
+    "type": "EMAIL_MANAGEMENT",
+    "path": "em"
+  },
+  "120": {
+    "name": "Account Management",
+    "type": "ACCOUNT_MANAGEMENT",
+    "path": "am"
+  },
+  "130": {
+    "name": "Service LifeCycle",
+    "type": "SLC",
+    "path": "slc"
+  },
+  "140": {
+    "name": "Insight",
+    "type": "INSIGHT",
+    "path": null
+  },
+  "150": {
+    "name": "Csp Common",
+    "type": "CSP_COMMON_XENON",
+    "path": null
+  },
+  "160": {
+    "name": "Reporting",
+    "type": "REPORTING",
+    "path": "reporting"
+  },
+  "170": {
+    "name": "Telemetry",
+    "type": "TELEMETRY",
+    "path": "telemetry"
+  },
+  "180": {
+    "name": "Billing",
+    "type": "BILLING",
+    "path": "billing"
+  },
+  "190": {
+    "name": "Host",
+    "type": "HOST",
+    "path": null
+  },
+  "200": {
+    "name": "Upgrade",
+    "type": "UPGRADE",
+    "path": null
+  },
+  "210": {
+    "name": "CLI",
+    "type": "CLI",
+    "path": null
+  },
+  "220": {
+    "name": "Portal",
+    "type": "UI",
+    "path": "portal"
+  },
+  "230": {
+    "name": "SCORE",
+    "type": "SCORE",
+    "path": "score"
+  },
+  "240": {
+    "name": "Service Discovery",
+    "type": "SERVICE_DISCOVERY",
+    "path": "service-discovery"
+  },
+  "250": {
+    "name": "Csp Common Spring",
+    "type": "CSP_COMMON",
+    "path": "common"
+  },
+  "260": {
+    "name": "Csp Customer Support",
+    "type": "CSP_CUSTOMER_SUPPORT",
+    "path": "cs"
+  },
+  "270": {
+    "name": "Feature Flags",
+    "type": "FEATURE_FLAGS",
+    "path": "feature-flags"
+  },
+  "280": {
+    "name": "AM Reactive Client",
+    "type": "AM_REACTIVE_CLIENT",
+    "path": null
+  },
+  "290": {
+    "name": "Feature Flags Xenon Client",
+    "type": "FEATURE_FLAGS_XENON_CLIENT",
+    "path": null
+  },
+  "300": {
+    "name": "Feature Flags MVC Client",
+    "type": "FEATURE_FLAGS_MVC_CLIENT",
+    "path": null
+  },
+  "310": {
+    "name": "Feature Flags Reactive Client",
+    "type": "FEATURE_FLAGS_REACTIVE_CLIENT",
+    "path": null
+  },
+  "320": {
+    "name": "Csp Session Management",
+    "type": "CSP_SESSION_MANAGEMENT",
+    "path": "session-management"
+  },
+  "330": {
+    "name": "Account Management MVC",
+    "type": "ACCOUNT_MANAGEMENT_MVC",
+    "path": "am"
+  },
+  "340": {
+    "name": "Account Management IDP Driver",
+    "type": "ACCOUNT_MANAGEMENT_IDP_DRIVER",
+    "path": null
+  },
+  "350": {
+    "name": "Account Management Persistence Driver",
+    "type": "ACCOUNT_MANAGEMENT_PERSISTENCE_DRIVER",
+    "path": null
+  },
+  "360": {
+    "name": "CSP Notification Service",
+    "type": "NOTIFICATION_SERVICE",
+    "path": "nts"
+  },
+  "370": {
+    "name": "Billing Persistence Driver",
+    "type": "BILLING_PERSISTENCE_DRIVER",
+    "path": null
+  },
+  "380": {
+    "name": "Service Lifecycle",
+    "type": "SLC_MVC",
+    "path": "slc"
+  },
+  "390": {
+    "name": "Service Life Cycle Persistence Driver",
+    "type": "SLC_PERSISTENCE_DRIVER",
+    "path": "slc"
+  },
+  "400": {
+    "name": "MSP Service",
+    "type": "CSP_MSP",
+    "path": "msp"
+  },
+  "410": {
+    "name": "Commerce",
+    "type": "COMMERCE",
+    "path": "commerce"
+  },
+  "420": {
+    "name": "IAM VMwareID",
+    "type": "CSP_IAM_VMWAREID",
+    "path": "iam-vmwareid"
+  },
+  "430": {
+    "name": "IAM VMwareID IDP Driver",
+    "type": "CSP_IAM_VMWAREID_IDP_DRIVER",
+    "path": null
+  },
+  "440": {
+    "name": "IAM VMwareID Persistence Driver",
+    "type": "CSP_IAM_VMWAREID_PERSISTENCE_DRIVER",
+    "path": null
+  },
+  "450": {
+    "name": "Usage Meter",
+    "type": "USAGE_METER",
+    "path": "um"
+  },
+  "460": {
+    "name": "Usage Meter Persistence Driver",
+    "type": "USAGE_METER_PERSISTENCE_DRIVER",
+    "path": "um"
+  },
+  "470    ": {
+    "name": "Notification Service",
+    "type": "CSP_NOTIFICATION_SERVICE",
+    "path": "ns"
+  },
+  "480": {
+    "name": "Operator Portal",
+    "type": "CSP_OPERATOR_PORTAL",
+    "path": "op"
+  },
+  "490": {
+    "name": "Message Driver",
+    "type": "CSP_MESSAGE_DRIVER",
+    "path": "umd"
+  },
+  "500": {
+    "name": "Csp billing sdp adapter",
+    "type": "CSP_BILLING_SDP",
+    "path": "sdp-adapter"
+  },
+  "510": {
+    "name": "API Gateway (Kong)",
+    "type": "CSP_API_GATEWAY",
+    "path": "apigw"
+  },
+  "520": {
+    "name": "Service Onboarding",
+    "type": "CSP_ONBOARDING",
+    "path": "os"
+  },
+  "530": {
+    "name": "CSP Data Lake Consumer",
+    "type": "CSP_LAKE_CONSUMER",
+    "path": "lc"
+  },
+  "540": {
+    "name": "CSP Authentication",
+    "type": "CSP_AUTHN",
+    "path": "authn"
+  },
+  "550": {
+    "name": "Federation Operations",
+    "type": "CSP_FEDERATION",
+    "path": "federation"
+  },
+  "560": {
+    "name": "Federation Operations IDP Driver",
+    "type": "CSP_FEDERATION_IDP_DRIVER",
+    "path": null
+  },
+  "570": {
+    "name": "Federation Operations Persistence Driver",
+    "type": "CSP_FEDERATION_PERSISTENCE_DRIVER",
+    "path": null
+  },
+  "580": {
+    "name": "Identity Access Management Common",
+    "type": "IAM_COMMON",
+    "path": "am-common"
+  },
+  "590": {
+    "name": "CSP Feature Flags Service",
+    "type": "CSP_FF_SERVICE",
+    "path": "ff-service"
+  },
+  "600": {
+    "name": "CSP Data Enrichment",
+    "type": "CSP_DATA_ENRICHMENT",
+    "path": "data-enrichment"
+  },
+  "610": {
+    "name": "CSP Data Mediator",
+    "type": "CSP_DATA_MEDIATOR",
+    "path": "data-mediator"
+  },
+  "620": {
+    "name": "CSP Commerce AWS Adapter",
+    "type": "CSP_COMMERCE_AWS_ADAPTER",
+    "path": "commerce-aws-adapter"
+  },
+  "630": {
+    "name": "CSP Resource manager",
+    "type": "CSP_RESOURCE_MANAGER",
+    "path": "resource"
+  },
+  "640": {
+    "name": "CSP IAM Roles Management",
+    "type": "CSP_IAM_ROLES_MGMT",
+    "path": "iam-roles-mgmt"
+  },
+  "650": {
+    "name": "CSP Multi Cloud Management",
+    "type": "CSP_MULTI_CLOUD_MANAGEMENT",
+    "path": "multi-cloud-management"
+  },
+  "660": {
+    "name": "Branding",
+    "type": "CSP_BRANDING",
+    "path": "branding"
+  },
+  "670": {
+    "name": "CSP Data Aggregator",
+    "type": "CSP_DATA_AGGREGATOR",
+    "path": "data-aggregator"
+  },
+  "680": {
+    "name": "CSP Audit Consumer",
+    "type": "CSP_AUDIT_CONSUMER",
+    "path": "audit-consumer"
+  },
+  "690": {
+    "name": "CSP Commerce Notifications",
+    "type": "COMMERCE_NOTIFICATIONS",
+    "path": "commerce-notifications"
+  },
+  "700": {
+    "name": "CSP Identity Governance",
+    "type": "CSP_IDENTITY_GOVERNANCE",
+    "path": "identity-governance"
+  },
+  "710": {
+    "name": "CSP Fraud Management",
+    "type": "CSP_FRAUD_MANAGEMENT",
+    "path": "fm"
+  }
+}
