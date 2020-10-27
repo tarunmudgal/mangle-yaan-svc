@@ -8,7 +8,8 @@ import pytest
 import requests
 
 from lib.csp import resources
-from src.testlib.pytest import utils
+from src.testlib.csp import utils as csp_utils
+from src.testlib.pytest import utils as pytest_utils
 
 LIST_NETWORK_POLICY_FILENAMES = ["preview_env_egress_commerce_service.yaml"]
 
@@ -20,7 +21,7 @@ LIST_NETWORK_POLICY_FILENAMES = ["preview_env_egress_commerce_service.yaml"]
 )
 class TestCSPAPIsWhenITServiceNotReachable(object):
     """
-    test cases for commerce APIs when IT service calls are blocked
+    test cases for CSP APIs when IT service calls are blocked
     """
 
     @pytest.mark.dependency()
@@ -28,12 +29,16 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 500
+        expected_http_code = 500
+        expected_module_error_type = "CSP_COMMON"
+        expected_svc_error_type = "SERVICE_ERROR"
         if (
             inject_k8s_infra_fault_block_egress_traffic_for_class
             == "preview_env_egress_commerce_service.yaml"
         ):
-            expected_status_code = 500
+            expected_http_code = 500
+            expected_module_error_type = "CSP_COMMON"
+            expected_svc_error_type = "SERVICE_ERROR"
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ESTIMATED_CHARGES").format(
@@ -46,22 +51,47 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
 
-        # verify csp api returns expected_status_code
+        # verify csp api returns expected error codes
         assert (
-            resp.status_code == expected_status_code
-        ), "Commerce service did not return expected status_code={}".format(expected_status_code)
+            resp.json is not None
+        ), "response could not be converted to json. resp.text={}".format(resp.text)
+
+        module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
+        module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
+        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+
+        mylog.debug(
+            "module_error_type={} found for module_error_code={}".format(
+                module_error_type, module_error_code
+            )
+        )
+        mylog.debug(
+            "svc_error_type={} found for svc_error_code={}".format(svc_error_type, svc_error_code)
+        )
+
+        assert (
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected http status_code={}".format(
+            expected_http_code
+        )
+
+        assert (
+            module_error_type == expected_module_error_type
+        ), "Commerce service did not return expected CSP module_error_type={}".format(
+            expected_module_error_type
+        )
+        assert (
+            svc_error_type == expected_svc_error_type
+        ), "Commerce service did not return expected CSP svc_error_type={}".format(
+            expected_svc_error_type
+        )
 
     @pytest.mark.dependency()
     def test_offers_api_when_it_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 504
-        if (
-            inject_k8s_infra_fault_block_egress_traffic_for_class
-            == "preview_env_egress_commerce_service.yaml"
-        ):
-            expected_status_code = 504
+        expected_http_code = 504
 
         # make csp api call
         api_resource = resources.COMMERCE.get("OFFERS").format(
@@ -73,22 +103,19 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
             "POST", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
         )
 
-        # verify csp api returns expected_status_code
+        # verify csp api returns expected_http_code
         assert (
-            resp.status_code == expected_status_code
-        ), "Commerce service did not return expected status_code={}".format(expected_status_code)
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
     def test_org_payment_methods_api_when_it_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 500
-        if (
-            inject_k8s_infra_fault_block_egress_traffic_for_class
-            == "preview_env_egress_commerce_service.yaml"
-        ):
-            expected_status_code = 500
+        expected_http_code = 500
+        expected_module_error_type = "CSP_COMMON"
+        expected_svc_error_type = "SERVICE_ERROR"
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ORG_PAYMENT_METHODS").format(
@@ -97,22 +124,48 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
 
-        # verify csp api returns expected_status_code
+        # verify csp api returns expected error codes
         assert (
-            resp.status_code == expected_status_code
-        ), "Commerce service did not return expected status_code={}".format(expected_status_code)
+            resp.json is not None
+        ), "response could not be converted to json. resp.text={}".format(resp.text)
+        module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
+        module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
+        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+
+        mylog.debug(
+            "module_error_type={} found for module_error_code={}".format(
+                module_error_type, module_error_code
+            )
+        )
+        mylog.debug(
+            "svc_error_type={} found for svc_error_code={}".format(svc_error_type, svc_error_code)
+        )
+
+        assert (
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected http status_code={}".format(
+            expected_http_code
+        )
+
+        assert (
+            module_error_type == expected_module_error_type
+        ), "Commerce service did not return expected CSP module_error_type={}".format(
+            expected_module_error_type
+        )
+        assert (
+            svc_error_type == expected_svc_error_type
+        ), "Commerce service did not return expected CSP svc_error_type={}".format(
+            expected_svc_error_type
+        )
 
     @pytest.mark.dependency()
     def test_user_payment_methods_api_when_it_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 500
-        if (
-            inject_k8s_infra_fault_block_egress_traffic_for_class
-            == "preview_env_egress_commerce_service.yaml"
-        ):
-            expected_status_code = 500
+        expected_http_code = 500
+        expected_module_error_type = "CSP_COMMON"
+        expected_svc_error_type = "SERVICE_ERROR"
 
         # make csp api call
         api_resource = resources.COMMERCE.get("USER_PAYMENT_METHODS").format(
@@ -121,22 +174,48 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
 
-        # verify csp api returns expected_status_code
+        # verify csp api returns expected error codes
         assert (
-            resp.status_code == expected_status_code
-        ), "Commerce service did not return expected status_code={}".format(expected_status_code)
+            resp.json is not None
+        ), "response could not be converted to json. resp.text={}".format(resp.text)
+        module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
+        module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
+        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+
+        mylog.debug(
+            "module_error_type={} found for module_error_code={}".format(
+                module_error_type, module_error_code
+            )
+        )
+        mylog.debug(
+            "svc_error_type={} found for svc_error_code={}".format(svc_error_type, svc_error_code)
+        )
+
+        assert (
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected http status_code={}".format(
+            expected_http_code
+        )
+
+        assert (
+            module_error_type == expected_module_error_type
+        ), "Commerce service did not return expected CSP module_error_type={}".format(
+            expected_module_error_type
+        )
+        assert (
+            svc_error_type == expected_svc_error_type
+        ), "Commerce service did not return expected CSP svc_error_type={}".format(
+            expected_svc_error_type
+        )
 
     @pytest.mark.dependency()
     def test_promotions_api_when_it_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 500
-        if (
-            inject_k8s_infra_fault_block_egress_traffic_for_class
-            == "preview_env_egress_commerce_service.yaml"
-        ):
-            expected_status_code = 500
+        expected_http_code = 500
+        expected_module_error_type = "CSP_COMMON"
+        expected_svc_error_type = "SERVICE_ERROR"
 
         # make csp api call
         api_resource = resources.COMMERCE.get("PROMOTIONS").format(
@@ -145,22 +224,46 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
 
-        # verify csp api returns expected_status_code
+        # verify csp api returns expected error codes
         assert (
-            resp.status_code == expected_status_code
-        ), "Commerce service did not return expected status_code={}".format(expected_status_code)
+            resp.json is not None
+        ), "response could not be converted to json. resp.text={}".format(resp.text)
+        module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
+        module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
+        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+
+        mylog.debug(
+            "module_error_type={} found for module_error_code={}".format(
+                module_error_type, module_error_code
+            )
+        )
+        mylog.debug(
+            "svc_error_type={} found for svc_error_code={}".format(svc_error_type, svc_error_code)
+        )
+
+        assert (
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected http status_code={}".format(
+            expected_http_code
+        )
+
+        assert (
+            module_error_type == expected_module_error_type
+        ), "Commerce service did not return expected CSP module_error_type={}".format(
+            expected_module_error_type
+        )
+        assert (
+            svc_error_type == expected_svc_error_type
+        ), "Commerce service did not return expected CSP svc_error_type={}".format(
+            expected_svc_error_type
+        )
 
     @pytest.mark.dependency()
     def test_list_subscriptions_api_when_it_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 504
-        if (
-            inject_k8s_infra_fault_block_egress_traffic_for_class
-            == "preview_env_egress_commerce_service.yaml"
-        ):
-            expected_status_code = 504
+        expected_http_code = 504
 
         # make csp api call
         api_resource = resources.COMMERCE.get("LIST_SUBSCRIPTIONS")
@@ -172,11 +275,11 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
 
         # verify csp api returns expected_status_code
         assert (
-            resp.status_code == expected_status_code
-        ), "Commerce service did not return expected status_code={}".format(expected_status_code)
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency(
-        # depends=utils.get_testcase_names(
+        # depends=pytest_utils.get_testcase_names(
         #     "TestCSPAPIsWhenITServiceNotReachable::test_list_subscriptions_api_when_it_service_calls_are_blocked",
         #     LIST_NETWORK_POLICY_FILENAMES,
         # )
@@ -187,12 +290,7 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 504
-        if (
-            inject_k8s_infra_fault_block_egress_traffic_for_class
-            == "preview_env_egress_commerce_service.yaml"
-        ):
-            expected_status_code = 504
+        expected_http_code = 504
 
         # make csp api call
         api_resource = resources.COMMERCE.get("GET_SUBSCRIPTION").format(
@@ -202,20 +300,18 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
 
         # verify csp api returns expected_status_code
-        assert resp.status_code == expected_status_code, "Commerce service did not return expected status_code={}".format(
-            expected_status_code)
+        assert (
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
     def test_inovice_api_when_it_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 500
-        if (
-                inject_k8s_infra_fault_block_egress_traffic_for_class
-                == "preview_env_egress_commerce_service.yaml"
-        ):
-            expected_status_code = 500
+        expected_http_code = 500
+        expected_module_error_type = "CSP_COMMON"
+        expected_svc_error_type = "SERVICE_ERROR"
 
         # make csp api call
         api_resource = resources.COMMERCE.get("INOVICES").format(
@@ -224,50 +320,140 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
 
-        # verify csp api returns expected_status_code
-        assert resp.status_code == expected_status_code, "Commerce service did not return expected status_code={}".format(
-            expected_status_code)
+        # verify csp api returns expected error codes
+        assert (
+            resp.json is not None
+        ), "response could not be converted to json. resp.text={}".format(resp.text)
+        module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
+        module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
+        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+
+        mylog.debug(
+            "module_error_type={} found for module_error_code={}".format(
+                module_error_type, module_error_code
+            )
+        )
+        mylog.debug(
+            "svc_error_type={} found for svc_error_code={}".format(svc_error_type, svc_error_code)
+        )
+
+        assert (
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected http status_code={}".format(
+            expected_http_code
+        )
+
+        assert (
+            module_error_type == expected_module_error_type
+        ), "Commerce service did not return expected CSP module_error_type={}".format(
+            expected_module_error_type
+        )
+        assert (
+            svc_error_type == expected_svc_error_type
+        ), "Commerce service did not return expected CSP svc_error_type={}".format(
+            expected_svc_error_type
+        )
 
     @pytest.mark.dependency()
     def test_statement_api_when_it_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 500
-        if (
-                inject_k8s_infra_fault_block_egress_traffic_for_class
-                == "preview_env_egress_commerce_service.yaml"
-        ):
-            expected_status_code = 500
+        expected_http_code = 500
+        expected_module_error_type = "CSP_COMMON"
+        expected_svc_error_type = "SERVICE_ERROR"
 
         # make csp api call
-        api_resource = resources.COMMERCE.get("SATATEMENT").format(orgId=myconfig.get("csp").get("defaultOrg").get("id"));
-        params = {"count":"15"}
+        api_resource = resources.COMMERCE.get("SATATEMENT").format(
+            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+        )
+        params = {"count": "15"}
 
-        resp = cclient.make_call("GET",api_resource, params=params, retry_count=0, disable_implicit_retry=True)
+        resp = cclient.make_call(
+            "GET", api_resource, params=params, retry_count=0, disable_implicit_retry=True
+        )
 
-        # verify csp api returns expected_status_code
-        assert resp.status_code == expected_status_code, "Commerce service did not return expected status_code={}".format(
-            expected_status_code)
+        # verify csp api returns expected error codes
+        assert (
+            resp.json is not None
+        ), "response could not be converted to json. resp.text={}".format(resp.text)
+        module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
+        module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
+        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+
+        mylog.debug(
+            "module_error_type={} found for module_error_code={}".format(
+                module_error_type, module_error_code
+            )
+        )
+        mylog.debug(
+            "svc_error_type={} found for svc_error_code={}".format(svc_error_type, svc_error_code)
+        )
+
+        assert (
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected http status_code={}".format(
+            expected_http_code
+        )
+
+        assert (
+            module_error_type == expected_module_error_type
+        ), "Commerce service did not return expected CSP module_error_type={}".format(
+            expected_module_error_type
+        )
+        assert (
+            svc_error_type == expected_svc_error_type
+        ), "Commerce service did not return expected CSP svc_error_type={}".format(
+            expected_svc_error_type
+        )
 
     @pytest.mark.dependency()
     def test_promotion_type_api_when_it_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_status_code = 500
-        if (
-                inject_k8s_infra_fault_block_egress_traffic_for_class
-                == "preview_env_egress_commerce_service.yaml"
-        ):
-            expected_status_code = 500
+        expected_http_code = 500
+        expected_module_error_type = "CSP_COMMON"
+        expected_svc_error_type = "SERVICE_ERROR"
 
         # make csp api call
         api_resource = resources.COMMERCE.get("PROMOTIONS_TYPE")
-        params = {"orgId":myconfig.get("csp").get("defaultOrg").get("id"),'promotionType':'ORG'}
+        params = {"orgId": myconfig.get("csp").get("defaultOrg").get("id"), "promotionType": "ORG"}
 
-        resp = cclient.make_call("GET", api_resource, params=params,retry_count = 0, disable_implicit_retry = True)
+        resp = cclient.make_call(
+            "GET", api_resource, params=params, retry_count=0, disable_implicit_retry=True
+        )
 
-        # verify csp api returns expected_status_code
-        assert resp.status_code == expected_status_code, "Commerce service did not return expected status_code={}".format(
-            expected_status_code)
+        # verify csp api returns expected error codes
+        assert (
+            resp.json is not None
+        ), "response could not be converted to json. resp.text={}".format(resp.text)
+        module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
+        module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
+        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+
+        mylog.debug(
+            "module_error_type={} found for module_error_code={}".format(
+                module_error_type, module_error_code
+            )
+        )
+        mylog.debug(
+            "svc_error_type={} found for svc_error_code={}".format(svc_error_type, svc_error_code)
+        )
+
+        assert (
+            resp.status_code == expected_http_code
+        ), "Commerce service did not return expected http status_code={}".format(
+            expected_http_code
+        )
+
+        assert (
+            module_error_type == expected_module_error_type
+        ), "Commerce service did not return expected CSP module_error_type={}".format(
+            expected_module_error_type
+        )
+        assert (
+            svc_error_type == expected_svc_error_type
+        ), "Commerce service did not return expected CSP svc_error_type={}".format(
+            expected_svc_error_type
+        )

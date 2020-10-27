@@ -13,5 +13,9 @@ SELENIUM_HUB_URI = "/wd/hub"
 # WebDriver params
 WEBDRIVER_DEFAULT_WAIT = 120
 
+# CSP error code files
+CSP_MODULE_CODE_FILE = "src/testlib/csp/errors/module_code.json"
+CSP_SERVICE_ERROR_CODE_FILES = ["src/testlib/csp/errors/csp_common_errors.json"]
+
 # csp urls
 # CSP_BASE_URL = ""
