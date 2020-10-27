@@ -202,6 +202,72 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
 
         # verify csp api returns expected_status_code
-        assert (
-            resp.status_code == expected_status_code
-        ), "Commerce service did not return expected status_code={}".format(expected_status_code)
+        assert resp.status_code == expected_status_code, "Commerce service did not return expected status_code={}".format(
+            expected_status_code)
+
+    @pytest.mark.dependency()
+    def test_inovice_api_when_it_service_calls_are_blocked(
+            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+    ):
+        # expected csp api response (status_code)
+        expected_status_code = 500
+        if (
+                inject_k8s_infra_fault_block_egress_traffic_for_class
+                == "preview_env_egress_commerce_service.yaml"
+        ):
+            expected_status_code = 500
+
+        # make csp api call
+        api_resource = resources.COMMERCE.get("INOVICES").format(
+            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+        )
+
+        resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
+
+        # verify csp api returns expected_status_code
+        assert resp.status_code == expected_status_code, "Commerce service did not return expected status_code={}".format(
+            expected_status_code)
+
+    @pytest.mark.dependency()
+    def test_statement_api_when_it_service_calls_are_blocked(
+            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+    ):
+        # expected csp api response (status_code)
+        expected_status_code = 500
+        if (
+                inject_k8s_infra_fault_block_egress_traffic_for_class
+                == "preview_env_egress_commerce_service.yaml"
+        ):
+            expected_status_code = 500
+
+        # make csp api call
+        api_resource = resources.COMMERCE.get("SATATEMENT").format(orgId=myconfig.get("csp").get("defaultOrg").get("id"));
+        params = {"count":"15"}
+
+        resp = cclient.make_call("GET",api_resource, params=params, retry_count=0, disable_implicit_retry=True)
+
+        # verify csp api returns expected_status_code
+        assert resp.status_code == expected_status_code, "Commerce service did not return expected status_code={}".format(
+            expected_status_code)
+
+    @pytest.mark.dependency()
+    def test_promotion_type_api_when_it_service_calls_are_blocked(
+            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+    ):
+        # expected csp api response (status_code)
+        expected_status_code = 500
+        if (
+                inject_k8s_infra_fault_block_egress_traffic_for_class
+                == "preview_env_egress_commerce_service.yaml"
+        ):
+            expected_status_code = 500
+
+        # make csp api call
+        api_resource = resources.COMMERCE.get("PROMOTIONS_TYPE")
+        params = {"orgId":myconfig.get("csp").get("defaultOrg").get("id"),'promotionType':'ORG'}
+
+        resp = cclient.make_call("GET", api_resource, params=params,retry_count = 0, disable_implicit_retry = True)
+
+        # verify csp api returns expected_status_code
+        assert resp.status_code == expected_status_code, "Commerce service did not return expected status_code={}".format(
+            expected_status_code)
