@@ -22,6 +22,12 @@ COMMERCE["ESTIMATED_CHARGES"] = "/commerce/api/v1/orgs/{orgId}/estimated-charges
 COMMERCE["OFFERS"] = "/commerce/api/v1/service-definitions/{serviceDefinitionId}/offers"
 COMMERCE["LIST_SUBSCRIPTIONS"] = "/commerce/api/v2/subscriptions"
 COMMERCE["GET_SUBSCRIPTION"] = "/commerce/api/v1/subscriptions/{subscriptionId}"
+COMMERCE["SATATEMENT"] = "/commerce/api/v1/orgs/{orgId}/statements"
+COMMERCE["INOVICES"] = "/commerce/api/v1/orgs/{orgId}/invoices"
+COMMERCE["PROMOTIONS_TYPE"] = "/commerce/api/v1/promotions"
+#CS resources
+CS = OrderedDict()
+CS["support-request"]="/cs/api/support-requests"
 
 # AM resources
 AM = OrderedDict()
