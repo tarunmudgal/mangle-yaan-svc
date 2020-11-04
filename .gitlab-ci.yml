@@ -13,14 +13,10 @@ pylintandmypy:
   script:
     - pip install -r ci_requirements.txt
     - pylint --disable superfluous-parens --disable=missing-docstring lib/
-  only:
-    -master
-  when: on_success
 
 buildanddeploy:
   stage: deploy
   image: docker:18.09
-
   script:
     - echo "Starting the script"
     - echo "Installing required tools"
