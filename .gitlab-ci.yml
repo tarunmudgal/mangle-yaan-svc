@@ -4,11 +4,19 @@ variables:
 
 services:
   - docker:18.09-dind
+stages:
+  - build
+  - deploy
+pylintandmypy:
+  stage: build
+  image: python:3.6
+  script:
+    - pip install -r ci_requirements.txt
+    - pylint --disable superfluous-parens --disable=missing-docstring lib/
 
 buildanddeploy:
-  stage: build
+  stage: deploy
   image: docker:18.09
-
   script:
     - echo "Starting the script"
     - echo "Installing required tools"
@@ -23,6 +31,7 @@ buildanddeploy:
   only:
     - master
   when: on_success
+
 
 #pylint:
 #  stage: test
