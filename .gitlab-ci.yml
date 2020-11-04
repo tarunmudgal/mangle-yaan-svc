@@ -13,6 +13,9 @@ pylintandmypy:
   script:
     - pip install -r ci_requirements.txt
     - pylint --disable superfluous-parens --disable=missing-docstring lib/
+  only:
+    - master
+  when: on_failure
 
 buildanddeploy:
   stage: deploy
