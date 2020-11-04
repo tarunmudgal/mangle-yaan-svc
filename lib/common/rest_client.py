@@ -104,7 +104,7 @@ class RESTClient(abc.ABC):
             try:
                 attempt += 1
                 mylog.debug(
-                    "RESTClient: Sending a request with method={}, resource={} disable_implicit_retry={}".format(
+                    "RESTClient: Sending a request with method={}, resource={}, disable_implicit_retry={}".format(
                         method, api_resource, disable_implicit_retry
                     )
                 )

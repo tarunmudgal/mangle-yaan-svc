@@ -27,6 +27,10 @@
     "description": "paginated APIs test cases while one service instance(pod) is down",
     "path": "tests/external_dependencies/test_csp_apis_when_it_not_reachable.py"
   },
+  "test_csp_apis_when_gaz_not_reachable": {
+    "description": "paginated APIs test cases while one service instance(pod) is down",
+    "path": "tests/external_dependencies/test_csp_apis_when_gaz_not_reachable.py"
+  },
   "test_csp_login_ui": {
     "description": "dummy test cases",
     "path": "tests/ui/test_csp_login.py"

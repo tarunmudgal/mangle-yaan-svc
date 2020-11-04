@@ -78,7 +78,7 @@ spec:
       protocol: TCP
     - port: 8370        #CSP_MULTI_CLOUD_MANAGEMENT_URL
       protocol: TCP
-#    - port: 8110        #CSP_SERVICE_LIFECYCLE_MVC_URL
-#      protocol: TCP
+    - port: 8110        #CSP_SERVICE_LIFECYCLE_MVC_URL
+      protocol: TCP
     to:
     - namespaceSelector: {}

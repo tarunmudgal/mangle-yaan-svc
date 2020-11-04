@@ -58,7 +58,7 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
 
         module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
         module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
-        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+        svc_error_type = csp_utils.get_csp_service_error_code_info(module_error_code, svc_error_code)
 
         mylog.debug(
             "module_error_type={} found for module_error_code={}".format(
@@ -130,7 +130,7 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         ), "response could not be converted to json. resp.text={}".format(resp.text)
         module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
         module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
-        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+        svc_error_type = csp_utils.get_csp_service_error_code_info(module_error_code, svc_error_code)
 
         mylog.debug(
             "module_error_type={} found for module_error_code={}".format(
@@ -180,7 +180,7 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         ), "response could not be converted to json. resp.text={}".format(resp.text)
         module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
         module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
-        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+        svc_error_type = csp_utils.get_csp_service_error_code_info(module_error_code, svc_error_code)
 
         mylog.debug(
             "module_error_type={} found for module_error_code={}".format(
@@ -230,7 +230,7 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         ), "response could not be converted to json. resp.text={}".format(resp.text)
         module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
         module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
-        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+        svc_error_type = csp_utils.get_csp_service_error_code_info(module_error_code, svc_error_code)
 
         mylog.debug(
             "module_error_type={} found for module_error_code={}".format(
@@ -326,7 +326,7 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         ), "response could not be converted to json. resp.text={}".format(resp.text)
         module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
         module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
-        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+        svc_error_type = csp_utils.get_csp_service_error_code_info(module_error_code, svc_error_code)
 
         mylog.debug(
             "module_error_type={} found for module_error_code={}".format(
@@ -379,7 +379,7 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         ), "response could not be converted to json. resp.text={}".format(resp.text)
         module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
         module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
-        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+        svc_error_type = csp_utils.get_csp_service_error_code_info(module_error_code, svc_error_code)
 
         mylog.debug(
             "module_error_type={} found for module_error_code={}".format(
@@ -430,7 +430,7 @@ class TestCSPAPIsWhenITServiceNotReachable(object):
         ), "response could not be converted to json. resp.text={}".format(resp.text)
         module_error_code, svc_error_code = resp.json.get("cspErrorCode").split(".")
         module_error_type = csp_utils.get_csp_module_error_code_info(module_error_code).get("type")
-        svc_error_type = csp_utils.get_csp_service_error_code_info(svc_error_code)
+        svc_error_type = csp_utils.get_csp_service_error_code_info(module_error_code, svc_error_code)
 
         mylog.debug(
             "module_error_type={} found for module_error_code={}".format(
