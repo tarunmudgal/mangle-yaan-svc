@@ -7,7 +7,7 @@ services:
 stages:
   - test
   - build
-pylint:
+pylint job:
   stage: test
   image: python:3.7-slim
   before_script:
@@ -28,7 +28,7 @@ pylint:
     - master
   when: always
 
-buildanddeploy:
+build job:
   stage: build
   image: docker:18.09
   script:
