@@ -9,7 +9,7 @@ stages:
   - deploy
 pylintandmypy:
   stage: build
-  image: image: python:3.6
+  image: python:3.6
   script:
     - pip install -r ci_requirements.txt
     - pylint --disable superfluous-parens --disable=missing-docstring lib/
