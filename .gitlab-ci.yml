@@ -7,10 +7,11 @@ image: "python:3.7-slim"
 services:
   - docker:18.09-dind
 stages:
-  - code_analysis
+  - code_analysis_pylint
+  - code_analysis_mypy
   - build
 pylint_job:
-  stage: code_analysis
+  stage: code_analysis_pylint
   image: python:3.7-slim
   before_script:
     - mkdir -p public/badges public/lint
@@ -31,7 +32,7 @@ pylint_job:
   when: always
 
 mypy_job:
-  stage: code_analysis
+  stage: code_analysis_mypy
   image: python:3.7-slim
   before_script:
     - pip install -r ci_requirements.txt
