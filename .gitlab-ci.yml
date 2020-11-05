@@ -30,6 +30,7 @@ pylint_job:
 
 mypy_job:
   stage: code_analysis
+  image: python:3.7-slim
   script:
     - mypy --disable-error-code name-defined --disable-error-code attr-defined --show-error-codes --show-error-context --strict --check-untyped-defs --pretty $(find . -path ./.tox -prune -false -o -type f -name "*.py") | tee /tmp/mypy.txt || echo -n "mypy returned failure"
   only:
