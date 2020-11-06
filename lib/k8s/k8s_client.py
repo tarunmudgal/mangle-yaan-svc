@@ -159,6 +159,61 @@ class K8SClient(object):
 
         return False
 
+    def get_service(self, service_name: str) -> client.V1Service:
+        """
+        reads a service details
+        Args:
+            service_name: service name for which details are required
+
+        Returns:
+            client.V1Service object
+        """
+
+        mylog.info("reading service details for service name={}".format(service_name))
+
+        response = None
+        try:
+            response = self.core_v1_api_client.read_namespaced_service(
+                service_name, self.namespace, pretty="true"
+            )
+            # mylog.info(response)
+        except ApiException as fault:
+            mylog.exception(
+                "exception occurred while reading service details for service name={}. Exception={}".format(
+                    service_name, fault
+                )
+            )
+
+        return response
+
+    def patch_service(self, service_name: str, body: client.V1Service) -> client.V1Service:
+        """
+        patches a service
+        Args:
+            service_name: service name for which details are required
+            body: updated (with patch changes) client.V1Service object
+
+        Returns:
+            client.V1Service object
+        """
+
+        mylog.info("patching service details for service name={}".format(service_name))
+
+        response = None
+        try:
+            response = self.core_v1_api_client.patch_namespaced_service(
+                service_name, self.namespace, body, pretty="true"
+            )
+            # mylog.info(response)
+        except ApiException as fault:
+            mylog.exception(
+                "exception occurred while patching service details for service name={}. Exception={}".format(
+                    service_name, fault
+                )
+            )
+
+        return response
+
     def create_network_policy(self, network_policy_fname):
         network_policy_fpath = (
             self.csp_k8s_dir + os.path.sep + "networkpolicy" + os.path.sep + network_policy_fname

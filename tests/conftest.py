@@ -65,22 +65,27 @@ def check_if_user_cancelled_execution():
             if resp.json["status"] == lib_params.MG_TASK_STATUS["CANCELLED"]:
                 pytest.exit(msg="Pytest Cancelled by User", returncode=2)
         else:
-            mylog.error("maxim-gun GET_TASK_STATUS API failed with status_code={}".format(resp.status_code))
+            mylog.error(
+                "maxim-gun GET_TASK_STATUS API failed with status_code={}".format(resp.status_code)
+            )
 
 
 @pytest.fixture(scope="function")
 def inject_k8s_infra_fault_service_unavailable_for_func():
     taskid_to_remediate = None
+    service_name = None
 
     def _inject_k8s_infra_fault_service_unavailable_for_func(resource_name, random_injection):
-        nonlocal taskid_to_remediate  # specifes var to be picked up from nearest outer scope
+        nonlocal taskid_to_remediate, service_name  # specifes var to be picked up from nearest outer scope
 
+        service_name = resource_name
+
+        # mangle fault injection
         request_body = {
             "endpointName": myconfig.get("k8sCluster").get("endpointName"),
             "resourceName": resource_name,
             "randomInjection": random_injection,
         }
-
         task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
             "POST", resources.INFRA_FAULTS.get("K8S_SERVICE_UNAVAILABLE"), json=request_body
         )
@@ -102,28 +107,58 @@ def inject_k8s_infra_fault_service_unavailable_for_func():
     )
     time.sleep(60)
 
-    api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + taskid_to_remediate
-    task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
-        "DELETE", api_resource
-    )
-    mylog.debug(
-        "task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}".format(
-            task_id, task_status
+    try:
+        # mangle fault remediation
+        api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + taskid_to_remediate
+        task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+            "DELETE", api_resource
         )
-    )
-    assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
+        mylog.debug(
+            "task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}".format(
+                task_id, task_status
+            )
+        )
+        assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
+    except Exception as fault:
+        mylog.info(
+            "Exception occurred while remediating mangle infra fault for service={}. Exception={}".format(
+                service_name, fault
+            )
+        )
+
+        # fallback mechanism to remediate fault if mangle fails to do so
+        service_info = ckclient.get_service(service_name)
+        if service_info.spec.selector["environment"] == "mangle":
+            mylog.info(
+                "Let's try to remediate mangle infra fault using K8S API for service={}".format(
+                    service_name
+                )
+            )
+            service_info.spec.selector["environment"] = (
+                myconfig.get("k8sCluster").get("namespace").split("-")[2]
+            )
+            ckclient.patch_service(service_name, service_info)
+            mylog.info(
+                "mangle infra fault remediated successfully for service={} using K8S API".format(service_name)
+            )
+        else:
+            mylog.info(
+                "mangle infra fault seems to be remediated already for service={}".format(
+                    service_name
+                )
+            )
 
 
 @pytest.fixture(scope="class")
 def inject_k8s_infra_fault_service_unavailable_for_class(request):
     faulty_svc_name = request.param
 
+    # mangle fault injection
     request_body = {
         "endpointName": myconfig.get("k8sCluster").get("endpointName"),
         "resourceName": faulty_svc_name,
         "randomInjection": False,
     }
-
     task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
         "POST", resources.INFRA_FAULTS.get("K8S_SERVICE_UNAVAILABLE"), json=request_body
     )
@@ -141,16 +176,45 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
     )
     time.sleep(60)
 
-    api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + task_id
-    task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
-        "DELETE", api_resource
-    )
-    mylog.debug(
-        "task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}".format(
-            task_id, task_status
+    try:
+        api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + task_id
+        task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+            "DELETE", api_resource
         )
-    )
-    assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
+        mylog.debug(
+            "task for K8S_SERVICE_UNAVAILABLE fault remediation triggered with task_id={}, task_status={}".format(
+                task_id, task_status
+            )
+        )
+        assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
+    except Exception as fault:
+        mylog.info(
+            "Exception occurred while remediating mangle infra fault for service={}. Exception={}".format(
+                faulty_svc_name, fault
+            )
+        )
+
+        # fallback mechanism to remediate fault if mangle fails to do so
+        service_info = ckclient.get_service(faulty_svc_name)
+        if service_info.spec.selector["environment"] == "mangle":
+            mylog.info(
+                "Let's try to remediate mangle infra fault using K8S API for service={}".format(
+                    faulty_svc_name
+                )
+            )
+            service_info.spec.selector["environment"] = (
+                myconfig.get("k8sCluster").get("namespace").split("-")[2]
+            )
+            ckclient.patch_service(faulty_svc_name, service_info)
+            mylog.info(
+                "mangle infra fault remediated successfully for service={} using K8S API".format(faulty_svc_name)
+            )
+        else:
+            mylog.info(
+                "mangle infra fault seems to be remediated already for service={}".format(
+                    faulty_svc_name
+                )
+            )
 
 
 @pytest.fixture(scope="class")
