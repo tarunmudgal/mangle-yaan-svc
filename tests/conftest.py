@@ -177,6 +177,7 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
     time.sleep(60)
 
     try:
+        # mangle fault remediation
         api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + task_id
         task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
             "DELETE", api_resource
