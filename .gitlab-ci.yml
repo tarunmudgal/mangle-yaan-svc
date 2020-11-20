@@ -43,7 +43,7 @@ mypy_job:
 
 build_job:
   stage: build
-  image: docker:18.09
+  image: harbor-repo.vmware.com/dockerhub-proxy-cache/library/docker:18.09
   script:
     - echo "Starting the script"
     - echo "Installing required tools"
@@ -61,7 +61,7 @@ build_job:
 
 pages:
   stage: build
-  image: alpine:latest
+  image: harbor-repo.vmware.com/dockerhub-proxy-cache/library/alpine:latest
   script:
     - echo
   artifacts:
