@@ -127,9 +127,14 @@ class CSPClient(rest_client.RESTClient):
         if response.status_code == requests.codes.ok:
             return response.json().get("access_token")
         else:
+            json = None
+            try:
+                json = response.json()
+            except Exception:
+                pass
             raise Exception(
-                "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})".format(
-                    access_token_url, headers, payload, response.status_code, response.text
+                "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={}, json={})".format(
+                    access_token_url, headers, payload, response.status_code, response.text, json
                 )
             )
 

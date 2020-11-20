@@ -37,6 +37,7 @@
     "s3": {
       "bucketName": "csp-e2e-qe",
       "testReportPath": "mangle-yaan/results/",
+      "testLogPath": "mangle-yaan/logs/",
       "awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
       "awsSecretAccessKey": "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"
     }
