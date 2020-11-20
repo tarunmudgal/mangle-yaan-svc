@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM harbor-repo.vmware.com/dockerhub-proxy-cache/library/python:3.6-alpine
 MAINTAINER CSP QE Team "csp-pune-qe@vmware.com"
 
 RUN apk add build-base
