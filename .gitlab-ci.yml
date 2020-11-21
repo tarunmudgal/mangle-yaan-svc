@@ -17,7 +17,7 @@ pylint_job:
     - echo undefined > public/badges/$CI_JOB_NAME.score
     - pip install -r ci_requirements.txt
   script:
-    - pylint --fail-under=10 --output-format=text $(find . -path ./.tox -prune -false -o -type f -name "*.py") | tee /tmp/pylint.txt  || echo -e "\n masking pylint's non-zero exit code \n"
+    - pylint --fail-under 10 --output-format=text $(find . -path ./.tox -prune -false -o -type f -name "*.py") | tee /tmp/pylint.txt  || echo -e "\n masking pylint's non-zero exit code \n"
     - sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' /tmp/pylint.txt > public/badges/$CI_JOB_NAME.score
   after_script:
     - anybadge --overwrite --label $CI_JOB_NAME --value=$(cat public/badges/$CI_JOB_NAME.score) --file=public/badges/$CI_JOB_NAME.svg 4=red 6=orange 8=yellow 10=green
