@@ -17,12 +17,7 @@ pylint_job:
     - echo undefined > public/badges/$CI_JOB_NAME.score
     - pip install -r ci_requirements.txt
   script:
-    - pylint --output-format=text $(find . -path ./.tox -prune -false -o -type f -name "*.py") | tee /tmp/pylint.txt  || echo -e "\n masking pylint's non-zero exit code \n"
-    - sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' /tmp/pylint.txt > public/badges/$CI_JOB_NAME.score
-  after_script:
-    - anybadge --overwrite --label $CI_JOB_NAME --value=$(cat public/badges/$CI_JOB_NAME.score) --file=public/badges/$CI_JOB_NAME.svg 4=red 6=orange 8=yellow 10=green
-    - |
-      echo -e "\n\n#### Your score is: $(cat public/badges/$CI_JOB_NAME.score) ####\n\n"
+    - pylint-fail-under --fail_under 7.5 --output-format=text --disable=import-error --disable=superfluous-parens --disable=line-too-long --disable=missing-docstring --disable=redefined-builtin  --disable=relative-import --disable=len-as-condition --disable=no-member --disable=no-else-return --fail-under=10 $(find . -path ./.tox -prune -false -o -type f -name "*.py")
   artifacts:
     paths:
       - public
