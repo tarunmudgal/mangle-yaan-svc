@@ -31,10 +31,11 @@
 # -- coding: utf-8 --
 &#34;&#34;&#34; module description &#34;&#34;&#34;
 
-__author__ = &#39;tarun mudgal&#39;
+__author__ = &#34;tarun mudgal&#34;
 
-from src.testlib.selenium.pages.base_page import BasePage
 from src.testlib.selenium.locators import login_page
+from src.testlib.selenium.pages.base_page import BasePage
+
 
 class LoginPage(BasePage):
     def __init__(self, driver, base_url, timeout=30):
@@ -49,7 +50,11 @@ class LoginPage(BasePage):
             mylog.info(&#34;waiting for locator={}&#34;.format(self.locators.TXT_WELCOME_TITLE))
             self.wait_for_element(self.locators.TXT_WELCOME_TITLE)
         if not self.find_element(self.locators.TXT_WELCOME_TITLE):
-            mylog.info(&#34;locator={} not found. redirecting to login page&#34;.format(self.locators.TXT_WELCOME_TITLE))
+            mylog.info(
+                &#34;locator={} not found. redirecting to login page&#34;.format(
+                    self.locators.TXT_WELCOME_TITLE
+                )
+            )
             self.open()
             mylog.info(&#34;waiting for locator={}&#34;.format(self.locators.TXT_WELCOME_TITLE))
             self.wait_for_element(self.locators.TXT_WELCOME_TITLE)
@@ -107,7 +112,11 @@ class LoginPage(BasePage):
             mylog.info(&#34;waiting for locator={}&#34;.format(self.locators.TXT_WELCOME_TITLE))
             self.wait_for_element(self.locators.TXT_WELCOME_TITLE)
         if not self.find_element(self.locators.TXT_WELCOME_TITLE):
-            mylog.info(&#34;locator={} not found. redirecting to login page&#34;.format(self.locators.TXT_WELCOME_TITLE))
+            mylog.info(
+                &#34;locator={} not found. redirecting to login page&#34;.format(
+                    self.locators.TXT_WELCOME_TITLE
+                )
+            )
             self.open()
             mylog.info(&#34;waiting for locator={}&#34;.format(self.locators.TXT_WELCOME_TITLE))
             self.wait_for_element(self.locators.TXT_WELCOME_TITLE)
@@ -184,7 +193,11 @@ class LoginPage(BasePage):
         mylog.info(&#34;waiting for locator={}&#34;.format(self.locators.TXT_WELCOME_TITLE))
         self.wait_for_element(self.locators.TXT_WELCOME_TITLE)
     if not self.find_element(self.locators.TXT_WELCOME_TITLE):
-        mylog.info(&#34;locator={} not found. redirecting to login page&#34;.format(self.locators.TXT_WELCOME_TITLE))
+        mylog.info(
+            &#34;locator={} not found. redirecting to login page&#34;.format(
+                self.locators.TXT_WELCOME_TITLE
+            )
+        )
         self.open()
         mylog.info(&#34;waiting for locator={}&#34;.format(self.locators.TXT_WELCOME_TITLE))
         self.wait_for_element(self.locators.TXT_WELCOME_TITLE)

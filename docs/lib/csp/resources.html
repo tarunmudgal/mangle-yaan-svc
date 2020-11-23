@@ -42,13 +42,25 @@ API_PREFIX = &#34;/csp/gateway&#34;
 COMMERCE = OrderedDict()
 COMMERCE[&#34;BILLING_ENGINES&#34;] = &#34;/commerce/api/v1/orgs/billing-engines&#34;
 COMMERCE[&#34;BILLING_ACCOUNTS&#34;] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts&#34;
-COMMERCE[&#34;BILLING_ACCOUNT_BY_ID&#34;] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}&#34;
+COMMERCE[
+    &#34;BILLING_ACCOUNT_BY_ID&#34;
+] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}&#34;
 COMMERCE[&#34;ORG_PAYMENT_METHODS&#34;] = &#34;/commerce/api/v1/orgs/{orgId}/payment-methods&#34;
 COMMERCE[&#34;USER_PAYMENT_METHODS&#34;] = &#34;/commerce/api/v1/users/{userEmail}/payment-methods&#34;
-COMMERCE[&#34;CURRENT_COSTS&#34;] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/current-costs&#34;
+COMMERCE[
+    &#34;CURRENT_COSTS&#34;
+] = &#34;/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/current-costs&#34;
 COMMERCE[&#34;PROMOTIONS&#34;] = &#34;/commerce/api/v1/orgs/{orgId}/promotions&#34;
 COMMERCE[&#34;ESTIMATED_CHARGES&#34;] = &#34;/commerce/api/v1/orgs/{orgId}/estimated-charges&#34;
 COMMERCE[&#34;OFFERS&#34;] = &#34;/commerce/api/v1/service-definitions/{serviceDefinitionId}/offers&#34;
+COMMERCE[&#34;LIST_SUBSCRIPTIONS&#34;] = &#34;/commerce/api/v2/subscriptions&#34;
+COMMERCE[&#34;GET_SUBSCRIPTION&#34;] = &#34;/commerce/api/v1/subscriptions/{subscriptionId}&#34;
+COMMERCE[&#34;SATATEMENT&#34;] = &#34;/commerce/api/v1/orgs/{orgId}/statements&#34;
+COMMERCE[&#34;INOVICES&#34;] = &#34;/commerce/api/v1/orgs/{orgId}/invoices&#34;
+COMMERCE[&#34;PROMOTIONS_TYPE&#34;] = &#34;/commerce/api/v1/promotions&#34;
+# CS resources
+CS = OrderedDict()
+CS[&#34;support-request&#34;] = &#34;/cs/api/support-requests&#34;
 
 # AM resources
 AM = OrderedDict()
@@ -86,7 +98,9 @@ SLC[&#34;GET_SVC_FAMILIES&#34;] = &#34;/slc/api/family&#34;
 # OS resources
 OS = OrderedDict()
 OS[&#34;ONBOARDING_CONTEXTS&#34;] = &#34;/os/api/service-definitions/{serviceDefinitionId}/onboarding-contexts&#34;
-OS[&#34;ONBOARDING_CONTEXTS_BY_ID&#34;] = &#34;/os/api/service-definitions/{serviceDefinitionId}/onboarding-contexts/{onboardingContextId}&#34;
+OS[
+    &#34;ONBOARDING_CONTEXTS_BY_ID&#34;
+] = &#34;/os/api/service-definitions/{serviceDefinitionId}/onboarding-contexts/{onboardingContextId}&#34;
 OS[&#34;FAQ_TOPICS&#34;] = &#34;/os/api/service-definitions/{serviceDefinitionId}/faq-topics&#34;</code></pre>
 </details>
 </section>

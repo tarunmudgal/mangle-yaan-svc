@@ -35,13 +35,21 @@ from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 
 
-class K8SClient(object):
+class K8SClient:
     &#34;&#34;&#34;
     Kubernetes client wrapper APIs that can manage CSP K8S infra.
     Refer kubernetes-client API doc here- https://github.com/kubernetes-client/python/tree/master/kubernetes
     &#34;&#34;&#34;
 
+    __single_instance = None
+
     def __init__(self, kubeconfig_filename, namespace):
+
+        if K8SClient.__single_instance is not None:
+            raise Exception(&#34;K8SClient is a singleton class and cannot have more than one objects&#34;)
+
+        K8SClient.__single_instance = self
+
         kubeconfig_dir = ROOT_DIR + os.path.sep + &#34;config&#34; + os.path.sep + &#34;kubeconfigs&#34;
         self.kubeconfig_filepath = kubeconfig_dir + os.path.sep + kubeconfig_filename
         self.csp_k8s_dir = ROOT_DIR + os.path.sep + &#34;infra&#34; + os.path.sep + &#34;csp_k8s&#34;
@@ -178,6 +186,61 @@ class K8SClient(object):
             curr_time = time.time()
 
         return False
+
+    def get_service(self, service_name: str) -&gt; client.V1Service:
+        &#34;&#34;&#34;
+        reads a service details
+        Args:
+            service_name: service name for which details are required
+
+        Returns:
+            client.V1Service object
+        &#34;&#34;&#34;
+
+        mylog.info(&#34;reading service details for service name={}&#34;.format(service_name))
+
+        response = None
+        try:
+            response = self.core_v1_api_client.read_namespaced_service(
+                service_name, self.namespace, pretty=&#34;true&#34;
+            )
+            # mylog.info(response)
+        except ApiException as fault:
+            mylog.exception(
+                &#34;exception occurred while reading service details for service name={}. Exception={}&#34;.format(
+                    service_name, fault
+                )
+            )
+
+        return response
+
+    def patch_service(self, service_name: str, body: client.V1Service) -&gt; client.V1Service:
+        &#34;&#34;&#34;
+        patches a service
+        Args:
+            service_name: service name for which details are required
+            body: updated (with patch changes) client.V1Service object
+
+        Returns:
+            client.V1Service object
+        &#34;&#34;&#34;
+
+        mylog.info(&#34;patching service details for service name={}&#34;.format(service_name))
+
+        response = None
+        try:
+            response = self.core_v1_api_client.patch_namespaced_service(
+                service_name, self.namespace, body, pretty=&#34;true&#34;
+            )
+            # mylog.info(response)
+        except ApiException as fault:
+            mylog.exception(
+                &#34;exception occurred while patching service details for service name={}. Exception={}&#34;.format(
+                    service_name, fault
+                )
+            )
+
+        return response
 
     def create_network_policy(self, network_policy_fname):
         network_policy_fpath = (
@@ -247,13 +310,21 @@ Refer kubernetes-client API doc here- <a href="https://github.com/kubernetes-cli
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class K8SClient(object):
+<pre><code class="python">class K8SClient:
     &#34;&#34;&#34;
     Kubernetes client wrapper APIs that can manage CSP K8S infra.
     Refer kubernetes-client API doc here- https://github.com/kubernetes-client/python/tree/master/kubernetes
     &#34;&#34;&#34;
 
+    __single_instance = None
+
     def __init__(self, kubeconfig_filename, namespace):
+
+        if K8SClient.__single_instance is not None:
+            raise Exception(&#34;K8SClient is a singleton class and cannot have more than one objects&#34;)
+
+        K8SClient.__single_instance = self
+
         kubeconfig_dir = ROOT_DIR + os.path.sep + &#34;config&#34; + os.path.sep + &#34;kubeconfigs&#34;
         self.kubeconfig_filepath = kubeconfig_dir + os.path.sep + kubeconfig_filename
         self.csp_k8s_dir = ROOT_DIR + os.path.sep + &#34;infra&#34; + os.path.sep + &#34;csp_k8s&#34;
@@ -390,6 +461,61 @@ Refer kubernetes-client API doc here- <a href="https://github.com/kubernetes-cli
             curr_time = time.time()
 
         return False
+
+    def get_service(self, service_name: str) -&gt; client.V1Service:
+        &#34;&#34;&#34;
+        reads a service details
+        Args:
+            service_name: service name for which details are required
+
+        Returns:
+            client.V1Service object
+        &#34;&#34;&#34;
+
+        mylog.info(&#34;reading service details for service name={}&#34;.format(service_name))
+
+        response = None
+        try:
+            response = self.core_v1_api_client.read_namespaced_service(
+                service_name, self.namespace, pretty=&#34;true&#34;
+            )
+            # mylog.info(response)
+        except ApiException as fault:
+            mylog.exception(
+                &#34;exception occurred while reading service details for service name={}. Exception={}&#34;.format(
+                    service_name, fault
+                )
+            )
+
+        return response
+
+    def patch_service(self, service_name: str, body: client.V1Service) -&gt; client.V1Service:
+        &#34;&#34;&#34;
+        patches a service
+        Args:
+            service_name: service name for which details are required
+            body: updated (with patch changes) client.V1Service object
+
+        Returns:
+            client.V1Service object
+        &#34;&#34;&#34;
+
+        mylog.info(&#34;patching service details for service name={}&#34;.format(service_name))
+
+        response = None
+        try:
+            response = self.core_v1_api_client.patch_namespaced_service(
+                service_name, self.namespace, body, pretty=&#34;true&#34;
+            )
+            # mylog.info(response)
+        except ApiException as fault:
+            mylog.exception(
+                &#34;exception occurred while patching service details for service name={}. Exception={}&#34;.format(
+                    service_name, fault
+                )
+            )
+
+        return response
 
     def create_network_policy(self, network_policy_fname):
         network_policy_fpath = (
@@ -622,6 +748,97 @@ Refer kubernetes-client API doc here- <a href="https://github.com/kubernetes-cli
     return ret</code></pre>
 </details>
 </dd>
+<dt id="lib.k8s.k8s_client.K8SClient.get_service"><code class="name flex">
+<span>def <span class="ident">get_service</span></span>(<span>self, service_name: str) ‑> kubernetes.client.models.v1_service.V1Service</span>
+</code></dt>
+<dd>
+<div class="desc"><p>reads a service details</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>service_name</code></strong></dt>
+<dd>service name for which details are required</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>client.V1Service object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_service(self, service_name: str) -&gt; client.V1Service:
+    &#34;&#34;&#34;
+    reads a service details
+    Args:
+        service_name: service name for which details are required
+
+    Returns:
+        client.V1Service object
+    &#34;&#34;&#34;
+
+    mylog.info(&#34;reading service details for service name={}&#34;.format(service_name))
+
+    response = None
+    try:
+        response = self.core_v1_api_client.read_namespaced_service(
+            service_name, self.namespace, pretty=&#34;true&#34;
+        )
+        # mylog.info(response)
+    except ApiException as fault:
+        mylog.exception(
+            &#34;exception occurred while reading service details for service name={}. Exception={}&#34;.format(
+                service_name, fault
+            )
+        )
+
+    return response</code></pre>
+</details>
+</dd>
+<dt id="lib.k8s.k8s_client.K8SClient.patch_service"><code class="name flex">
+<span>def <span class="ident">patch_service</span></span>(<span>self, service_name: str, body: kubernetes.client.models.v1_service.V1Service) ‑> kubernetes.client.models.v1_service.V1Service</span>
+</code></dt>
+<dd>
+<div class="desc"><p>patches a service</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>service_name</code></strong></dt>
+<dd>service name for which details are required</dd>
+<dt><strong><code>body</code></strong></dt>
+<dd>updated (with patch changes) client.V1Service object</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>client.V1Service object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def patch_service(self, service_name: str, body: client.V1Service) -&gt; client.V1Service:
+    &#34;&#34;&#34;
+    patches a service
+    Args:
+        service_name: service name for which details are required
+        body: updated (with patch changes) client.V1Service object
+
+    Returns:
+        client.V1Service object
+    &#34;&#34;&#34;
+
+    mylog.info(&#34;patching service details for service name={}&#34;.format(service_name))
+
+    response = None
+    try:
+        response = self.core_v1_api_client.patch_namespaced_service(
+            service_name, self.namespace, body, pretty=&#34;true&#34;
+        )
+        # mylog.info(response)
+    except ApiException as fault:
+        mylog.exception(
+            &#34;exception occurred while patching service details for service name={}. Exception={}&#34;.format(
+                service_name, fault
+            )
+        )
+
+    return response</code></pre>
+</details>
+</dd>
 <dt id="lib.k8s.k8s_client.K8SClient.scale_deployment"><code class="name flex">
 <span>def <span class="ident">scale_deployment</span></span>(<span>self, deployment_name: str, new_replica_count: int, timeout: int = 360, sleep_interval: int = 10) ‑> bool</span>
 </code></dt>
@@ -730,6 +947,8 @@ Refer kubernetes-client API doc here- <a href="https://github.com/kubernetes-cli
 <li><code><a title="lib.k8s.k8s_client.K8SClient.deploy_deployment" href="#lib.k8s.k8s_client.K8SClient.deploy_deployment">deploy_deployment</a></code></li>
 <li><code><a title="lib.k8s.k8s_client.K8SClient.get_deployment" href="#lib.k8s.k8s_client.K8SClient.get_deployment">get_deployment</a></code></li>
 <li><code><a title="lib.k8s.k8s_client.K8SClient.get_pods" href="#lib.k8s.k8s_client.K8SClient.get_pods">get_pods</a></code></li>
+<li><code><a title="lib.k8s.k8s_client.K8SClient.get_service" href="#lib.k8s.k8s_client.K8SClient.get_service">get_service</a></code></li>
+<li><code><a title="lib.k8s.k8s_client.K8SClient.patch_service" href="#lib.k8s.k8s_client.K8SClient.patch_service">patch_service</a></code></li>
 <li><code><a title="lib.k8s.k8s_client.K8SClient.scale_deployment" href="#lib.k8s.k8s_client.K8SClient.scale_deployment">scale_deployment</a></code></li>
 </ul>
 </li>

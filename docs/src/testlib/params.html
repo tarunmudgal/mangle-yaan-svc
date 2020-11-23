@@ -31,7 +31,7 @@
 # -*- coding: utf-8 -*-
 &#34;&#34;&#34; module description &#34;&#34;&#34;
 
-__author__ = &#39;tarun mudgal&#39;
+__author__ = &#34;tarun mudgal&#34;
 
 # selenium grid
 SELENIUM_GRID_HOST = &#34;selenium-mangle-yaan.svc-stage.eng.vmware.com&#34;
@@ -41,6 +41,14 @@ SELENIUM_HUB_URI = &#34;/wd/hub&#34;
 
 # WebDriver params
 WEBDRIVER_DEFAULT_WAIT = 120
+
+# CSP error code files
+CSP_MODULE_CODE_FILE = &#34;src/testlib/csp/errors/module_code.json&#34;
+CSP_MODULE_SERVICE_ERROR_CODE_FILES_MAP = {
+    &#34;250&#34;: &#34;src/testlib/csp/errors/csp_common_errors.json&#34;,
+    &#34;330&#34;: &#34;src/testlib/csp/errors/am_errors.json&#34;,
+    &#34;340&#34;: &#34;src/testlib/csp/errors/am_idp_errors.json&#34;,
+}
 
 # csp urls
 # CSP_BASE_URL = &#34;&#34;</code></pre>

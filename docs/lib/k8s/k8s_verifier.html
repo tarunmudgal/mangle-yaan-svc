@@ -31,7 +31,7 @@
 from lib.k8s import k8s_client
 
 
-class K8SVerifier(object):
+class K8SVerifier:
     def verfy_k8s(kube_config_file, namespace):
 
         verify = k8s_client.K8SClient(kube_config_file, namespace)
@@ -70,7 +70,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class K8SVerifier(object):
+<pre><code class="python">class K8SVerifier:
     def verfy_k8s(kube_config_file, namespace):
 
         verify = k8s_client.K8SClient(kube_config_file, namespace)

@@ -31,28 +31,25 @@
 # -*- coding: utf-8 -*-
 &#34;&#34;&#34; module description &#34;&#34;&#34;
 
-__author__ = &#39;tarun mudgal&#39;
-
+__author__ = &#34;tarun mudgal&#34;
 
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-class BasePageElement(object):
+class BasePageElement:
     &#34;&#34;&#34;Base page class that is initialized on every page object class.&#34;&#34;&#34;
 
     def __set__(self, obj, value):
         &#34;&#34;&#34;Sets the text to the value supplied&#34;&#34;&#34;
         driver = obj.driver
-        WebDriverWait(driver, 100).until(
-            lambda driver: driver.find_element_by_name(self.locator))
+        WebDriverWait(driver, 100).until(lambda driver: driver.find_element_by_name(self.locator))
         driver.find_element_by_name(self.locator).clear()
         driver.find_element_by_name(self.locator).send_keys(value)
 
     def __get__(self, obj, owner):
         &#34;&#34;&#34;Gets the text of the specified object&#34;&#34;&#34;
         driver = obj.driver
-        WebDriverWait(driver, 100).until(
-            lambda driver: driver.find_element_by_name(self.locator))
+        WebDriverWait(driver, 100).until(lambda driver: driver.find_element_by_name(self.locator))
         element = driver.find_element_by_name(self.locator)
         return element.get_attribute(&#34;value&#34;)</code></pre>
 </details>
@@ -75,22 +72,20 @@ class BasePageElement(object):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class BasePageElement(object):
+<pre><code class="python">class BasePageElement:
     &#34;&#34;&#34;Base page class that is initialized on every page object class.&#34;&#34;&#34;
 
     def __set__(self, obj, value):
         &#34;&#34;&#34;Sets the text to the value supplied&#34;&#34;&#34;
         driver = obj.driver
-        WebDriverWait(driver, 100).until(
-            lambda driver: driver.find_element_by_name(self.locator))
+        WebDriverWait(driver, 100).until(lambda driver: driver.find_element_by_name(self.locator))
         driver.find_element_by_name(self.locator).clear()
         driver.find_element_by_name(self.locator).send_keys(value)
 
     def __get__(self, obj, owner):
         &#34;&#34;&#34;Gets the text of the specified object&#34;&#34;&#34;
         driver = obj.driver
-        WebDriverWait(driver, 100).until(
-            lambda driver: driver.find_element_by_name(self.locator))
+        WebDriverWait(driver, 100).until(lambda driver: driver.find_element_by_name(self.locator))
         element = driver.find_element_by_name(self.locator)
         return element.get_attribute(&#34;value&#34;)</code></pre>
 </details>

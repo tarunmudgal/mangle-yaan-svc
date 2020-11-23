@@ -116,7 +116,7 @@ def create_maxim_gun_client(timeout: int = 120) -&gt; maximgun_client.MGClient:
 
     # maxim-gun client
     mg_conf = my_json.get(&#34;maximGun&#34;)
-    mgclient = maximgun_client.MGClient(mg_conf.get(&#34;host&#34;), timeout=timeout, )
+    mgclient = maximgun_client.MGClient(mg_conf.get(&#34;host&#34;), timeout=timeout,)
 
     return mgclient
 
@@ -329,9 +329,9 @@ def cleanup_old_reports(log_dir: str, days: int = 15) -&gt; None:
                 &#34;-{timeStamp}.html&#34;, &#34;&#34;
             )
             if (
-                    os.path.exists(fpath)
-                    and os.path.isfile(fpath)
-                    and file_.startswith(my_report_name_expr)
+                os.path.exists(fpath)
+                and os.path.isfile(fpath)
+                and file_.startswith(my_report_name_expr)
             ):
                 stat = os.stat(fpath)
                 if stat.st_mtime &lt;= time_in_secs:
@@ -342,10 +342,10 @@ def cleanup_old_reports(log_dir: str, days: int = 15) -&gt; None:
 
 
 def prepare_setup(
-        myconf_file: str = None,
-        project_name: str = None,
-        workload_name: str = None,
-        run_id: str = None,
+    myconf_file: str = None,
+    project_name: str = None,
+    workload_name: str = None,
+    run_id: str = None,
 ) -&gt; None:
     &#34;&#34;&#34;Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
     config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
@@ -547,7 +547,7 @@ if __name__ == &#34;__main__&#34;:
         type=str,
         default=&#34;&#34;,
         help=&#34;mangle-yaan config file path. If this option is used, &#34;
-             &#34;it will ovverride default config file config/my.json&#34;,
+        &#34;it will ovverride default config file config/my.json&#34;,
     )
     parser.add_argument(
         &#34;--pytest_args&#34;,
@@ -633,7 +633,9 @@ if __name__ == &#34;__main__&#34;:
             args.run_id, status=lib_params.MG_TASK_STATUS[&#34;FAILED&#34;], end_time=end_time
         )
     if pytest_status == 2:
+        mylog.error(&#34;Pytest execution terminated by user&#34;)
         copy_results = False
+        mg_agent.update_task(args.run_id, end_time=end_time)
     if copy_results:
         s3_path = post_run_activities(copy_results=copy_results)
         mg_agent.update_task(
@@ -719,9 +721,9 @@ if __name__ == &#34;__main__&#34;:
                 &#34;-{timeStamp}.html&#34;, &#34;&#34;
             )
             if (
-                    os.path.exists(fpath)
-                    and os.path.isfile(fpath)
-                    and file_.startswith(my_report_name_expr)
+                os.path.exists(fpath)
+                and os.path.isfile(fpath)
+                and file_.startswith(my_report_name_expr)
             ):
                 stat = os.stat(fpath)
                 if stat.st_mtime &lt;= time_in_secs:
@@ -919,7 +921,7 @@ if __name__ == &#34;__main__&#34;:
 
     # maxim-gun client
     mg_conf = my_json.get(&#34;maximGun&#34;)
-    mgclient = maximgun_client.MGClient(mg_conf.get(&#34;host&#34;), timeout=timeout, )
+    mgclient = maximgun_client.MGClient(mg_conf.get(&#34;host&#34;), timeout=timeout,)
 
     return mgclient</code></pre>
 </details>
@@ -1096,10 +1098,10 @@ and endpoint for CSP K8S cluster etc.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def prepare_setup(
-        myconf_file: str = None,
-        project_name: str = None,
-        workload_name: str = None,
-        run_id: str = None,
+    myconf_file: str = None,
+    project_name: str = None,
+    workload_name: str = None,
+    run_id: str = None,
 ) -&gt; None:
     &#34;&#34;&#34;Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
     config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential

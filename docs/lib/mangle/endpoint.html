@@ -32,11 +32,11 @@ Copyright 2017 VMware, Inc. All rights reserved. -- VMware confidential
 &#34;&#34;&#34;
 import os
 
-from lib.mangle import resources
 from lib.common import utils
+from lib.mangle import resources
 
 
-class EndPointBase(object):
+class EndPointBase:
     def __init__(self, mangle_client):
         self.mangle_client = mangle_client
 
@@ -109,7 +109,15 @@ class EndpointCredential(EndPointBase):
         Creates endpoint credentials for kubernetes cluster
         :return:
         &#34;&#34;&#34;
-        kubeconfig_filepath = ROOT_DIR + os.path.sep + &#34;config&#34; + os.path.sep + kubeconfig_filename
+        kubeconfig_filepath = (
+            ROOT_DIR
+            + os.path.sep
+            + &#34;config&#34;
+            + os.path.sep
+            + &#34;kubeconfigs&#34;
+            + os.path.sep
+            + kubeconfig_filename
+        )
         files = [(&#34;kubeConfig&#34;, open(kubeconfig_filepath, &#34;rb&#34;))]
         params = {&#34;id&#34;: credential_name, &#34;name&#34;: credential_name}
         headers = {&#34;Authorization&#34;: &#34;Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu&#34;}
@@ -200,7 +208,7 @@ class TestConnection(EndPointBase):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class EndPointBase(object):
+<pre><code class="python">class EndPointBase:
     def __init__(self, mangle_client):
         self.mangle_client = mangle_client</code></pre>
 </details>
@@ -403,7 +411,15 @@ def list_endpoints_k8s_cluster(self, credential_name=None):
         Creates endpoint credentials for kubernetes cluster
         :return:
         &#34;&#34;&#34;
-        kubeconfig_filepath = ROOT_DIR + os.path.sep + &#34;config&#34; + os.path.sep + kubeconfig_filename
+        kubeconfig_filepath = (
+            ROOT_DIR
+            + os.path.sep
+            + &#34;config&#34;
+            + os.path.sep
+            + &#34;kubeconfigs&#34;
+            + os.path.sep
+            + kubeconfig_filename
+        )
         files = [(&#34;kubeConfig&#34;, open(kubeconfig_filepath, &#34;rb&#34;))]
         params = {&#34;id&#34;: credential_name, &#34;name&#34;: credential_name}
         headers = {&#34;Authorization&#34;: &#34;Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu&#34;}
@@ -455,7 +471,15 @@ def create_credential_k8s_cluster(self, credential_name, kubeconfig_filename):
     Creates endpoint credentials for kubernetes cluster
     :return:
     &#34;&#34;&#34;
-    kubeconfig_filepath = ROOT_DIR + os.path.sep + &#34;config&#34; + os.path.sep + kubeconfig_filename
+    kubeconfig_filepath = (
+        ROOT_DIR
+        + os.path.sep
+        + &#34;config&#34;
+        + os.path.sep
+        + &#34;kubeconfigs&#34;
+        + os.path.sep
+        + kubeconfig_filename
+    )
     files = [(&#34;kubeConfig&#34;, open(kubeconfig_filepath, &#34;rb&#34;))]
     params = {&#34;id&#34;: credential_name, &#34;name&#34;: credential_name}
     headers = {&#34;Authorization&#34;: &#34;Basic YWRtaW5AbWFuZ2xlLmxvY2FsOmFkbWlu&#34;}

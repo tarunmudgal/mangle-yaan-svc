@@ -34,10 +34,10 @@
 __author__ = &#34;tarun mudgal&#34;
 
 import math
+import uuid
 
 import pytest
 import requests
-import uuid
 
 from lib.csp import resources
 
@@ -45,22 +45,24 @@ LIST_NETWORK_POLICY_FILENAMES = [&#34;preview_env_egress_onboarding_service.yaml
 
 
 @pytest.mark.parametrize(
-    &#34;inject_k8s_infra_fault_block_egress_traffic_for_class&#34;, LIST_NETWORK_POLICY_FILENAMES, indirect=True,
+    &#34;inject_k8s_infra_fault_block_egress_traffic_for_class&#34;,
+    LIST_NETWORK_POLICY_FILENAMES,
+    indirect=True,
 )
-class TestCSPAPIsWhenVIPServiceNotReachable(object):
+class TestCSPAPIsWhenVIPServiceNotReachable:
     &#34;&#34;&#34;
     test cases for language translation APIs when VIP service calls are blocked
     &#34;&#34;&#34;
 
     @pytest.mark.dependency()
     def test_onboarding_contexts_api_when_vip_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 500
         if (
-                inject_k8s_infra_fault_block_egress_traffic_for_class
-                == &#34;preview_env_egress_onboarding_service.yaml&#34;
+            inject_k8s_infra_fault_block_egress_traffic_for_class
+            == &#34;preview_env_egress_onboarding_service.yaml&#34;
         ):
             expected_response = 500
 
@@ -68,28 +70,29 @@ class TestCSPAPIsWhenVIPServiceNotReachable(object):
         api_resource = resources.OS.get(&#34;ONBOARDING_CONTEXTS&#34;).format(
             serviceDefinitionId=myconfig.get(&#34;csp&#34;).get(&#34;defaultService&#34;).get(&#34;id&#34;)
         )
-        request_body = {&#34;seller&#34;: &#34;VMWARE&#34;,
-                        &#34;context&#34;: {
-                            &#34;title&#34;: &#34;test context&#34;
-                        },
-                        &#34;description&#34;: &#34;patched description&#34;,
-                        &#34;title&#34;: &#34;Single Host&#34;,
-                        &#34;globalizationKey&#34;: str(uuid.uuid4())
-                        }
+        request_body = {
+            &#34;seller&#34;: &#34;VMWARE&#34;,
+            &#34;context&#34;: {&#34;title&#34;: &#34;test context&#34;},
+            &#34;description&#34;: &#34;patched description&#34;,
+            &#34;title&#34;: &#34;Single Host&#34;,
+            &#34;globalizationKey&#34;: str(uuid.uuid4()),
+        }
 
         # verify csp api raises exception for &#39;too many 504 error responses&#39;
-        with pytest.raises(requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;):
+        with pytest.raises(
+            requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;
+        ):
             cclient.make_call(&#34;POST&#34;, api_resource, json=request_body, retry_count=0)
 
     @pytest.mark.dependency()
     def test_faq_topics_api_when_vip_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 500
         if (
-                inject_k8s_infra_fault_block_egress_traffic_for_class
-                == &#34;preview_env_egress_onboarding_service.yaml&#34;
+            inject_k8s_infra_fault_block_egress_traffic_for_class
+            == &#34;preview_env_egress_onboarding_service.yaml&#34;
         ):
             expected_response = 500
 
@@ -102,14 +105,14 @@ class TestCSPAPIsWhenVIPServiceNotReachable(object):
             &#34;title&#34;: &#34;FAQ 13?&#34;,
             &#34;linkTitle&#34;: &#34;More info&#34;,
             &#34;text&#34;: &#34;Test description for FAQ 13&#34;,
-            &#34;onboardingContextIds&#34;: [
-                &#34;3c0e2fd2-4dc8-4a01-a356-1ecf2dcd4fbd&#34;
-            ],
-            &#34;globalizationKey&#34;: str(uuid.uuid4())
+            &#34;onboardingContextIds&#34;: [&#34;3c0e2fd2-4dc8-4a01-a356-1ecf2dcd4fbd&#34;],
+            &#34;globalizationKey&#34;: str(uuid.uuid4()),
         }
 
         # verify csp api raises exception for &#39;too many 504 error responses&#39;
-        with pytest.raises(requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;):
+        with pytest.raises(
+            requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;
+        ):
             cclient.make_call(&#34;POST&#34;, api_resource, json=request_body, retry_count=0)</code></pre>
 </details>
 </section>
@@ -131,20 +134,20 @@ class TestCSPAPIsWhenVIPServiceNotReachable(object):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class TestCSPAPIsWhenVIPServiceNotReachable(object):
+<pre><code class="python">class TestCSPAPIsWhenVIPServiceNotReachable:
     &#34;&#34;&#34;
     test cases for language translation APIs when VIP service calls are blocked
     &#34;&#34;&#34;
 
     @pytest.mark.dependency()
     def test_onboarding_contexts_api_when_vip_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 500
         if (
-                inject_k8s_infra_fault_block_egress_traffic_for_class
-                == &#34;preview_env_egress_onboarding_service.yaml&#34;
+            inject_k8s_infra_fault_block_egress_traffic_for_class
+            == &#34;preview_env_egress_onboarding_service.yaml&#34;
         ):
             expected_response = 500
 
@@ -152,28 +155,29 @@ class TestCSPAPIsWhenVIPServiceNotReachable(object):
         api_resource = resources.OS.get(&#34;ONBOARDING_CONTEXTS&#34;).format(
             serviceDefinitionId=myconfig.get(&#34;csp&#34;).get(&#34;defaultService&#34;).get(&#34;id&#34;)
         )
-        request_body = {&#34;seller&#34;: &#34;VMWARE&#34;,
-                        &#34;context&#34;: {
-                            &#34;title&#34;: &#34;test context&#34;
-                        },
-                        &#34;description&#34;: &#34;patched description&#34;,
-                        &#34;title&#34;: &#34;Single Host&#34;,
-                        &#34;globalizationKey&#34;: str(uuid.uuid4())
-                        }
+        request_body = {
+            &#34;seller&#34;: &#34;VMWARE&#34;,
+            &#34;context&#34;: {&#34;title&#34;: &#34;test context&#34;},
+            &#34;description&#34;: &#34;patched description&#34;,
+            &#34;title&#34;: &#34;Single Host&#34;,
+            &#34;globalizationKey&#34;: str(uuid.uuid4()),
+        }
 
         # verify csp api raises exception for &#39;too many 504 error responses&#39;
-        with pytest.raises(requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;):
+        with pytest.raises(
+            requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;
+        ):
             cclient.make_call(&#34;POST&#34;, api_resource, json=request_body, retry_count=0)
 
     @pytest.mark.dependency()
     def test_faq_topics_api_when_vip_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 500
         if (
-                inject_k8s_infra_fault_block_egress_traffic_for_class
-                == &#34;preview_env_egress_onboarding_service.yaml&#34;
+            inject_k8s_infra_fault_block_egress_traffic_for_class
+            == &#34;preview_env_egress_onboarding_service.yaml&#34;
         ):
             expected_response = 500
 
@@ -186,14 +190,14 @@ class TestCSPAPIsWhenVIPServiceNotReachable(object):
             &#34;title&#34;: &#34;FAQ 13?&#34;,
             &#34;linkTitle&#34;: &#34;More info&#34;,
             &#34;text&#34;: &#34;Test description for FAQ 13&#34;,
-            &#34;onboardingContextIds&#34;: [
-                &#34;3c0e2fd2-4dc8-4a01-a356-1ecf2dcd4fbd&#34;
-            ],
-            &#34;globalizationKey&#34;: str(uuid.uuid4())
+            &#34;onboardingContextIds&#34;: [&#34;3c0e2fd2-4dc8-4a01-a356-1ecf2dcd4fbd&#34;],
+            &#34;globalizationKey&#34;: str(uuid.uuid4()),
         }
 
         # verify csp api raises exception for &#39;too many 504 error responses&#39;
-        with pytest.raises(requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;):
+        with pytest.raises(
+            requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;
+        ):
             cclient.make_call(&#34;POST&#34;, api_resource, json=request_body, retry_count=0)</code></pre>
 </details>
 <h3>Class variables</h3>
@@ -216,13 +220,13 @@ class TestCSPAPIsWhenVIPServiceNotReachable(object):
 </summary>
 <pre><code class="python">@pytest.mark.dependency()
 def test_faq_topics_api_when_vip_service_calls_are_blocked(
-        self, inject_k8s_infra_fault_block_egress_traffic_for_class
+    self, inject_k8s_infra_fault_block_egress_traffic_for_class
 ):
     # expected csp api response (status_code)
     expected_response = 500
     if (
-            inject_k8s_infra_fault_block_egress_traffic_for_class
-            == &#34;preview_env_egress_onboarding_service.yaml&#34;
+        inject_k8s_infra_fault_block_egress_traffic_for_class
+        == &#34;preview_env_egress_onboarding_service.yaml&#34;
     ):
         expected_response = 500
 
@@ -235,14 +239,14 @@ def test_faq_topics_api_when_vip_service_calls_are_blocked(
         &#34;title&#34;: &#34;FAQ 13?&#34;,
         &#34;linkTitle&#34;: &#34;More info&#34;,
         &#34;text&#34;: &#34;Test description for FAQ 13&#34;,
-        &#34;onboardingContextIds&#34;: [
-            &#34;3c0e2fd2-4dc8-4a01-a356-1ecf2dcd4fbd&#34;
-        ],
-        &#34;globalizationKey&#34;: str(uuid.uuid4())
+        &#34;onboardingContextIds&#34;: [&#34;3c0e2fd2-4dc8-4a01-a356-1ecf2dcd4fbd&#34;],
+        &#34;globalizationKey&#34;: str(uuid.uuid4()),
     }
 
     # verify csp api raises exception for &#39;too many 504 error responses&#39;
-    with pytest.raises(requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;):
+    with pytest.raises(
+        requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;
+    ):
         cclient.make_call(&#34;POST&#34;, api_resource, json=request_body, retry_count=0)</code></pre>
 </details>
 </dd>
@@ -257,13 +261,13 @@ def test_faq_topics_api_when_vip_service_calls_are_blocked(
 </summary>
 <pre><code class="python">@pytest.mark.dependency()
 def test_onboarding_contexts_api_when_vip_service_calls_are_blocked(
-        self, inject_k8s_infra_fault_block_egress_traffic_for_class
+    self, inject_k8s_infra_fault_block_egress_traffic_for_class
 ):
     # expected csp api response (status_code)
     expected_response = 500
     if (
-            inject_k8s_infra_fault_block_egress_traffic_for_class
-            == &#34;preview_env_egress_onboarding_service.yaml&#34;
+        inject_k8s_infra_fault_block_egress_traffic_for_class
+        == &#34;preview_env_egress_onboarding_service.yaml&#34;
     ):
         expected_response = 500
 
@@ -271,17 +275,18 @@ def test_onboarding_contexts_api_when_vip_service_calls_are_blocked(
     api_resource = resources.OS.get(&#34;ONBOARDING_CONTEXTS&#34;).format(
         serviceDefinitionId=myconfig.get(&#34;csp&#34;).get(&#34;defaultService&#34;).get(&#34;id&#34;)
     )
-    request_body = {&#34;seller&#34;: &#34;VMWARE&#34;,
-                    &#34;context&#34;: {
-                        &#34;title&#34;: &#34;test context&#34;
-                    },
-                    &#34;description&#34;: &#34;patched description&#34;,
-                    &#34;title&#34;: &#34;Single Host&#34;,
-                    &#34;globalizationKey&#34;: str(uuid.uuid4())
-                    }
+    request_body = {
+        &#34;seller&#34;: &#34;VMWARE&#34;,
+        &#34;context&#34;: {&#34;title&#34;: &#34;test context&#34;},
+        &#34;description&#34;: &#34;patched description&#34;,
+        &#34;title&#34;: &#34;Single Host&#34;,
+        &#34;globalizationKey&#34;: str(uuid.uuid4()),
+    }
 
     # verify csp api raises exception for &#39;too many 504 error responses&#39;
-    with pytest.raises(requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;):
+    with pytest.raises(
+        requests.exceptions.RetryError, match=&#34;.*too many 504 error responses.*&#34;
+    ):
         cclient.make_call(&#34;POST&#34;, api_resource, json=request_body, retry_count=0)</code></pre>
 </details>
 </dd>

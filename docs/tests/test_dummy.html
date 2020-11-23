@@ -28,6 +28,8 @@
 </summary>
 <pre><code class="python">from datetime import datetime
 
+import pytest
+
 # import pytest
 
 
@@ -49,12 +51,10 @@
 #     print(&#34;in test_after_cpu_fault_injected_1&#34;)
 
 
-import pytest
-
 # from tests import conftest
 
-class TestDummy():
 
+class TestDummy:
     def test_example1(self):
         print(&#34;test_example1 called&#34;)
 
@@ -80,10 +80,10 @@ def create_sut():
         s.cleanup()
 
 
-@pytest.fixture(scope=&#39;class&#39;)
+@pytest.fixture(scope=&#34;class&#34;)
 def create_sut_class():
     instances = []
-    s = Sut(p1=&#39;v1&#39;)
+    s = Sut(p1=&#34;v1&#34;)
     instances.append(s)
     print(&#34;create_sut_class setup&#34;)
     yield
@@ -100,11 +100,11 @@ class Sut:
     &#34;&#34;&#34;
 
     def __init__(self, **kwargs):
-        print(&#39;DO SETUP&#39;)
+        print(&#34;DO SETUP&#34;)
         self.__dict__.update(kwargs)
 
     def cleanup(self):
-        print(&#39;DO CLEANUP&#39;)</code></pre>
+        print(&#34;DO CLEANUP&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -146,10 +146,10 @@ def create_sut():
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@pytest.fixture(scope=&#39;class&#39;)
+<pre><code class="python">@pytest.fixture(scope=&#34;class&#34;)
 def create_sut_class():
     instances = []
-    s = Sut(p1=&#39;v1&#39;)
+    s = Sut(p1=&#34;v1&#34;)
     instances.append(s)
     print(&#34;create_sut_class setup&#34;)
     yield
@@ -182,11 +182,11 @@ def create_sut_class():
     &#34;&#34;&#34;
 
     def __init__(self, **kwargs):
-        print(&#39;DO SETUP&#39;)
+        print(&#34;DO SETUP&#34;)
         self.__dict__.update(kwargs)
 
     def cleanup(self):
-        print(&#39;DO CLEANUP&#39;)</code></pre>
+        print(&#34;DO CLEANUP&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -200,7 +200,7 @@ def create_sut_class():
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def cleanup(self):
-    print(&#39;DO CLEANUP&#39;)</code></pre>
+    print(&#34;DO CLEANUP&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -214,8 +214,7 @@ def create_sut_class():
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class TestDummy():
-
+<pre><code class="python">class TestDummy:
     def test_example1(self):
         print(&#34;test_example1 called&#34;)
 

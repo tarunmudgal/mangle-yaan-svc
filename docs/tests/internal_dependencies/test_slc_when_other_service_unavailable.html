@@ -34,15 +34,14 @@
 __author__ = &#34;tarun mudgal&#34;
 
 import pytest
+
 from lib.csp import resources
 
 LIST_DEPENDENT_SERVICES = [&#34;csp-onboarding&#34;]
 
 
 @pytest.mark.parametrize(
-    &#34;inject_k8s_infra_fault_service_unavailable_for_class&#34;,
-    LIST_DEPENDENT_SERVICES,
-    indirect=True,
+    &#34;inject_k8s_infra_fault_service_unavailable_for_class&#34;, LIST_DEPENDENT_SERVICES, indirect=True,
 )
 # @pytest.mark.usefixtures(&#34;inject_k8s_infra_fault_service_unavailable_for_class&#34;)
 class TestSLCDependencyOnDifferentServices:
@@ -62,10 +61,12 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                am_resp.status_code == expected_response
+            am_resp.status_code == expected_response
         ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)
 
-    def test_api_get_service_definition(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_service_definition(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -77,10 +78,12 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                am_resp.status_code == expected_response
+            am_resp.status_code == expected_response
         ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)
 
-    def test_api_get_service_definition_roles(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_service_definition_roles(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -92,7 +95,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                am_resp.status_code == expected_response
+            am_resp.status_code == expected_response
         ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)
 
     def test_api_get_service_families(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -105,7 +108,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                am_resp.status_code == expected_response
+            am_resp.status_code == expected_response
         ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)</code></pre>
 </details>
 </section>
@@ -144,10 +147,12 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                am_resp.status_code == expected_response
+            am_resp.status_code == expected_response
         ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)
 
-    def test_api_get_service_definition(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_service_definition(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -159,10 +164,12 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                am_resp.status_code == expected_response
+            am_resp.status_code == expected_response
         ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)
 
-    def test_api_get_service_definition_roles(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_service_definition_roles(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -174,7 +181,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                am_resp.status_code == expected_response
+            am_resp.status_code == expected_response
         ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)
 
     def test_api_get_service_families(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -187,7 +194,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-                am_resp.status_code == expected_response
+            am_resp.status_code == expected_response
         ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)</code></pre>
 </details>
 <h3>Class variables</h3>
@@ -208,7 +215,9 @@ class TestSLCDependencyOnDifferentServices:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def test_api_get_service_definition(self, inject_k8s_infra_fault_service_unavailable_for_class):
+<pre><code class="python">def test_api_get_service_definition(
+    self, inject_k8s_infra_fault_service_unavailable_for_class
+):
     # expected csp api response (status_code)
     expected_response = 200
 
@@ -220,7 +229,7 @@ class TestSLCDependencyOnDifferentServices:
 
     # verify csp api actual status_code with expected status code when fault is present
     assert (
-            am_resp.status_code == expected_response
+        am_resp.status_code == expected_response
     ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)</code></pre>
 </details>
 </dd>
@@ -233,7 +242,9 @@ class TestSLCDependencyOnDifferentServices:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def test_api_get_service_definition_roles(self, inject_k8s_infra_fault_service_unavailable_for_class):
+<pre><code class="python">def test_api_get_service_definition_roles(
+    self, inject_k8s_infra_fault_service_unavailable_for_class
+):
     # expected csp api response (status_code)
     expected_response = 200
 
@@ -245,7 +256,7 @@ class TestSLCDependencyOnDifferentServices:
 
     # verify csp api actual status_code with expected status code when fault is present
     assert (
-            am_resp.status_code == expected_response
+        am_resp.status_code == expected_response
     ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)</code></pre>
 </details>
 </dd>
@@ -268,7 +279,7 @@ class TestSLCDependencyOnDifferentServices:
 
     # verify csp api actual status_code with expected status code when fault is present
     assert (
-            am_resp.status_code == expected_response
+        am_resp.status_code == expected_response
     ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)</code></pre>
 </details>
 </dd>
@@ -297,7 +308,7 @@ class TestSLCDependencyOnDifferentServices:
 
     # verify csp api actual status_code with expected status code when fault is present
     assert (
-            am_resp.status_code == expected_response
+        am_resp.status_code == expected_response
     ), &#34;SLC service did not return expected response {}&#34;.format(expected_response)</code></pre>
 </details>
 </dd>
