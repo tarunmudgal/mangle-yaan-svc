@@ -2,14 +2,20 @@
 # -*- coding: utf-8 -*-
 """ module description """
 
-__author__ = 'tarun mudgal'
+__author__ = "tarun mudgal"
 
 import requests
+
 from lib.maximgun import resources as mg_resources
 
 
-def update_task(run_id: str, end_time: str = None, status: str = None,
-                report_url: str = None, cancel: int = None) -> bool:
+def update_task(
+    run_id: str,
+    end_time: str = None,
+    status: str = None,
+    report_url: str = None,
+    cancel: int = None,
+) -> bool:
     """
     updates maxim-gun task status (maxim_gun.run_test table)
     Args:
@@ -31,20 +37,24 @@ def update_task(run_id: str, end_time: str = None, status: str = None,
             update_task_info["end_time"] = end_time if end_time else task_info["end_time"]
             update_task_info["status"] = status if status else task_info["status"]
             update_task_info["report_url"] = report_url if report_url else task_info["report_url"]
-            update_task_info["cancel"] = cancel if cancel else 0#task_info["cancel"]
+            update_task_info["cancel"] = cancel if cancel else 0  # task_info["cancel"]
         else:
-            mylog.error("failed to fetch maxim-gun task details for run_id={}. Cannot update task.".format(run_id))
+            mylog.error(
+                "failed to fetch maxim-gun task details for run_id={}. Cannot update task.".format(
+                    run_id
+                )
+            )
             return False
 
         api_resource = mg_resources.MAXIMGUN.get("TASK_STATUS_UPDATE")
-        response = mgclient.make_call(
-            "POST", api_resource, json=update_task_info
-        )
+        response = mgclient.make_call("POST", api_resource, json=update_task_info)
         if response.status_code == requests.codes.ok:
             mylog.info("maxim-gun job run_id={} updated successfully".format(run_id))
         else:
             mylog.error(
                 "failed to update maxim-gun job run_id={} where end_time={}, status={}, report_url={}, cancel={}".format(
-                    run_id, end_time, status, report_url, cancel))
+                    run_id, end_time, status, report_url, cancel
+                )
+            )
     else:
         mylog.error("invalid run_id found. Ignore if execution is running locally")

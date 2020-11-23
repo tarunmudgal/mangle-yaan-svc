@@ -13,15 +13,13 @@ import urllib3
 requests.packages.urllib3.disable_warnings()
 
 from requests.adapters import HTTPAdapter
-from requests.exceptions import (ConnectionError, ConnectTimeout,
-                                 ReadTimeout, SSLError, Timeout)
+from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout, SSLError, Timeout
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 from requests.packages.urllib3.util.retry import Retry
 
 mylog = logging.getLogger("root")
 mylog.setLevel(logging.DEBUG)
 mylog.addHandler(logging.StreamHandler())
-
 
 HTTP_RETRIABLE_ERRORS = (
     ConnectionError,
@@ -36,16 +34,7 @@ HTTP_RETRIABLE_ERRORS = (
 DEFAULT_RETRY_OBJ = Retry(
     total=3,
     status_forcelist=[429, 500, 502, 503, 504],
-    method_whitelist=[
-        "GET",
-        "POST",
-        "PUT",
-        "DELETE",
-        "OPTIONS",
-        "PUT",
-        "HEAD",
-        "TRACE",
-    ],
+    method_whitelist=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PUT", "HEAD", "TRACE",],
     backoff_factor=1,
 )
 
@@ -106,13 +95,7 @@ class RESTClient(abc.ABC):
     """
 
     def __init__(
-        self,
-        scheme="https://",
-        host="",
-        port=443,
-        api_prefix="",
-        ssl_verify=False,
-        timeout=None,
+        self, scheme="https://", host="", port=443, api_prefix="", ssl_verify=False, timeout=None,
     ):
         self._base_url = scheme + host + ":" + str(port) + api_prefix
         self._ssl_verify = ssl_verify
@@ -192,22 +175,18 @@ class RESTClient(abc.ABC):
                     fault,
                 )
                 if attempt < retry_count + 1:
-                    mylog.debug(
-                        "RESTClient: retry(%d) after %d seconds", attempt, retry_sleep
-                    )
+                    mylog.debug("RESTClient: retry(%d) after %d seconds", attempt, retry_sleep)
                     time.sleep(retry_sleep)
                 else:
                     mylog.exception(fault)
                     raise
             except Exception as fault:
-                mylog.debug(
-                    "RESTClient: Exception occurred in method=%s, url=%s", method, url
-                )
+                mylog.debug("RESTClient: Exception occurred in method=%s, url=%s", method, url)
                 mylog.exception(fault)
                 raise
 
 
-class CSPResponse(object):
+class CSPResponse:
     """CSPClient Response Wrapper"""
 
     def __init__(self, response):
@@ -264,9 +243,7 @@ class CSPClient(RESTClient):
         adapter = HTTPAdapter(max_retries=retry_obj)
 
         if CSPClient.__single_instance is not None:
-            raise Exception(
-                "CSPClient is a singleton class and cannot have more than one objects"
-            )
+            raise Exception("CSPClient is a singleton class and cannot have more than one objects")
 
         CSPClient.__single_instance = self
 
@@ -296,19 +273,16 @@ class CSPClient(RESTClient):
 
     def get_access_token(self):
         access_token_url = self._base_url + "/am/api/auth/api-tokens/authorize"
-        headers = {"Content-Type": "application/x-www-form-urlencoded",
-                   "Cookie": "visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA=="}
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Cookie": "visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==",
+        }
         payload = "refresh_token={}".format(self._refresh_token)
 
         mylog.debug("fetching access_token for CSP API calls")
         # response = requests.request("POST", access_token_url, headers=headers, data=payload)
         response = rest_request(
-            "POST",
-            access_token_url,
-            retry_count=1,
-            retry_sleep=5,
-            headers=headers,
-            data=payload,
+            "POST", access_token_url, retry_count=1, retry_sleep=5, headers=headers, data=payload,
         )
 
         if response.status_code == requests.codes.ok:
@@ -316,11 +290,7 @@ class CSPClient(RESTClient):
         else:
             raise Exception(
                 "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})".format(
-                    access_token_url,
-                    headers,
-                    payload,
-                    response.status_code,
-                    response.text,
+                    access_token_url, headers, payload, response.status_code, response.text,
                 )
             )
 
@@ -337,9 +307,7 @@ class CSPClient(RESTClient):
         """
         req_resp = self.request(verb, api_resource, **kwargs)
         if req_resp.status_code == 401:
-            mylog.debug(
-                "Authorization error occurred for CSP API call. Updating access_token"
-            )
+            mylog.debug("Authorization error occurred for CSP API call. Updating access_token")
             self.init_session()
             req_resp = self.request(verb, api_resource, **kwargs)
         return CSPResponse(req_resp)
@@ -357,55 +325,40 @@ if __name__ == "__main__":
 
     api_resource = "/am/api/orgs/f09537d7-633a-4204-891e-2fe6e58265a7/oauth-apps"
     payload = {
-            "refreshTokenTTL": None,
-            "accessTokenTTL": 1800,
-            "grantTypes": [
-                "client_credentials"
-            ],
-            "description": "Test2",
-            "displayName": "res_oauth_app_2",
-            "publicClient": False,
-            "allowedScopes": {
-                "generalScopes": [],
-                "allRoles": False,
-                "servicesScopes": [
-                    {
-                        "allRoles": False,
-                        "serviceDefinitionId": "514b6d89-b22b-482a-96fb-cfcab3137ccf",
-                        "roles": [
-                            {
-                                "resource": None,
-                                "name": "srv_name:user"
-                            },
-                            {
-                                "resource": None,
-                                "name": "srv_name:admin",
-                                "selected":1
-                            }
-                        ]
-                    }
-                ],
-                "organizationScopes": {
+        "refreshTokenTTL": None,
+        "accessTokenTTL": 1800,
+        "grantTypes": ["client_credentials"],
+        "description": "Test2",
+        "displayName": "res_oauth_app_2",
+        "publicClient": False,
+        "allowedScopes": {
+            "generalScopes": [],
+            "allRoles": False,
+            "servicesScopes": [
+                {
                     "allRoles": False,
+                    "serviceDefinitionId": "514b6d89-b22b-482a-96fb-cfcab3137ccf",
                     "roles": [
-                        {
-                            "name": "org_owner"
-                        },
-                        {
-                            "name": "support_user"
-                        },
-                        {
-                            "name": "project_admin"
-                        }
-                    ]
+                        {"resource": None, "name": "srv_name:user"},
+                        {"resource": None, "name": "srv_name:admin", "selected": 1},
+                    ],
                 }
+            ],
+            "organizationScopes": {
+                "allRoles": False,
+                "roles": [
+                    {"name": "org_owner"},
+                    {"name": "support_user"},
+                    {"name": "project_admin"},
+                ],
             },
-            "redirectUris": []
-        }
+        },
+        "redirectUris": [],
+    }
 
     call_count_start = 11
     call_count_end = 100
-    for cnt in range(call_count_start, call_count_end+1):
+    for cnt in range(call_count_start, call_count_end + 1):
         mylog.info("call has been made for cnt={}".format(cnt))
         payload.update(description="Test_OAuth_{}".format(cnt))
         payload.update(displayName="resiliency_oauth_app_{}".format(cnt))

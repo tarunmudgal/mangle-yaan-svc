@@ -7,7 +7,7 @@ from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 
 
-class K8SClient(object):
+class K8SClient:
     """
     Kubernetes client wrapper APIs that can manage CSP K8S infra.
     Refer kubernetes-client API doc here- https://github.com/kubernetes-client/python/tree/master/kubernetes

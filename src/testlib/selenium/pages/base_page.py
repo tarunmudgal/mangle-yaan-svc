@@ -2,20 +2,19 @@
 # -*- coding: utf-8 -*-
 """ module description """
 
-__author__ = 'tarun mudgal'
+__author__ = "tarun mudgal"
 
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
 
-from src.testlib.selenium.locators import login_page as login_page_locators
 from src.testlib import params
-from selenium.common.exceptions import NoSuchElementException
+from src.testlib.selenium.locators import login_page as login_page_locators
 
 
 # this Base class is serving basic attributes for every single page inherited from Page class
-class BasePage(object):
+class BasePage:
     browser_session = None
 
     def __init__(self, driver, base_url, timeout=30):
@@ -25,18 +24,23 @@ class BasePage(object):
 
         if BasePage.browser_session is None:
             self.open()
-            self.wait_for_element(login_page_locators.LoginPageLocators.TXT_WELCOME_TITLE, timeout=120)
+            self.wait_for_element(
+                login_page_locators.LoginPageLocators.TXT_WELCOME_TITLE, timeout=120
+            )
 
     def wait_if_element_not_displayed(func):
         def _wait_to_display(self, *args, **kwargs):
             locator = args[0]
             try:
                 WebDriverWait(self.driver, params.WEBDRIVER_DEFAULT_WAIT).until(
-                    lambda s: s.find_element(*locator).is_displayed())
+                    lambda s: s.find_element(*locator).is_displayed()
+                )
             except TimeoutException as fault:
                 mylog.exception(
                     "exception occurred as locator {} could not be found within {} seconds. Exception={}".format(
-                        locator, params.WEBDRIVER_DEFAULT_WAIT, fault))
+                        locator, params.WEBDRIVER_DEFAULT_WAIT, fault
+                    )
+                )
             return func(self, *args, **kwargs)
 
         return _wait_to_display
@@ -63,12 +67,15 @@ class BasePage(object):
 
     def wait_for_element(self, locator, timeout=10):
         try:
-            WebDriverWait(self.driver, timeout).until(lambda s: s.find_element(*locator).is_displayed())
+            WebDriverWait(self.driver, timeout).until(
+                lambda s: s.find_element(*locator).is_displayed()
+            )
         except TimeoutException as fault:
             mylog.exception(
-                "exception occurred as locator {} could not be found on url {} within {} seconds".format(locator,
-                                                                                                         self.get_url(),
-                                                                                                         timeout))
+                "exception occurred as locator {} could not be found on url {} within {} seconds".format(
+                    locator, self.get_url(), timeout
+                )
+            )
             self.driver.quit()
 
     def send_keys(self, locator, value):

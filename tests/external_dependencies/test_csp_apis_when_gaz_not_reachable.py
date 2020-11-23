@@ -19,7 +19,7 @@ LIST_NETWORK_POLICY_FILENAMES = ["preview_env_egress_am_service.yaml"]
     LIST_NETWORK_POLICY_FILENAMES,
     indirect=True,
 )
-class TestCSPAPIsWhenGAZServiceNotReachable(object):
+class TestCSPAPIsWhenGAZServiceNotReachable:
     """
     test cases for CSP APIs when GAZ service calls are blocked
     """

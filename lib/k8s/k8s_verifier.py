@@ -3,7 +3,7 @@ import os
 from lib.k8s import k8s_client
 
 
-class K8SVerifier(object):
+class K8SVerifier:
     def verfy_k8s(kube_config_file, namespace):
 
         verify = k8s_client.K8SClient(kube_config_file, namespace)

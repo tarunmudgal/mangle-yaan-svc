@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 """ module description """
 
-__author__ = 'tarun mudgal'
+__author__ = "tarun mudgal"
 
 import pytest
+
 from src.testlib.selenium.pages.login_page import LoginPage
 
+
 @pytest.mark.usefixtures("init_chrome_driver")
-class TestCSPLogin():
+class TestCSPLogin:
     def test_csp_login(self):
         breakpoint()
         loginpage = LoginPage(self.driver, "https://console-preview.cloud.vmware.com")

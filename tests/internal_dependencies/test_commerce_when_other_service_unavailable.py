@@ -8,7 +8,6 @@ import pytest
 import requests
 
 from lib.csp import resources
-
 from src.testlib.pytest import utils
 
 LIST_DEPENDENT_SERVICES = ["csp-onboarding"]

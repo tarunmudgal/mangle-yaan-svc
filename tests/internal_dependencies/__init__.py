@@ -2,4 +2,4 @@
 # -*- coding: utf-8 -*-
 """ module description """
 
-__author__ = 'tarun mudgal'
+__author__ = "tarun mudgal"

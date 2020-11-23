@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """ module description """
 
-__author__ = 'tarun mudgal'
+__author__ = "tarun mudgal"
 
 
 def get_testcase_names(name, params):

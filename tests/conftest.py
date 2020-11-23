@@ -139,7 +139,9 @@ def inject_k8s_infra_fault_service_unavailable_for_func():
             )
             ckclient.patch_service(service_name, service_info)
             mylog.info(
-                "mangle infra fault remediated successfully for service={} using K8S API".format(service_name)
+                "mangle infra fault remediated successfully for service={} using K8S API".format(
+                    service_name
+                )
             )
         else:
             mylog.info(
@@ -208,7 +210,9 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
             )
             ckclient.patch_service(faulty_svc_name, service_info)
             mylog.info(
-                "mangle infra fault remediated successfully for service={} using K8S API".format(faulty_svc_name)
+                "mangle infra fault remediated successfully for service={} using K8S API".format(
+                    faulty_svc_name
+                )
             )
         else:
             mylog.info(

@@ -7,7 +7,7 @@ from lib.common import utils
 from lib.mangle import resources
 
 
-class EndPointBase(object):
+class EndPointBase:
     def __init__(self, mangle_client):
         self.mangle_client = mangle_client
 

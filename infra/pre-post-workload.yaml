@@ -6,31 +6,31 @@ spec:
   template:
     spec:
       containers:
-      - name: pre-post-workload-job-resiliency
-        image: vmware-docker-csp-tools.bintray.io/csp-resiliency-workload-wrapper:latest
-        env:
-          - name: type
-            value: "pre"
-          - name: project_name
-            value: "csp_resiliency"
-          - name: workload_name
-            value: "cpu_spike"
-          - name: run_id
-            value: "abcd"
-          - name: fault_type
-            value: "cpuload"
-          - name: timeout
-            value: "30"
-          - name: fault_percentage
-            value: "30"
-          - name: container_name
-            value: "csp-data-enrichment"
-          - name: container_label
-            value: "app=csp-data-enrichment"
-        resources:
-          limits:
-            memory: "4Gi"
+        - name: pre-post-workload-job-resiliency
+          image: vmware-docker-csp-tools.bintray.io/csp-resiliency-workload-wrapper:latest
+          env:
+            - name: type
+              value: "pre"
+            - name: project_name
+              value: "csp_resiliency"
+            - name: workload_name
+              value: "cpu_spike"
+            - name: run_id
+              value: "abcd"
+            - name: fault_type
+              value: "cpuload"
+            - name: timeout
+              value: "30"
+            - name: fault_percentage
+              value: "30"
+            - name: container_name
+              value: "csp-data-enrichment"
+            - name: container_label
+              value: "app=csp-data-enrichment"
+          resources:
+            limits:
+              memory: "4Gi"
       restartPolicy: "Never"
       imagePullSecrets:
-      - name: maxim-bintray
+        - name: maxim-bintray
   backoffLimit: 0

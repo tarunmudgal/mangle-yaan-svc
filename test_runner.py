@@ -87,7 +87,7 @@ def create_maxim_gun_client(timeout: int = 120) -> maximgun_client.MGClient:
 
     # maxim-gun client
     mg_conf = my_json.get("maximGun")
-    mgclient = maximgun_client.MGClient(mg_conf.get("host"), timeout=timeout, )
+    mgclient = maximgun_client.MGClient(mg_conf.get("host"), timeout=timeout,)
 
     return mgclient
 
@@ -300,9 +300,9 @@ def cleanup_old_reports(log_dir: str, days: int = 15) -> None:
                 "-{timeStamp}.html", ""
             )
             if (
-                    os.path.exists(fpath)
-                    and os.path.isfile(fpath)
-                    and file_.startswith(my_report_name_expr)
+                os.path.exists(fpath)
+                and os.path.isfile(fpath)
+                and file_.startswith(my_report_name_expr)
             ):
                 stat = os.stat(fpath)
                 if stat.st_mtime <= time_in_secs:
@@ -313,10 +313,10 @@ def cleanup_old_reports(log_dir: str, days: int = 15) -> None:
 
 
 def prepare_setup(
-        myconf_file: str = None,
-        project_name: str = None,
-        workload_name: str = None,
-        run_id: str = None,
+    myconf_file: str = None,
+    project_name: str = None,
+    workload_name: str = None,
+    run_id: str = None,
 ) -> None:
     """Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
     config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
@@ -518,7 +518,7 @@ if __name__ == "__main__":
         type=str,
         default="",
         help="mangle-yaan config file path. If this option is used, "
-             "it will ovverride default config file config/my.json",
+        "it will ovverride default config file config/my.json",
     )
     parser.add_argument(
         "--pytest_args",
@@ -606,9 +606,7 @@ if __name__ == "__main__":
     if pytest_status == 2:
         mylog.error("Pytest execution terminated by user")
         copy_results = False
-        mg_agent.update_task(
-            args.run_id, end_time=end_time
-        )
+        mg_agent.update_task(args.run_id, end_time=end_time)
     if copy_results:
         s3_path = post_run_activities(copy_results=copy_results)
         mg_agent.update_task(

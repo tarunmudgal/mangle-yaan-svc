@@ -171,7 +171,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_principal_user_info(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_principal_user_info(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -185,7 +187,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_terms_of_service_signatures(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_terms_of_service_signatures(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -235,7 +239,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_org_svc_roles_for_user_account(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_org_svc_roles_for_user_account(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -252,7 +258,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_org_svc_roles_for_user_account_v2(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_org_svc_roles_for_user_account_v2(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -269,7 +277,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_org_info_for_user_account(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_org_info_for_user_account(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -286,7 +296,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_org_info_for_user_account_v2(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_org_info_for_user_account_v2(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -303,7 +315,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_org_roles_for_user_account(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_org_roles_for_user_account(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -320,7 +334,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_org_roles_for_user_account_v2(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_org_roles_for_user_account_v2(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -337,7 +353,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_orgs_for_user_account(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_orgs_for_user_account(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -353,7 +371,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_orgs_for_user_account_v2(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_orgs_for_user_account_v2(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 
@@ -369,7 +389,9 @@ class TestAMDependencyOnDifferentServices:
             am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
-    def test_api_get_all_invitations_for_user_account(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_all_invitations_for_user_account(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
         # expected csp api response (status_code)
         expected_response = 200
 

@@ -8,10 +8,10 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - name: e2e-qe-selenium-hub-port-dev
-    port: 4444
-    targetPort: 4444
-    nodePort: 31001
+    - name: e2e-qe-selenium-hub-port-dev
+      port: 4444
+      targetPort: 4444
+      nodePort: 31001
   selector:
     app: e2e-qe-selenium-hub-dev
     environment: auto

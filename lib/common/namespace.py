@@ -1,7 +1,7 @@
 basestring = unicode = str
 
 
-class Namespace(object):
+class Namespace:
     """
     Converts a dictionary into an object so that its key-values can be
     be accessed as regular attributes. Recursively traverses the given

@@ -13,7 +13,7 @@ import traceback
 from lib import params
 
 
-class Log(object):
+class Log:
     def __init__(self, logger):
         self.logger = logger
 

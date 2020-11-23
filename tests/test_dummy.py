@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import pytest
+
 # import pytest
 
 
@@ -21,12 +23,10 @@ from datetime import datetime
 #     print("in test_after_cpu_fault_injected_1")
 
 
-import pytest
-
 # from tests import conftest
 
-class TestDummy():
 
+class TestDummy:
     def test_example1(self):
         print("test_example1 called")
 
@@ -52,10 +52,10 @@ def create_sut():
         s.cleanup()
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope="class")
 def create_sut_class():
     instances = []
-    s = Sut(p1='v1')
+    s = Sut(p1="v1")
     instances.append(s)
     print("create_sut_class setup")
     yield
@@ -72,8 +72,8 @@ class Sut:
     """
 
     def __init__(self, **kwargs):
-        print('DO SETUP')
+        print("DO SETUP")
         self.__dict__.update(kwargs)
 
     def cleanup(self):
-        print('DO CLEANUP')
+        print("DO CLEANUP")

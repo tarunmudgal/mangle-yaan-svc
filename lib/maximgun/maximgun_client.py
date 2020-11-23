@@ -21,7 +21,7 @@ DEFAULT_RETRY_OBJ = Retry(
 )
 
 
-class MGResponse(object):
+class MGResponse:
     """MGClient Response Wrapper"""
 
     def __init__(self, response):
@@ -103,9 +103,7 @@ class MGClient(rest_client.RESTClient):
         self._session_no_retry.verify = self._ssl_verify
 
     # @utils.log_args
-    def make_call(
-        self, verb: str, api_resource: str, **kwargs: str
-    ) -> MGResponse:
+    def make_call(self, verb: str, api_resource: str, **kwargs: str) -> MGResponse:
         """
         makes a HTTP call using RESTClient.request API
         Args:

@@ -2,10 +2,11 @@
 # -- coding: utf-8 --
 """ module description """
 
-__author__ = 'tarun mudgal'
+__author__ = "tarun mudgal"
 
-from src.testlib.selenium.pages.base_page import BasePage
 from src.testlib.selenium.locators import login_page
+from src.testlib.selenium.pages.base_page import BasePage
+
 
 class LoginPage(BasePage):
     def __init__(self, driver, base_url, timeout=30):
@@ -20,7 +21,11 @@ class LoginPage(BasePage):
             mylog.info("waiting for locator={}".format(self.locators.TXT_WELCOME_TITLE))
             self.wait_for_element(self.locators.TXT_WELCOME_TITLE)
         if not self.find_element(self.locators.TXT_WELCOME_TITLE):
-            mylog.info("locator={} not found. redirecting to login page".format(self.locators.TXT_WELCOME_TITLE))
+            mylog.info(
+                "locator={} not found. redirecting to login page".format(
+                    self.locators.TXT_WELCOME_TITLE
+                )
+            )
             self.open()
             mylog.info("waiting for locator={}".format(self.locators.TXT_WELCOME_TITLE))
             self.wait_for_element(self.locators.TXT_WELCOME_TITLE)

@@ -17,7 +17,7 @@ LIST_DEPENDENT_SERVICES = ["csp-commerce"]
     "inject_k8s_infra_fault_service_unavailable_for_class", LIST_DEPENDENT_SERVICES, indirect=True,
 )
 # @pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
-class TestOSDependencyOnDifferentServices(object):
+class TestOSDependencyOnDifferentServices:
     @pytest.mark.dependency()
     def test_api_create_onboarding_context(
         self, inject_k8s_infra_fault_service_unavailable_for_class

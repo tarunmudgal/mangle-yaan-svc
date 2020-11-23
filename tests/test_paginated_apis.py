@@ -12,7 +12,7 @@ import requests
 from lib.csp import resources
 
 
-class TestPaginatedAPIs(object):
+class TestPaginatedAPIs:
     """
     test cases for paginated response APIs where fault is injected while pages have been read
     """

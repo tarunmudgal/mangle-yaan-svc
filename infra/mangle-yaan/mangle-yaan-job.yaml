@@ -6,30 +6,30 @@ spec:
   template:
     spec:
       containers:
-      - name: mangle-yaan-job
-        image: vmware-docker-csp-tools.bintray.io/mangle-yaan:latest
-        imagePullPolicy: Always
-        env:
-          - name: PROJECT_NAME
-            value: "MANGLE_YAAN_TEST"
-          - name: WORKLOAD_NAME
-            value: "Test-workload"
-          - name: TESTSUITE_NAMES
-            value: "test_csp_apis_when_vip_not_reachable"
-          - name: PYTEST_ARGS
-            value: ""
-          - name: MYCONFIG
-            value: ""
-          - name: run_id
-            value: ""
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
+        - name: mangle-yaan-job
+          image: vmware-docker-csp-tools.bintray.io/mangle-yaan:latest
+          imagePullPolicy: Always
+          env:
+            - name: PROJECT_NAME
+              value: "MANGLE_YAAN_TEST"
+            - name: WORKLOAD_NAME
+              value: "Test-workload"
+            - name: TESTSUITE_NAMES
+              value: "test_csp_apis_when_vip_not_reachable"
+            - name: PYTEST_ARGS
+              value: ""
+            - name: MYCONFIG
+              value: ""
+            - name: run_id
+              value: ""
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
       restartPolicy: "Never"
       imagePullSecrets:
-      - name: mangle-yaan-secret
+        - name: mangle-yaan-secret
   backoffLimit: 3

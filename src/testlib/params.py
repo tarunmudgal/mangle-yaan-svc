@@ -21,6 +21,5 @@ CSP_MODULE_SERVICE_ERROR_CODE_FILES_MAP = {
     "340": "src/testlib/csp/errors/am_idp_errors.json",
 }
 
-
 # csp urls
 # CSP_BASE_URL = ""

@@ -24,7 +24,7 @@ DEFAULT_RETRY_OBJ = Retry(
 )
 
 
-class MangleResponse(object):
+class MangleResponse:
     """MangleClient Response Wrapper"""
 
     def __init__(self, response):
@@ -116,9 +116,7 @@ class MangleClient(RESTClient):
         self._session_no_retry.verify = self._ssl_verify
 
     # @utils.log_args
-    def make_call(
-        self, verb: str, api_resource: str, **kwargs: str
-    ) -> MangleResponse:
+    def make_call(self, verb: str, api_resource: str, **kwargs: str) -> MangleResponse:
         """
         makes a HTTP call using RESTClient.request API
         Args:

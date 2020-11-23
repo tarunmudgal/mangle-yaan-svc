@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 """ module description """
 
-from src.testlib import params
 import json
 
-__author__ = 'tarun mudgal'
+from src.testlib import params
+
+__author__ = "tarun mudgal"
 
 CSP_MODULE_CODES = None
 CSP_MODULE_SERVICE_ERROR_CODES_MAP = None
+
 
 def get_csp_module_error_code_info(module_code: int) -> dict:
     global CSP_MODULE_CODES
@@ -16,6 +18,7 @@ def get_csp_module_error_code_info(module_code: int) -> dict:
         with open(params.CSP_MODULE_CODE_FILE) as json_file:
             CSP_MODULE_CODES = json.load(json_file)
     return CSP_MODULE_CODES.get(module_code, None)
+
 
 def get_csp_service_error_code_info(module_code: int, service_code: int) -> dict:
     global CSP_MODULE_SERVICE_ERROR_CODES_MAP
@@ -26,6 +29,7 @@ def get_csp_service_error_code_info(module_code: int, service_code: int) -> dict
             with open(error_code_file) as json_file:
                 CSP_MODULE_SERVICE_ERROR_CODES_MAP[mod_code].update(json.load(json_file))
     return CSP_MODULE_SERVICE_ERROR_CODES_MAP[module_code].get(service_code, None)
+
 
 def get_module_service_error_types(csp_error_code: str) -> list:
     if not csp_error_code:

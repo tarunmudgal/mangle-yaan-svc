@@ -21,7 +21,7 @@ DEFAULT_RETRY_OBJ = Retry(
 )
 
 
-class CSPResponse(object):
+class CSPResponse:
     """CSPClient Response Wrapper"""
 
     def __init__(self, response):
@@ -49,14 +49,14 @@ class CSPClient(rest_client.RESTClient):
     __single_instance = None
 
     def __init__(
-            self,
-            host: str,
-            refresh_token: str,
-            api_prefix: str = resources.API_PREFIX,
-            scheme: str = "https://",
-            retry_obj: Retry = DEFAULT_RETRY_OBJ,
-            ssl_verify: bool = False,
-            timeout: int = None,
+        self,
+        host: str,
+        refresh_token: str,
+        api_prefix: str = resources.API_PREFIX,
+        scheme: str = "https://",
+        retry_obj: Retry = DEFAULT_RETRY_OBJ,
+        ssl_verify: bool = False,
+        timeout: int = None,
     ) -> None:
         """Initializes singleton CSPClient that is used to make CSP API calls
         Args:
@@ -139,9 +139,7 @@ class CSPClient(rest_client.RESTClient):
             )
 
     # @utils.log_args
-    def make_call(
-            self, verb: str, api_resource: str, **kwargs: str
-    ) -> CSPResponse:
+    def make_call(self, verb: str, api_resource: str, **kwargs: str) -> CSPResponse:
         """
         makes a HTTP call using RESTClient.request API
         Args:
