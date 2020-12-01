@@ -369,9 +369,11 @@ def prepare_setup(
     builtins.mycache = mycache
 
     # adding project_name and workload_name into mycache to use them in pytest-html report generation
-    mycache["project_name"] = project_name
-    mycache["workload_name"] = workload_name
-    mycache["run_id"] = run_id
+    mycache["run_info"] = {}
+    mycache["test_info"] = {}
+    mycache["run_info"]["project_name"] = project_name
+    mycache["run_info"]["workload_name"] = workload_name
+    mycache["run_info"]["run_id"] = run_id
 
     mylog.info("setup is ready to run resiliency tests now")
 
@@ -379,7 +381,7 @@ def prepare_setup(
 def run_pytest(*args: str, run_id: str = None, **kwargs: str) -> int:
     # start_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
     start_ts = datetime.datetime.now().strftime("%d%b%Y_%H:%M:%S.%f")
-    mycache.update({"test_start_timestamp": start_ts})
+    mycache["run_info"].update({"test_start_timestamp": start_ts})
     mylog.info("starting pytest test cases execution at: %s" % start_ts)
 
     # update maxim-gun task status if run_id exists
@@ -389,7 +391,7 @@ def run_pytest(*args: str, run_id: str = None, **kwargs: str) -> int:
 
     # end_ts = datetime.datetime.now().strftime("%d/%m/%Y, %I:%M:%S.%f %p")
     end_ts = datetime.datetime.now().strftime("%d%b%Y_%H:%M:%S.%f")
-    mycache.update({"test_end_timestamp": end_ts})
+    mycache["run_info"].update({"test_end_timestamp": end_ts})
     mylog.info("pytest test cases execution finished at {} with status={}".format(end_ts, status))
 
     return status

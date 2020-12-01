@@ -4,12 +4,15 @@
 
 __author__ = "tarun mudgal"
 
+import os
+
 import pytest
 import requests
 
 from lib.csp import resources
 from src.testlib.pytest import utils
 
+CURRENT_FILENAME = os.path.basename(__file__)
 LIST_DEPENDENT_SERVICES = ["csp-commerce"]
 
 
@@ -38,7 +41,8 @@ class TestOSDependencyOnDifferentServices:
         os_resp = cclient.make_call("POST", api_resource, json=request_body)
 
         # add a value in cache dict to use it in other test cases
-        mycache["onboarding_context_id"] = os_resp.json.get("onboardingContextId")
+        mycache["test_info"][CURRENT_FILENAME] = {}
+        mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"] = os_resp.json.get("onboardingContextId")
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
@@ -60,7 +64,7 @@ class TestOSDependencyOnDifferentServices:
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
             serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
-            onboardingContextId=mycache["onboarding_context_id"],
+            onboardingContextId=mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"],
         )
 
         os_resp = cclient.make_call("GET", api_resource)
@@ -103,7 +107,7 @@ class TestOSDependencyOnDifferentServices:
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
             serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
-            onboardingContextId=mycache["onboarding_context_id"],
+            onboardingContextId=mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"],
         )
 
         request_body = {"title": "new test onboarding", "description": "new test onboarding"}
@@ -134,7 +138,7 @@ class TestOSDependencyOnDifferentServices:
             "linkUrl": "https://dummyurl.com",
             "title": "dummy faq topic",
             "linkTitle": "dummy faq topic",
-            "onboardingContextIds": ["{}".format(mycache["onboarding_context_id"])],
+            "onboardingContextIds": ["{}".format(mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"])],
             "text": "dummy faq topic",
         }
 

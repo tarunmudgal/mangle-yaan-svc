@@ -32,10 +32,10 @@ def pytest_html_results_summary(prefix, summary, postfix):
         class p(html.p):
             style = html.Style(font_weight="bold")
 
-    prefix.extend([myhtml.p("{:<30}{}".format("PROJECT NAME:", mycache["project_name"]))])
-    prefix.extend([myhtml.p("{:<30}{}".format("WORKLOAD NAME:", mycache["workload_name"]))])
+    prefix.extend([myhtml.p("{:<30}{}".format("PROJECT NAME:", mycache["run_info"]["project_name"]))])
+    prefix.extend([myhtml.p("{:<30}{}".format("WORKLOAD NAME:", mycache["run_info"]["workload_name"]))])
     prefix.extend(
-        [myhtml.p("{:<30}{}".format("Test Start Timestamp:", mycache["test_start_timestamp"]))]
+        [myhtml.p("{:<30}{}".format("Test Start Timestamp:", mycache["run_info"]["test_start_timestamp"]))]
     )
 
 
@@ -46,7 +46,7 @@ def pytest_configure(config):
         config.option.htmlpath = (
             myconfig.get("mangleYaan")
             .get("testReportPath")
-            .format(timeStamp=mycache.get("test_start_timestamp"))
+            .format(timeStamp=mycache["run_info"].get("test_start_timestamp"))
         )
         config.option.self_contained_html = True
 
@@ -56,8 +56,8 @@ def pytest_configure(config):
 
 @pytest.fixture(scope="function", autouse=True)
 def check_if_user_cancelled_execution():
-    if mycache["run_id"]:
-        params = {"run_id": mycache["run_id"]}
+    if mycache["run_info"]["run_id"]:
+        params = {"run_id": mycache["run_info"]["run_id"]}
         resp = mgclient.make_call(
             "GET", maxim_gun_resources.MAXIMGUN.get("GET_TASK_STATUS"), params=params
         )
