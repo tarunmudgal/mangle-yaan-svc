@@ -20,16 +20,20 @@
     "path": "tests/test_paginated_apis.py"
   },
   "test_csp_apis_when_vip_not_reachable": {
-    "description": "paginated APIs test cases while one service instance(pod) is down",
+    "description": "paginated APIs test cases while VIP service is down",
     "path": "tests/external_dependencies/test_csp_apis_when_vip_not_reachable.py"
   },
   "test_csp_apis_when_it_not_reachable": {
-    "description": "paginated APIs test cases while one service instance(pod) is down",
+    "description": "paginated APIs test cases while IT service is down",
     "path": "tests/external_dependencies/test_csp_apis_when_it_not_reachable.py"
   },
   "test_csp_apis_when_gaz_not_reachable": {
-    "description": "paginated APIs test cases while one service instance(pod) is down",
+    "description": "paginated APIs test cases while GAZ service is down",
     "path": "tests/external_dependencies/test_csp_apis_when_gaz_not_reachable.py"
+  },
+  "test_csp_apis_when_kafka_not_reachable": {
+    "description": "paginated APIs test cases while kafka message broker service is down",
+    "path": "tests/external_dependencies/test_csp_apis_when_kafka_not_reachable.py"
   },
   "test_csp_login_ui": {
     "description": "dummy test cases",
