@@ -397,59 +397,80 @@ def run_pytest(*args: str, run_id: str = None, **kwargs: str) -> int:
     return status
 
 
-def post_run_activities(copy_results: bool = True) -> str:
+def post_run_activities(copy_results: bool = True, copy_logs: bool = True) -> str:
     """Tasks to be performed after pytest test-suites execution
 
     Args:
       copy_results: flag for enabling/disabling pytest test results copy on S3 bucket
+      copy_logs: flag for enabling/disabling pytest test logs copy on S3 bucket
 
     Returns:
       s3 key (file-path) where file is copied
     """
-    s3_key = None
-    if copy_results:
-        s3_key = copy_file_on_s3(
+    s3_conf = myconfig.get("aws").get("s3")
+    if copy_logs:
+        src_fpath = myconfig.get("mangleYaan").get("testLogPath")
+        fname = os.path.basename(src_fpath)
+        name, ext = os.path.splitext(fname)
+        fname = "{name}-{timeStamp}{ext}".format(
+            name=name, timeStamp=mycache["run_info"].get("test_start_timestamp"), ext=ext
+        )
+        s3_fpath = "{}{}".format(s3_conf.get("testLogPath"), fname)
+        copy_file_on_s3(
             bucket_name=myconfig.get("aws").get("s3").get("bucketName"),
-            file_path=myconfig.get("mangleYaan").get("testReportPath"),
+            src_fpath=src_fpath,
+            s3_fpath=s3_fpath,
         )
 
-    return s3_key
+    copy_results_status = None
+    if copy_results:
+        src_fpath = myconfig.get("mangleYaan").get("testReportPath")
+        fname = os.path.basename(src_fpath)
+        s3_fpath = "{}{}".format(s3_conf.get("testReportPath"), fname)
+        copy_results_status = copy_file_on_s3(
+            bucket_name=myconfig.get("aws").get("s3").get("bucketName"),
+            src_fpath=src_fpath,
+            s3_fpath=s3_fpath,
+        )
+
+    if copy_results_status:
+        return s3_fpath
+
+    return None
 
 
-def copy_file_on_s3(bucket_name: str, file_path: str = None) -> str:
+def copy_file_on_s3(bucket_name: str, src_fpath: str = None, s3_fpath: str = None) -> str:
     """copies file on S3 bucket
 
     Args:
       bucket_name: S3 bucket name
-      file_path: file-path that need to be copied to S3 bucket
+      src_fpath: file-path that need to be copied to S3 bucket
+      s3_fpath: S3 file-path relative to S3 bucket bucket_name where src_fpath would be copied
 
     Returns:
-        s3 key (file-path) where file is copied
+        copy_status (True or False)
     """
-    s3_key = None
-    if file_path:
+    copy_status = False
+    if src_fpath:
         s3_conf = myconfig.get("aws").get("s3")
         s3_client = boto3.client(
             "s3",
             aws_access_key_id=s3_conf.get("awsAccessKeyID"),
             aws_secret_access_key=s3_conf.get("awsSecretAccessKey"),
         )
-
-        fname = os.path.basename(file_path)
-        s3_key = "{}{}".format(s3_conf.get("testReportPath"), fname)
         try:
             s3_client.upload_file(
-                Filename=file_path, Bucket=bucket_name, Key=s3_key,
+                Filename=src_fpath, Bucket=bucket_name, Key=s3_fpath,
             )
-            mylog.info("file {} successfully copied on s3".format(file_path))
+            copy_status = True
+            mylog.info("file {} successfully copied on s3 at {}".format(src_fpath, s3_fpath))
         except Exception as fault:
-            mylog.error("file {} could not be copied on S3. Error={}".format(file_path, fault))
+            mylog.error("file {} could not be copied on S3. Error={}".format(src_fpath, fault))
             mylog.exception(fault)
-            s3_key = None
     else:
         mylog.debug("nothing to copy on S3")
 
-    return s3_key
+    return copy_status
 
 
 def get_test_modules_from_testsuite_names(testsuite_names: str) -> typing.List[str]:

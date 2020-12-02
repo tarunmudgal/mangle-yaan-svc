@@ -2,7 +2,8 @@
   "projectName": "csp_resiliency",
   "projectDescription": "CSP Resiliency Test Suite",
   "mangleYaan": {
-    "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html"
+    "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",
+    "testLogPath": "logs/test_runner.log"
   },
   "mangle": {
     "host": "10.182.50.117",

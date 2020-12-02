@@ -66,7 +66,6 @@ def purge_old_reports_from_s3(
 
     cur_time = datetime.datetime.now(tz=tzutc())
     for rp_obj in report_objects["Contents"]:
-        # breakpoint()
         datetime_diff = cur_time - rp_obj["LastModified"]
         if datetime_diff.days > days_before:
             try:

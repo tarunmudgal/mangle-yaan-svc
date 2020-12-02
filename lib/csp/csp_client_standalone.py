@@ -199,7 +199,6 @@ class CSPResponse:
         try:
             self.json = response.json()
         except ValueError as fault:
-            breakpoint()
             self.text = response.text
 
     def __repr__(self):
