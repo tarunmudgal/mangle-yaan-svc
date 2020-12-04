@@ -7,6 +7,7 @@ __author__ = "tarun mudgal"
 import json
 import os
 import time
+from collections import OrderedDict
 
 import boto3
 import pytest
@@ -16,6 +17,7 @@ from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from lib import params as lib_params
+from lib.common import utils
 from lib.mangle import resources
 from lib.maximgun import agent as mg_agent
 from lib.maximgun import maximgun_client as maxim_client
@@ -24,24 +26,46 @@ from src.testlib import params as testlib_params
 
 
 def pytest_html_report_title(report):
+    """
+    hook to modify pytest-html report title
+    """
     report.title = myconfig.get("projectDescription") + " " + "Report"
 
 
 def pytest_html_results_summary(prefix, summary, postfix):
+    """
+    hook to modify pytest-html results summary
+    """
+
     class myhtml(html):
         class p(html.p):
             style = html.Style(font_weight="bold")
 
-    prefix.extend([myhtml.p("{:<30}{}".format("PROJECT NAME:", mycache["run_info"]["project_name"]))])
-    prefix.extend([myhtml.p("{:<30}{}".format("WORKLOAD NAME:", mycache["run_info"]["workload_name"]))])
     prefix.extend(
-        [myhtml.p("{:<30}{}".format("Test Start Timestamp:", mycache["run_info"]["test_start_timestamp"]))]
+        [myhtml.p("{:<30}{}".format("PROJECT NAME:", mycache["run_info"]["project_name"]))]
+    )
+    prefix.extend(
+        [myhtml.p("{:<30}{}".format("WORKLOAD NAME:", mycache["run_info"]["workload_name"]))]
+    )
+    prefix.extend(
+        [
+            myhtml.p(
+                "{:<30}{}".format(
+                    "Test Start Timestamp:", mycache["run_info"]["test_start_timestamp"]
+                )
+            )
+        ]
     )
 
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
-    # pick pytest-html filepath dynamically
+    """
+    From Pytest doc:
+    Allow plugins and conftest files to perform initial configuration. This hook is called for every
+    plugin and initial conftest file after command line options have been parsed.
+    Here, we are using it to pick pytest-html filepath dynamically
+    """
     if not config.option.htmlpath:
         config.option.htmlpath = (
             myconfig.get("mangleYaan")
@@ -56,6 +80,9 @@ def pytest_configure(config):
 
 @pytest.fixture(scope="function", autouse=True)
 def check_if_user_cancelled_execution():
+    """
+    this fixture is called for each function. It captures if user has cancelled workload execution from maxim-gun UI
+    """
     if mycache["run_info"]["run_id"]:
         params = {"run_id": mycache["run_info"]["run_id"]}
         resp = mgclient.make_call(
@@ -68,6 +95,28 @@ def check_if_user_cancelled_execution():
             mylog.error(
                 "maxim-gun GET_TASK_STATUS API failed with status_code={}".format(resp.status_code)
             )
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """
+    hook to perform some task during pytest session finish. we are using it to calculate aggregate result and
+    accordingly colour coding (GREEN/YELLOW/RED) would be added for workload run on maxim-gun UI
+    """
+    reporter = session.config.pluginmanager.get_plugin("terminalreporter")
+    result_summary = OrderedDict()
+    result_summary["passed"] = len(reporter.stats.get("passed", []))
+    result_summary["failed"] = len(reporter.stats.get("failed", []))
+    result_summary["skipped"] = len(reporter.stats.get("skipped", []))
+
+    passing_percent = utils.get_mangleyaan_passing_test_percent(result_summary)
+    aggregatd_result = utils.get_mangleyaan_result_status(passing_percent)
+
+    result_summary["passing_percent"] = passing_percent
+    result_summary["aggregatd_result"] = aggregatd_result
+
+    mylog.debug("current test execution result_summary={}".format(result_summary))
+
+    mycache["run_info"]["result_summary"] = result_summary
 
 
 @pytest.fixture(scope="function")

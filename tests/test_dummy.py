@@ -29,6 +29,9 @@ import pytest
 class TestDummy:
     def test_example1(self):
         print("test_example1 called")
+        import time
+
+        time.sleep(300)
 
     def test_example2(self):
         print("test_example2 called")
@@ -36,6 +39,12 @@ class TestDummy:
 
     def test_example3(self):
         print("test_example3 called")
+
+    def test_example4(self):
+        print("test_example4 called")
+
+    def test_example5(self):
+        print("test_example5 called")
 
 
 @pytest.fixture

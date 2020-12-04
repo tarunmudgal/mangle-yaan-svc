@@ -42,7 +42,9 @@ class TestOSDependencyOnDifferentServices:
 
         # add a value in cache dict to use it in other test cases
         mycache["test_info"][CURRENT_FILENAME] = {}
-        mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"] = os_resp.json.get("onboardingContextId")
+        mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"] = os_resp.json.get(
+            "onboardingContextId"
+        )
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
@@ -138,7 +140,9 @@ class TestOSDependencyOnDifferentServices:
             "linkUrl": "https://dummyurl.com",
             "title": "dummy faq topic",
             "linkTitle": "dummy faq topic",
-            "onboardingContextIds": ["{}".format(mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"])],
+            "onboardingContextIds": [
+                "{}".format(mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"])
+            ],
             "text": "dummy faq topic",
         }
 

@@ -20,7 +20,7 @@ import pytest
 import requests
 
 from lib import params as lib_params
-from lib.common import config_reader, logger, rest_client
+from lib.common import config_reader, logger, rest_client, utils
 from lib.csp import csp_client
 from lib.csp import resources as csp_resources
 from lib.k8s import k8s_client
@@ -339,6 +339,9 @@ def prepare_setup(
     # update maxim-gun task status if run_id exists
     mg_agent.update_task(run_id, status=lib_params.MG_TASK_STATUS["STARTED"])
 
+    # trigger a thread to update maxim-gun task periodically
+    utils.start_mangleyaan_health_updater(args.run_id)
+
     # read mangle-yaan config and add it in builtins
     myconfig = get_mangle_yaan_config(myconf_file=myconf_file, workload_name=workload_name)
     if myconfig is None:
@@ -617,19 +620,23 @@ if __name__ == "__main__":
         workload_name=args.workload_name,
         run_id=args.run_id,
     )
+
     pytest_status = run_pytest(pytest_cmdline, run_id=args.run_id)
     # don't copy logs to S3 for pytest usage error. seems incorrect --pytest_args are passed. Also, update task status as FAILED
+
     copy_results = True
-    end_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    end_time = datetime.datetime.now().strftime(lib_params.MG_DATETIME_FORMAT)
     if pytest_status == 4:
         copy_results = False
         mg_agent.update_task(
             args.run_id, status=lib_params.MG_TASK_STATUS["FAILED"], end_time=end_time
         )
+        # sys.exit(3)
     if pytest_status == 2:
         mylog.error("Pytest execution terminated by user")
         copy_results = False
         mg_agent.update_task(args.run_id, end_time=end_time)
+        # sys.exit(3)
     if copy_results:
         s3_path = post_run_activities(copy_results=copy_results)
         mg_agent.update_task(
@@ -637,4 +644,8 @@ if __name__ == "__main__":
             status=lib_params.MG_TASK_STATUS["COMPLETED"],
             end_time=end_time,
             report_url=s3_path,
+            result=mycache["run_info"]["result_summary"]["aggregatd_result"],
         )
+
+    # stops thread to update maxim-gun task periodically
+    utils.stop_mangleyaan_health_updater()

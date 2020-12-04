@@ -8,10 +8,17 @@ import datetime
 import functools
 import logging
 import sys
+import threading
+import time
 from pprint import pprint
 
 import boto3
 from dateutil.tz import tzutc
+
+from lib import params
+from lib.maximgun import agent as mg_agent
+
+MY_HEALTH_UPDATE_EVENT_HANDLER = threading.Event()
 
 
 def log_args(func):
@@ -77,6 +84,60 @@ def purge_old_reports_from_s3(
                         rp_obj["Key"], bucket_name, fault
                     )
                 )
+
+
+def get_mangleyaan_passing_test_percent(result_summary: dict) -> float:
+    total_tests = result_summary["passed"] + result_summary["failed"] + result_summary["skipped"]
+    return (result_summary["passed"] / total_tests) * 100
+
+
+def get_mangleyaan_result_status(pass_percent: float) -> str:
+    if params.MANGLEYAAN_PASS_THRESHOLD <= pass_percent:
+        return params.MANGLEYAAN_AGGREGATED_RESULT["PASS"]
+    elif (
+        params.MANGLEYAAN_PARTIALLY_PASS_THRESHOLD
+        <= pass_percent
+        < params.MANGLEYAAN_PASS_THRESHOLD
+    ):
+        return params.MANGLEYAAN_AGGREGATED_RESULT["PARTIAL_PASS"]
+    else:
+        return params.MANGLEYAAN_AGGREGATED_RESULT["FAIL"]
+
+
+def start_mangleyaan_health_updater(run_id: str):
+    global MY_HEALTH_UPDATE_EVENT_HANDLER
+
+    mylog.info("initializing health updater thread...")
+    if run_id:
+        MY_HEALTH_UPDATE_EVENT_HANDLER.set()
+        th_job = threading.Thread(
+            target=_update_health, args=(run_id, MY_HEALTH_UPDATE_EVENT_HANDLER)
+        )
+        th_job.start()
+    else:
+        mylog.error(
+            "failed to initialize health updater theread due to invalid run_id. Ignore if execution is running locally"
+        )
+
+
+def stop_mangleyaan_health_updater():
+    global MY_HEALTH_UPDATE_EVENT_HANDLER
+
+    mylog.info("terminating health updater thread...")
+    MY_HEALTH_UPDATE_EVENT_HANDLER.clear()
+
+
+def _update_health(run_id: str, event: threading.Event):
+    while event.is_set():
+        try:
+            time.sleep(params.MANGLEYAAN_TASK_UPDATE_INTERVAL)
+            mylog.debug("updating end_time for run_id={}".format(run_id))
+            mg_agent.update_task(
+                run_id, end_time=datetime.datetime.now().strftime(params.MG_DATETIME_FORMAT)
+            )
+        except Exception as fault:
+            mylog.error("Exception occurred while updating maxim-gun task")
+            mylog.exception(fault)
 
 
 if __name__ == "__main__":

@@ -37,7 +37,9 @@ class TestCommerceDependencyOnDifferentServices:
 
         # add a value in cache dict to use it in other test cases
         mycache["test_info"][CURRENT_FILENAME] = {}
-        mycache["test_info"][CURRENT_FILENAME]["billing_account_id"] = com_resp.json.get("results")[0].get("billingAccountId")
+        mycache["test_info"][CURRENT_FILENAME]["billing_account_id"] = com_resp.json.get(
+            "results"
+        )[0].get("billingAccountId")
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (

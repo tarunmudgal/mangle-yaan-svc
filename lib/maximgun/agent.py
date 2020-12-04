@@ -15,6 +15,7 @@ def update_task(
     status: str = None,
     report_url: str = None,
     cancel: int = None,
+    result: str = None,
 ) -> bool:
     """
     updates maxim-gun task status (maxim_gun.run_test table)
@@ -23,6 +24,7 @@ def update_task(
         end_time: task end time
         status: status to be updated. Valid entries are 'Started', 'Running', 'Completed', 'Failed', 'Cancelled'
         report_url: test report url which is copied on s3
+        result: aggregated result of the task. Valid entries are PASS, FAIL, PARTIALLY-PASS
         cancel: flag to set if task is failed. Valid entries are 0, 1
     Returns:
         status
@@ -37,6 +39,7 @@ def update_task(
             update_task_info["end_time"] = end_time if end_time else task_info["end_time"]
             update_task_info["status"] = status if status else task_info["status"]
             update_task_info["report_url"] = report_url if report_url else task_info["report_url"]
+            update_task_info["result"] = result if result else task_info["baseline_result"]
             update_task_info["cancel"] = cancel if cancel else 0  # task_info["cancel"]
         else:
             mylog.error(

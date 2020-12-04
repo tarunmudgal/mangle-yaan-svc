@@ -455,7 +455,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
             ("CSP_COMMON", "SERVICE_ERROR"),
             (
                 "ACCOUNT_MANAGEMENT_IDP_DRIVER",
-                "IDP_USER_GET_USER_ACCT_IDENTIFIER_ERROR",
+                "IDP_USER_GET_USER_BY_USER_ID_ERROR",
                 # "IDP_USER_GET_USER_BY_USER_ID_ERROR",
             ),
         ]
