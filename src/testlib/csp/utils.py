@@ -12,7 +12,7 @@ CSP_MODULE_CODES = None
 CSP_MODULE_SERVICE_ERROR_CODES_MAP = None
 
 
-def get_csp_module_error_code_info(module_code: int) -> dict:
+def get_csp_module_error_code_info(module_code: str) -> dict:
     global CSP_MODULE_CODES
     if CSP_MODULE_CODES is None:
         with open(params.CSP_MODULE_CODE_FILE) as json_file:
@@ -20,7 +20,7 @@ def get_csp_module_error_code_info(module_code: int) -> dict:
     return CSP_MODULE_CODES.get(module_code, None)
 
 
-def get_csp_service_error_code_info(module_code: int, service_code: int) -> dict:
+def get_csp_service_error_code_info(module_code: int, service_code: str) -> dict:
     global CSP_MODULE_SERVICE_ERROR_CODES_MAP
     if CSP_MODULE_SERVICE_ERROR_CODES_MAP is None:
         CSP_MODULE_SERVICE_ERROR_CODES_MAP = {}
