@@ -6,7 +6,7 @@
     "testLogPath": "logs/test_runner.log"
   },
   "mangle": {
-    "host": "10.182.50.117",
+    "host": "10.126.4.81",
     "username": "admin@mangle.local",
     "password": "admin"
   },
@@ -22,10 +22,10 @@
   "csp": {
     "host": "console-preview.cloud.vmware.com",
     "defaultOrg": {
-      "id": "f09537d7-633a-4204-891e-2fe6e58265a7"
+      "id": "60a3904d-3354-4422-9e8a-347585537826"
     },
     "defaultService": {
-      "id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
+      "id": "11ff011a-0811-4523-9afb-2bf9808223d3"
     },
     "defaultUser": {
       "id": "preview_vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",

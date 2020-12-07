@@ -9,13 +9,13 @@ import typing
 
 import requests
 import urllib3
-
-requests.packages.urllib3.disable_warnings()
-
 from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout, SSLError, Timeout
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 from requests.packages.urllib3.util.retry import Retry
+
+requests.packages.urllib3.disable_warnings()
+
 
 mylog = logging.getLogger("root")
 mylog.setLevel(logging.DEBUG)
@@ -34,7 +34,16 @@ HTTP_RETRIABLE_ERRORS = (
 DEFAULT_RETRY_OBJ = Retry(
     total=3,
     status_forcelist=[429, 500, 502, 503, 504],
-    method_whitelist=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PUT", "HEAD", "TRACE",],
+    method_whitelist=[
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "OPTIONS",
+        "PUT",
+        "HEAD",
+        "TRACE",
+    ],
     backoff_factor=1,
 )
 
@@ -60,7 +69,9 @@ def rest_request(
         try:
             attempt += 1
             mylog.debug(
-                "Sending a request with method=%s, url=%s", method, url,
+                "Sending a request with method=%s, url=%s",
+                method,
+                url,
             )
             response = requests.request(method, url, **kwargs)
             mylog.debug(
@@ -91,11 +102,17 @@ def rest_request(
 
 class RESTClient(abc.ABC):
     """
-        This class prepares REST calls, send requests and handle errors
+    This class prepares REST calls, send requests and handle errors
     """
 
     def __init__(
-        self, scheme="https://", host="", port=443, api_prefix="", ssl_verify=False, timeout=None,
+        self,
+        scheme="https://",
+        host="",
+        port=443,
+        api_prefix="",
+        ssl_verify=False,
+        timeout=None,
     ):
         self._base_url = scheme + host + ":" + str(port) + api_prefix
         self._ssl_verify = ssl_verify
@@ -281,7 +298,12 @@ class CSPClient(RESTClient):
         mylog.debug("fetching access_token for CSP API calls")
         # response = requests.request("POST", access_token_url, headers=headers, data=payload)
         response = rest_request(
-            "POST", access_token_url, retry_count=1, retry_sleep=5, headers=headers, data=payload,
+            "POST",
+            access_token_url,
+            retry_count=1,
+            retry_sleep=5,
+            headers=headers,
+            data=payload,
         )
 
         if response.status_code == requests.codes.ok:
@@ -289,7 +311,11 @@ class CSPClient(RESTClient):
         else:
             raise Exception(
                 "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})".format(
-                    access_token_url, headers, payload, response.status_code, response.text,
+                    access_token_url,
+                    headers,
+                    payload,
+                    response.status_code,
+                    response.text,
                 )
             )
 
@@ -322,7 +348,7 @@ if __name__ == "__main__":
         timeout=120,
     )
 
-    api_resource = "/am/api/orgs/f09537d7-633a-4204-891e-2fe6e58265a7/oauth-apps"
+    api_resource = "/am/api/orgs/60a3904d-3354-4422-9e8a-347585537826/oauth-apps"
     payload = {
         "refreshTokenTTL": None,
         "accessTokenTTL": 1800,
@@ -336,7 +362,7 @@ if __name__ == "__main__":
             "servicesScopes": [
                 {
                     "allRoles": False,
-                    "serviceDefinitionId": "514b6d89-b22b-482a-96fb-cfcab3137ccf",
+                    "serviceDefinitionId": "11ff011a-0811-4523-9afb-2bf9808223d3",
                     "roles": [
                         {"resource": None, "name": "srv_name:user"},
                         {"resource": None, "name": "srv_name:admin", "selected": 1},
@@ -355,7 +381,7 @@ if __name__ == "__main__":
         "redirectUris": [],
     }
 
-    call_count_start = 11
+    call_count_start = 1
     call_count_end = 100
     for cnt in range(call_count_start, call_count_end + 1):
         mylog.info("call has been made for cnt={}".format(cnt))

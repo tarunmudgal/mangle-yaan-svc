@@ -67,7 +67,11 @@ def purge_old_reports_from_s3(
     s3_key_prefix="mangle-yaan/results/mangle-yaan-test-report",
     days_before=60,
 ):
-    s3_client = boto3.client("s3", aws_access_key_id=aws_key, aws_secret_access_key=aws_secret,)
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=aws_key,
+        aws_secret_access_key=aws_secret,
+    )
     report_objects = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=s3_key_prefix)
     # pprint(report_objects["Contents"])
 
@@ -88,6 +92,11 @@ def purge_old_reports_from_s3(
 
 def get_mangleyaan_passing_test_percent(result_summary: dict) -> float:
     total_tests = result_summary["passed"] + result_summary["failed"] + result_summary["skipped"]
+
+    # handle ZeroDivisionError
+    if total_tests == 0:
+        return 0
+
     return (result_summary["passed"] / total_tests) * 100
 
 
@@ -109,7 +118,7 @@ def start_mangleyaan_health_updater(run_id: str):
 
     mylog.info("initializing health updater thread...")
     if run_id:
-        MY_HEALTH_UPDATE_EVENT_HANDLER.set()
+        # MY_HEALTH_UPDATE_EVENT_HANDLER.set()
         th_job = threading.Thread(
             target=_update_health, args=(run_id, MY_HEALTH_UPDATE_EVENT_HANDLER)
         )
@@ -124,17 +133,17 @@ def stop_mangleyaan_health_updater():
     global MY_HEALTH_UPDATE_EVENT_HANDLER
 
     mylog.info("terminating health updater thread...")
-    MY_HEALTH_UPDATE_EVENT_HANDLER.clear()
+    MY_HEALTH_UPDATE_EVENT_HANDLER.set()
 
 
 def _update_health(run_id: str, event: threading.Event):
-    while event.is_set():
+    while not event.is_set():
         try:
-            time.sleep(params.MANGLEYAAN_TASK_UPDATE_INTERVAL)
             mylog.debug("updating end_time for run_id={}".format(run_id))
             mg_agent.update_task(
                 run_id, end_time=datetime.datetime.now().strftime(params.MG_DATETIME_FORMAT)
             )
+            event.wait(params.MANGLEYAAN_TASK_UPDATE_INTERVAL)
         except Exception as fault:
             mylog.error("Exception occurred while updating maxim-gun task")
             mylog.exception(fault)

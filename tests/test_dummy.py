@@ -31,7 +31,7 @@ class TestDummy:
         print("test_example1 called")
         import time
 
-        time.sleep(300)
+        time.sleep(60)
 
     def test_example2(self):
         print("test_example2 called")

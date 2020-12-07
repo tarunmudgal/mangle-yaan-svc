@@ -12,7 +12,9 @@ LIST_DEPENDENT_SERVICES = ["csp-onboarding"]
 
 
 @pytest.mark.parametrize(
-    "inject_k8s_infra_fault_service_unavailable_for_class", LIST_DEPENDENT_SERVICES, indirect=True,
+    "inject_k8s_infra_fault_service_unavailable_for_class",
+    LIST_DEPENDENT_SERVICES,
+    indirect=True,
 )
 # @pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
 class TestSLCDependencyOnDifferentServices:
@@ -74,7 +76,7 @@ class TestSLCDependencyOnDifferentServices:
         expected_response = 200
 
         # make csp api call
-        api_resource = resources.SLC.get("GET_SVC_FAMILIES")
+        api_resource = resources.SLC.get("SVC_FAMILIES")
         am_resp = cclient.make_call("GET", api_resource)
 
         # verify csp api actual status_code with expected status code when fault is present

@@ -65,7 +65,9 @@ SLC = OrderedDict()
 SLC["SERVICES"] = "/slc/api/v2/orgs/{orgId}/services"
 SLC["GET_SVC_DEF"] = "/slc/api/definitions/external/{id}"
 SLC["GET_SVC_DEF_ROLES"] = "/slc/api/definitions/external/{id}/service-roles"
-SLC["GET_SVC_FAMILIES"] = "/slc/api/family"
+SLC["SVC_FAMILIES"] = "/slc/api/family"
+SLC["SVC_FAMILY"] = "/slc/api/family/{serviceFamilyId}"
+SLC["SVC_FAMILY_REGISTER"] = "/slc/api/family/{serviceFamilyId}/register-service"
 
 # OS resources
 OS = OrderedDict()
