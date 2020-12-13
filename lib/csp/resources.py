@@ -68,6 +68,10 @@ SLC["GET_SVC_DEF_ROLES"] = "/slc/api/definitions/external/{id}/service-roles"
 SLC["SVC_FAMILIES"] = "/slc/api/family"
 SLC["SVC_FAMILY"] = "/slc/api/family/{serviceFamilyId}"
 SLC["SVC_FAMILY_REGISTER"] = "/slc/api/family/{serviceFamilyId}/register-service"
+SLC["OPERATIONAL_DATA"] = "/slc/api/definitions/external/{serviceId}/operational-data"
+SLC["ALL_OPERATIONAL_DATA"] = "/slc/api/definitions/external/operational-data"
+SLC["SERVICE_INSTANCES"] = "/slc/api/definitions/external/{serviceId}/service-instances"
+SLC["SERVICE_INSTANCE"] = "/slc/api/definitions/external/{serviceId}/service-instances/{instanceId}"
 
 # OS resources
 OS = OrderedDict()
@@ -76,3 +80,4 @@ OS[
     "ONBOARDING_CONTEXTS_BY_ID"
 ] = "/os/api/service-definitions/{serviceDefinitionId}/onboarding-contexts/{onboardingContextId}"
 OS["FAQ_TOPICS"] = "/os/api/service-definitions/{serviceDefinitionId}/faq-topics"
+OS["FAQ_TOPIC"] = "/os/api/service-definitions/{serviceDefinitionId}/faq-topics/{topicId}"

@@ -4,10 +4,13 @@
 
 __author__ = "tarun mudgal"
 
+import os
+
 import pytest
 
 from lib.csp import resources
 
+CURRENT_FILENAME = os.path.basename(__file__)
 LIST_DEPENDENT_SERVICES = ["csp-account-management-mvc", "csp-onboarding"]
 
 
@@ -82,6 +85,168 @@ class TestSLCDependencyOnDifferentServices:
         # make csp api call
         api_resource = resources.SLC.get("SVC_FAMILIES")
         slc_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            slc_resp.status_code in expected_response
+        ), "SLC service returned status_code={} whereas expected status_code={}".format(
+            slc_resp.status_code, expected_response
+        )
+
+    def test_api_create_operational_data(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
+        # expected csp api response (status_code)
+        expected_response = [200, 409]
+
+        # make csp api call
+        api_resource = resources.SLC.get("OPERATIONAL_DATA").format(
+            serviceId=myconfig.get("csp").get("defaultService").get("id")
+        )
+
+        request_body = {
+            "serviceEscalationProcedure": "Use Pagerduty and Slack channel #vmc-assist",
+            "serviceCostCenter": "US1079608",
+            "serviceEngineeringOwnerEmail": "engmgr@vmware.com",
+            "pagerDutyEscalationPolicy": "CSP-ENG-PRODUCTION",
+            "status": "PRODUCTION_AVAILABLE",
+            "serviceAdditionalKeyContactsEmail": "dtonnessen@vmware.com,john@vmware.com",
+        }
+
+        slc_resp = cclient.make_call(
+            "POST", api_resource, json=request_body, disable_implicit_retry=True
+        )
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            slc_resp.status_code in expected_response
+        ), "SLC service returned status_code={} whereas expected status_code={}".format(
+            slc_resp.status_code, expected_response
+        )
+
+    def test_api_patch_operational_data(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
+        # expected csp api response (status_code)
+        expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.SLC.get("OPERATIONAL_DATA").format(
+            serviceId=myconfig.get("csp").get("defaultService").get("id")
+        )
+
+        request_body = {
+            "serviceEscalationProcedure": "Updated: Use Pagerduty and Slack channel #vmc-assist"
+        }
+
+        slc_resp = cclient.make_call(
+            "PATCH", api_resource, json=request_body, disable_implicit_retry=True
+        )
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            slc_resp.status_code in expected_response
+        ), "SLC service returned status_code={} whereas expected status_code={}".format(
+            slc_resp.status_code, expected_response
+        )
+
+    def test_api_get_operational_data(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.SLC.get("OPERATIONAL_DATA").format(
+            serviceId=myconfig.get("csp").get("defaultService").get("id")
+        )
+
+        slc_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            slc_resp.status_code in expected_response
+        ), "SLC service returned status_code={} whereas expected status_code={}".format(
+            slc_resp.status_code, expected_response
+        )
+
+    def test_api_get_all_operational_data(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
+        # expected csp api response (status_code)
+        expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.SLC.get("ALL_OPERATIONAL_DATA")
+
+        slc_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            slc_resp.status_code in expected_response
+        ), "SLC service returned status_code={} whereas expected status_code={}".format(
+            slc_resp.status_code, expected_response
+        )
+
+    @pytest.mark.dependency(name="test_api_create_service_instance")
+    def test_api_create_service_instance(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
+        # expected csp api response (status_code)
+        expected_response = [201]
+
+        # make csp api call
+        api_resource = resources.SLC.get("SERVICE_INSTANCES").format(
+            serviceId=myconfig.get("csp").get("defaultService").get("id")
+        )
+        request_body = {"url": "https://dummyurl.com", "displayName": "res test svc instance"}
+
+        slc_resp = cclient.make_call(
+            "POST", api_resource, json=request_body, disable_implicit_retry=True
+        )
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            slc_resp.status_code in expected_response
+        ), "SLC service returned status_code={} whereas expected status_code={}".format(
+            slc_resp.status_code, expected_response
+        )
+
+        if slc_resp.json is not None:
+            # add a value in cache dict to use it in other test cases
+            mycache["test_info"][CURRENT_FILENAME] = {}
+            mycache["test_info"][CURRENT_FILENAME]["service_instance_id"] = slc_resp.json.get("id")
+
+    def test_api_get_service_instances(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.SLC.get("SERVICE_INSTANCES").format(
+            serviceId=myconfig.get("csp").get("defaultService").get("id")
+        )
+
+        slc_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            slc_resp.status_code in expected_response
+        ), "SLC service returned status_code={} whereas expected status_code={}".format(
+            slc_resp.status_code, expected_response
+        )
+
+    @pytest.mark.dependency(depends=["test_api_create_service_instance"])
+    def test_api_delete_service_instance(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
+        # expected csp api response (status_code)
+        expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.SLC.get("SERVICE_INSTANCE").format(
+            serviceId=myconfig.get("csp").get("defaultService").get("id"),
+            instanceId=mycache["test_info"][CURRENT_FILENAME]["service_instance_id"],
+        )
+
+        slc_resp = cclient.make_call("DELETE", api_resource, disable_implicit_retry=True)
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (

@@ -150,3 +150,127 @@ class TestCommerceDependencyOnDifferentServices:
         ), "Commerce service returned status_code={} whereas expected status_code should be from {}".format(
             com_resp.status_code, expected_response
         )
+
+    @pytest.mark.dependency()
+    def test_api_get_estimated_charges(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = [200]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [500]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
+            expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.COMMERCE.get("ESTIMATED_CHARGES").format(
+            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+        )
+
+        com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            com_resp.status_code in expected_response
+        ), "Commerce service returned status_code={} whereas expected status_code should be from {}".format(
+            com_resp.status_code, expected_response
+        )
+
+    @pytest.mark.dependency()
+    def test_api_get_offers(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = [200]
+        # if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+        #     expected_response = [500, 504]
+        # elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
+        #     expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.COMMERCE.get("OFFERS").format(
+            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+        )
+        request_body = {"billingEngine": "SAP"}
+
+        com_resp = cclient.make_call(
+            "POST", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
+        )
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            com_resp.status_code in expected_response
+        ), "Commerce service returned status_code={} whereas expected status_code should be from {}".format(
+            com_resp.status_code, expected_response
+        )
+
+    @pytest.mark.dependency()
+    def test_api_list_subscriptions(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = [200]
+        # if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+        #     expected_response = [500, 504]
+        # elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
+        #     expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.COMMERCE.get("LIST_SUBSCRIPTIONS")
+        params = {"orgId": myconfig.get("csp").get("defaultOrg").get("id")}
+
+        com_resp = cclient.make_call(
+            "GET", api_resource, params=params, retry_count=0, disable_implicit_retry=True
+        )
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            com_resp.status_code in expected_response
+        ), "Commerce service returned status_code={} whereas expected status_code should be from {}".format(
+            com_resp.status_code, expected_response
+        )
+
+    @pytest.mark.dependency()
+    def test_api_get_inovice(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = [200]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [500, 504]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
+            expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.COMMERCE.get("INOVICES").format(
+            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+        )
+
+        com_resp = cclient.make_call(
+            "GET", api_resource, retry_count=0, disable_implicit_retry=True
+        )
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            com_resp.status_code in expected_response
+        ), "Commerce service returned status_code={} whereas expected status_code should be from {}".format(
+            com_resp.status_code, expected_response
+        )
+
+    @pytest.mark.dependency()
+    def test_api_get_statement(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = [200]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [500, 504]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
+            expected_response = [200]
+
+        # make csp api call
+        api_resource = resources.COMMERCE.get("SATATEMENT").format(
+            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+        )
+        params = {"count": "15"}
+
+        com_resp = cclient.make_call(
+            "GET", api_resource, params=params, retry_count=0, disable_implicit_retry=True
+        )
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            com_resp.status_code in expected_response
+        ), "Commerce service returned status_code={} whereas expected status_code should be from {}".format(
+            com_resp.status_code, expected_response
+        )

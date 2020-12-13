@@ -137,7 +137,9 @@ class TestOSDependencyOnDifferentServices:
             os_resp.status_code, expected_response
         )
 
-    @pytest.mark.dependency(depends=["test_api_create_onboarding_context"])
+    @pytest.mark.dependency(
+        name="test_api_create_faq_topics", depends=["test_api_create_onboarding_context"]
+    )
     def test_api_create_faq_topics(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = 201
@@ -171,6 +173,10 @@ class TestOSDependencyOnDifferentServices:
             os_resp.status_code, expected_response
         )
 
+        if os_resp.json is not None:
+            # add a value in cache dict to use it in other test cases
+            mycache["test_info"][CURRENT_FILENAME]["faq_topic_id"] = os_resp.json.get("id")
+
     def test_api_get_faq_topics(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = requests.codes.ok
@@ -186,6 +192,84 @@ class TestOSDependencyOnDifferentServices:
         assert (
             os_resp.json is not None
         ), "response could not be converted to json. resp.text={}".format(os_resp.text)
+        assert (
+            os_resp.status_code == expected_response
+        ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
+            os_resp.status_code, expected_response
+        )
+
+    @pytest.mark.dependency(depends=["test_api_create_faq_topics"])
+    def test_api_get_faq_topic(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = requests.codes.ok
+
+        # make csp api call
+        api_resource = resources.OS.get("FAQ_TOPIC").format(
+            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            topicId=mycache["test_info"][CURRENT_FILENAME]["faq_topic_id"],
+        )
+
+        os_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            os_resp.json is not None
+        ), "response could not be converted to json. resp.text={}".format(os_resp.text)
+        assert (
+            os_resp.status_code == expected_response
+        ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
+            os_resp.status_code, expected_response
+        )
+
+    @pytest.mark.dependency(depends=["test_api_create_faq_topics"])
+    def test_api_patch_faq_topic(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = requests.codes.ok
+
+        # make csp api call
+        api_resource = resources.OS.get("FAQ_TOPIC").format(
+            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            topicId=mycache["test_info"][CURRENT_FILENAME]["faq_topic_id"],
+        )
+        request_body = {
+            "title": "new dummy faq topic",
+            "onboardingContextIds": [
+                "{}".format(mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"])
+            ],
+            "text": "new dummy faq topic",
+        }
+
+        os_resp = cclient.make_call(
+            "PATCH", api_resource, json=request_body, disable_implicit_retry=True
+        )
+
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            os_resp.json is not None
+        ), "response could not be converted to json. resp.text={}".format(os_resp.text)
+        assert (
+            os_resp.status_code == expected_response
+        ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
+            os_resp.status_code, expected_response
+        )
+
+    @pytest.mark.dependency(depends=["test_api_create_faq_topics"])
+    def test_api_delete_faq_topic(self, inject_k8s_infra_fault_service_unavailable_for_class):
+        # expected csp api response (status_code)
+        expected_response = requests.codes.ok
+
+        # make csp api call
+        api_resource = resources.OS.get("FAQ_TOPIC").format(
+            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            topicId=mycache["test_info"][CURRENT_FILENAME]["faq_topic_id"],
+        )
+
+        os_resp = cclient.make_call("DELETE", api_resource, disable_implicit_retry=True)
+
+        # verify csp api actual status_code with expected status code when fault is present
+        # assert (
+        #         os_resp.json is not None
+        # ), "response could not be converted to json. resp.text={}".format(os_resp.text)
         assert (
             os_resp.status_code == expected_response
         ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
