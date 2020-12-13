@@ -7,7 +7,8 @@ __author__ = "tarun mudgal"
 import os
 from collections import OrderedDict
 
-from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout, SSLError, Timeout
+from requests.exceptions import (ConnectionError, ConnectTimeout,
+                                 ReadTimeout, SSLError, Timeout)
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 
 # logger

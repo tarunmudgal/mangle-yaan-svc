@@ -67,11 +67,7 @@ def purge_old_reports_from_s3(
     s3_key_prefix="mangle-yaan/results/mangle-yaan-test-report",
     days_before=60,
 ):
-    s3_client = boto3.client(
-        "s3",
-        aws_access_key_id=aws_key,
-        aws_secret_access_key=aws_secret,
-    )
+    s3_client = boto3.client("s3", aws_access_key_id=aws_key, aws_secret_access_key=aws_secret,)
     report_objects = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=s3_key_prefix)
     # pprint(report_objects["Contents"])
 

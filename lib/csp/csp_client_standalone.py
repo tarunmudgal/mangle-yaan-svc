@@ -10,7 +10,8 @@ import typing
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
-from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout, SSLError, Timeout
+from requests.exceptions import (ConnectionError, ConnectTimeout,
+                                 ReadTimeout, SSLError, Timeout)
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 from requests.packages.urllib3.util.retry import Retry
 
@@ -34,16 +35,7 @@ HTTP_RETRIABLE_ERRORS = (
 DEFAULT_RETRY_OBJ = Retry(
     total=3,
     status_forcelist=[429, 500, 502, 503, 504],
-    method_whitelist=[
-        "GET",
-        "POST",
-        "PUT",
-        "DELETE",
-        "OPTIONS",
-        "PUT",
-        "HEAD",
-        "TRACE",
-    ],
+    method_whitelist=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PUT", "HEAD", "TRACE",],
     backoff_factor=1,
 )
 
@@ -69,9 +61,7 @@ def rest_request(
         try:
             attempt += 1
             mylog.debug(
-                "Sending a request with method=%s, url=%s",
-                method,
-                url,
+                "Sending a request with method=%s, url=%s", method, url,
             )
             response = requests.request(method, url, **kwargs)
             mylog.debug(
@@ -106,13 +96,7 @@ class RESTClient(abc.ABC):
     """
 
     def __init__(
-        self,
-        scheme="https://",
-        host="",
-        port=443,
-        api_prefix="",
-        ssl_verify=False,
-        timeout=None,
+        self, scheme="https://", host="", port=443, api_prefix="", ssl_verify=False, timeout=None,
     ):
         self._base_url = scheme + host + ":" + str(port) + api_prefix
         self._ssl_verify = ssl_verify
@@ -298,12 +282,7 @@ class CSPClient(RESTClient):
         mylog.debug("fetching access_token for CSP API calls")
         # response = requests.request("POST", access_token_url, headers=headers, data=payload)
         response = rest_request(
-            "POST",
-            access_token_url,
-            retry_count=1,
-            retry_sleep=5,
-            headers=headers,
-            data=payload,
+            "POST", access_token_url, retry_count=1, retry_sleep=5, headers=headers, data=payload,
         )
 
         if response.status_code == requests.codes.ok:
@@ -311,11 +290,7 @@ class CSPClient(RESTClient):
         else:
             raise Exception(
                 "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})".format(
-                    access_token_url,
-                    headers,
-                    payload,
-                    response.status_code,
-                    response.text,
+                    access_token_url, headers, payload, response.status_code, response.text,
                 )
             )
 

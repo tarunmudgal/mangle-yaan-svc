@@ -71,7 +71,9 @@ SLC["SVC_FAMILY_REGISTER"] = "/slc/api/family/{serviceFamilyId}/register-service
 SLC["OPERATIONAL_DATA"] = "/slc/api/definitions/external/{serviceId}/operational-data"
 SLC["ALL_OPERATIONAL_DATA"] = "/slc/api/definitions/external/operational-data"
 SLC["SERVICE_INSTANCES"] = "/slc/api/definitions/external/{serviceId}/service-instances"
-SLC["SERVICE_INSTANCE"] = "/slc/api/definitions/external/{serviceId}/service-instances/{instanceId}"
+SLC[
+    "SERVICE_INSTANCE"
+] = "/slc/api/definitions/external/{serviceId}/service-instances/{instanceId}"
 
 # OS resources
 OS = OrderedDict()
