@@ -293,6 +293,11 @@ def inject_k8s_infra_fault_block_egress_traffic_for_class(request):
 
 
 @pytest.fixture(scope="class")
+def update_csp_access_token():
+    cclient.update_access_token()
+
+
+@pytest.fixture(scope="class")
 def init_chrome_driver(request):
     # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub', desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
     selenium_hub_fqdn = (

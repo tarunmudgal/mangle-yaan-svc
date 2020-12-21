@@ -21,6 +21,7 @@ CURRENT_FILENAME = os.path.basename(__file__)
 LIST_DEPENDENT_SERVICES = ["csp-account-management-mvc", "csp-service-lifecycle", "csp-commerce"]
 
 
+@pytest.mark.usefixtures("update_csp_access_token")
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_service_unavailable_for_class", LIST_DEPENDENT_SERVICES, indirect=True,
 )

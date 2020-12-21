@@ -138,6 +138,15 @@ class CSPClient(rest_client.RESTClient):
                 )
             )
 
+    def update_access_token(self) -> None:
+        """
+        updates access token for CSPClient
+        Returns:
+            None
+        """
+        mylog.debug("updating access_token for CSP API calls")
+        self._access_token = self.get_access_token()
+
     # @utils.log_args
     def make_call(self, verb: str, api_resource: str, **kwargs: str) -> CSPResponse:
         """
