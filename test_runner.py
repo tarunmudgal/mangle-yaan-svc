@@ -280,36 +280,39 @@ def setup_mangle_infra() -> None:
         )
 
 
-def cleanup_old_reports(log_dir: str, days: int = 15) -> None:
+def cleanup_old_reports(log_dir: str, max_count: int = 5) -> None:
     """
     deletes mangle-yaan-test-reports present under logs/ dir which are older than specified number of days
     Args:
         log_dir: log directory path
-        days: number of days
+        max_count: maximum number of latest reports to keep
 
     Returns:
         None
     """
-    mylog.info("deleting mangle-yaan-test-reports older than {} days".format(days))
-    time_in_secs = time.time() - (days * 24 * 60 * 60)
-    for root, dirs, files in os.walk(log_dir, topdown=False):
-        for file_ in files:
-            fpath = os.path.join(root, file_)
-            my_report_path = myconfig.get("mangleYaan").get("testReportPath")
-            my_report_name_expr = my_report_path.replace("logs/", "").replace(
-                "-{timeStamp}.html", ""
-            )
-            if (
-                os.path.exists(fpath)
-                and os.path.isfile(fpath)
-                and file_.startswith(my_report_name_expr)
-            ):
-                stat = os.stat(fpath)
-                if stat.st_mtime <= time_in_secs:
-                    try:
-                        os.remove(fpath)
-                    except OSError as fault:
-                        mylog.error("could not delete file {}. Exception={}".format(fpath, fault))
+    mylog.info(
+        "deleting older mangle-yaan-test-reports after keeping {} maximum reports".format(
+            max_count
+        )
+    )
+
+    my_report_path = myconfig.get("mangleYaan").get("testReportPath")
+    my_report_name_expr = my_report_path.replace("logs/", "").replace("-{timeStamp}.html", "")
+
+    # get list of files (file paths) starting with "mangle-yaan-test-report" and sort it by mtime in desc order
+    fpaths = os.listdir(log_dir)
+    fpaths = [
+        os.path.join(log_dir, file_) for file_ in fpaths if file_.startswith(my_report_name_expr)
+    ]
+    fpaths = sorted(fpaths, key=os.path.getmtime, reverse=True)
+
+    # keep max_count reports (latest) and delete remaining reports if any
+    for fpath in fpaths[max_count:]:
+        if os.path.exists(fpath) and os.path.isfile(fpath):
+            try:
+                os.remove(fpath)
+            except OSError as fault:
+                mylog.error("could not delete file {}. Exception={}".format(fpath, fault))
 
 
 def prepare_setup(
@@ -340,7 +343,7 @@ def prepare_setup(
     mg_agent.update_task(run_id, status=lib_params.MG_TASK_STATUS["STARTED"])
 
     # trigger a thread to update maxim-gun task periodically
-    utils.start_mangleyaan_health_updater(args.run_id)
+    utils.start_mangleyaan_health_updater(run_id)
 
     # read mangle-yaan config and add it in builtins
     myconfig = get_mangle_yaan_config(myconf_file=myconf_file, workload_name=workload_name)
@@ -365,7 +368,7 @@ def prepare_setup(
     setup_mangle_infra()
 
     # cleanup older mangle-yaan-test-reports
-    cleanup_old_reports(LOG_DIR, days=15)
+    cleanup_old_reports(LOG_DIR, max_count=5)
 
     # test_runner cache to maintain states
     mycache = {}
@@ -523,7 +526,7 @@ def print_testsuite_info() -> None:
     print("Available testsuites are:\n{}\n".format(testsuite_names))
 
 
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(description="""resiliency test suite execution driver""")
     parser.add_argument(
         "--project_name", action="store", type=str, help="project name created on maxim-gun UI",
@@ -647,5 +650,10 @@ if __name__ == "__main__":
             result=mycache["run_info"]["result_summary"]["aggregatd_result"],
         )
 
-    # stops thread to update maxim-gun task periodically
-    utils.stop_mangleyaan_health_updater()
+
+if __name__ == "__main__":
+    try:
+        main()
+    finally:
+        # stops thread to update maxim-gun task periodically
+        utils.stop_mangleyaan_health_updater()

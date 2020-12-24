@@ -19,8 +19,10 @@ spec:
     spec:
       containers:
         - name: e2e-qe-selenium-node-chrome-dev
-          image: selenium/node-chrome-debug:3.141
-          imagePullPolicy: "Always"
+#          image: selenium/node-chrome-debug:3.141
+          image: harbor-repo.vmware.com/csp_qe/selenium/node-chrome-debug:3.141
+#          imagePullPolicy: "Always"
+          imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5900
           resources:

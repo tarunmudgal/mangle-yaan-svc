@@ -57,7 +57,7 @@ def get_logger(
     file_log_filename="test_runner.log",
     file_log_level="DEBUG",
     file_log_max_bytes=1_000_000,
-    file_log_backup_count=10,
+    file_log_backup_count=5,
 ):
     """ provides console and file loggers """
     log_dir = ROOT_DIR + os.path.sep + "logs"

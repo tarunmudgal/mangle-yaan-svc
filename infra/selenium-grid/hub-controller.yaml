@@ -19,8 +19,10 @@ spec:
     spec:
       containers:
         - name: e2e-qe-selenium-hub-dev
-          image: selenium/hub:3.14
-          imagePullPolicy: "Always"
+#          image: selenium/hub:3.14
+          image: harbor-repo.vmware.com/csp_qe/selenium/hub:3.14
+#          imagePullPolicy: "Always"
+          imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 4444
           resources:

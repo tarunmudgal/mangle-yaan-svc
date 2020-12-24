@@ -1,1 +1,460 @@
-[23-11-2020 11:33:35 PM] [INFO] [test_runner.py] [53]: [<module>] logger initialized
+[25-12-2020 02:03:24 AM] [INFO] [test_runner.py] [53]: [<module>] logger initialized
+[25-12-2020 02:03:24 AM] [DEBUG] [test_runner.py] [571]: [main] test_runner args=Namespace(list_testsuite_names=False, myconfig='', project_name='test_project', pytest_args='', run_id='c0b5cd87-a072-4f7c-afa9-0adb57091a33', testsuite_names='test_csp_login_ui', workload_name='Test-workload')
+[25-12-2020 02:03:25 AM] [INFO] [test_runner.py] [68]: [check_network_availability] Network Availability Check: OK
+[25-12-2020 02:03:25 AM] [DEBUG] [maximgun_client.py] [90]: [__init__] MGClient obj MGClient(base_url=https://maxim-gun-ui.svc-stage.eng.vmware.com:443/api) initialized.
+[25-12-2020 02:03:25 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33, disable_implicit_retry=False
+[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33 succeeded in (1) attempt(s)
+[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/history/status, disable_implicit_retry=False
+[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
+[25-12-2020 02:03:27 AM] [INFO] [agent.py] [55]: [update_task] maxim-gun job run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33 updated successfully
+[25-12-2020 02:03:27 AM] [INFO] [utils.py] [115]: [start_mangleyaan_health_updater] initializing health updater thread...
+[25-12-2020 02:03:27 AM] [DEBUG] [utils.py] [138]: [_update_health] updating end_time for run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33
+[25-12-2020 02:03:27 AM] [DEBUG] [test_runner.py] [170]: [get_mangle_yaan_config] reading config from maxim-gun app. resource=/res/runtest/mangle-yaan/config
+[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33, disable_implicit_retry=False
+[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/runtest/mangle-yaan/config, disable_implicit_retry=False
+[25-12-2020 02:03:28 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/runtest/mangle-yaan/config succeeded in (1) attempt(s)
+[25-12-2020 02:03:28 AM] [DEBUG] [mangle_client.py] [97]: [__init__] MangleClient obj MangleClient(base_url=https://10.126.4.81:443/mangle-services) initialized.
+[25-12-2020 02:03:28 AM] [DEBUG] [csp_client.py] [121]: [get_access_token] fetching access_token for CSP API calls
+[25-12-2020 02:03:28 AM] [DEBUG] [rest_client.py] [161]: [request] Sending a request with method=POST, url=https://console-preview.cloud.vmware.com:443/csp/gateway/am/api/auth/api-tokens/authorize
+[25-12-2020 02:03:28 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33 succeeded in (1) attempt(s)
+[25-12-2020 02:03:28 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/history/status, disable_implicit_retry=False
+[25-12-2020 02:03:29 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
+[25-12-2020 02:03:29 AM] [INFO] [agent.py] [55]: [update_task] maxim-gun job run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33 updated successfully
+[25-12-2020 02:03:30 AM] [DEBUG] [rest_client.py] [165]: [request] Request with method=POST, url=https://console-preview.cloud.vmware.com:443/csp/gateway/am/api/auth/api-tokens/authorize succeeded in (1) attempt(s)
+[25-12-2020 02:03:30 AM] [DEBUG] [csp_client.py] [93]: [__init__] CSPClient obj CSPClient(base_url=https://console-preview.cloud.vmware.com:443/csp/gateway) initialized.
+[25-12-2020 02:03:33 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints/credentials, disable_implicit_retry=False
+[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints/credentials succeeded in (1) attempt(s)
+[25-12-2020 02:03:34 AM] [DEBUG] [utils.py] [48]: [func_wrapper] func list_credentials(<lib.mangle.endpoint.EndpointCredential object at 0x10831bd30>) status: PASS
+[25-12-2020 02:03:34 AM] [INFO] [test_runner.py] [222]: [setup_mangle_infra] credential 'csp-app-preview' for k8s cluster already exist
+[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints, disable_implicit_retry=False
+[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints succeeded in (1) attempt(s)
+[25-12-2020 02:03:34 AM] [INFO] [test_runner.py] [260]: [setup_mangle_infra] Endpoint 'csp-app-preview' for k8s cluster already exist
+[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints/csp-app-preview, disable_implicit_retry=False
+[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints/csp-app-preview succeeded in (1) attempt(s)
+[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/rest/api/v1/endpoints/testEndpoint, disable_implicit_retry=False
+[25-12-2020 02:03:37 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/rest/api/v1/endpoints/testEndpoint succeeded in (1) attempt(s)
+[25-12-2020 02:03:37 AM] [DEBUG] [utils.py] [48]: [func_wrapper] func test_endpoint(<lib.mangle.endpoint.TestConnection object at 0x10831b5e0>, 'csp-app-preview') status: PASS
+[25-12-2020 02:03:37 AM] [INFO] [test_runner.py] [276]: [setup_mangle_infra] Test connection for endpoint csp-app-preview passed
+[25-12-2020 02:03:37 AM] [INFO] [test_runner.py] [293]: [cleanup_old_reports] deleting older mangle-yaan-test-reports after keeping 5 maximum reports
+[25-12-2020 02:03:37 AM] [INFO] [test_runner.py] [384]: [prepare_setup] setup is ready to run resiliency tests now
+[25-12-2020 02:03:37 AM] [INFO] [test_runner.py] [391]: [run_pytest] starting pytest test cases execution at: 25Dec2020_02:03:37.173944
+[25-12-2020 02:03:37 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33, disable_implicit_retry=False
+[25-12-2020 02:03:38 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33 succeeded in (1) attempt(s)
+[25-12-2020 02:03:38 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/history/status, disable_implicit_retry=False
+[25-12-2020 02:03:38 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
+[25-12-2020 02:03:38 AM] [INFO] [agent.py] [55]: [update_task] maxim-gun job run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33 updated successfully
+[25-12-2020 02:03:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
+[25-12-2020 02:03:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
+[25-12-2020 02:03:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
+[25-12-2020 02:03:41 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
+[25-12-2020 02:03:41 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
+[25-12-2020 02:03:41 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
+[25-12-2020 02:03:42 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:03:42 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
+[25-12-2020 02:03:42 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
+[25-12-2020 02:03:43 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
+[25-12-2020 02:03:43 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:03:43 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:03:44 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
+[25-12-2020 02:03:44 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
+[25-12-2020 02:03:45 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
+[25-12-2020 02:03:45 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
+[25-12-2020 02:03:45 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
+[25-12-2020 02:03:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
+[25-12-2020 02:03:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
+[25-12-2020 02:03:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
+[25-12-2020 02:03:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
+[25-12-2020 02:03:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
+[25-12-2020 02:03:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
+[25-12-2020 02:03:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
+[25-12-2020 02:03:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
+[25-12-2020 02:03:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
+[25-12-2020 02:03:49 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
+[25-12-2020 02:03:49 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
+[25-12-2020 02:03:49 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
+[25-12-2020 02:03:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
+[25-12-2020 02:03:50 AM] [INFO] [k8s_client.py] [187]: [scale_deployments] following deployments are going to be scaled to their associated replica count: {'csp-audit-consumer': 0, 'csp-authn': 0, 'csp-billing-mvc': 0, 'csp-billing-sdp': 0, 'csp-branding': 0, 'csp-commerce': 0, 'csp-commerce-aws-adapter': 0, 'csp-commerce-notifications': 0, 'csp-customer-support': 0, 'csp-data-aggregator': 0, 'csp-data-enrichment': 0, 'csp-data-mediator': 0, 'csp-email': 0, 'csp-email-management': 0, 'csp-feature-flags': 0, 'csp-federation': 0, 'csp-fraud-management': 0, 'csp-iam-roles-mgmt': 0, 'csp-iam-vmwid': 0, 'csp-lake-consumer': 0, 'csp-message-driver': 0, 'csp-msp': 0, 'csp-onboarding': 0, 'csp-operator-portal': 0, 'csp-post-office': 0, 'csp-resource-manager': 0, 'csp-service-lifecycle': 0, 'csp-usage-meter': 0, 'ns-event-service': 0, 'ns-inapp': 0}
+[25-12-2020 02:03:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
+[25-12-2020 02:03:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
+[25-12-2020 02:03:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
+[25-12-2020 02:03:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
+[25-12-2020 02:03:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
+[25-12-2020 02:03:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
+[25-12-2020 02:03:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:03:55 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
+[25-12-2020 02:03:55 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
+[25-12-2020 02:03:56 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
+[25-12-2020 02:03:57 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:03:57 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:03:58 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
+[25-12-2020 02:03:59 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
+[25-12-2020 02:03:59 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
+[25-12-2020 02:04:00 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
+[25-12-2020 02:04:01 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
+[25-12-2020 02:04:01 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
+[25-12-2020 02:04:02 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
+[25-12-2020 02:04:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
+[25-12-2020 02:04:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
+[25-12-2020 02:04:04 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
+[25-12-2020 02:04:05 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
+[25-12-2020 02:04:05 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
+[25-12-2020 02:04:06 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
+[25-12-2020 02:04:07 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
+[25-12-2020 02:04:07 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
+[25-12-2020 02:04:08 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
+[25-12-2020 02:04:09 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
+[25-12-2020 02:04:10 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
+[25-12-2020 02:04:10 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
+[25-12-2020 02:04:10 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-audit-consumer updated with 0 available_replicas successfully
+[25-12-2020 02:04:10 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
+[25-12-2020 02:04:11 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-billing-mvc updated with 0 available_replicas successfully
+[25-12-2020 02:04:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
+[25-12-2020 02:04:11 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-branding updated with 0 available_replicas successfully
+[25-12-2020 02:04:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce-aws-adapter updated with 0 available_replicas successfully
+[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
+[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-customer-support updated with 0 available_replicas successfully
+[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-enrichment updated with 0 available_replicas successfully
+[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
+[25-12-2020 02:04:13 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-email updated with 0 available_replicas successfully
+[25-12-2020 02:04:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
+[25-12-2020 02:04:13 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-feature-flags updated with 0 available_replicas successfully
+[25-12-2020 02:04:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
+[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-fraud-management updated with 0 available_replicas successfully
+[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
+[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-iam-vmwid updated with 0 available_replicas successfully
+[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
+[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-message-driver updated with 0 available_replicas successfully
+[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
+[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-onboarding updated with 0 available_replicas successfully
+[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
+[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-post-office updated with 0 available_replicas successfully
+[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
+[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-service-lifecycle updated with 0 available_replicas successfully
+[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
+[25-12-2020 02:04:16 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment ns-event-service updated with 0 available_replicas successfully
+[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
+[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-authn updated with 0 available_replicas successfully
+[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
+[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce updated with 0 available_replicas successfully
+[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
+[25-12-2020 02:04:47 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-aggregator updated with 0 available_replicas successfully
+[25-12-2020 02:04:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
+[25-12-2020 02:04:47 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-email-management updated with 0 available_replicas successfully
+[25-12-2020 02:04:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
+[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-iam-roles-mgmt updated with 0 available_replicas successfully
+[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
+[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-msp updated with 0 available_replicas successfully
+[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
+[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-resource-manager updated with 0 available_replicas successfully
+[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
+[25-12-2020 02:04:49 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment ns-inapp updated with 0 available_replicas successfully
+[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
+[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-billing-sdp updated with 0 available_replicas successfully
+[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-mediator updated with 0 available_replicas successfully
+[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
+[25-12-2020 02:05:20 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-lake-consumer updated with 0 available_replicas successfully
+[25-12-2020 02:05:20 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
+[25-12-2020 02:05:20 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-usage-meter updated with 0 available_replicas successfully
+[25-12-2020 02:05:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
+[25-12-2020 02:05:50 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce-notifications updated with 0 available_replicas successfully
+[25-12-2020 02:05:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
+[25-12-2020 02:05:51 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-operator-portal updated with 0 available_replicas successfully
+[25-12-2020 02:06:21 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
+[25-12-2020 02:06:21 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-federation updated with 0 available_replicas successfully
+[25-12-2020 02:06:55 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/history/status, disable_implicit_retry=False
+[25-12-2020 02:07:02 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/history/status succeeded in (1) attempt(s)
+[25-12-2020 02:07:02 AM] [DEBUG] [base_page.py] [76]: [go_to_url] going to url=https://console-preview.cloud.vmware.com/
+[25-12-2020 02:07:05 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('id', 'csp-welcome-title') upto 60 seconds
+[25-12-2020 02:07:08 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('id', 'csp-welcome-title') found
+[25-12-2020 02:07:11 AM] [INFO] [login_page.py] [27]: [goto_login_page] reached on login page
+[25-12-2020 02:07:11 AM] [DEBUG] [base_page.py] [146]: [send_keys] sending keys to locator=('id', 'discovery_username')
+[25-12-2020 02:07:17 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('id', 'next-btn')
+[25-12-2020 02:07:20 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('id', 'password') upto 10 seconds
+[25-12-2020 02:07:26 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('id', 'password') found
+[25-12-2020 02:07:26 AM] [DEBUG] [base_page.py] [146]: [send_keys] sending keys to locator=('id', 'password')
+[25-12-2020 02:07:32 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('xpath', "//button[contains(text(),'SIGN IN')]")
+[25-12-2020 02:07:39 AM] [DEBUG] [base_page.py] [218]: [wait_for_spinner_to_disappear] waiting for spinner to appear upto 60 seconds
+[25-12-2020 02:07:43 AM] [DEBUG] [base_page.py] [225]: [wait_for_spinner_to_disappear] spinner found on url https://console-preview.cloud.vmware.com/csp/gateway/portal/
+[25-12-2020 02:07:43 AM] [DEBUG] [base_page.py] [240]: [wait_for_spinner_to_disappear] waiting for spinner to disapper on url https://console-preview.cloud.vmware.com/csp/gateway/portal/ upto 600 seconds
+[25-12-2020 02:08:50 AM] [DEBUG] [base_page.py] [249]: [wait_for_spinner_to_disappear] spinner disappeared from url https://console-preview.cloud.vmware.com/csp/gateway/portal/#/consumer
+[25-12-2020 02:08:50 AM] [DEBUG] [base_page.py] [218]: [wait_for_spinner_to_disappear] waiting for spinner to appear upto 60 seconds
+[25-12-2020 02:08:53 AM] [DEBUG] [base_page.py] [225]: [wait_for_spinner_to_disappear] spinner found on url https://console-preview.cloud.vmware.com/csp/gateway/portal/#/consumer
+[25-12-2020 02:08:54 AM] [DEBUG] [base_page.py] [240]: [wait_for_spinner_to_disappear] waiting for spinner to disapper on url https://console-preview.cloud.vmware.com/csp/gateway/portal/#/consumer upto 600 seconds
+[25-12-2020 02:10:00 AM] [DEBUG] [base_page.py] [249]: [wait_for_spinner_to_disappear] spinner disappeared from url https://console-preview.cloud.vmware.com/csp/gateway/portal/#/consumer
+[25-12-2020 02:10:00 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('xpath', "//button[contains(text(),'Ok')]") upto 600 seconds
+[25-12-2020 02:10:02 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('xpath', "//button[contains(text(),'Ok')]") found
+[25-12-2020 02:10:02 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('xpath', "//button[contains(text(),'Ok')]")
+[25-12-2020 02:10:06 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('class name', 'title') upto 600 seconds
+[25-12-2020 02:10:08 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('class name', 'title') found
+[25-12-2020 02:10:08 AM] [DEBUG] [test_csp_login.py] [66]: [test_csp_login_logout_when_minimal_services_are_up] user lhruser3usd@yahoo.com logged-in to CSP portal successfully
+[25-12-2020 02:10:09 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('id', 'btn-csp-user')
+[25-12-2020 02:10:13 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('id', 'csp-sign-out-btn')
+[25-12-2020 02:10:17 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('class name', 'logout-message') upto 180 seconds
+[25-12-2020 02:10:52 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('class name', 'logout-message') found
+[25-12-2020 02:10:52 AM] [DEBUG] [test_csp_login.py] [74]: [test_csp_login_logout_when_minimal_services_are_up] user lhruser3usd@yahoo.com logged-out from CSP portal successfully
+[25-12-2020 02:10:52 AM] [INFO] [k8s_client.py] [187]: [scale_deployments] following deployments are going to be scaled to their associated replica count: {'csp-audit-consumer': 3, 'csp-authn': 3, 'csp-billing-mvc': 3, 'csp-billing-sdp': 3, 'csp-branding': 3, 'csp-commerce': 3, 'csp-commerce-aws-adapter': 3, 'csp-commerce-notifications': 1, 'csp-customer-support': 3, 'csp-data-aggregator': 3, 'csp-data-enrichment': 3, 'csp-data-mediator': 3, 'csp-email': 3, 'csp-email-management': 3, 'csp-feature-flags': 0, 'csp-federation': 3, 'csp-fraud-management': 3, 'csp-iam-roles-mgmt': 3, 'csp-iam-vmwid': 3, 'csp-lake-consumer': 3, 'csp-message-driver': 3, 'csp-msp': 3, 'csp-onboarding': 3, 'csp-operator-portal': 3, 'csp-post-office': 3, 'csp-resource-manager': 3, 'csp-service-lifecycle': 6, 'csp-usage-meter': 3, 'ns-event-service': 3, 'ns-inapp': 3}
+[25-12-2020 02:10:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
+[25-12-2020 02:12:10 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
+[25-12-2020 02:12:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
+[25-12-2020 02:12:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
+[25-12-2020 02:12:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
+[25-12-2020 02:12:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
+[25-12-2020 02:12:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:12:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
+[25-12-2020 02:12:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
+[25-12-2020 02:12:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
+[25-12-2020 02:12:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:12:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:12:17 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
+[25-12-2020 02:12:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
+[25-12-2020 02:12:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
+[25-12-2020 02:12:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
+[25-12-2020 02:12:20 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
+[25-12-2020 02:12:21 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
+[25-12-2020 02:12:21 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
+[25-12-2020 02:12:22 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
+[25-12-2020 02:12:23 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
+[25-12-2020 02:12:24 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
+[25-12-2020 02:12:24 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
+[25-12-2020 02:12:25 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
+[25-12-2020 02:12:25 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
+[25-12-2020 02:12:26 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
+[25-12-2020 02:12:27 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
+[25-12-2020 02:12:28 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
+[25-12-2020 02:12:28 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
+[25-12-2020 02:12:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
+[25-12-2020 02:12:30 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
+[25-12-2020 02:12:31 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-audit-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:31 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
+[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-authn, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
+[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-billing-mvc, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
+[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-billing-sdp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
+[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-branding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
+[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
+[25-12-2020 02:12:34 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-notifications, available_replicas=0, expected_replicas=1. waiting for 30 seconds
+[25-12-2020 02:12:34 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
+[25-12-2020 02:12:34 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-customer-support, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:34 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
+[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-aggregator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
+[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-email, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
+[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-email-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
+[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-feature-flags updated with 0 available_replicas successfully
+[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
+[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-fraud-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
+[25-12-2020 02:12:37 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-roles-mgmt, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:37 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
+[25-12-2020 02:12:37 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-vmwid, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:37 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
+[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-lake-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
+[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-message-driver, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
+[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-msp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
+[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-onboarding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
+[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-operator-portal, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
+[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-post-office, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
+[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-resource-manager, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
+[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-service-lifecycle, available_replicas=0, expected_replicas=6. waiting for 30 seconds
+[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
+[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-usage-meter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
+[25-12-2020 02:12:41 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment ns-event-service updated with 3 available_replicas successfully
+[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
+[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-audit-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
+[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-authn updated with 3 available_replicas successfully
+[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
+[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-billing-sdp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
+[25-12-2020 02:13:12 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-branding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
+[25-12-2020 02:13:12 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
+[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-notifications, available_replicas=0, expected_replicas=1. waiting for 30 seconds
+[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
+[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-customer-support, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
+[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-aggregator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
+[25-12-2020 02:13:15 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-email updated with 3 available_replicas successfully
+[25-12-2020 02:13:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
+[25-12-2020 02:13:15 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-federation, available_replicas=2, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
+[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-fraud-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
+[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-roles-mgmt, available_replicas=2, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
+[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-vmwid, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
+[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-lake-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
+[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-message-driver, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
+[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-msp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
+[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-onboarding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
+[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-operator-portal, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
+[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-post-office updated with 3 available_replicas successfully
+[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
+[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-service-lifecycle, available_replicas=0, expected_replicas=6. waiting for 30 seconds
+[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
+[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-usage-meter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
+[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment ns-inapp updated with 3 available_replicas successfully
+[25-12-2020 02:13:49 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
+[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-audit-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
+[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-billing-mvc updated with 3 available_replicas successfully
+[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
+[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-branding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
+[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
+[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-notifications, available_replicas=0, expected_replicas=1. waiting for 30 seconds
+[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
+[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-customer-support, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
+[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-aggregator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
+[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-email-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
+[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-federation updated with 3 available_replicas successfully
+[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
+[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-iam-roles-mgmt updated with 3 available_replicas successfully
+[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
+[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-lake-consumer updated with 3 available_replicas successfully
+[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
+[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-msp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
+[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-onboarding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
+[25-12-2020 02:13:55 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-operator-portal updated with 3 available_replicas successfully
+[25-12-2020 02:13:55 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
+[25-12-2020 02:13:55 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-service-lifecycle updated with 6 available_replicas successfully
+[25-12-2020 02:14:25 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
+[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-audit-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
+[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-billing-sdp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
+[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-branding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
+[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
+[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-notifications, available_replicas=0, expected_replicas=1. waiting for 30 seconds
+[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
+[25-12-2020 02:14:28 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-customer-support updated with 3 available_replicas successfully
+[25-12-2020 02:14:28 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:14:28 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:28 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
+[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-email-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
+[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-fraud-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
+[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-vmwid, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
+[25-12-2020 02:14:30 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-message-driver, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:30 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
+[25-12-2020 02:14:30 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-msp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:30 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
+[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-onboarding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
+[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-resource-manager, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
+[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-usage-meter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:15:01 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
+[25-12-2020 02:15:01 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-audit-consumer updated with 3 available_replicas successfully
+[25-12-2020 02:15:01 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
+[25-12-2020 02:15:02 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-branding updated with 3 available_replicas successfully
+[25-12-2020 02:15:02 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:15:02 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:15:02 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
+[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce-notifications updated with 1 available_replicas successfully
+[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=1, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
+[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-email-management updated with 3 available_replicas successfully
+[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
+[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-vmwid, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
+[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-message-driver, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
+[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-msp updated with 3 available_replicas successfully
+[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
+[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-resource-manager, available_replicas=0, expected_replicas=3. waiting for 30 seconds
+[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
+[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-usage-meter updated with 3 available_replicas successfully
+[25-12-2020 02:15:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
+[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-billing-sdp updated with 3 available_replicas successfully
+[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
+[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce-aws-adapter updated with 3 available_replicas successfully
+[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
+[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-enrichment updated with 3 available_replicas successfully
+[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
+[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-fraud-management updated with 3 available_replicas successfully
+[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
+[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-message-driver updated with 3 available_replicas successfully
+[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
+[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-resource-manager updated with 3 available_replicas successfully
+[25-12-2020 02:16:07 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
+[25-12-2020 02:16:08 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce updated with 3 available_replicas successfully
+[25-12-2020 02:16:08 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
+[25-12-2020 02:16:08 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-mediator updated with 3 available_replicas successfully
+[25-12-2020 02:16:08 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
+[25-12-2020 02:16:09 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-onboarding updated with 3 available_replicas successfully
+[25-12-2020 02:16:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
+[25-12-2020 02:16:39 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-aggregator updated with 3 available_replicas successfully
+[25-12-2020 02:17:09 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
+[25-12-2020 02:17:09 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-iam-vmwid updated with 3 available_replicas successfully
+[25-12-2020 02:17:39 AM] [DEBUG] [conftest.py] [117]: [pytest_sessionfinish] current test execution result_summary=OrderedDict([('passed', 1), ('failed', 0), ('skipped', 0), ('passing_percent', 100.0), ('aggregatd_result', 'PASS')])
+[25-12-2020 02:17:39 AM] [INFO] [test_runner.py] [401]: [run_pytest] pytest test cases execution finished at 25Dec2020_02:17:39.838721 with status=0
+[25-12-2020 02:17:46 AM] [INFO] [test_runner.py] [472]: [copy_file_on_s3] file logs/test_runner.log successfully copied on s3 at mangle-yaan/logs/test_runner-25Dec2020_02:03:37.173944.log
+[25-12-2020 02:17:51 AM] [INFO] [test_runner.py] [472]: [copy_file_on_s3] file logs/mangle-yaan-test-report-25Dec2020_02:03:37.173944.html successfully copied on s3 at mangle-yaan/results/mangle-yaan-test-report-25Dec2020_02:03:37.173944.html
+[25-12-2020 02:17:51 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33, disable_implicit_retry=False
+[25-12-2020 02:17:58 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33 succeeded in (1) attempt(s)
+[25-12-2020 02:17:58 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/history/status, disable_implicit_retry=False
+[25-12-2020 02:17:59 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
+[25-12-2020 02:17:59 AM] [INFO] [agent.py] [55]: [update_task] maxim-gun job run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33 updated successfully
+[25-12-2020 02:17:59 AM] [INFO] [utils.py] [131]: [stop_mangleyaan_health_updater] terminating health updater thread...

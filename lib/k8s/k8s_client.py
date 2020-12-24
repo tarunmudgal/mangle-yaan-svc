@@ -111,7 +111,7 @@ class K8SClient:
         """
         updates a deployment replica count
         Args:
-            deployment_name: deployment name for which details are required
+            deployment_name: deployment name that needs to be scaled to new_replica_count
             new_replica_count: new replica count to be set for the deployment_name. It can be used to scale up/down a deployment
             timeout: timeout in seconds to wait for deployement to adapt new_replica_count
             sleep_interval: polling interval to check replicas count if deployment adapted new_replica_count
@@ -119,6 +119,12 @@ class K8SClient:
         Returns:
             True if deployment reached to new_replica_count before timeout period else False
         """
+
+        mylog.info(
+            "deployment {} is going to be scaled to {} replicas".format(
+                deployment_name, new_replica_count
+            )
+        )
 
         deployment_info = self.get_deployment(deployment_name)
         deployment_info.spec.replicas = new_replica_count
@@ -139,7 +145,11 @@ class K8SClient:
         start_time = curr_time = time.time()
         while available_replicas != new_replica_count and curr_time < start_time + timeout:
             deployment_info = self.get_deployment(deployment_name)
-            available_replicas = deployment_info.status.available_replicas
+            available_replicas = (
+                0
+                if deployment_info.status.available_replicas is None
+                else deployment_info.status.available_replicas
+            )
             mylog.info(
                 "deployment {} got {} available replicas currently".format(
                     deployment_name, available_replicas
@@ -158,6 +168,81 @@ class K8SClient:
             curr_time = time.time()
 
         return False
+
+    def scale_deployments(
+        self, deployments_replica_map: dict, timeout: int = 900, sleep_interval: int = 30,
+    ) -> tuple:
+        """
+        updates deployments replica count
+        Args:
+            deployments_replica_map: a dict of diployment name and new_replica count. It can be used to scale up/down different deployments
+            timeout: timeout in seconds to wait for all the deployements to adapt associated replica count
+            sleep_interval: polling interval to check replicas count if all deployments adapted associated replica count
+
+        Returns:
+            (True, []) if all deployments reached to their associated replica count before timeout period else (
+            False, [deployments_failed_to_be_scaled])
+        """
+
+        mylog.info(
+            "following deployments are going to be scaled to their associated replica count: {}".format(
+                deployments_replica_map
+            )
+        )
+
+        deployments_scaled_successfully = []
+        deployments_not_yet_scaled = list(deployments_replica_map.keys())
+
+        for deployment_name, deployment_replica_count in deployments_replica_map.items():
+            deployment_info = self.get_deployment(deployment_name)
+            deployment_info.spec.replicas = deployment_replica_count
+            try:
+                self.apps_v1_api.patch_namespaced_deployment_scale(
+                    deployment_name, self.namespace, deployment_info, pretty="true"
+                )
+                # mylog.info(response)
+            except ApiException as fault:
+                mylog.exception(
+                    "exception occurred while reading deployment details for deployment name={}. Exception={}".format(
+                        deployment_name, fault
+                    )
+                )
+
+        start_time = curr_time = time.time()
+        while deployments_not_yet_scaled and curr_time < start_time + timeout:
+            for deployment_name in deployments_not_yet_scaled:
+                deployment_info = self.get_deployment(deployment_name)
+                available_replicas = (
+                    0
+                    if deployment_info.status.available_replicas is None
+                    else deployment_info.status.available_replicas
+                )
+
+                if available_replicas == deployments_replica_map[deployment_name]:
+                    mylog.info(
+                        "deployment {} updated with {} available_replicas successfully".format(
+                            deployment_name, available_replicas
+                        )
+                    )
+                    deployments_not_yet_scaled.remove(deployment_name)
+                    deployments_scaled_successfully.append(deployment_name)
+                else:
+                    mylog.info(
+                        "deployment={}, available_replicas={}, expected_replicas={}. waiting for {} seconds".format(
+                            deployment_name,
+                            available_replicas,
+                            deployments_replica_map[deployment_name],
+                            sleep_interval,
+                        )
+                    )
+
+            time.sleep(sleep_interval)
+            curr_time = time.time()
+
+        if not deployments_not_yet_scaled:
+            return True, []
+
+        return False, deployments_not_yet_scaled
 
     def get_service(self, service_name: str) -> client.V1Service:
         """

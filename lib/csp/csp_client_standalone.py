@@ -10,8 +10,7 @@ import typing
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
-from requests.exceptions import (ConnectionError, ConnectTimeout,
-                                 ReadTimeout, SSLError, Timeout)
+from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout, SSLError, Timeout
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 from requests.packages.urllib3.util.retry import Retry
 

@@ -35,9 +35,9 @@
     "description": "paginated APIs test cases while kafka message broker service is down",
     "path": "tests/external_dependencies/test_csp_apis_when_kafka_not_reachable.py"
   },
-  "test_csp_login_ui": {
-    "description": "dummy test cases",
-    "path": "tests/ui/test_csp_login.py"
+  "test_csp_login_logout_workflow_with_minimal_services": {
+    "description": "CSP Login and Logout workflow when minimal services are up",
+    "path": "tests/ui/test_csp_login_logout_workflow_with_minimal_services.py"
   },
   "test_dummy": {
     "description": "dummy test cases",

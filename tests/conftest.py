@@ -293,6 +293,31 @@ def inject_k8s_infra_fault_block_egress_traffic_for_class(request):
 
 
 @pytest.fixture(scope="class")
+def scale_down_deployments_for_class(request):
+    deployment_names = request.cls.DEPLOYMENT_NAMES_DONT_IMPACT_LOGIN
+    new_replica_count = request.cls.NEW_REPLICA_COUNT
+
+    deployments_replica_map_prev = {}
+    deployments_replica_map_next = {}
+
+    for dep_name in deployment_names:
+        deployment_info = ckclient.get_deployment(dep_name)
+        deployments_replica_map_prev[dep_name] = deployment_info.spec.replicas
+        deployments_replica_map_next[dep_name] = new_replica_count
+
+    status, deployments_not_scaled = ckclient.scale_deployments(
+        deployments_replica_map_next, timeout=300
+    )
+    if deployments_not_scaled:
+        request.cls.ALL_DEPLOYMENTS_COULD_NOT_BE_SCALED = True
+
+    # performs post yield section as teardown
+    yield
+
+    ckclient.scale_deployments(deployments_replica_map_prev, timeout=900)
+
+
+@pytest.fixture(scope="class")
 def update_csp_access_token():
     cclient.update_access_token()
 
@@ -311,6 +336,12 @@ def init_chrome_driver(request):
         command_executor=selenium_hub_fqdn,
         desired_capabilities=getattr(DesiredCapabilities, "CHROME"),
     )
+    driver.implicitly_wait(testlib_params.WEBDRIVER_IMPLICIT_WAIT)
+    driver.maximize_window()
+
+    # assign driver as a class variable to the class consuming fixture
     request.cls.driver = driver
+
     yield
-    driver.close()
+
+    driver.quit()
