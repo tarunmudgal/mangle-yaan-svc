@@ -646,6 +646,11 @@ if __name__ == "__main__":
             report_url=s3_path,
             result=mycache["run_info"]["result_summary"]["aggregatd_result"],
         )
+        mg_agent.update_result(
+            args.run_id,
+            end_time=end_time,
+            report_details=mycache["run_info"]["result_summary"]
+        )
 
     # stops thread to update maxim-gun task periodically
     utils.stop_mangleyaan_health_updater()
