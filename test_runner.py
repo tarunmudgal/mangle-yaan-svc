@@ -649,6 +649,11 @@ def main() -> None:
             report_url=s3_path,
             result=mycache["run_info"]["result_summary"]["aggregatd_result"],
         )
+        mg_agent.update_result(
+            args.run_id,
+            end_time=end_time,
+            report_details=mycache["run_info"]["result_summary"]
+        )
 
 
 if __name__ == "__main__":
