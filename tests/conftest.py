@@ -4,6 +4,7 @@
 
 __author__ = "tarun mudgal"
 
+import builtins
 import json
 import os
 import time
@@ -56,6 +57,31 @@ def pytest_html_results_summary(prefix, summary, postfix):
             )
         ]
     )
+
+
+@pytest.mark.hookwrapper
+def pytest_runtest_makereport(item, call):
+    """
+    Extends the PyTest Plugin to take and embed screenshot in html report, whenever test fails.
+    :param item:
+    """
+    pytest_html = item.config.pluginmanager.getplugin("html")
+    outcome = yield
+    report = outcome.get_result()
+    extra = getattr(report, "extra", [])
+
+    if report.when == "call" and "init_chrome_driver" in item.funcargs:
+        # extra.append(pytest_html.extras.url('http://www.example.com/'))
+        xfail = hasattr(report, "wasxfail")
+        if (report.skipped and xfail) or (report.failed and not xfail):
+            request_ctx = item.funcargs["request"]
+            # driver = request_ctx.getfixturevalue('init_chrome_driver')
+            driver = getattr(request_ctx.cls, "driver", None)
+            if driver is not None:
+                screenshot = driver.get_screenshot_as_base64()
+                extra.append(pytest_html.extras.image(screenshot, ""))
+                # extra.append(pytest_html.extras.html('<div>Additional HTML</div>'))
+        report.extra = extra
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -342,6 +368,6 @@ def init_chrome_driver(request):
     # assign driver as a class variable to the class consuming fixture
     request.cls.driver = driver
 
-    yield
+    yield driver
 
     driver.quit()
