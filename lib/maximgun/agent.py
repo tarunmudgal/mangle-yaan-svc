@@ -67,7 +67,7 @@ def update_result(run_id: str, end_time: str = None, report_details: any = None)
     if run_id:
         update_result_info = {}
         update_result_info["run_id"] = run_id
-        update_result_info["time"] = end_time
+        update_result_info["time"] = end_time[0:19]
         update_result_info["report_details"] = [
             {
                 "PASS": report_details["passed"],
@@ -76,7 +76,6 @@ def update_result(run_id: str, end_time: str = None, report_details: any = None)
             }
         ]
         api_resources = mg_resources.MAXIMGUN["POST_RESULT_DETAIL"]
-        print(update_result_info)
         response = mgclient.make_call("POST", api_resources, json=update_result_info)
         if response.status_code == requests.codes.ok:
             mylog.info("maxim-gun job run result updated successfully")
