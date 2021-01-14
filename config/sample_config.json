@@ -5,7 +5,7 @@
     "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",
     "testLogPath": "logs/test_runner.log",
     "webDriver": {
-      "initLocal": true,
+      "initLocal": false,
       "chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
     }
   },
