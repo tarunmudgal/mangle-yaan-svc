@@ -59,6 +59,16 @@ def pytest_html_results_summary(prefix, summary, postfix):
     )
 
 
+@pytest.mark.optionalhook
+def pytest_html_results_table_header(cells):
+    cells.insert(1, html.th("Description"))
+
+
+@pytest.mark.optionalhook
+def pytest_html_results_table_row(report, cells):
+    cells.insert(1, html.td(report.description))
+
+
 @pytest.mark.hookwrapper
 def pytest_runtest_makereport(item, call):
     """
@@ -68,6 +78,7 @@ def pytest_runtest_makereport(item, call):
     pytest_html = item.config.pluginmanager.getplugin("html")
     outcome = yield
     report = outcome.get_result()
+    report.description = str(item.function.__doc__)
     extra = getattr(report, "extra", [])
 
     if report.when == "call" and "init_chrome_driver" in item.funcargs:
@@ -226,6 +237,34 @@ def inject_k8s_infra_fault_service_unavailable_for_func():
             )
 
 
+@pytest.fixture(scope="function")
+def inject_k8s_infra_fault_delete_resource_for_func():
+    def _inject_k8s_infra_fault_delete_resource_for_func(
+        resource_type, resource_labels, random_injection
+    ):
+        # mangle fault injection
+        request_body = {
+            "endpointName": myconfig.get("k8sCluster").get("endpointName"),
+            "resourceType": resource_type,
+            "resourceLabels": resource_labels,
+            "randomInjection": random_injection,
+        }
+        task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+            "POST", resources.INFRA_FAULTS.get("K8S_RESOURCE_DELETE"), json=request_body
+        )
+        mylog.debug(
+            "task for K8S_RESOURCE_DELETE fault triggered with task_id={}, task_status={}".format(
+                task_id, task_status
+            )
+        )
+        assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
+
+        return
+
+    # returns this func when fixture is called. Post test case execution, performs post yield section as teardown
+    yield _inject_k8s_infra_fault_delete_resource_for_func
+
+
 @pytest.fixture(scope="class")
 def inject_k8s_infra_fault_service_unavailable_for_class(request):
     faulty_svc_name = request.param
@@ -350,18 +389,24 @@ def update_csp_access_token():
 
 @pytest.fixture(scope="class")
 def init_chrome_driver(request):
-    # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub', desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
-    selenium_hub_fqdn = (
-        "http://"
-        + testlib_params.SELENIUM_GRID_HOST
-        + ":"
-        + testlib_params.SELENIUM_GRID_PORT
-        + testlib_params.SELENIUM_HUB_URI
-    )
-    driver = webdriver.Remote(
-        command_executor=selenium_hub_fqdn,
-        desired_capabilities=getattr(DesiredCapabilities, "CHROME"),
-    )
+    if myconfig.get("mangleYaan").get("webDriver").get("initLocal"):
+        driver = webdriver.Chrome(
+            myconfig.get("mangleYaan").get("webDriver").get("chromeDriverPath")
+        )
+    else:
+        # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub'
+        #                                           , desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
+        selenium_hub_fqdn = (
+            "http://"
+            + testlib_params.SELENIUM_GRID_HOST
+            + ":"
+            + testlib_params.SELENIUM_GRID_PORT
+            + testlib_params.SELENIUM_HUB_URI
+        )
+        driver = webdriver.Remote(
+            command_executor=selenium_hub_fqdn,
+            desired_capabilities=getattr(DesiredCapabilities, "CHROME"),
+        )
     driver.implicitly_wait(testlib_params.WEBDRIVER_IMPLICIT_WAIT)
     driver.maximize_window()
 
