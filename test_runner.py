@@ -139,7 +139,6 @@ def create_csp_k8s_client(kubeconfig_filename: str, namespace: str) -> k8s_clien
     Returns:
        K8SClient instance
     """
-
     csp_k8s_client = k8s_client.K8SClient(kubeconfig_filename, namespace)
 
     return csp_k8s_client

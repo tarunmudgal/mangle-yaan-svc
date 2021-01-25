@@ -39,6 +39,10 @@
     "description": "CSP Login and Logout workflow when minimal services are up",
     "path": "tests/ui/test_csp_login_logout_workflow_with_minimal_services.py"
   },
+  "test_os_when_pods_shutdown_abruptly": {
+    "description": "Onboardng service APIs execution when service instances go down abruptly",
+    "path": "tests/abrupt_service_shutown/test_os_when_pods_shutdown_abruptly.py"
+  },
   "test_dummy": {
     "description": "dummy test cases",
     "path": "tests/test_dummy.py"

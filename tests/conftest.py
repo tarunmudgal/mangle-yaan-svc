@@ -238,31 +238,18 @@ def inject_k8s_infra_fault_service_unavailable_for_func():
 
 
 @pytest.fixture(scope="function")
-def inject_k8s_infra_fault_delete_resource_for_func():
-    def _inject_k8s_infra_fault_delete_resource_for_func(
-        resource_type, resource_labels, random_injection
-    ):
-        # mangle fault injection
-        request_body = {
-            "endpointName": myconfig.get("k8sCluster").get("endpointName"),
-            "resourceType": resource_type,
-            "resourceLabels": resource_labels,
-            "randomInjection": random_injection,
-        }
-        task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
-            "POST", resources.INFRA_FAULTS.get("K8S_RESOURCE_DELETE"), json=request_body
-        )
-        mylog.debug(
-            "task for K8S_RESOURCE_DELETE fault triggered with task_id={}, task_status={}".format(
-                task_id, task_status
-            )
-        )
-        assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
+def inject_k8s_infra_fault_abrupt_pod_shutdown_for_func(request):
+    resource_labels = request.cls.resource_labels
+    random_injection = request.cls.random_injection
+    sleep_interval = request.cls.sleep_interval
 
-        return
+    pod_shutdown_event_handler = mclient.trigger_abrupt_pod_shutdown_fault_repetatively(
+        resource_labels, random_injection, sleep_interval
+    )
 
-    # returns this func when fixture is called. Post test case execution, performs post yield section as teardown
-    yield _inject_k8s_infra_fault_delete_resource_for_func
+    yield
+
+    pod_shutdown_event_handler.set()
 
 
 @pytest.fixture(scope="class")
