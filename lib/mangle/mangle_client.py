@@ -3,6 +3,7 @@
 """ Mangle REST Client """
 
 import base64
+import threading
 import time
 import typing
 
@@ -205,3 +206,49 @@ class MangleClient(RESTClient):
             mylog.error("could not trigger fault task. Response={}".format(req_resp))
 
         return t_id, t_status
+
+    # @utils.log_args
+    def trigger_abrupt_pod_shutdown_fault_repetatively(
+        self, resource_labels: str, random_injection: str, sleep_interval: float
+    ) -> bool:
+        """
+        # TODO
+        """
+
+        def _trigger_abrupt_pod_shutdown_fault_repetatively(
+            resource_labels: str,
+            random_injection: str,
+            sleep_interval: float,
+            event: threading.Event,
+        ):
+            request_body = {
+                "endpointName": myconfig.get("k8sCluster").get("endpointName"),
+                "resourceType": "POD",
+                "resourceLabels": resource_labels,
+                "randomInjection": random_injection,
+            }
+
+            while not event.is_set():
+                try:
+                    mylog.debug(
+                        "triggering abrupt pod shutdown fault for resource_labels={} where "
+                        "random_injection={}".format(resource_labels, random_injection)
+                    )
+                    req_resp = self.request(
+                        "POST",
+                        resources.INFRA_FAULTS.get("K8S_DELETE_RESOURCE"),
+                        json=request_body,
+                    )
+                    event.wait(sleep_interval)
+                except Exception as fault:
+                    mylog.error("Exception occurred while triggering abrupt pod shutdown fault")
+                    mylog.exception(fault)
+
+        pod_shutdown_event_handler = threading.Event()
+        th_job = threading.Thread(
+            target=_trigger_abrupt_pod_shutdown_fault_repetatively,
+            args=(resource_labels, random_injection, sleep_interval, pod_shutdown_event_handler),
+        )
+        th_job.start()
+
+        return pod_shutdown_event_handler

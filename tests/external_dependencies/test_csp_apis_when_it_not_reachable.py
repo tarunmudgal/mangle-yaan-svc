@@ -93,7 +93,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_http_code = 504
+        expected_http_code = [500, 504]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("OFFERS").format(
@@ -107,7 +107,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # verify csp api returns expected_http_code
         assert (
-            resp.status_code == expected_http_code
+            resp.status_code in expected_http_code
         ), "Commerce service did not return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
@@ -271,7 +271,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_http_code = 504
+        expected_http_code = [500, 504]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("LIST_SUBSCRIPTIONS")
@@ -283,7 +283,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # verify csp api returns expected_status_code
         assert (
-            resp.status_code == expected_http_code
+            resp.status_code in expected_http_code
         ), "Commerce service did not return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency(
@@ -298,7 +298,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_http_code = 504
+        expected_http_code = [500, 504]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("GET_SUBSCRIPTION").format(
@@ -309,7 +309,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # verify csp api returns expected_status_code
         assert (
-            resp.status_code == expected_http_code
+            resp.status_code in expected_http_code
         ), "Commerce service did not return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()

@@ -3,7 +3,11 @@
   "projectDescription": "CSP Resiliency Test Suite",
   "mangleYaan": {
     "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",
-    "testLogPath": "logs/test_runner.log"
+    "testLogPath": "logs/test_runner.log",
+    "webDriver": {
+      "initLocal": false,
+      "chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
+    }
   },
   "mangle": {
     "host": "10.126.4.81",

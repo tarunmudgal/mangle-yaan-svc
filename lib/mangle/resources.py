@@ -20,6 +20,7 @@ INFRA_FAULTS["DISK_SPACE"] = "/rest/api/v1/faults/disk-space"
 INFRA_FAULTS["KERNEL_PANIC"] = "/rest/api/v1/faults/kernel-panic"
 INFRA_FAULTS["K8S_DELETE_RESOURCE"] = "/rest/api/v1/faults/k8s/delete-resource"
 INFRA_FAULTS["K8S_RESOURCE_NOT_READY"] = "/rest/api/v1/faults/k8s/resource-not-ready"
+INFRA_FAULTS["K8S_RESOURCE_DELETE"] = "/rest/api/v1/faults/k8s/delete-resource"
 INFRA_FAULTS["K8S_SERVICE_UNAVAILABLE"] = "/rest/api/v1/faults/k8s/service-unavailable"
 
 # dict for APPLICATION fault resources
