@@ -9,12 +9,18 @@ import uuid
 
 import pytest
 import requests
+from flaky import flaky
 
 from lib.csp import resources
 
 LIST_NETWORK_POLICY_FILENAMES = ["preview_env_egress_onboarding_service.yaml"]
 
 
+@flaky(
+    max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
+    min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
+    rerun_filter=None,
+)
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_block_egress_traffic_for_class",
     LIST_NETWORK_POLICY_FILENAMES,

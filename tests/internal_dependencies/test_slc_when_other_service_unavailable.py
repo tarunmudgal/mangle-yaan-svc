@@ -7,6 +7,7 @@ __author__ = "tarun mudgal"
 import os
 
 import pytest
+from flaky import flaky
 
 from lib.csp import resources
 
@@ -14,6 +15,11 @@ CURRENT_FILENAME = os.path.basename(__file__)
 LIST_DEPENDENT_SERVICES = ["csp-account-management-mvc", "csp-onboarding"]
 
 
+@flaky(
+    max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
+    min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
+    rerun_filter=None,
+)
 @pytest.mark.usefixtures("update_csp_access_token")
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_service_unavailable_for_class", LIST_DEPENDENT_SERVICES, indirect=True,

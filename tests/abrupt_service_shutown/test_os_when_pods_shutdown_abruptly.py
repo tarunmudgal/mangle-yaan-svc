@@ -16,7 +16,11 @@ from lib.csp import resources
 CURRENT_FILENAME = os.path.basename(__file__)
 
 
-@flaky(max_runs=2, min_passes=1, rerun_filter=None)
+@flaky(
+    max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
+    min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
+    rerun_filter=None,
+)
 class TestOnboardingServiceAPIs:
     """
 

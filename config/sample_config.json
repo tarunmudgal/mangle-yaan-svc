@@ -7,6 +7,10 @@
     "webDriver": {
       "initLocal": false,
       "chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
+    },
+    "retryFailedTests": {
+      "maxRuns": 2,
+      "minPasses": 1
     }
   },
   "mangle": {
@@ -18,23 +22,23 @@
     "host": "maxim-gun-ui.svc-stage.eng.vmware.com"
   },
   "k8sCluster": {
-    "endpointName": "csp-app-preview",
-    "credentialName": "csp-app-preview",
-    "namespace": "csp-app-preview",
-    "kubeConfigFileName": "csp-app-preview.yaml"
+    "endpointName": "scdc1-staging-csp-qe-res",
+    "credentialName": "scdc1-staging-csp-qe-res",
+    "namespace": "scdc1-staging-csp-qe-res",
+    "kubeConfigFileName": "scdc1-staging-csp-qe-res.yaml"
   },
   "csp": {
-    "host": "console-preview.cloud.vmware.com",
+    "host": "csp-console-scdc1-staging-csp-qe-res.svc-stage.eng.vmware.com",
     "defaultOrg": {
-      "id": "60a3904d-3354-4422-9e8a-347585537826"
+      "id": "5589bbe5-1e25-44c1-a15c-f37bcfabe96e"
     },
     "defaultService": {
-      "id": "11ff011a-0811-4523-9afb-2bf9808223d3"
+      "id": "bd7efb46-944e-4554-bfe3-cc68487b171c"
     },
     "defaultUser": {
-      "id": "preview_vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
+      "id": "vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
       "email": "mtarun@vmware.com",
-      "refreshToken": "5GcznFtRSQFqUMPFN7ON4jHQUHHhiRY52rS9Qi9Pq1vPSdGWF0N4RvpmpADzfZn6",
+      "refreshToken": "rFDXDluA2nF8KhcG2pk6izUjLQ55TAJd6fNrYmAvJBCFjQXXtLFfmAJqa8pzxooo",
       "accessToken": ""
     }
   },

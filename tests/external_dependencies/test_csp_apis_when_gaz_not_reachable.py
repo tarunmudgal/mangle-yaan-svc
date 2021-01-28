@@ -6,6 +6,7 @@ __author__ = "tarun mudgal"
 
 import pytest
 import requests
+from flaky import flaky
 
 from lib.csp import resources
 from src.testlib.csp import utils as csp_utils
@@ -14,6 +15,11 @@ from src.testlib.pytest import utils as pytest_utils
 LIST_NETWORK_POLICY_FILENAMES = ["preview_env_egress_am_service.yaml"]
 
 
+@flaky(
+    max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
+    min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
+    rerun_filter=None,
+)
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_block_egress_traffic_for_class",
     LIST_NETWORK_POLICY_FILENAMES,

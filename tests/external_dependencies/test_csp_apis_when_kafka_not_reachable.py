@@ -8,6 +8,7 @@ import os
 
 import pytest
 import requests
+from flaky import flaky
 
 from lib.csp import resources
 from src.testlib.csp import utils as csp_utils
@@ -21,6 +22,11 @@ CURRENT_FILENAME = os.path.basename(__file__)
 SECOND_SERVICE_ID = "142cd4ab-5727-4e7d-9cc2-a87ff8998635"
 
 
+@flaky(
+    max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
+    min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
+    rerun_filter=None,
+)
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_block_egress_traffic_for_class",
     LIST_NETWORK_POLICY_FILENAMES,

@@ -8,10 +8,16 @@ import math
 
 import pytest
 import requests
+from flaky import flaky
 
 from lib.csp import resources
 
 
+@flaky(
+    max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
+    min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
+    rerun_filter=None,
+)
 class TestPaginatedAPIs:
     """
     test cases for paginated response APIs where fault is injected while pages have been read

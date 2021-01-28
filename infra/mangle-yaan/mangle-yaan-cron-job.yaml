@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
             - name: mangle-yaan-job
-              image: vmware-docker-csp-tools.bintray.io/mangle-yaan:latest
+              image: vmwaresaas.jfrog.io/csp/mangle-yaan:latest
               imagePullPolicy: Always
               env:
                 - name: PROJECT_NAME
@@ -35,5 +35,5 @@ spec:
                   cpu: "1000m"
           restartPolicy: "Never"
           imagePullSecrets:
-            - name: mangle-yaan-secret
+            - name: auto-secret
       backoffLimit: 3

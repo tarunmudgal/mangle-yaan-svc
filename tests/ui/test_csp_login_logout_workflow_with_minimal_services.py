@@ -5,10 +5,16 @@
 __author__ = "tarun mudgal"
 
 import pytest
+from flaky import flaky
 
 from src.testlib.selenium.pages.csp.login_page import LoginPage
 
 
+@flaky(
+    max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
+    min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
+    rerun_filter=None,
+)
 @pytest.mark.usefixtures("init_chrome_driver")
 @pytest.mark.usefixtures("scale_down_deployments_for_class")
 class TestCSPLoginLogoutWorkflow:
