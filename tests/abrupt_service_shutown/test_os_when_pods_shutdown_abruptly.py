@@ -28,7 +28,7 @@ class TestOnboardingServiceAPIs:
 
     def test_api_get_services_for_org(self, inject_k8s_infra_fault_abrupt_pod_shutdown_for_func):
         # expected csp api response (status_code)
-        expected_response = [500]
+        expected_response = [500, 403]
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS").format(
