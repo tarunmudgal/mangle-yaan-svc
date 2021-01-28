@@ -9,12 +9,14 @@ import os
 
 import pytest
 import requests
+from flaky import flaky
 
 from lib.csp import resources
 
 CURRENT_FILENAME = os.path.basename(__file__)
 
 
+@flaky(max_runs=2, min_passes=1, rerun_filter=None)
 class TestOnboardingServiceAPIs:
     """
 
@@ -24,11 +26,9 @@ class TestOnboardingServiceAPIs:
     random_injection = False
     sleep_interval = 0.5
 
-    def test_api_get_services_for_org(
-        self,
-    ):  # , inject_k8s_infra_fault_abrupt_pod_shutdown_for_func):
+    def test_api_get_services_for_org(self, inject_k8s_infra_fault_abrupt_pod_shutdown_for_func):
         # expected csp api response (status_code)
-        expected_response = [500, 403]
+        expected_response = [500]
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS").format(
