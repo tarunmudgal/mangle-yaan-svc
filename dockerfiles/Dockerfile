@@ -6,7 +6,7 @@ RUN apk add --update --no-cache \
     python3-dev \
     py-pip \
     build-base \
-    openjdk8-jre \
+    openjdk11-jre \
     wget \
     unzip \
   && pip install virtualenv \
