@@ -48,7 +48,9 @@
       "testReportPath": "mangle-yaan/results/",
       "testLogPath": "mangle-yaan/logs/",
       "awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
-      "awsSecretAccessKey": "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"
+      "awsSecretAccessKey": "hDdsiNAJoCYqGfYE3nfTRKBQran2+6QUTPS5qUGd",
+      "resultTrendsBucketName": "csp-qe-res",
+      "resultTrendsHistoryPath": "workloads-history/"
     }
   }
 }

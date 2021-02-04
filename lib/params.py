@@ -10,11 +10,25 @@ from collections import OrderedDict
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout, SSLError, Timeout
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 
+# test_runner
+LOG_DIR = ""
+CONF_DIR = ""
+TESTSUITES_DIR = ""
+SRC_DIR = ""
+TESTLIB_DIR = ""
+ALLURE_LOG_DIR = ""
+
 # logger
 LOG_FORMAT = (
     "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
 )
 LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
+
+CONSOLE_LOG_LEVEL = "DEBUG"
+FILE_LOG_FILENAME = "test_runner.log"
+FILE_LOG_LEVEL = "DEBUG"
+FILE_LOG_MAX_BYTES = 1_000_000
+FILE_LOG_BACKUP_COUNT = 5
 
 # rest_client
 HTTP_RETRIABLE_ERRORS = (

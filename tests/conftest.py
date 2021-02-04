@@ -114,6 +114,9 @@ def pytest_configure(config):
         # updating final htmlpath to my.json
         myconfig["mangleYaan"]["testReportPath"] = config.option.htmlpath
 
+    if not config.option.allure_report_dir:
+        config.option.allure_report_dir = lib_params.ALLURE_LOG_DIR + os.path.sep + "raw"
+
 
 @pytest.fixture(scope="function", autouse=True)
 def check_if_user_cancelled_execution():

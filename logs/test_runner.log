@@ -1,460 +1,222 @@
-[25-12-2020 02:03:24 AM] [INFO] [test_runner.py] [53]: [<module>] logger initialized
-[25-12-2020 02:03:24 AM] [DEBUG] [test_runner.py] [571]: [main] test_runner args=Namespace(list_testsuite_names=False, myconfig='', project_name='test_project', pytest_args='', run_id='c0b5cd87-a072-4f7c-afa9-0adb57091a33', testsuite_names='test_csp_login_ui', workload_name='Test-workload')
-[25-12-2020 02:03:25 AM] [INFO] [test_runner.py] [68]: [check_network_availability] Network Availability Check: OK
-[25-12-2020 02:03:25 AM] [DEBUG] [maximgun_client.py] [90]: [__init__] MGClient obj MGClient(base_url=https://maxim-gun-ui.svc-stage.eng.vmware.com:443/api) initialized.
-[25-12-2020 02:03:25 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33, disable_implicit_retry=False
-[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33 succeeded in (1) attempt(s)
-[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/history/status, disable_implicit_retry=False
-[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
-[25-12-2020 02:03:27 AM] [INFO] [agent.py] [55]: [update_task] maxim-gun job run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33 updated successfully
-[25-12-2020 02:03:27 AM] [INFO] [utils.py] [115]: [start_mangleyaan_health_updater] initializing health updater thread...
-[25-12-2020 02:03:27 AM] [DEBUG] [utils.py] [138]: [_update_health] updating end_time for run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33
-[25-12-2020 02:03:27 AM] [DEBUG] [test_runner.py] [170]: [get_mangle_yaan_config] reading config from maxim-gun app. resource=/res/runtest/mangle-yaan/config
-[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33, disable_implicit_retry=False
-[25-12-2020 02:03:27 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/runtest/mangle-yaan/config, disable_implicit_retry=False
-[25-12-2020 02:03:28 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/runtest/mangle-yaan/config succeeded in (1) attempt(s)
-[25-12-2020 02:03:28 AM] [DEBUG] [mangle_client.py] [97]: [__init__] MangleClient obj MangleClient(base_url=https://10.126.4.81:443/mangle-services) initialized.
-[25-12-2020 02:03:28 AM] [DEBUG] [csp_client.py] [121]: [get_access_token] fetching access_token for CSP API calls
-[25-12-2020 02:03:28 AM] [DEBUG] [rest_client.py] [161]: [request] Sending a request with method=POST, url=https://console-preview.cloud.vmware.com:443/csp/gateway/am/api/auth/api-tokens/authorize
-[25-12-2020 02:03:28 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33 succeeded in (1) attempt(s)
-[25-12-2020 02:03:28 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/history/status, disable_implicit_retry=False
-[25-12-2020 02:03:29 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
-[25-12-2020 02:03:29 AM] [INFO] [agent.py] [55]: [update_task] maxim-gun job run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33 updated successfully
-[25-12-2020 02:03:30 AM] [DEBUG] [rest_client.py] [165]: [request] Request with method=POST, url=https://console-preview.cloud.vmware.com:443/csp/gateway/am/api/auth/api-tokens/authorize succeeded in (1) attempt(s)
-[25-12-2020 02:03:30 AM] [DEBUG] [csp_client.py] [93]: [__init__] CSPClient obj CSPClient(base_url=https://console-preview.cloud.vmware.com:443/csp/gateway) initialized.
-[25-12-2020 02:03:33 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints/credentials, disable_implicit_retry=False
-[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints/credentials succeeded in (1) attempt(s)
-[25-12-2020 02:03:34 AM] [DEBUG] [utils.py] [48]: [func_wrapper] func list_credentials(<lib.mangle.endpoint.EndpointCredential object at 0x10831bd30>) status: PASS
-[25-12-2020 02:03:34 AM] [INFO] [test_runner.py] [222]: [setup_mangle_infra] credential 'csp-app-preview' for k8s cluster already exist
-[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints, disable_implicit_retry=False
-[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints succeeded in (1) attempt(s)
-[25-12-2020 02:03:34 AM] [INFO] [test_runner.py] [260]: [setup_mangle_infra] Endpoint 'csp-app-preview' for k8s cluster already exist
-[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints/csp-app-preview, disable_implicit_retry=False
-[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints/csp-app-preview succeeded in (1) attempt(s)
-[25-12-2020 02:03:34 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/rest/api/v1/endpoints/testEndpoint, disable_implicit_retry=False
-[25-12-2020 02:03:37 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/rest/api/v1/endpoints/testEndpoint succeeded in (1) attempt(s)
-[25-12-2020 02:03:37 AM] [DEBUG] [utils.py] [48]: [func_wrapper] func test_endpoint(<lib.mangle.endpoint.TestConnection object at 0x10831b5e0>, 'csp-app-preview') status: PASS
-[25-12-2020 02:03:37 AM] [INFO] [test_runner.py] [276]: [setup_mangle_infra] Test connection for endpoint csp-app-preview passed
-[25-12-2020 02:03:37 AM] [INFO] [test_runner.py] [293]: [cleanup_old_reports] deleting older mangle-yaan-test-reports after keeping 5 maximum reports
-[25-12-2020 02:03:37 AM] [INFO] [test_runner.py] [384]: [prepare_setup] setup is ready to run resiliency tests now
-[25-12-2020 02:03:37 AM] [INFO] [test_runner.py] [391]: [run_pytest] starting pytest test cases execution at: 25Dec2020_02:03:37.173944
-[25-12-2020 02:03:37 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33, disable_implicit_retry=False
-[25-12-2020 02:03:38 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33 succeeded in (1) attempt(s)
-[25-12-2020 02:03:38 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/history/status, disable_implicit_retry=False
-[25-12-2020 02:03:38 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
-[25-12-2020 02:03:38 AM] [INFO] [agent.py] [55]: [update_task] maxim-gun job run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33 updated successfully
-[25-12-2020 02:03:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
-[25-12-2020 02:03:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
-[25-12-2020 02:03:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
-[25-12-2020 02:03:41 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
-[25-12-2020 02:03:41 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
-[25-12-2020 02:03:41 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
-[25-12-2020 02:03:42 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:03:42 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
-[25-12-2020 02:03:42 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
-[25-12-2020 02:03:43 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
-[25-12-2020 02:03:43 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:03:43 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:03:44 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
-[25-12-2020 02:03:44 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
-[25-12-2020 02:03:45 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
-[25-12-2020 02:03:45 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
-[25-12-2020 02:03:45 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
-[25-12-2020 02:03:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
-[25-12-2020 02:03:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
-[25-12-2020 02:03:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
-[25-12-2020 02:03:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
-[25-12-2020 02:03:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
-[25-12-2020 02:03:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
-[25-12-2020 02:03:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
-[25-12-2020 02:03:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
-[25-12-2020 02:03:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
-[25-12-2020 02:03:49 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
-[25-12-2020 02:03:49 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
-[25-12-2020 02:03:49 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
-[25-12-2020 02:03:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
-[25-12-2020 02:03:50 AM] [INFO] [k8s_client.py] [187]: [scale_deployments] following deployments are going to be scaled to their associated replica count: {'csp-audit-consumer': 0, 'csp-authn': 0, 'csp-billing-mvc': 0, 'csp-billing-sdp': 0, 'csp-branding': 0, 'csp-commerce': 0, 'csp-commerce-aws-adapter': 0, 'csp-commerce-notifications': 0, 'csp-customer-support': 0, 'csp-data-aggregator': 0, 'csp-data-enrichment': 0, 'csp-data-mediator': 0, 'csp-email': 0, 'csp-email-management': 0, 'csp-feature-flags': 0, 'csp-federation': 0, 'csp-fraud-management': 0, 'csp-iam-roles-mgmt': 0, 'csp-iam-vmwid': 0, 'csp-lake-consumer': 0, 'csp-message-driver': 0, 'csp-msp': 0, 'csp-onboarding': 0, 'csp-operator-portal': 0, 'csp-post-office': 0, 'csp-resource-manager': 0, 'csp-service-lifecycle': 0, 'csp-usage-meter': 0, 'ns-event-service': 0, 'ns-inapp': 0}
-[25-12-2020 02:03:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
-[25-12-2020 02:03:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
-[25-12-2020 02:03:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
-[25-12-2020 02:03:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
-[25-12-2020 02:03:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
-[25-12-2020 02:03:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
-[25-12-2020 02:03:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:03:55 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
-[25-12-2020 02:03:55 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
-[25-12-2020 02:03:56 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
-[25-12-2020 02:03:57 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:03:57 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:03:58 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
-[25-12-2020 02:03:59 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
-[25-12-2020 02:03:59 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
-[25-12-2020 02:04:00 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
-[25-12-2020 02:04:01 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
-[25-12-2020 02:04:01 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
-[25-12-2020 02:04:02 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
-[25-12-2020 02:04:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
-[25-12-2020 02:04:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
-[25-12-2020 02:04:04 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
-[25-12-2020 02:04:05 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
-[25-12-2020 02:04:05 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
-[25-12-2020 02:04:06 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
-[25-12-2020 02:04:07 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
-[25-12-2020 02:04:07 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
-[25-12-2020 02:04:08 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
-[25-12-2020 02:04:09 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
-[25-12-2020 02:04:10 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
-[25-12-2020 02:04:10 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
-[25-12-2020 02:04:10 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-audit-consumer updated with 0 available_replicas successfully
-[25-12-2020 02:04:10 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
-[25-12-2020 02:04:11 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-billing-mvc updated with 0 available_replicas successfully
-[25-12-2020 02:04:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
-[25-12-2020 02:04:11 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-branding updated with 0 available_replicas successfully
-[25-12-2020 02:04:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce-aws-adapter updated with 0 available_replicas successfully
-[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
-[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-customer-support updated with 0 available_replicas successfully
-[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-enrichment updated with 0 available_replicas successfully
-[25-12-2020 02:04:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
-[25-12-2020 02:04:13 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-email updated with 0 available_replicas successfully
-[25-12-2020 02:04:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
-[25-12-2020 02:04:13 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-feature-flags updated with 0 available_replicas successfully
-[25-12-2020 02:04:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
-[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-fraud-management updated with 0 available_replicas successfully
-[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
-[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-iam-vmwid updated with 0 available_replicas successfully
-[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
-[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-message-driver updated with 0 available_replicas successfully
-[25-12-2020 02:04:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
-[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-onboarding updated with 0 available_replicas successfully
-[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
-[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-post-office updated with 0 available_replicas successfully
-[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
-[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-service-lifecycle updated with 0 available_replicas successfully
-[25-12-2020 02:04:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
-[25-12-2020 02:04:16 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment ns-event-service updated with 0 available_replicas successfully
-[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
-[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-authn updated with 0 available_replicas successfully
-[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
-[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce updated with 0 available_replicas successfully
-[25-12-2020 02:04:46 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
-[25-12-2020 02:04:47 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-aggregator updated with 0 available_replicas successfully
-[25-12-2020 02:04:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
-[25-12-2020 02:04:47 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-email-management updated with 0 available_replicas successfully
-[25-12-2020 02:04:47 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
-[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-iam-roles-mgmt updated with 0 available_replicas successfully
-[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
-[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-msp updated with 0 available_replicas successfully
-[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
-[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-resource-manager updated with 0 available_replicas successfully
-[25-12-2020 02:04:48 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
-[25-12-2020 02:04:49 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment ns-inapp updated with 0 available_replicas successfully
-[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
-[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-billing-sdp updated with 0 available_replicas successfully
-[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-mediator updated with 0 available_replicas successfully
-[25-12-2020 02:05:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
-[25-12-2020 02:05:20 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-lake-consumer updated with 0 available_replicas successfully
-[25-12-2020 02:05:20 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
-[25-12-2020 02:05:20 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-usage-meter updated with 0 available_replicas successfully
-[25-12-2020 02:05:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
-[25-12-2020 02:05:50 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce-notifications updated with 0 available_replicas successfully
-[25-12-2020 02:05:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
-[25-12-2020 02:05:51 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-operator-portal updated with 0 available_replicas successfully
-[25-12-2020 02:06:21 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
-[25-12-2020 02:06:21 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-federation updated with 0 available_replicas successfully
-[25-12-2020 02:06:55 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/history/status, disable_implicit_retry=False
-[25-12-2020 02:07:02 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/history/status succeeded in (1) attempt(s)
-[25-12-2020 02:07:02 AM] [DEBUG] [base_page.py] [76]: [go_to_url] going to url=https://console-preview.cloud.vmware.com/
-[25-12-2020 02:07:05 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('id', 'csp-welcome-title') upto 60 seconds
-[25-12-2020 02:07:08 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('id', 'csp-welcome-title') found
-[25-12-2020 02:07:11 AM] [INFO] [login_page.py] [27]: [goto_login_page] reached on login page
-[25-12-2020 02:07:11 AM] [DEBUG] [base_page.py] [146]: [send_keys] sending keys to locator=('id', 'discovery_username')
-[25-12-2020 02:07:17 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('id', 'next-btn')
-[25-12-2020 02:07:20 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('id', 'password') upto 10 seconds
-[25-12-2020 02:07:26 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('id', 'password') found
-[25-12-2020 02:07:26 AM] [DEBUG] [base_page.py] [146]: [send_keys] sending keys to locator=('id', 'password')
-[25-12-2020 02:07:32 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('xpath', "//button[contains(text(),'SIGN IN')]")
-[25-12-2020 02:07:39 AM] [DEBUG] [base_page.py] [218]: [wait_for_spinner_to_disappear] waiting for spinner to appear upto 60 seconds
-[25-12-2020 02:07:43 AM] [DEBUG] [base_page.py] [225]: [wait_for_spinner_to_disappear] spinner found on url https://console-preview.cloud.vmware.com/csp/gateway/portal/
-[25-12-2020 02:07:43 AM] [DEBUG] [base_page.py] [240]: [wait_for_spinner_to_disappear] waiting for spinner to disapper on url https://console-preview.cloud.vmware.com/csp/gateway/portal/ upto 600 seconds
-[25-12-2020 02:08:50 AM] [DEBUG] [base_page.py] [249]: [wait_for_spinner_to_disappear] spinner disappeared from url https://console-preview.cloud.vmware.com/csp/gateway/portal/#/consumer
-[25-12-2020 02:08:50 AM] [DEBUG] [base_page.py] [218]: [wait_for_spinner_to_disappear] waiting for spinner to appear upto 60 seconds
-[25-12-2020 02:08:53 AM] [DEBUG] [base_page.py] [225]: [wait_for_spinner_to_disappear] spinner found on url https://console-preview.cloud.vmware.com/csp/gateway/portal/#/consumer
-[25-12-2020 02:08:54 AM] [DEBUG] [base_page.py] [240]: [wait_for_spinner_to_disappear] waiting for spinner to disapper on url https://console-preview.cloud.vmware.com/csp/gateway/portal/#/consumer upto 600 seconds
-[25-12-2020 02:10:00 AM] [DEBUG] [base_page.py] [249]: [wait_for_spinner_to_disappear] spinner disappeared from url https://console-preview.cloud.vmware.com/csp/gateway/portal/#/consumer
-[25-12-2020 02:10:00 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('xpath', "//button[contains(text(),'Ok')]") upto 600 seconds
-[25-12-2020 02:10:02 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('xpath', "//button[contains(text(),'Ok')]") found
-[25-12-2020 02:10:02 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('xpath', "//button[contains(text(),'Ok')]")
-[25-12-2020 02:10:06 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('class name', 'title') upto 600 seconds
-[25-12-2020 02:10:08 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('class name', 'title') found
-[25-12-2020 02:10:08 AM] [DEBUG] [test_csp_login.py] [66]: [test_csp_login_logout_when_minimal_services_are_up] user lhruser3usd@yahoo.com logged-in to CSP portal successfully
-[25-12-2020 02:10:09 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('id', 'btn-csp-user')
-[25-12-2020 02:10:13 AM] [DEBUG] [base_page.py] [165]: [click] clicking on locator=('id', 'csp-sign-out-btn')
-[25-12-2020 02:10:17 AM] [DEBUG] [base_page.py] [183]: [wait_for_element] waiting for locator=('class name', 'logout-message') upto 180 seconds
-[25-12-2020 02:10:52 AM] [DEBUG] [base_page.py] [186]: [wait_for_element] element=('class name', 'logout-message') found
-[25-12-2020 02:10:52 AM] [DEBUG] [test_csp_login.py] [74]: [test_csp_login_logout_when_minimal_services_are_up] user lhruser3usd@yahoo.com logged-out from CSP portal successfully
-[25-12-2020 02:10:52 AM] [INFO] [k8s_client.py] [187]: [scale_deployments] following deployments are going to be scaled to their associated replica count: {'csp-audit-consumer': 3, 'csp-authn': 3, 'csp-billing-mvc': 3, 'csp-billing-sdp': 3, 'csp-branding': 3, 'csp-commerce': 3, 'csp-commerce-aws-adapter': 3, 'csp-commerce-notifications': 1, 'csp-customer-support': 3, 'csp-data-aggregator': 3, 'csp-data-enrichment': 3, 'csp-data-mediator': 3, 'csp-email': 3, 'csp-email-management': 3, 'csp-feature-flags': 0, 'csp-federation': 3, 'csp-fraud-management': 3, 'csp-iam-roles-mgmt': 3, 'csp-iam-vmwid': 3, 'csp-lake-consumer': 3, 'csp-message-driver': 3, 'csp-msp': 3, 'csp-onboarding': 3, 'csp-operator-portal': 3, 'csp-post-office': 3, 'csp-resource-manager': 3, 'csp-service-lifecycle': 6, 'csp-usage-meter': 3, 'ns-event-service': 3, 'ns-inapp': 3}
-[25-12-2020 02:10:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
-[25-12-2020 02:12:10 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
-[25-12-2020 02:12:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
-[25-12-2020 02:12:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
-[25-12-2020 02:12:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
-[25-12-2020 02:12:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
-[25-12-2020 02:12:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:12:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
-[25-12-2020 02:12:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
-[25-12-2020 02:12:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
-[25-12-2020 02:12:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:12:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:12:17 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
-[25-12-2020 02:12:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
-[25-12-2020 02:12:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
-[25-12-2020 02:12:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
-[25-12-2020 02:12:20 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
-[25-12-2020 02:12:21 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
-[25-12-2020 02:12:21 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
-[25-12-2020 02:12:22 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
-[25-12-2020 02:12:23 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
-[25-12-2020 02:12:24 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
-[25-12-2020 02:12:24 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
-[25-12-2020 02:12:25 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
-[25-12-2020 02:12:25 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
-[25-12-2020 02:12:26 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
-[25-12-2020 02:12:27 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
-[25-12-2020 02:12:28 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
-[25-12-2020 02:12:28 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
-[25-12-2020 02:12:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
-[25-12-2020 02:12:30 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
-[25-12-2020 02:12:31 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-audit-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:31 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
-[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-authn, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
-[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-billing-mvc, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
-[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-billing-sdp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:32 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
-[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-branding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
-[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:33 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
-[25-12-2020 02:12:34 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-notifications, available_replicas=0, expected_replicas=1. waiting for 30 seconds
-[25-12-2020 02:12:34 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
-[25-12-2020 02:12:34 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-customer-support, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:34 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
-[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-aggregator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
-[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-email, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
-[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-email-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-feature-flags
-[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-feature-flags updated with 0 available_replicas successfully
-[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
-[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-fraud-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
-[25-12-2020 02:12:37 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-roles-mgmt, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:37 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
-[25-12-2020 02:12:37 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-vmwid, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:37 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
-[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-lake-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
-[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-message-driver, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
-[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-msp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:38 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
-[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-onboarding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
-[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-operator-portal, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
-[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-post-office, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
-[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-resource-manager, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
-[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-service-lifecycle, available_replicas=0, expected_replicas=6. waiting for 30 seconds
-[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
-[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-usage-meter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:12:40 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-event-service
-[25-12-2020 02:12:41 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment ns-event-service updated with 3 available_replicas successfully
-[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
-[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-audit-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-authn
-[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-authn updated with 3 available_replicas successfully
-[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
-[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-billing-sdp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:11 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
-[25-12-2020 02:13:12 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-branding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
-[25-12-2020 02:13:12 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:12 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
-[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-notifications, available_replicas=0, expected_replicas=1. waiting for 30 seconds
-[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
-[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-customer-support, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:13 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
-[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-aggregator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:14 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email
-[25-12-2020 02:13:15 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-email updated with 3 available_replicas successfully
-[25-12-2020 02:13:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
-[25-12-2020 02:13:15 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-federation, available_replicas=2, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:15 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
-[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-fraud-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
-[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-roles-mgmt, available_replicas=2, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
-[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-vmwid, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:16 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
-[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-lake-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
-[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-message-driver, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
-[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-msp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:17 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
-[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-onboarding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
-[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-operator-portal, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-post-office
-[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-post-office updated with 3 available_replicas successfully
-[25-12-2020 02:13:18 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
-[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-service-lifecycle, available_replicas=0, expected_replicas=6. waiting for 30 seconds
-[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
-[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-usage-meter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=ns-inapp
-[25-12-2020 02:13:19 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment ns-inapp updated with 3 available_replicas successfully
-[25-12-2020 02:13:49 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
-[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-audit-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-mvc
-[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-billing-mvc updated with 3 available_replicas successfully
-[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
-[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-branding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:50 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
-[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
-[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-notifications, available_replicas=0, expected_replicas=1. waiting for 30 seconds
-[25-12-2020 02:13:51 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
-[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-customer-support, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
-[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-aggregator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:52 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
-[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-email-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-federation
-[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-federation updated with 3 available_replicas successfully
-[25-12-2020 02:13:53 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-roles-mgmt
-[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-iam-roles-mgmt updated with 3 available_replicas successfully
-[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-lake-consumer
-[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-lake-consumer updated with 3 available_replicas successfully
-[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
-[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-msp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
-[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-onboarding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:13:54 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-operator-portal
-[25-12-2020 02:13:55 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-operator-portal updated with 3 available_replicas successfully
-[25-12-2020 02:13:55 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-service-lifecycle
-[25-12-2020 02:13:55 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-service-lifecycle updated with 6 available_replicas successfully
-[25-12-2020 02:14:25 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
-[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-audit-consumer, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
-[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-billing-sdp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
-[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-branding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:26 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
-[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
-[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-notifications, available_replicas=0, expected_replicas=1. waiting for 30 seconds
-[25-12-2020 02:14:27 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-customer-support
-[25-12-2020 02:14:28 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-customer-support updated with 3 available_replicas successfully
-[25-12-2020 02:14:28 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:14:28 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:28 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
-[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-email-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
-[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-fraud-management, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
-[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-vmwid, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:29 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
-[25-12-2020 02:14:30 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-message-driver, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:30 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
-[25-12-2020 02:14:30 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-msp, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:30 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
-[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-onboarding, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
-[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-resource-manager, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
-[25-12-2020 02:14:31 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-usage-meter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:15:01 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-audit-consumer
-[25-12-2020 02:15:01 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-audit-consumer updated with 3 available_replicas successfully
-[25-12-2020 02:15:01 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-branding
-[25-12-2020 02:15:02 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-branding updated with 3 available_replicas successfully
-[25-12-2020 02:15:02 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:15:02 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-commerce-aws-adapter, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:15:02 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-notifications
-[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce-notifications updated with 1 available_replicas successfully
-[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-enrichment, available_replicas=1, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-data-mediator, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:15:03 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-email-management
-[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-email-management updated with 3 available_replicas successfully
-[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
-[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-iam-vmwid, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
-[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-message-driver, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:15:04 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-msp
-[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-msp updated with 3 available_replicas successfully
-[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
-[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [230]: [scale_deployments] deployment=csp-resource-manager, available_replicas=0, expected_replicas=3. waiting for 30 seconds
-[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-usage-meter
-[25-12-2020 02:15:05 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-usage-meter updated with 3 available_replicas successfully
-[25-12-2020 02:15:35 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-billing-sdp
-[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-billing-sdp updated with 3 available_replicas successfully
-[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce-aws-adapter
-[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce-aws-adapter updated with 3 available_replicas successfully
-[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-enrichment
-[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-enrichment updated with 3 available_replicas successfully
-[25-12-2020 02:15:36 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-fraud-management
-[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-fraud-management updated with 3 available_replicas successfully
-[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-message-driver
-[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-message-driver updated with 3 available_replicas successfully
-[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-resource-manager
-[25-12-2020 02:15:37 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-resource-manager updated with 3 available_replicas successfully
-[25-12-2020 02:16:07 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-commerce
-[25-12-2020 02:16:08 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-commerce updated with 3 available_replicas successfully
-[25-12-2020 02:16:08 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-mediator
-[25-12-2020 02:16:08 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-mediator updated with 3 available_replicas successfully
-[25-12-2020 02:16:08 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-onboarding
-[25-12-2020 02:16:09 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-onboarding updated with 3 available_replicas successfully
-[25-12-2020 02:16:39 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-data-aggregator
-[25-12-2020 02:16:39 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-data-aggregator updated with 3 available_replicas successfully
-[25-12-2020 02:17:09 AM] [INFO] [k8s_client.py] [87]: [get_deployment] reading deployment details for deployment name=csp-iam-vmwid
-[25-12-2020 02:17:09 AM] [INFO] [k8s_client.py] [222]: [scale_deployments] deployment csp-iam-vmwid updated with 3 available_replicas successfully
-[25-12-2020 02:17:39 AM] [DEBUG] [conftest.py] [117]: [pytest_sessionfinish] current test execution result_summary=OrderedDict([('passed', 1), ('failed', 0), ('skipped', 0), ('passing_percent', 100.0), ('aggregatd_result', 'PASS')])
-[25-12-2020 02:17:39 AM] [INFO] [test_runner.py] [401]: [run_pytest] pytest test cases execution finished at 25Dec2020_02:17:39.838721 with status=0
-[25-12-2020 02:17:46 AM] [INFO] [test_runner.py] [472]: [copy_file_on_s3] file logs/test_runner.log successfully copied on s3 at mangle-yaan/logs/test_runner-25Dec2020_02:03:37.173944.log
-[25-12-2020 02:17:51 AM] [INFO] [test_runner.py] [472]: [copy_file_on_s3] file logs/mangle-yaan-test-report-25Dec2020_02:03:37.173944.html successfully copied on s3 at mangle-yaan/results/mangle-yaan-test-report-25Dec2020_02:03:37.173944.html
-[25-12-2020 02:17:51 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33, disable_implicit_retry=False
-[25-12-2020 02:17:58 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/res/history/run_id/c0b5cd87-a072-4f7c-afa9-0adb57091a33 succeeded in (1) attempt(s)
-[25-12-2020 02:17:58 AM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/history/status, disable_implicit_retry=False
-[25-12-2020 02:17:59 AM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/history/status succeeded in (1) attempt(s)
-[25-12-2020 02:17:59 AM] [INFO] [agent.py] [55]: [update_task] maxim-gun job run_id=c0b5cd87-a072-4f7c-afa9-0adb57091a33 updated successfully
-[25-12-2020 02:17:59 AM] [INFO] [utils.py] [131]: [stop_mangleyaan_health_updater] terminating health updater thread...
+[04-02-2021 01:42:48 PM] [INFO] [test_runner.py] [55]: [<module>] logger initialized
+[04-02-2021 01:42:48 PM] [DEBUG] [test_runner.py] [623]: [main] test_runner args=Namespace(list_testsuite_names=False, myconfig='config/sample_config.json', project_name='test_project', pytest_args='', run_id='', testsuite_names='test_dummy', workload_name='Test-workload')
+[04-02-2021 01:42:51 PM] [INFO] [test_runner.py] [70]: [check_network_availability] Network Availability Check: OK
+[04-02-2021 01:42:51 PM] [DEBUG] [maximgun_client.py] [90]: [__init__] MGClient obj MGClient(base_url=https://maxim-gun-ui.svc-stage.eng.vmware.com:443/api) initialized.
+[04-02-2021 01:42:51 PM] [ERROR] [agent.py] [63]: [update_task] invalid run_id found. Ignore if execution is running locally
+[04-02-2021 01:42:51 PM] [INFO] [utils.py] [116]: [start_mangleyaan_health_updater] initializing health updater thread...
+[04-02-2021 01:42:51 PM] [ERROR] [utils.py] [124]: [start_mangleyaan_health_updater] failed to initialize health updater theread due to invalid run_id. Ignore if execution is running locally
+[04-02-2021 01:42:51 PM] [DEBUG] [test_runner.py] [169]: [get_mangle_yaan_config] reading config locally from path=config/sample_config.json
+[04-02-2021 01:42:51 PM] [DEBUG] [mangle_client.py] [98]: [__init__] MangleClient obj MangleClient(base_url=https://10.126.4.81:443/mangle-services) initialized.
+[04-02-2021 01:42:51 PM] [DEBUG] [csp_client.py] [121]: [get_access_token] fetching access_token for CSP API calls
+[04-02-2021 01:42:51 PM] [DEBUG] [rest_client.py] [161]: [request] Sending a request with method=POST, url=https://csp-console-scdc1-staging-csp-qe-res.svc-stage.eng.vmware.com:443/csp/gateway/am/api/auth/api-tokens/authorize
+[04-02-2021 01:43:02 PM] [DEBUG] [rest_client.py] [165]: [request] Request with method=POST, url=https://csp-console-scdc1-staging-csp-qe-res.svc-stage.eng.vmware.com:443/csp/gateway/am/api/auth/api-tokens/authorize succeeded in (1) attempt(s)
+[04-02-2021 01:43:02 PM] [DEBUG] [csp_client.py] [93]: [__init__] CSPClient obj CSPClient(base_url=https://csp-console-scdc1-staging-csp-qe-res.svc-stage.eng.vmware.com:443/csp/gateway) initialized.
+[04-02-2021 01:43:02 PM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints/credentials, disable_implicit_retry=False
+[04-02-2021 01:43:04 PM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints/credentials succeeded in (1) attempt(s)
+[04-02-2021 01:43:04 PM] [DEBUG] [utils.py] [49]: [func_wrapper] func list_credentials(<lib.mangle.endpoint.EndpointCredential object at 0x10611dc40>) status: PASS
+[04-02-2021 01:43:04 PM] [INFO] [test_runner.py] [229]: [setup_mangle_infra] credential 'scdc1-staging-csp-qe-res' for k8s cluster already exist
+[04-02-2021 01:43:04 PM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints, disable_implicit_retry=False
+[04-02-2021 01:43:05 PM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints succeeded in (1) attempt(s)
+[04-02-2021 01:43:05 PM] [INFO] [test_runner.py] [267]: [setup_mangle_infra] Endpoint 'scdc1-staging-csp-qe-res' for k8s cluster already exist
+[04-02-2021 01:43:05 PM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=GET, resource=/rest/api/v1/endpoints/scdc1-staging-csp-qe-res, disable_implicit_retry=False
+[04-02-2021 01:43:05 PM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=GET, resource=/rest/api/v1/endpoints/scdc1-staging-csp-qe-res succeeded in (1) attempt(s)
+[04-02-2021 01:43:05 PM] [DEBUG] [rest_client.py] [106]: [request] RESTClient: Sending a request with method=POST, resource=/rest/api/v1/endpoints/testEndpoint, disable_implicit_retry=False
+[04-02-2021 01:43:06 PM] [DEBUG] [rest_client.py] [113]: [request] RESTClient: request with method=POST, resource=/rest/api/v1/endpoints/testEndpoint succeeded in (1) attempt(s)
+[04-02-2021 01:43:06 PM] [DEBUG] [utils.py] [49]: [func_wrapper] func test_endpoint(<lib.mangle.endpoint.TestConnection object at 0x1061de700>, 'scdc1-staging-csp-qe-res') status: PASS
+[04-02-2021 01:43:06 PM] [INFO] [test_runner.py] [283]: [setup_mangle_infra] Test connection for endpoint scdc1-staging-csp-qe-res passed
+[04-02-2021 01:43:06 PM] [INFO] [test_runner.py] [300]: [cleanup_old_reports] deleting older mangle-yaan-test-reports after keeping 5 maximum reports
+[04-02-2021 01:43:06 PM] [INFO] [test_runner.py] [397]: [prepare_setup] setup is ready to run resiliency tests now
+[04-02-2021 01:43:06 PM] [INFO] [test_runner.py] [404]: [run_pytest] starting pytest test cases execution at: 04Feb2021_13:43:06.683341
+[04-02-2021 01:43:06 PM] [ERROR] [agent.py] [63]: [update_task] invalid run_id found. Ignore if execution is running locally
+[04-02-2021 01:43:07 PM] [DEBUG] [conftest.py] [159]: [pytest_sessionfinish] current test execution result_summary=OrderedDict([('passed', 4), ('failed', 2), ('skipped', 0), ('passing_percent', 66.66666666666666), ('aggregatd_result', 'FAIL')])
+[04-02-2021 01:43:07 PM] [INFO] [test_runner.py] [414]: [run_pytest] pytest test cases execution finished at 04Feb2021_13:43:07.634506 with status=1
+[04-02-2021 01:43:11 PM] [INFO] [test_runner.py] [485]: [copy_file_on_s3] file logs/test_runner.log successfully copied on s3 at mangle-yaan/logs/test_runner-04Feb2021_13:43:06.683341.log
+[04-02-2021 01:43:15 PM] [INFO] [test_runner.py] [485]: [copy_file_on_s3] file logs/mangle-yaan-test-report-04Feb2021_13:43:06.683341.html successfully copied on s3 at mangle-yaan/results/mangle-yaan-test-report-04Feb2021_13:43:06.683341.html
+[04-02-2021 01:43:15 PM] [ERROR] [agent.py] [63]: [update_task] invalid run_id found. Ignore if execution is running locally
+[04-02-2021 01:43:24 PM] [DEBUG] [utils.py] [151]: [run_cmd] running 'b'allure generate /Users/mtarun/vmware/code/mangle-yaan-service/logs/allure/raw --clean -o /Users/mtarun/vmware/code/mangle-yaan-service/logs/allure/html'' command...
+[04-02-2021 01:43:27 PM] [DEBUG] [test_runner.py] [512]: [generate_and_copy_result_trends] cmd='b'allure generate /Users/mtarun/vmware/code/mangle-yaan-service/logs/allure/raw --clean -o /Users/mtarun/vmware/code/mangle-yaan-service/logs/allure/html'' executed with output=b'Report successfully generated to /Users/mtarun/vmware/code/mangle-yaan-service/logs/allure/html\n'
+[04-02-2021 01:43:27 PM] [DEBUG] [test_runner.py] [515]: [generate_and_copy_result_trends] allure report generated successfully
+[04-02-2021 01:43:27 PM] [DEBUG] [test_runner.py] [517]: [generate_and_copy_result_trends] deleting workload history key=workloads-history/Test-workload/history
+[04-02-2021 01:43:30 PM] [DEBUG] [test_runner.py] [519]: [generate_and_copy_result_trends] uploading allure html history dir /Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history to s3 workload history workloads-history/Test-workload/history
+[04-02-2021 01:43:33 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/duration-trend.json file with mimetype=application/json to s3 key=workloads-history/Test-workload/history/duration-trend.json
+[04-02-2021 01:43:36 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/retry-trend.json file with mimetype=application/json to s3 key=workloads-history/Test-workload/history/retry-trend.json
+[04-02-2021 01:43:37 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/history.json file with mimetype=application/json to s3 key=workloads-history/Test-workload/history/history.json
+[04-02-2021 01:43:40 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/categories-trend.json file with mimetype=application/json to s3 key=workloads-history/Test-workload/history/categories-trend.json
+[04-02-2021 01:43:41 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/history-trend.json file with mimetype=application/json to s3 key=workloads-history/Test-workload/history/history-trend.json
+[04-02-2021 01:43:45 PM] [DEBUG] [test_runner.py] [525]: [generate_and_copy_result_trends] deleting result key=Test-workload
+[04-02-2021 01:43:58 PM] [DEBUG] [test_runner.py] [527]: [generate_and_copy_result_trends] uploading allure html dir /Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html to s3 workload results Test-workload
+[04-02-2021 01:44:02 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/favicon.ico file with mimetype=image/vnd.microsoft.icon to s3 key=Test-workload/favicon.ico
+[04-02-2021 01:44:05 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/index.html file with mimetype=text/html to s3 key=Test-workload/index.html
+[04-02-2021 01:44:05 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/styles.css file with mimetype=text/css to s3 key=Test-workload/styles.css
+[04-02-2021 01:44:42 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/app.js file with mimetype=application/javascript to s3 key=Test-workload/app.js
+[04-02-2021 01:44:50 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/plugins/behaviors/index.js file with mimetype=application/javascript to s3 key=Test-workload/plugins/behaviors/index.js
+[04-02-2021 01:44:51 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/plugins/packages/index.js file with mimetype=application/javascript to s3 key=Test-workload/plugins/packages/index.js
+[04-02-2021 01:44:52 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/plugins/screen-diff/styles.css file with mimetype=text/css to s3 key=Test-workload/plugins/screen-diff/styles.css
+[04-02-2021 01:44:53 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/plugins/screen-diff/index.js file with mimetype=application/javascript to s3 key=Test-workload/plugins/screen-diff/index.js
+[04-02-2021 01:44:54 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/duration-trend.json file with mimetype=application/json to s3 key=Test-workload/history/duration-trend.json
+[04-02-2021 01:44:55 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/retry-trend.json file with mimetype=application/json to s3 key=Test-workload/history/retry-trend.json
+[04-02-2021 01:44:56 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/history.json file with mimetype=application/json to s3 key=Test-workload/history/history.json
+[04-02-2021 01:44:58 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/categories-trend.json file with mimetype=application/json to s3 key=Test-workload/history/categories-trend.json
+[04-02-2021 01:44:59 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/history/history-trend.json file with mimetype=application/json to s3 key=Test-workload/history/history-trend.json
+[04-02-2021 01:45:00 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/export/influxDbData.txt file with mimetype=text/plain to s3 key=Test-workload/export/influxDbData.txt
+[04-02-2021 01:45:01 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/export/mail.html file with mimetype=text/html to s3 key=Test-workload/export/mail.html
+[04-02-2021 01:45:02 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/export/prometheusData.txt file with mimetype=text/plain to s3 key=Test-workload/export/prometheusData.txt
+[04-02-2021 01:45:03 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/categories.json file with mimetype=application/json to s3 key=Test-workload/data/categories.json
+[04-02-2021 01:45:04 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/categories.csv file with mimetype=text/csv to s3 key=Test-workload/data/categories.csv
+[04-02-2021 01:45:05 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/suites.json file with mimetype=application/json to s3 key=Test-workload/data/suites.json
+[04-02-2021 01:45:06 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/timeline.json file with mimetype=application/json to s3 key=Test-workload/data/timeline.json
+[04-02-2021 01:45:08 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/packages.json file with mimetype=application/json to s3 key=Test-workload/data/packages.json
+[04-02-2021 01:45:09 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/suites.csv file with mimetype=text/csv to s3 key=Test-workload/data/suites.csv
+[04-02-2021 01:45:10 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/behaviors.json file with mimetype=application/json to s3 key=Test-workload/data/behaviors.json
+[04-02-2021 01:45:11 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/behaviors.csv file with mimetype=text/csv to s3 key=Test-workload/data/behaviors.csv
+[04-02-2021 01:45:12 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/6347b0be109a49fc.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/6347b0be109a49fc.json
+[04-02-2021 01:45:13 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/c51b10663fbc5dc7.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/c51b10663fbc5dc7.json
+[04-02-2021 01:45:15 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/c4bf6132ebf695c.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/c4bf6132ebf695c.json
+[04-02-2021 01:45:17 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/9441a69e7349af84.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/9441a69e7349af84.json
+[04-02-2021 01:45:18 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/ef7faf3de3bae63b.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/ef7faf3de3bae63b.json
+[04-02-2021 01:45:18 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/a237424d59c31d3b.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/a237424d59c31d3b.json
+[04-02-2021 01:45:19 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/8931063d9d9f6288.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/8931063d9d9f6288.json
+[04-02-2021 01:45:20 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/81f3f548907544cc.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/81f3f548907544cc.json
+[04-02-2021 01:45:21 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/ddcd0c98f6d6c60b.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/ddcd0c98f6d6c60b.json
+[04-02-2021 01:45:22 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/54189418ad7bc46.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/54189418ad7bc46.json
+[04-02-2021 01:45:23 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/5e0075198291067a.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/5e0075198291067a.json
+[04-02-2021 01:45:24 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/9e8fd17daae6a29.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/9e8fd17daae6a29.json
+[04-02-2021 01:45:25 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/1cfa94a1f9e5eb13.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/1cfa94a1f9e5eb13.json
+[04-02-2021 01:45:25 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/709484670ccefd2d.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/709484670ccefd2d.json
+[04-02-2021 01:45:27 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7d9e4b059685ac77.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7d9e4b059685ac77.json
+[04-02-2021 01:45:28 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/6d883fe4efc27380.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/6d883fe4efc27380.json
+[04-02-2021 01:45:29 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7c7ac2d311ab823b.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7c7ac2d311ab823b.json
+[04-02-2021 01:45:30 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/55a54650c059e276.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/55a54650c059e276.json
+[04-02-2021 01:45:31 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/d67ca4759ed237de.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/d67ca4759ed237de.json
+[04-02-2021 01:45:32 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/e7ba8a3de442adb0.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/e7ba8a3de442adb0.json
+[04-02-2021 01:45:33 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/64b2b3543787f4b3.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/64b2b3543787f4b3.json
+[04-02-2021 01:45:34 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/e362759f2fa4c717.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/e362759f2fa4c717.json
+[04-02-2021 01:45:35 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/c353c8df55470213.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/c353c8df55470213.json
+[04-02-2021 01:45:36 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/a21404f6dff4df7c.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/a21404f6dff4df7c.json
+[04-02-2021 01:45:37 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/d874e2e2b39e8059.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/d874e2e2b39e8059.json
+[04-02-2021 01:45:38 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/8fd94da9fdbccd9.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/8fd94da9fdbccd9.json
+[04-02-2021 01:45:39 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/14680a7098015ce2.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/14680a7098015ce2.json
+[04-02-2021 01:45:40 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/a399803a27ebcb9.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/a399803a27ebcb9.json
+[04-02-2021 01:45:41 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/5c307892917cc8e2.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/5c307892917cc8e2.json
+[04-02-2021 01:45:42 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/6fa61c4279c9330b.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/6fa61c4279c9330b.json
+[04-02-2021 01:45:43 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7cba48f2fc89947b.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7cba48f2fc89947b.json
+[04-02-2021 01:45:43 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7ef8dc9664b6111f.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7ef8dc9664b6111f.json
+[04-02-2021 01:45:44 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/764feef6de45cbb6.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/764feef6de45cbb6.json
+[04-02-2021 01:45:45 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/3df7c9bfffa920b6.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/3df7c9bfffa920b6.json
+[04-02-2021 01:45:46 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/18346d61c92e0c9.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/18346d61c92e0c9.json
+[04-02-2021 01:45:48 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/fa292965bc0b73c9.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/fa292965bc0b73c9.json
+[04-02-2021 01:45:49 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/c1737971e80acc2d.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/c1737971e80acc2d.json
+[04-02-2021 01:45:50 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/64259e7be4dae623.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/64259e7be4dae623.json
+[04-02-2021 01:45:51 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/336b6bc6171425a3.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/336b6bc6171425a3.json
+[04-02-2021 01:45:52 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/79e4100b6b52c042.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/79e4100b6b52c042.json
+[04-02-2021 01:45:53 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/274555e91877933.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/274555e91877933.json
+[04-02-2021 01:45:54 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7286918005d9bc2a.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7286918005d9bc2a.json
+[04-02-2021 01:45:55 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/95fccfa5b2e0a9ec.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/95fccfa5b2e0a9ec.json
+[04-02-2021 01:45:55 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/1f36c7dea86f8dce.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/1f36c7dea86f8dce.json
+[04-02-2021 01:45:57 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/d879ee68df07b4e3.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/d879ee68df07b4e3.json
+[04-02-2021 01:45:58 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/702ac729be6d46bb.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/702ac729be6d46bb.json
+[04-02-2021 01:45:59 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/419bc3559b37a46e.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/419bc3559b37a46e.json
+[04-02-2021 01:45:59 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/8c6e16fc9debdf51.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/8c6e16fc9debdf51.json
+[04-02-2021 01:46:01 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/ec0069433aeab564.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/ec0069433aeab564.json
+[04-02-2021 01:46:02 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/f241ebb8eb80b0a4.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/f241ebb8eb80b0a4.json
+[04-02-2021 01:46:03 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7d5f067f3086351.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7d5f067f3086351.json
+[04-02-2021 01:46:04 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/351dae3411e74d9f.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/351dae3411e74d9f.json
+[04-02-2021 01:46:06 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/139d420aa53c9e.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/139d420aa53c9e.json
+[04-02-2021 01:46:06 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/239cba13485dad13.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/239cba13485dad13.json
+[04-02-2021 01:46:08 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/6b6df107d5bb10b8.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/6b6df107d5bb10b8.json
+[04-02-2021 01:46:09 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/b829dc61153e5de8.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/b829dc61153e5de8.json
+[04-02-2021 01:46:09 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/e7e2d98b151cbbcd.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/e7e2d98b151cbbcd.json
+[04-02-2021 01:46:11 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7b602a7077fdbe45.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7b602a7077fdbe45.json
+[04-02-2021 01:46:12 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/4fdeb11b892445c9.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/4fdeb11b892445c9.json
+[04-02-2021 01:46:13 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/c977a3103b705365.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/c977a3103b705365.json
+[04-02-2021 01:46:14 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/a3b0f7f4ee6bf38.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/a3b0f7f4ee6bf38.json
+[04-02-2021 01:46:14 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/bf3fa011a2bf9f6.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/bf3fa011a2bf9f6.json
+[04-02-2021 01:46:15 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/3e1a403b9928bc22.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/3e1a403b9928bc22.json
+[04-02-2021 01:46:16 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/6834750198ae47da.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/6834750198ae47da.json
+[04-02-2021 01:46:17 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/d64e2a7a5d75eb2.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/d64e2a7a5d75eb2.json
+[04-02-2021 01:46:18 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/2cc004335c419803.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/2cc004335c419803.json
+[04-02-2021 01:46:19 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/30161fa37d1cdd4a.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/30161fa37d1cdd4a.json
+[04-02-2021 01:46:21 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/b914e7c1021f1f48.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/b914e7c1021f1f48.json
+[04-02-2021 01:46:22 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/4e5cd57205340d48.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/4e5cd57205340d48.json
+[04-02-2021 01:46:23 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/468746bbb81d4caf.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/468746bbb81d4caf.json
+[04-02-2021 01:46:24 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/d21676a1c4dab973.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/d21676a1c4dab973.json
+[04-02-2021 01:46:25 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/778d6fd75a7d309d.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/778d6fd75a7d309d.json
+[04-02-2021 01:46:26 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/daf329afccd775e5.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/daf329afccd775e5.json
+[04-02-2021 01:46:27 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/6f5cc90efee494a3.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/6f5cc90efee494a3.json
+[04-02-2021 01:46:28 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/daefaac46af5fb31.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/daefaac46af5fb31.json
+[04-02-2021 01:46:29 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/bd8d1e1536afb6ac.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/bd8d1e1536afb6ac.json
+[04-02-2021 01:46:30 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/77594a380942a791.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/77594a380942a791.json
+[04-02-2021 01:46:33 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/8db495b3e019c72d.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/8db495b3e019c72d.json
+[04-02-2021 01:46:33 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/256de65c2c8c354.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/256de65c2c8c354.json
+[04-02-2021 01:46:35 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/ad1cfab212176ba3.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/ad1cfab212176ba3.json
+[04-02-2021 01:46:36 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/87d8cf1b601ede76.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/87d8cf1b601ede76.json
+[04-02-2021 01:46:36 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/a9e935f322e12fbc.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/a9e935f322e12fbc.json
+[04-02-2021 01:46:37 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/553a0bd5342de588.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/553a0bd5342de588.json
+[04-02-2021 01:46:38 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/5c329518b66c0b24.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/5c329518b66c0b24.json
+[04-02-2021 01:46:39 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/3b1f383a9775fb90.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/3b1f383a9775fb90.json
+[04-02-2021 01:46:40 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7abd850e9c9104dc.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7abd850e9c9104dc.json
+[04-02-2021 01:46:41 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/790836abffbbbb92.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/790836abffbbbb92.json
+[04-02-2021 01:46:42 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/15ae29acfc3d4a89.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/15ae29acfc3d4a89.json
+[04-02-2021 01:46:43 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/9aaa91dd410fcc9e.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/9aaa91dd410fcc9e.json
+[04-02-2021 01:46:45 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/45f7033176e16f1f.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/45f7033176e16f1f.json
+[04-02-2021 01:46:45 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/c77464a6647a3c68.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/c77464a6647a3c68.json
+[04-02-2021 01:46:46 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/e8b4a1f0d23d0af1.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/e8b4a1f0d23d0af1.json
+[04-02-2021 01:46:47 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/2ac2c061c4d08145.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/2ac2c061c4d08145.json
+[04-02-2021 01:46:48 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7debfeb0ae6cda84.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7debfeb0ae6cda84.json
+[04-02-2021 01:46:50 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/bafbf2b1577b637e.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/bafbf2b1577b637e.json
+[04-02-2021 01:46:51 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/2e8b0c954c7b867c.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/2e8b0c954c7b867c.json
+[04-02-2021 01:46:52 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/b4f5ae53c991cef7.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/b4f5ae53c991cef7.json
+[04-02-2021 01:46:53 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/fce5bfb3f3680c33.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/fce5bfb3f3680c33.json
+[04-02-2021 01:46:54 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/2aa46f5c7f3c395d.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/2aa46f5c7f3c395d.json
+[04-02-2021 01:46:55 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/fac039929f0f096f.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/fac039929f0f096f.json
+[04-02-2021 01:46:55 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/ec1e0eb44cacf648.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/ec1e0eb44cacf648.json
+[04-02-2021 01:46:57 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7a480265a8078fb1.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7a480265a8078fb1.json
+[04-02-2021 01:46:58 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/51be2a480ab25e7a.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/51be2a480ab25e7a.json
+[04-02-2021 01:46:59 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7fc8556d900d581d.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7fc8556d900d581d.json
+[04-02-2021 01:47:00 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/e253ef3446841ee4.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/e253ef3446841ee4.json
+[04-02-2021 01:47:01 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/35d4fabb430487e4.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/35d4fabb430487e4.json
+[04-02-2021 01:47:02 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/997f538a82868af3.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/997f538a82868af3.json
+[04-02-2021 01:47:03 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/ba856b868c06cec2.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/ba856b868c06cec2.json
+[04-02-2021 01:47:04 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/1fcdf69373740be3.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/1fcdf69373740be3.json
+[04-02-2021 01:47:06 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/a0d4c9f0f0fc3432.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/a0d4c9f0f0fc3432.json
+[04-02-2021 01:47:07 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/4e01b4700bb38f71.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/4e01b4700bb38f71.json
+[04-02-2021 01:47:08 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/8ba5b3746d7e3a7d.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/8ba5b3746d7e3a7d.json
+[04-02-2021 01:47:09 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/4cea9d4d93e57361.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/4cea9d4d93e57361.json
+[04-02-2021 01:47:10 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/424ca9c384c1ee78.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/424ca9c384c1ee78.json
+[04-02-2021 01:47:11 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/a5213efae9ade451.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/a5213efae9ade451.json
+[04-02-2021 01:47:12 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/15c7842b28044632.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/15c7842b28044632.json
+[04-02-2021 01:47:13 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/19d21a012031a16c.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/19d21a012031a16c.json
+[04-02-2021 01:47:14 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7629878ce62c6551.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7629878ce62c6551.json
+[04-02-2021 01:47:15 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/294c705bd20027d3.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/294c705bd20027d3.json
+[04-02-2021 01:47:16 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/46c05d4ed185c9a4.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/46c05d4ed185c9a4.json
+[04-02-2021 01:47:18 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/fa3da665c43f3843.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/fa3da665c43f3843.json
+[04-02-2021 01:47:19 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/ec2fc469a36f70c6.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/ec2fc469a36f70c6.json
+[04-02-2021 01:47:20 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/74916b86d054e795.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/74916b86d054e795.json
+[04-02-2021 01:47:22 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/d1ced8ae4513dc02.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/d1ced8ae4513dc02.json
+[04-02-2021 01:47:23 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/167a307c1e305028.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/167a307c1e305028.json
+[04-02-2021 01:47:24 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/ce05589b6c405744.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/ce05589b6c405744.json
+[04-02-2021 01:47:26 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/6483afb485abd256.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/6483afb485abd256.json
+[04-02-2021 01:47:27 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/76bf1fef089be72e.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/76bf1fef089be72e.json
+[04-02-2021 01:47:28 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/71ec099311bf4250.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/71ec099311bf4250.json
+[04-02-2021 01:47:30 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/462d3a1dab19954a.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/462d3a1dab19954a.json
+[04-02-2021 01:47:31 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/85427d679d2daffb.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/85427d679d2daffb.json
+[04-02-2021 01:47:32 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/6f08fc31cac26155.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/6f08fc31cac26155.json
+[04-02-2021 01:47:33 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/ebb2d2f14f7eb7a7.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/ebb2d2f14f7eb7a7.json
+[04-02-2021 01:47:34 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/7d37214f0232f602.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/7d37214f0232f602.json
+[04-02-2021 01:47:35 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/6c102e593bfcdec3.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/6c102e593bfcdec3.json
+[04-02-2021 01:47:35 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/data/test-cases/28992437c8c14651.json file with mimetype=application/json to s3 key=Test-workload/data/test-cases/28992437c8c14651.json
+[04-02-2021 01:47:36 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/categories.json file with mimetype=application/json to s3 key=Test-workload/widgets/categories.json
+[04-02-2021 01:47:37 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/summary.json file with mimetype=application/json to s3 key=Test-workload/widgets/summary.json
+[04-02-2021 01:47:38 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/executors.json file with mimetype=application/json to s3 key=Test-workload/widgets/executors.json
+[04-02-2021 01:47:39 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/duration-trend.json file with mimetype=application/json to s3 key=Test-workload/widgets/duration-trend.json
+[04-02-2021 01:47:40 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/status-chart.json file with mimetype=application/json to s3 key=Test-workload/widgets/status-chart.json
+[04-02-2021 01:47:41 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/suites.json file with mimetype=application/json to s3 key=Test-workload/widgets/suites.json
+[04-02-2021 01:47:41 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/retry-trend.json file with mimetype=application/json to s3 key=Test-workload/widgets/retry-trend.json
+[04-02-2021 01:47:42 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/categories-trend.json file with mimetype=application/json to s3 key=Test-workload/widgets/categories-trend.json
+[04-02-2021 01:47:43 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/severity.json file with mimetype=application/json to s3 key=Test-workload/widgets/severity.json
+[04-02-2021 01:47:44 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/history-trend.json file with mimetype=application/json to s3 key=Test-workload/widgets/history-trend.json
+[04-02-2021 01:47:45 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/launch.json file with mimetype=application/json to s3 key=Test-workload/widgets/launch.json
+[04-02-2021 01:47:45 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/behaviors.json file with mimetype=application/json to s3 key=Test-workload/widgets/behaviors.json
+[04-02-2021 01:47:46 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/duration.json file with mimetype=application/json to s3 key=Test-workload/widgets/duration.json
+[04-02-2021 01:47:47 PM] [DEBUG] [s3.py] [114]: [upload_files_to_s3] copying src=/Users/mtarun/OneDrive - VMware, Inc/vmware/code/mangle-yaan-service/logs/allure/html/widgets/environment.json file with mimetype=application/json to s3 key=Test-workload/widgets/environment.json
+[04-02-2021 01:47:48 PM] [INFO] [utils.py] [132]: [stop_mangleyaan_health_updater] terminating health updater thread...

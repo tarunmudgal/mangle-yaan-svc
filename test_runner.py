@@ -20,6 +20,7 @@ import pytest
 import requests
 
 from lib import params as lib_params
+from lib.aws import s3
 from lib.common import config_reader, logger, rest_client, utils
 from lib.csp import csp_client
 from lib.csp import resources as csp_resources
@@ -36,16 +37,17 @@ requests.packages.urllib3.disable_warnings()
 ROOT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 builtins.ROOT_DIR = ROOT_DIR
 
-LOG_DIR = ROOT_DIR + os.path.sep + "logs"
-CONF_DIR = ROOT_DIR + os.path.sep + "config"
-TESTSUITES_DIR = ROOT_DIR + os.path.sep + "tests"
-SRC_DIR = ROOT_DIR + os.path.sep + "src"
-TESTLIB_DIR = ROOT_DIR + os.path.sep + "src" + os.path.sep + "testlib"
+lib_params.LOG_DIR = ROOT_DIR + os.path.sep + "logs"
+lib_params.CONF_DIR = ROOT_DIR + os.path.sep + "config"
+lib_params.TESTSUITES_DIR = ROOT_DIR + os.path.sep + "tests"
+lib_params.SRC_DIR = ROOT_DIR + os.path.sep + "src"
+lib_params.TESTLIB_DIR = ROOT_DIR + os.path.sep + "src" + os.path.sep + "testlib"
+lib_params.ALLURE_LOG_DIR = ROOT_DIR + os.path.sep + "logs" + os.path.sep + "allure"
 
 # create logs dir if not exist
-if not os.path.exists(LOG_DIR):
-    print("creating log directory: %s" % LOG_DIR, flush=True)
-    os.makedirs(LOG_DIR)
+if not os.path.exists(lib_params.LOG_DIR):
+    print("creating log directory: %s" % lib_params.LOG_DIR, flush=True)
+    os.makedirs(lib_params.LOG_DIR)
 
 # mylog = logger.Log(logger.get_logger())
 mylog = logger.get_logger()
@@ -82,7 +84,7 @@ def create_maxim_gun_client(timeout: int = 120) -> maximgun_client.MGClient:
         MGClient instance
     """
     # read static config
-    my_json = CONF_DIR + os.path.sep + "my.json"
+    my_json = lib_params.CONF_DIR + os.path.sep + "my.json"
     my_json = config_reader.parse_json(my_json)
 
     # maxim-gun client
@@ -142,6 +144,21 @@ def create_csp_k8s_client(kubeconfig_filename: str, namespace: str) -> k8s_clien
     csp_k8s_client = k8s_client.K8SClient(kubeconfig_filename, namespace)
 
     return csp_k8s_client
+
+
+def create_s3_client(aws_access_key_id: str, aws_secret_access_key: str) -> s3.S3Client:
+    """
+    creates aws s3 client
+    Args:
+        aws_access_key_id: aws access key id for authentication
+        aws_secret_access_key: aws access key secret for authentication
+
+    Returns:
+        S3Client instance
+    """
+    s3_client = s3.S3Client(aws_access_key_id, aws_secret_access_key)
+
+    return s3_client
 
 
 def get_mangle_yaan_config(myconf_file: str = None, workload_name: str = None) -> typing.Dict:
@@ -363,11 +380,17 @@ def prepare_setup(
         csp_k8s_info.get("kubeConfigFileName"), csp_k8s_info.get("namespace")
     )
 
+    # create s3 client
+    builtins.s3_client = create_s3_client(
+        myconfig.get("aws").get("s3").get("awsAccessKeyID"),
+        myconfig.get("aws").get("s3").get("awsSecretAccessKey"),
+    )
+
     # creates mangle endpoint and confirms its connectivity
     setup_mangle_infra()
 
     # cleanup older mangle-yaan-test-reports
-    cleanup_old_reports(LOG_DIR, max_count=5)
+    cleanup_old_reports(lib_params.LOG_DIR, max_count=5)
 
     # test_runner cache to maintain states
     mycache = {}
@@ -402,7 +425,7 @@ def run_pytest(*args: str, run_id: str = None, **kwargs: str) -> int:
     return status
 
 
-def post_run_activities(copy_results: bool = True, copy_logs: bool = True) -> str:
+def copy_results_and_logs(copy_results: bool = True, copy_logs: bool = True) -> str:
     """Tasks to be performed after pytest test-suites execution
 
     Args:
@@ -478,6 +501,64 @@ def copy_file_on_s3(bucket_name: str, src_fpath: str = None, s3_fpath: str = Non
     return copy_status
 
 
+def generate_and_copy_result_trends(bucket: str, result_key: str, history_key: str) -> None:
+    """generates and copies resiliency workloads result trends
+
+    Args:
+      bucket: S3 bucket name (e.g. csp-qe-res)
+      result_key: resiliency workloads result trends s3 key (directory) in above bucket
+      history_key: resiliency workloads result trends history s3 key (directory) in above bucket
+
+    Returns:
+        copy_status (True or False)
+    """
+    workload_history_key = (
+        history_key.rstrip("/") + "/" + mycache["run_info"]["workload_name"] + "/" + "history"
+    )
+
+    allure_raw = lib_params.ALLURE_LOG_DIR + os.path.sep + "raw"
+    allure_html = lib_params.ALLURE_LOG_DIR + os.path.sep + "html"
+    allure_raw_history = lib_params.ALLURE_LOG_DIR + os.path.sep + "raw" + os.path.sep + "history"
+    allure_html_history = (
+        lib_params.ALLURE_LOG_DIR + os.path.sep + "html" + os.path.sep + "history"
+    )
+
+    if s3_client.if_key_exists(bucket, workload_history_key):
+        s3_client.download_files_from_s3(bucket, workload_history_key, allure_raw)
+
+    allure_report_gen_cmd = "allure generate {} --clean -o {}".format(allure_raw, allure_html)
+    # allure_report_gen_cmd = b'allure generate /Users/mtarun/vmware/code/mangle-yaan-service/logs/allure/raw --clean ' \
+    #                         b'-o /Users/mtarun/vmware/code/mangle-yaan-service/logs/allure/html'
+    cmd_output = utils.run_cmd(allure_report_gen_cmd)
+    mylog.debug("cmd='{}' executed with output={}".format(allure_report_gen_cmd, cmd_output))
+
+    if cmd_output.startswith(b"Report successfully generated to"):
+        mylog.debug("allure report generated successfully")
+        if s3_client.if_key_exists(bucket, workload_history_key):
+            mylog.debug("deleting workload history key={}".format(workload_history_key))
+            s3_client.delete_files_from_s3(bucket, workload_history_key)
+        mylog.debug(
+            "uploading allure html history dir {} to s3 workload history {}".format(
+                allure_html_history, workload_history_key
+            )
+        )
+        s3_client.upload_files_to_s3(
+            bucket, os.path.dirname(workload_history_key), allure_html_history
+        )
+
+        if s3_client.if_key_exists(bucket, result_key):
+            mylog.debug("deleting result key={}".format(result_key))
+            s3_client.delete_files_from_s3(bucket, result_key)
+        mylog.debug(
+            "uploading allure html dir {} to s3 workload results {}".format(
+                allure_html, result_key
+            )
+        )
+        s3_client.upload_files_to_s3(
+            bucket, result_key, allure_html, skip_parent_dir_creation=True
+        )
+
+
 def get_test_modules_from_testsuite_names(testsuite_names: str) -> typing.List[str]:
     """verifies test-suites exist in testsuites_info.json and returns corresponding test-module file-paths.
     test-suites are a bit user-friendly names. They are mapped with test-modules in testsuites_info.json file.
@@ -490,7 +571,7 @@ def get_test_modules_from_testsuite_names(testsuite_names: str) -> typing.List[s
     Returns:
       testmodule_paths: list of test-module paths
     """
-    testsuites_info_file = TESTLIB_DIR + os.path.sep + "testsuites_info.json"
+    testsuites_info_file = lib_params.TESTLIB_DIR + os.path.sep + "testsuites_info.json"
     testsuites_info = config_reader.parse_json(testsuites_info_file)
 
     # removes empty-string/white-spaces-only test-suite names if any
@@ -518,7 +599,7 @@ def print_testsuite_info() -> None:
     Returns:
         None
     """
-    testsuites_info_file = TESTLIB_DIR + os.path.sep + "testsuites_info.json"
+    testsuites_info_file = lib_params.TESTLIB_DIR + os.path.sep + "testsuites_info.json"
     testsuites_info = config_reader.parse_json(testsuites_info_file)
 
     testsuite_names = pprint.pformat(list(testsuites_info.keys()))
@@ -627,9 +708,11 @@ def main() -> None:
     # don't copy logs to S3 for pytest usage error. seems incorrect --pytest_args are passed. Also, update task status as FAILED
 
     copy_results = True
+    copy_result_trends = True
     end_time = datetime.datetime.now().strftime(lib_params.MG_DATETIME_FORMAT)
     if pytest_status == 4:
         copy_results = False
+        copy_result_trends = False
         mg_agent.update_task(
             args.run_id, status=lib_params.MG_TASK_STATUS["FAILED"], end_time=end_time
         )
@@ -637,10 +720,11 @@ def main() -> None:
     if pytest_status == 2:
         mylog.error("Pytest execution terminated by user")
         copy_results = False
+        copy_result_trends = False
         mg_agent.update_task(args.run_id, end_time=end_time)
         # sys.exit(3)
     if copy_results:
-        s3_path = post_run_activities(copy_results=copy_results)
+        s3_path = copy_results_and_logs(copy_results=copy_results)
         mg_agent.update_task(
             args.run_id,
             status=lib_params.MG_TASK_STATUS["COMPLETED"],
@@ -650,6 +734,13 @@ def main() -> None:
         )
         mg_agent.update_result(
             args.run_id, end_time=end_time, report_details=mycache["run_info"]["result_summary"]
+        )
+
+    if copy_result_trends:
+        generate_and_copy_result_trends(
+            myconfig.get("aws").get("s3").get("resultTrendsBucketName"),
+            mycache["run_info"]["workload_name"],
+            myconfig.get("aws").get("s3").get("resultTrendsHistoryPath"),
         )
 
 

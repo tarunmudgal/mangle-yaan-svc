@@ -52,17 +52,10 @@ class Log:
         self.logger.error("%s", msg)
 
 
-def get_logger(
-    console_log_level="DEBUG",
-    file_log_filename="test_runner.log",
-    file_log_level="DEBUG",
-    file_log_max_bytes=1_000_000,
-    file_log_backup_count=5,
-):
+def get_logger():
     """ provides console and file loggers """
     log_dir = ROOT_DIR + os.path.sep + "logs"
-
-    file_log_filepath = os.path.join(log_dir, file_log_filename)
+    file_log_filepath = os.path.join(log_dir, params.FILE_LOG_FILENAME)
 
     formatter = logging.Formatter(params.LOG_FORMAT)
     formatter.converter = time.gmtime  # log UTC timestamps
@@ -72,7 +65,9 @@ def get_logger(
 
     console_handler = logging.StreamHandler(sys.stdout)
     file_handler = logging.handlers.RotatingFileHandler(
-        file_log_filepath, maxBytes=file_log_max_bytes, backupCount=file_log_backup_count
+        file_log_filepath,
+        maxBytes=params.FILE_LOG_MAX_BYTES,
+        backupCount=params.FILE_LOG_BACKUP_COUNT,
     )
     formatter = logging.Formatter(params.LOG_FORMAT, datefmt=params.LOG_DATE_FORMAT)
     console_handler.setFormatter(formatter)
@@ -83,8 +78,8 @@ def get_logger(
     if os.path.isfile(file_log_filepath) and os.path.getsize(file_log_filepath) > 0:
         file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
 
-    console_handler.setLevel(console_log_level)
-    file_handler.setLevel(file_log_level)
+    console_handler.setLevel(params.CONSOLE_LOG_LEVEL)
+    file_handler.setLevel(params.FILE_LOG_LEVEL)
 
     log.addHandler(console_handler)
     log.addHandler(file_handler)

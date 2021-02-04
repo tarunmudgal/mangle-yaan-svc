@@ -28,7 +28,7 @@ from flaky import flaky
 
 
 @flaky(max_runs=2, min_passes=1, rerun_filter=None)
-@pytest.mark.usefixtures("init_chrome_driver")
+# @pytest.mark.usefixtures("init_chrome_driver")
 class TestDummy:
     def test_example1(self):
         """

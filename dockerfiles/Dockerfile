@@ -1,7 +1,22 @@
 FROM harbor-repo.vmware.com/dockerhub-proxy-cache/library/python:3.6-alpine
 MAINTAINER CSP QE Team "csp-pune-qe@vmware.com"
 
-RUN apk add build-base
+RUN apk add --update --no-cache \
+    python3 \
+    python3-dev \
+    py-pip \
+    build-base \
+    openjdk8-jre \
+    wget \
+    unzip \
+  && pip install virtualenv \
+  && rm -rf /var/cache/apk/*
+
+RUN python -m pip install -U pip
+RUN wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.13.8/allure-commandline-2.13.8.zip
+RUN unzip allure-commandline-2.13.8.zip -d /allure
+RUN rm allure-commandline-2.13.8.zip
+ENV PATH="/allure/allure-2.13.8/bin:${PATH}"
 
 COPY . /mangle-yaan/
 

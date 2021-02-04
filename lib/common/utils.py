@@ -7,6 +7,7 @@ __author__ = "tarun mudgal"
 import datetime
 import functools
 import logging
+import subprocess
 import sys
 import threading
 import time
@@ -143,6 +144,20 @@ def _update_health(run_id: str, event: threading.Event):
         except Exception as fault:
             mylog.error("Exception occurred while updating maxim-gun task")
             mylog.exception(fault)
+
+
+def run_cmd(cmd, ignore_error=False):
+    """ runs a shell command """
+    mylog.debug("running '{}' command...".format(cmd))
+    status = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True
+    )
+    output, error = status.communicate()
+
+    if not ignore_error:
+        assert not error, "error occurred while running '{}' command. error: {}".format(cmd, error)
+
+    return output
 
 
 if __name__ == "__main__":
