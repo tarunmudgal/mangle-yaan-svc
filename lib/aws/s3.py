@@ -172,6 +172,27 @@ class S3Client:
         except Exception as fault:
             mylog.exception(fault)
 
+    def copy_files_on_s3_from_src_key(self, bucket: str, src_key: str, dest_key: str) -> None:
+        """copies src_key files (that matches src_key as prefix) to dest key
+        Args:
+          bucket: S3 bucket name
+          src_key: key name that is used as a prefix to select all the keys that starts with this key name
+          dest_key: key name where you want to copy files to
+
+        Returns:
+            None
+        """
+        try:
+            bucket_obj = self.resource.Bucket(bucket)
+            for obj in bucket_obj.objects.filter(Prefix=src_key):
+                if not obj.key.endswith("/"):
+                    fname = obj.key.split("/")[-1]
+                    dest_file_key = dest_key + "/" + fname
+                    src_file_key = bucket + "/" + obj.key
+                    self.resource.Object(bucket, dest_file_key).copy_from(CopySource=src_file_key)
+        except Exception as fault:
+            mylog.exception(fault)
+
     def delete_files_from_s3(self, bucket: str, key: str) -> None:
         """deletes all keys that starts with key prefix
         Args:

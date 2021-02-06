@@ -515,6 +515,13 @@ def generate_and_copy_result_trends(bucket: str, result_key: str, history_key: s
     workload_history_key = (
         history_key.rstrip("/") + "/" + mycache["run_info"]["workload_name"] + "/" + "history"
     )
+    workload_history_backup_key = (
+        history_key.rstrip("/")
+        + "/"
+        + mycache["run_info"]["workload_name"]
+        + "/"
+        + "history-backup"
+    )
 
     allure_raw = lib_params.ALLURE_LOG_DIR + os.path.sep + "raw"
     allure_html = lib_params.ALLURE_LOG_DIR + os.path.sep + "html"
@@ -534,7 +541,21 @@ def generate_and_copy_result_trends(bucket: str, result_key: str, history_key: s
 
     if cmd_output.startswith(b"Report successfully generated to"):
         mylog.debug("allure report generated successfully")
+
         if s3_client.if_key_exists(bucket, workload_history_key):
+            if s3_client.if_key_exists(bucket, workload_history_backup_key):
+                mylog.debug(
+                    "deleting workload history backup key={}".format(workload_history_backup_key)
+                )
+                s3_client.delete_files_from_s3(bucket, workload_history_backup_key)
+
+            mylog.debug(
+                "creating a backup for workload history key={}".format(workload_history_key)
+            )
+            s3_client.copy_files_on_s3_from_src_key(
+                bucket, workload_history_key, workload_history_backup_key
+            )
+
             mylog.debug("deleting workload history key={}".format(workload_history_key))
             s3_client.delete_files_from_s3(bucket, workload_history_key)
         mylog.debug(
