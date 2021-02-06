@@ -3,6 +3,7 @@ __pycache__/
 .idea/
 .Python
 .pytest_cache
+.mypy_cache
 .tox
 /extras/
 /logs/
