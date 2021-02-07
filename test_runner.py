@@ -520,7 +520,7 @@ def generate_and_copy_result_trends(bucket: str, result_key: str, history_key: s
         + "/"
         + mycache["run_info"]["workload_name"]
         + "/"
-        + "history-backup"
+        + "backup-history"
     )
 
     allure_raw = lib_params.ALLURE_LOG_DIR + os.path.sep + "raw"
@@ -550,7 +550,9 @@ def generate_and_copy_result_trends(bucket: str, result_key: str, history_key: s
                 s3_client.delete_files_from_s3(bucket, workload_history_backup_key)
 
             mylog.debug(
-                "creating a backup for workload history key={}".format(workload_history_key)
+                "creating a backup for workload history-key={} to history-backup-key={}".format(
+                    workload_history_key, workload_history_backup_key
+                )
             )
             s3_client.copy_files_on_s3_from_src_key(
                 bucket, workload_history_key, workload_history_backup_key
