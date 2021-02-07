@@ -109,7 +109,7 @@ class S3Client:
 
             for obj in response.get("Contents", []):
                 local_path = download_path + os.path.sep + os.path.basename(obj["Key"])
-                print("local_path={}".format(local_path))
+                # print("local_path={}".format(local_path))
                 self.client.download_file(bucket, obj["Key"], local_path)
         except Exception as fault:
             mylog.exception(fault)

@@ -5,6 +5,7 @@
 __author__ = "tarun mudgal"
 
 import builtins
+import io
 import json
 import os
 import time
@@ -143,6 +144,7 @@ def pytest_sessionfinish(session, exitstatus):
     accordingly colour coding (GREEN/YELLOW/RED) would be added for workload run on maxim-gun UI
     """
     reporter = session.config.pluginmanager.get_plugin("terminalreporter")
+    flaky_plugin = session.config.pluginmanager.get_plugin("flaky")
     result_summary = OrderedDict()
     result_summary["passed"] = len(reporter.stats.get("passed", []))
     result_summary["failed"] = len(reporter.stats.get("failed", []))
@@ -154,9 +156,21 @@ def pytest_sessionfinish(session, exitstatus):
     result_summary["passing_percent"] = passing_percent
     result_summary["aggregatd_result"] = aggregatd_result
 
-    mylog.debug("current test execution result_summary={}".format(result_summary))
+    mylog.info("current test execution result_summary={}".format(result_summary))
 
     mycache["run_info"]["result_summary"] = result_summary
+
+    flaky_output = io.StringIO()
+    flaky_plugin.pytest_terminal_summary(flaky_output)
+    mylog.info("flaky plugin execution report=\n{}".format(flaky_output.getvalue()))
+
+    allure_report_dir = session.config.option.allure_report_dir
+    env_details = """my.properties.browser=Firefox
+my.properties.url=http://yandex.ru"""#.format(mycache["run_info"]["workload_name"])
+
+    if allure_report_dir:
+        with open('{}/{}'.format(allure_report_dir, 'environment.properties'), 'w') as allure_env:
+            allure_env.write("{}".format(env_details))
 
 
 @pytest.fixture(scope="function")

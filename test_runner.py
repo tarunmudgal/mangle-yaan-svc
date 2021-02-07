@@ -744,6 +744,14 @@ def main() -> None:
         copy_result_trends = False
         mg_agent.update_task(args.run_id, end_time=end_time)
         # sys.exit(3)
+
+    if copy_result_trends:
+        generate_and_copy_result_trends(
+            myconfig.get("aws").get("s3").get("resultTrendsBucketName"),
+            mycache["run_info"]["workload_name"],
+            myconfig.get("aws").get("s3").get("resultTrendsHistoryPath"),
+        )
+
     if copy_results:
         s3_path = copy_results_and_logs(copy_results=copy_results)
         mg_agent.update_task(
@@ -755,13 +763,6 @@ def main() -> None:
         )
         mg_agent.update_result(
             args.run_id, end_time=end_time, report_details=mycache["run_info"]["result_summary"]
-        )
-
-    if copy_result_trends:
-        generate_and_copy_result_trends(
-            myconfig.get("aws").get("s3").get("resultTrendsBucketName"),
-            mycache["run_info"]["workload_name"],
-            myconfig.get("aws").get("s3").get("resultTrendsHistoryPath"),
         )
 
 
