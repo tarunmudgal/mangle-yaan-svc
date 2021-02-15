@@ -114,10 +114,10 @@ class TestSLCDependencyOnDifferentServices:
         request_body = {
             "serviceEscalationProcedure": "Use Pagerduty and Slack channel #vmc-assist",
             "serviceCostCenter": "US1079608",
-            "serviceEngineeringOwnerEmail": "engmgr@vmware.com",
+            "serviceEngineeringOwnerEmail": "test@vmware.com",
             "pagerDutyEscalationPolicy": "CSP-ENG-PRODUCTION",
             "status": "PRODUCTION_AVAILABLE",
-            "serviceAdditionalKeyContactsEmail": "dtonnessen@vmware.com,john@vmware.com",
+            "serviceAdditionalKeyContactsEmail": "test@vmware.com",
         }
 
         slc_resp = cclient.make_call(
