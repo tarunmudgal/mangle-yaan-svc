@@ -1,56 +1,53 @@
 {
-  "projectName": "csp_resiliency",
-  "projectDescription": "CSP Resiliency Test Suite",
+  "aws": {
+    "s3": {
+      "bucketName": "csp-e2e-qe",
+      "testLogPath": "mangle-yaan/logs/",
+      "awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
+      "testReportPath": "mangle-yaan/results/",
+      "awsSecretAccessKey": "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",
+      "resultTrendsBucketName": "csp-qe-res",
+      "resultTrendsHistoryPath": "workloads-history/"
+    }
+  },
+  "csp": {
+    "host": "console-preview.cloud.vmware.com",
+    "defaultOrg": {
+      "id": "f09537d7-633a-4204-891e-2fe6e58265a7"
+    },
+    "defaultUser": {
+      "id": "preview_vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
+      "email": "mtarun@vmware.com",
+      "accessToken": "",
+      "refreshToken": "5GcznFtRSQFqUMPFN7ON4jHQUHHhiRY52rS9Qi9Pq1vPSdGWF0N4RvpmpADzfZn6"
+    },
+    "defaultService": {
+      "id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
+    }
+  },
+  "mangle": {
+    "host": "10.126.4.81",
+    "password": "admin",
+    "username": "admin@mangle.local"
+  },
+  "k8sCluster": {
+    "namespace": "csp-app-preview",
+    "endpointName": "csp-app-preview",
+    "credentialName": "csp-app-preview",
+    "kubeConfigFileName": "csp-app-preview.yaml"
+  },
   "mangleYaan": {
-    "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",
-    "testLogPath": "logs/test_runner.log",
     "webDriver": {
       "initLocal": false,
       "chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
     },
+    "testLogPath": "logs/test_runner.log",
+    "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",
     "retryFailedTests": {
       "maxRuns": 2,
       "minPasses": 1
     }
   },
-  "mangle": {
-    "host": "10.126.4.81",
-    "username": "admin@mangle.local",
-    "password": "admin"
-  },
-  "maximGun": {
-    "host": "maxim-gun-ui.svc-stage.eng.vmware.com"
-  },
-  "k8sCluster": {
-    "endpointName": "scdc1-staging-csp-qe-res",
-    "credentialName": "scdc1-staging-csp-qe-res",
-    "namespace": "scdc1-staging-csp-qe-res",
-    "kubeConfigFileName": "scdc1-staging-csp-qe-res.yaml"
-  },
-  "csp": {
-    "host": "csp-console-scdc1-staging-csp-qe-res.svc-stage.eng.vmware.com",
-    "defaultOrg": {
-      "id": "5589bbe5-1e25-44c1-a15c-f37bcfabe96e"
-    },
-    "defaultService": {
-      "id": "bd7efb46-944e-4554-bfe3-cc68487b171c"
-    },
-    "defaultUser": {
-      "id": "vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
-      "email": "mtarun@vmware.com",
-      "refreshToken": "rFDXDluA2nF8KhcG2pk6izUjLQ55TAJd6fNrYmAvJBCFjQXXtLFfmAJqa8pzxooo",
-      "accessToken": ""
-    }
-  },
-  "aws": {
-    "s3": {
-      "bucketName": "csp-e2e-qe",
-      "testReportPath": "mangle-yaan/results/",
-      "testLogPath": "mangle-yaan/logs/",
-      "awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
-      "awsSecretAccessKey": "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",
-      "resultTrendsBucketName": "csp-qe-res",
-      "resultTrendsHistoryPath": "workloads-history/"
-    }
-  }
+  "projectName": "Test-run-all-testsuites",
+  "projectDescription": "CSP Resiliency Test Suite"
 }

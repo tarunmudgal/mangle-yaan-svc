@@ -1,80 +1,92 @@
 {
-  "project_id": "7yxPBvgGBuRW7rMcCine8E",
-  "description": "Workload for SLC APIs whan a service down",
-  "sut_details": {
-    "csp_host": "console-preview.cloud.vmware.com",
-    "csp_protocol": "https"
-  },
-  "service_tags": [
-    "csp-service-lifecycle "
-  ],
-  "workload_name": "Test-slc-api-when-a-service-down",
-  "workload_type": "res",
-  "workload_image": "vmware-docker-csp-tools.bintray.io/mangle-yaan",
-  "wavefront_links": [
-    {
-      "wavefront_link": "https://vmwareprod.wavefront.com/dashboards/csp1#_v01(g:(d:7200,ls:!f,s:1590120124,w:'2h'),p:(csp_micro_service:(d:Label_2,f:TAG_KEY,k:app,l:'Csp%20Micro%20Service',m:(Label_10:csp-customer-support,Label_2:csp-account-management-mvc),q:'ts(http.server.requests.seconds.max)',s:Label_10),kubernetes_namespace:(d:Label_2,f:TAG_KEY,k:kubernetes_namespace,l:kubernetes_namespace,m:(Label_2:csp-app-dev),q:'ts(http.server.requests.seconds.count)'),region:(d:'01%20-%20%20us-west-2',l:Region,m:('01%20-%20%20us-west-2':us-west-2,'02%20-%20us-east-1':us-east-1),vo:!('02%20-%20us-east-1','01%20-%20%20us-west-2'))))",
-      "waverfront_link_name": "Customer Support"
-    }
-  ],
-  "confluence_links": {
-    "confluence_link": "https://confluence.eng.vmware.com/display/E2EQEPUNE/Current+Perf+Workloads",
-    "confluence_page_id": "628859985",
-    "confluence_link_name": "Current Perf Workloads",
-    "confluence_report_name": "None",
-    "confluence_attachment_id": "661483652"
-  },
-  "mangle_yaan_conf": {
-    "aws": {
-      "s3": {
-        "bucketName": "csp-e2e-qe",
-        "awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
-        "testReportPath": "mangle-yaan/results/",
-        "awsSecretAccessKey": "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"
-      }
-    },
-    "csp": {
-      "host": "console-preview.cloud.vmware.com",
-      "defaultOrg": {
-        "id": "f09537d7-633a-4204-891e-2fe6e58265a7"
-      },
-      "defaultUser": {
-        "id": "preview_vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
-        "email": "mtarun@vmware.com",
-        "accessToken": "",
-        "refreshToken": "5GcznFtRSQFqUMPFN7ON4jHQUHHhiRY52rS9Qi9Pq1vPSdGWF0N4RvpmpADzfZn6"
-      },
-      "defaultService": {
-        "id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
-      }
-    },
-    "mangle": {
-      "host": "10.182.50.117",
-      "password": "admin",
-      "username": "admin@mangle.local"
-    },
-    "k8sCluster": {
-      "namespace": "csp-app-preview",
-      "endpointName": "csp-app-preview",
-      "credentialName": "csp-app-preview",
-      "kubeConfigFileName": "csp-app-preview.yaml"
-    },
-    "mangleYaan": {
-      "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html"
-    },
-    "projectName": "Test_SLC_whan_a_service_down",
-    "projectDescription": "CSP Resiliency Test Suite"
-  },
-  "workload_profile": {
-    "perf_nodes": "1",
-    "perf_test_name": "com.vmware.perf.tests.regressions.AllGetApisThruRefreshTokenTest",
-    "injection_profile": {
-      "users": "10",
-      "duration": "10 minutes",
-      "profile_name": "atOnceUser"
-    }
-  },
-  "pre_workload_image": null,
-  "post_workload_image": null,
-  "workload_testsuites": "test_slc_api_when_a_service_down"
+	"project_id": "k6uWqG34zLumCemXEjjwEi",
+	"description": "Workload for Test-run-all-testsuites",
+	"sut_details": {
+		"csp_host": "console-preview.cloud.vmware.com",
+		"csp_protocol": "https"
+	},
+	"service_tags": [
+		"Testsuite-Combinations"
+	],
+	"workload_name": "Test-run-all-testsuites",
+	"workload_type": "res",
+	"workload_image": "vmware-docker-csp-tools.bintray.io/mangle-yaan",
+	"wavefront_links": [
+		{
+			"wavefront_link": "https://vmwareprod.wavefront.com/dashboards/csp1#_v01(g:(d:5705.187801,ls:!f,s:1610503231.12106),p:(csp_micro_service:(d:Label_2,f:TAG_KEY,k:app,l:'Csp%20Micro%20Service',m:(Label_11:csp-customer-support,Label_2:csp-account-management-mvc),q:'ts(http.server.requests.seconds.max)',s:Label_11),kubernetes_namespace:(d:Label_2,f:TAG_KEY,k:kubernetes_namespace,l:kubernetes_namespace,m:(Label_2:csp-app-dev,Label_4:csp-app-preview),q:'ts(http.server.requests.seconds.count)',s:Label_4),region:(d:'01%20-%20%20us-west-2',l:Region,m:('01%20-%20%20us-west-2':us-west-2,'02%20-%20us-east-1':us-east-1),vo:!('02%20-%20us-east-1','01%20-%20%20us-west-2'))))",
+			"waverfront_link_name": "Customer Support"
+		}
+	],
+	"confluence_links": {
+		"confluence_link": "https://confluence.eng.vmware.com/display/E2EQEPUNE/Current+Perf+Workloads",
+		"confluence_page_id": "628859985",
+		"confluence_link_name": "Current Perf Workloads",
+		"confluence_report_name": "None",
+		"confluence_attachment_id": "661483652"
+	},
+	"mangle_yaan_conf": {
+		"aws": {
+			"s3": {
+				"bucketName": "csp-e2e-qe",
+				"testLogPath": "mangle-yaan/logs/",
+				"awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
+				"testReportPath": "mangle-yaan/results/",
+				"awsSecretAccessKey": "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",
+				"resultTrendsBucketName": "csp-qe-res",
+				"resultTrendsHistoryPath": "workloads-history/"
+			}
+		},
+		"csp": {
+			"host": "console-preview.cloud.vmware.com",
+			"defaultOrg": {
+				"id": "f09537d7-633a-4204-891e-2fe6e58265a7"
+			},
+			"defaultUser": {
+				"id": "preview_vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
+				"email": "mtarun@vmware.com",
+				"accessToken": "",
+				"refreshToken": "5GcznFtRSQFqUMPFN7ON4jHQUHHhiRY52rS9Qi9Pq1vPSdGWF0N4RvpmpADzfZn6"
+			},
+			"defaultService": {
+				"id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
+			}
+		},
+		"mangle": {
+			"host": "10.126.4.81",
+			"password": "admin",
+			"username": "admin@mangle.local"
+		},
+		"k8sCluster": {
+			"namespace": "csp-app-preview",
+			"endpointName": "csp-app-preview",
+			"credentialName": "csp-app-preview",
+			"kubeConfigFileName": "csp-app-preview.yaml"
+		},
+		"mangleYaan": {
+			"webDriver": {
+				"initLocal": false,
+				"chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
+			},
+			"testLogPath": "logs/test_runner.log",
+			"testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",
+			"retryFailedTests": {
+				"maxRuns": 2,
+				"minPasses": 1
+			}
+		},
+		"projectName": "Test-run-all-testsuites",
+		"projectDescription": "CSP Resiliency Test Suite"
+	},
+	"workload_profile": {
+		"perf_nodes": "1",
+		"perf_test_name": "com.vmware.perf.tests.regressions.AllGetApisThruRefreshTokenTest",
+		"injection_profile": {
+			"users": "10",
+			"duration": "10 minutes",
+			"profile_name": "atOnceUser"
+		}
+	},
+	"pre_workload_image": null,
+	"post_workload_image": null,
+	"workload_testsuites": "test_csp_apis_when_it_not_reachable,test_csp_apis_when_gaz_not_reachable,test_paginated_api_when_one_service_instance_down,test_am_api_when_a_service_down,test_slc_api_when_a_service_down,test_onboarding_api_when_a_service_down,test_commerce_api_when_a_service_down"
 }

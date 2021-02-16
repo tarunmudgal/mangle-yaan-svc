@@ -1,18 +1,18 @@
 {
-  "confluence_links": [
-    {
-      "confluence_attachment_id": "",
-      "confluence_link": "",
-      "confluence_link_name": "",
-      "confluence_page_id": ""
-    }
-  ],
-  "project_name": "Test-SLC-whan-a-service-down",
-  "project_type": "res",
-  "wavefront_links": [
-    {
-      "wavefront_link": "",
-      "waverfront_link_name": ""
-    }
-  ]
+	"confluence_links": [
+		{
+			"confluence_attachment_id": "",
+			"confluence_link": "",
+			"confluence_link_name": "",
+			"confluence_page_id": ""
+		}
+	],
+	"project_name": "Workloads-Dependent-on-Internal-Services",
+	"project_type": "res",
+	"wavefront_links": [
+		{
+			"wavefront_link": "",
+			"waverfront_link_name": ""
+		}
+	]
 }
