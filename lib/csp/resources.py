@@ -29,6 +29,7 @@ COMMERCE["GET_SUBSCRIPTION"] = "/commerce/api/v1/subscriptions/{subscriptionId}"
 COMMERCE["SATATEMENT"] = "/commerce/api/v1/orgs/{orgId}/statements"
 COMMERCE["INOVICES"] = "/commerce/api/v1/orgs/{orgId}/invoices"
 COMMERCE["PROMOTIONS_TYPE"] = "/commerce/api/v1/promotions"
+COMMERCE["ORG_DETAILS"] = "/commerce/api/v1/orgs/{orgId}/details"
 # CS resources
 CS = OrderedDict()
 CS["support-request"] = "/cs/api/support-requests"
