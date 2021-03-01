@@ -31,6 +31,10 @@
     "description": "paginated APIs test cases while GAZ service is down",
     "path": "tests/external_dependencies/test_csp_apis_when_gaz_not_reachable.py"
   },
+  "test_sscp_apis_when_gaz_not_reachable": {
+    "description": "paginated APIs test cases while GAZ service is down",
+    "path": "tests/external_dependencies/test_sscp_apis_when_gaz_not_reachable.py"
+  },
   "test_csp_apis_when_kafka_not_reachable": {
     "description": "paginated APIs test cases while kafka message broker service is down",
     "path": "tests/external_dependencies/test_csp_apis_when_kafka_not_reachable.py"
