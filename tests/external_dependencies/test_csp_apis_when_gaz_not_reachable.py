@@ -47,7 +47,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_ROLES").format(
-            orgId=myconfig.get("csp").get("").get("id")
+            orgId=myconfig.get("csp").get("defaultOrg").get("id")
         )
         params = {"expand": True}
 
@@ -450,46 +450,6 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
                 module_service_error_types, expected_module_service_error_types
             )
         )
-
-    @pytest.mark.dependency()
-    def test_org_details_api_when_gaz_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
-    ):
-        # expected csp api response (status_code)
-        expected_http_code = [500, 504]
-
-        # make csp api call
-
-        api_resource = resources.COMMERCE.get("ORG_DETAILS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
-        )
-
-        resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
-
-        # verify csp api returns expected_status_code
-        assert (
-                resp.status_code in expected_http_code
-        ), "AM service did not return expected status_code={}".format(expected_http_code)
-
-    @pytest.mark.dependency()
-    def test_get_org_address_v3_api_when_gaz_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
-    ):
-        # expected csp api response (status_code)
-        expected_http_code = [500, 504]
-
-        # make csp api call
-
-        api_resource = resources.COMMERCE.get("GET_ORG_ADDRESS_V3").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
-        )
-
-        resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
-
-        # verify csp api returns expected_status_code
-        assert (
-                resp.status_code in expected_http_code
-        ), "AM service did not return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
     def test_get_principal_user_info_api_when_gaz_service_calls_are_blocked(
