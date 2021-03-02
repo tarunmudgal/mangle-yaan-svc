@@ -31,7 +31,7 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
     """
 
     @pytest.mark.dependency()
-    def test_get_org_address_v3_api_when_gaz_service_calls_are_blocked(
+    def test_get_org_sellers_v3_api_when_db_service_calls_are_blocked(
             self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
@@ -39,7 +39,7 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
 
         # make csp api call
 
-        api_resource = resources.COMMERCE.get("GET_ORG_ADDRESS_V3").format(
+        api_resource = resources.COMMERCE.get("GET_SELLERS_CREATED_IN_ORGANIZATION_V3").format(
             orgId=myconfig.get("csp").get("defaultOrg").get("id")
         )
 
