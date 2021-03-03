@@ -30,7 +30,11 @@ COMMERCE["SATATEMENT"] = "/commerce/api/v1/orgs/{orgId}/statements"
 COMMERCE["INOVICES"] = "/commerce/api/v1/orgs/{orgId}/invoices"
 COMMERCE["PROMOTIONS_TYPE"] = "/commerce/api/v1/promotions"
 COMMERCE["ORG_DETAILS"] = "/commerce/api/v1/orgs/{orgId}/details"
+
+# sscp resources
 COMMERCE["GET_ORG_ADDRESS_V3"] = "/commerce/api/v3/orgs/{orgId}/addresses"
+COMMERCE["GET_SELLERS_CREATED_IN_ORGANIZATION_V3"] = "/commerce/api/v3/orgs/{orgId}/sellers"
+COMMERCE["GET_ORG_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts"
 
 # CS resources
 CS = OrderedDict()
