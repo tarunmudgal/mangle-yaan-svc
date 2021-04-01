@@ -35,6 +35,11 @@ COMMERCE["ORG_DETAILS"] = "/commerce/api/v1/orgs/{orgId}/details"
 COMMERCE["GET_ORG_ADDRESS_V3"] = "/commerce/api/v3/orgs/{orgId}/addresses"
 COMMERCE["GET_SELLERS_CREATED_IN_ORGANIZATION_V3"] = "/commerce/api/v3/orgs/{orgId}/sellers"
 COMMERCE["GET_ORG_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts"
+COMMERCE["GET_ALL_SELLERS_DETAILS"] = "/commerce/api/v3/sellers"
+COMMERCE["GET_ORDERS_FOR_GIVEN_SELLER"] = "/commerce/api/v3/orgs/{orgId}/sellers/{seller}/orders"
+COMMERCE["GET_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts"
+COMMERCE["GET_DEFAULT_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/default"
+COMMERCE["GET_CURRENT_PERIOD_ESTIMATED_COSTS"] = "/commerce/api/v3/billing-accounts/{billingAccountId}/current-costs"
 
 # CS resources
 CS = OrderedDict()
