@@ -11,6 +11,8 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
+from collections import defaultdict
+
 from lib import params
 from lib.common import utils
 from lib.common.rest_client import RESTClient
@@ -252,3 +254,44 @@ class MangleClient(RESTClient):
         th_job.start()
 
         return pod_shutdown_event_handler
+
+    def wait_for_child_tasks_to_finish(
+        self,
+        parent_task_id,
+        child_tasks_count: int = 1,
+        timeout: int = 360,
+        sleep_interval: int = 10,
+    ):
+        child_tasks = defaultdict(str)
+        start_time = curr_time = time.time()
+        while curr_time < start_time + timeout:
+            if len(child_tasks) < child_tasks_count:
+                resp = self.make_call(
+                    "GET", resources.TASK_CTRLR["TASK"].format(taskId=parent_task_id)
+                )
+                for trigger in resp.json.get("triggers"):
+                    for child_task_id in trigger.get("childTaskIDs"):
+                        child_tasks[child_task_id] = ""
+
+            else:
+                completed = 0
+                failed = 0
+                for task_id in child_tasks:
+                    resp = self.make_call(
+                        "GET", resources.TASK_CTRLR["TASK"].format(taskId=task_id)
+                    )
+                    if resp.json.get("mangleTaskInfo").get("taskStatus") == params.MANGLE_TASK_STATUS["COMPLETED"]:
+                        child_tasks[task_id] = params.MANGLE_TASK_STATUS["COMPLETED"]
+                        completed += 1
+                    elif resp.json.get("mangleTaskInfo").get("taskStatus") == params.MANGLE_TASK_STATUS["FAILED"]:
+                        child_tasks[task_id] = params.MANGLE_TASK_STATUS["FAILED"]
+                        failed += 1
+                if completed == child_tasks_count:
+                    mylog.info("all child tasks succeeded")
+                    return True
+                elif failed:
+                    mylog.error("{} child tasks failed".format(failed))
+                    return False
+                else:
+                    mylog.info("waiting for {} tasks to be finished".format(child_tasks_count - completed))
+

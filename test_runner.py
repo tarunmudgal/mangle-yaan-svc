@@ -581,6 +581,9 @@ def main() -> None:
     parser.add_argument(
         "--list_testsuite_names", action="store_true", help="list of available testsuites",
     )
+    parser.add_argument(
+        "--skip_copy_logs", action="store_true", help="skip logs copy on s3",
+    )
 
     args = parser.parse_args()
     mylog.debug("test_runner args={}".format(args))
@@ -658,6 +661,10 @@ def main() -> None:
         copy_result_trends = False
         mg_agent.update_task(args.run_id, end_time=end_time)
         # sys.exit(3)
+
+    if args.skip_copy_logs:
+        copy_results = False
+        copy_result_trends = False
 
     if copy_result_trends:
         generate_and_copy_result_trends(

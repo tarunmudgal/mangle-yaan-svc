@@ -46,7 +46,7 @@ class S3Client:
 
     def copy_file_on_s3(
         self, bucket_name: str, src_fpath: str = None, s3_fpath: str = None
-    ) -> str:
+    ) -> bool:
         """copies file on S3 bucket
         Args:
           bucket_name: S3 bucket name

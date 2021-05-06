@@ -5,11 +5,12 @@
 import json
 
 from src.testlib import params
+from typing import Dict
 
 __author__ = "tarun mudgal"
 
 CSP_MODULE_CODES = None
-CSP_MODULE_SERVICE_ERROR_CODES_MAP = None
+CSP_MODULE_SERVICE_ERROR_CODES_MAP: Dict[str, Dict] = None
 
 
 def get_csp_module_error_code_info(module_code: str) -> dict:

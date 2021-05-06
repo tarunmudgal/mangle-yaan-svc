@@ -56,3 +56,4 @@ EP_CTRLR["TEST_ENDPOINT"] = "/rest/api/v1/endpoints/testEndpoint"
 TASK_CTRLR = OrderedDict()
 TASK_CTRLR["TASKS"] = "/rest/api/v1/tasks"
 TASK_CTRLR["TASKS_CLEANUP"] = "/rest/api/v1/tasks/clean-up"
+TASK_CTRLR["TASK"] = "/rest/api/v1/tasks/{taskId}"

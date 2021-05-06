@@ -47,6 +47,10 @@
     "description": "Onboardng service APIs execution when service instances go down abruptly",
     "path": "tests/abrupt_service_shutown/test_os_when_pods_shutdown_abruptly.py"
   },
+  "test_sscp_apis_during_high_network_latency": {
+    "description": "Onboardng service APIs execution when service instances go down abruptly",
+    "path": "tests/network_latency/test_sscp_apis_during_high_network_latency.py"
+  },
   "test_dummy": {
     "description": "dummy test cases",
     "path": "tests/test_dummy.py"

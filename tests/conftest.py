@@ -4,14 +4,11 @@
 
 __author__ = "tarun mudgal"
 
-import builtins
 import io
-import json
 import os
 import time
 from collections import OrderedDict
 
-import boto3
 import pytest
 import requests
 from py.xml import html
@@ -21,8 +18,6 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from lib import params as lib_params
 from lib.common import utils
 from lib.mangle import resources
-from lib.maximgun import agent as mg_agent
-from lib.maximgun import maximgun_client as maxim_client
 from lib.maximgun import resources as maxim_gun_resources
 from src.testlib import params as testlib_params
 
@@ -107,8 +102,8 @@ def pytest_configure(config):
     if not config.option.htmlpath:
         config.option.htmlpath = (
             myconfig.get("mangleYaan")
-            .get("testReportPath")
-            .format(timeStamp=mycache["run_info"].get("test_start_timestamp"))
+                .get("testReportPath")
+                .format(timeStamp=mycache["run_info"].get("test_start_timestamp"))
         )
         config.option.self_contained_html = True
 
@@ -166,7 +161,7 @@ def pytest_sessionfinish(session, exitstatus):
 
     allure_report_dir = session.config.option.allure_report_dir
     env_details = """my.properties.browser=Firefox
-my.properties.url=http://yandex.ru"""#.format(mycache["run_info"]["workload_name"])
+my.properties.url=http://yandex.ru"""  # .format(mycache["run_info"]["workload_name"])
 
     if allure_report_dir:
         with open('{}/{}'.format(allure_report_dir, 'environment.properties'), 'w') as allure_env:
@@ -270,6 +265,97 @@ def inject_k8s_infra_fault_abrupt_pod_shutdown_for_func(request):
 
 
 @pytest.fixture(scope="class")
+def inject_k8s_app_fault_spring_service_latency_for_class(request, scale_deployments_for_class):
+    service_latency = request.cls.SERVICE_LATENCY
+    service_method_verb = request.cls.SERVICE_METHOD_VERB
+    service_uri = request.cls.SERVICE_URI
+    container_name = request.cls.CONTAINER_NAME
+    pod_labels = request.cls.POD_LABELS
+    random_injection = request.cls.RANDOM_INJECTION
+    java_home_path = request.cls.JAVA_HOME_PATH
+    port = request.cls.PORT
+
+    deployment_names = request.module.DEPLOYMENT_NAMES_TO_BE_SCALED
+    new_replica_count = request.module.NEW_REPLICA_COUNT
+
+    status, pod_names = ckclient.wait_for_pods_to_update_state(new_replica_count, label_selector=pod_labels,
+                                            field_selector="status.phase=Running")
+
+    pod_info = {}
+    if status:
+        for pod_name in pod_names:
+            jvm_process_id = ckclient.execute_cmd_inside_pod(pod_name, 'pgrep java')
+            pod_info[pod_name] = {'process_id': jvm_process_id}
+
+            # mangle fault injection
+            request_body = {
+                "endpointName": myconfig.get("k8sCluster").get("endpointName"),
+                "injectionHomeDir": "/tmp/",
+                "latency": service_latency,
+                "servicesString": service_uri,
+                "httpMethodsString": service_method_verb,
+                "k8sArguments": {
+                    "containerName": container_name,
+                    "podLabels": pod_labels,
+                    "enableRandomInjection": random_injection
+                },
+                "jvmProperties": {
+                    "javaHomePath": java_home_path,
+                    "jvmprocess": jvm_process_id,
+                    "port": port
+                }
+            }
+
+            task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+                "POST", resources.APP_FAULTS.get("SPRING_SERVICE_LATENCY"), json=request_body
+            )
+
+            pod_info[pod_name]['fault_task_id'] = task_id
+            pod_info[pod_name]['fault_task_status'] = task_status
+
+            mylog.debug(
+                "task for SPRING_SERVICE_LATENCY fault triggered with task_id={}, task_status={}".format(
+                    task_id, task_status
+                )
+            )
+            assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
+
+            status = mclient.wait_for_child_tasks_to_finish(task_id)
+            assert status
+    else:
+        request.module.DEPLOYMENTS_COULD_NOT_BE_SCALED = True
+
+    yield  # post yield runs as the part of teardown
+
+    if status:
+        mylog.debug(
+            "let's give some time to mangle before triggering remediation task. waiting for 60 secs"
+        )
+        time.sleep(60)
+
+        for pod_name in pod_info:
+            try:
+                # mangle fault remediation
+                api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + pod_info[pod_name]['fault_task_id']
+                task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
+                    "DELETE", api_resource
+                )
+                mylog.debug(
+                    "task for SPRING_SERVICE_LATENCY fault remediation triggered with task_id={}, task_status={}".format(
+                        task_id, task_status
+                    )
+                )
+                assert task_status == lib_params.MANGLE_TASK_STATUS["COMPLETED"]
+            except Exception as fault:
+                mylog.info(
+                    "Exception occurred while remediating mangle SPRING_SERVICE_LATENCY fault with id={}. Exception={"
+                    "}".format(
+                        pod_info[pod_name]['fault_task_id'], fault
+                    )
+                )
+
+
+@pytest.fixture(scope="class")
 def inject_k8s_infra_fault_service_unavailable_for_class(request):
     faulty_svc_name = request.param
 
@@ -362,9 +448,9 @@ def inject_k8s_infra_fault_block_egress_traffic_for_class(request):
 
 
 @pytest.fixture(scope="class")
-def scale_down_deployments_for_class(request):
-    deployment_names = request.cls.DEPLOYMENT_NAMES_DONT_IMPACT_LOGIN
-    new_replica_count = request.cls.NEW_REPLICA_COUNT
+def scale_deployments_for_class(request):
+    deployment_names = request.module.DEPLOYMENT_NAMES_TO_BE_SCALED
+    new_replica_count = request.module.NEW_REPLICA_COUNT
 
     deployments_replica_map_prev = {}
     deployments_replica_map_next = {}
@@ -375,10 +461,10 @@ def scale_down_deployments_for_class(request):
         deployments_replica_map_next[dep_name] = new_replica_count
 
     status, deployments_not_scaled = ckclient.scale_deployments(
-        deployments_replica_map_next, timeout=300
+        deployments_replica_map_next, timeout=600
     )
     if deployments_not_scaled:
-        request.cls.ALL_DEPLOYMENTS_COULD_NOT_BE_SCALED = True
+        request.module.DEPLOYMENTS_COULD_NOT_BE_SCALED = True
 
     # performs post yield section as teardown
     yield
@@ -401,11 +487,11 @@ def init_chrome_driver(request):
         # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub'
         #                                           , desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
         selenium_hub_fqdn = (
-            "http://"
-            + testlib_params.SELENIUM_GRID_HOST
-            + ":"
-            + testlib_params.SELENIUM_GRID_PORT
-            + testlib_params.SELENIUM_HUB_URI
+                "http://"
+                + testlib_params.SELENIUM_GRID_HOST
+                + ":"
+                + testlib_params.SELENIUM_GRID_PORT
+                + testlib_params.SELENIUM_HUB_URI
         )
         driver = webdriver.Remote(
             command_executor=selenium_hub_fqdn,
