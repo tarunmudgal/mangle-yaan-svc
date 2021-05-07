@@ -442,7 +442,7 @@ def inject_k8s_infra_fault_block_egress_traffic_for_class(request):
     yield network_policy_filename  # post yield runs as the part of teardown
 
     mylog.debug("deleting network policy {}".format(response_create.metadata.name))
-    response_delete = ckclient.delete_network_policy(response_create.metadata.name)
+    response_delete, error = ckclient.delete_network_policy(response_create.metadata.name)
     assert response_delete.status == "Success"
     mylog.debug("network policy {} deleted successfully".format(response_delete.details.name))
 

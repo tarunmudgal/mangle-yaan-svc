@@ -410,6 +410,7 @@ class K8SClient:
         )
 
         response = None
+        error = None
         try:
             response = self.networking_v1_api.create_namespaced_network_policy(
                 self.namespace, body, pretty="true"
@@ -418,13 +419,15 @@ class K8SClient:
             mylog.exception(
                 "exception occurred while creating a NetworkPolicy. Exception={}".format(fault)
             )
+            error = fault
 
-        return response
+        return response, error
 
     def delete_network_policy(self, network_policy_name):
         body = client.V1DeleteOptions()
 
         response = None
+        error = None
         try:
             response = self.networking_v1_api.delete_namespaced_network_policy(
                 network_policy_name,
@@ -437,6 +440,23 @@ class K8SClient:
             mylog.exception(
                 "exception occurred while deleting NetworkPolicy {}. Exception={}".format(
                     network_policy_name, fault
+                )
+            )
+            error = fault
+
+        return response, error
+
+    def list_network_policies(self):
+        response = None
+        try:
+            response = self.networking_v1_api.list_namespaced_network_policy(
+                self.namespace,
+                pretty="true",
+            )
+        except ApiException as fault:
+            mylog.exception(
+                "exception occurred while listing NetworkPolicies in {} namespace. Exception={}".format(
+                    self.namespace, fault
                 )
             )
 
