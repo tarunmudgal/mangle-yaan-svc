@@ -32,9 +32,10 @@ log = logger.get_logger()
 builtins.mylog = log
 mylog.info("logger initialized")
 
-# Flask REST service initialization
+# Flask REST service app initialization
 app = Flask(__name__)
 app.config["RESTPLUS_VALIDATE"] = True
+app.config.SWAGGER_UI_DOC_EXPANSION = "full"  # allowed values are  ('none', 'list' or 'full')
 
 api = Api(
     app,
@@ -81,23 +82,7 @@ class Authorize(Resource):
             response = OrderedDict({"message": ""})
             status_code = 200
 
-            req_parser = reqparse.RequestParser()
-            req_parser.add_argument(
-                "kubeconfig_filepath",
-                type=str,
-                location="form",
-                help="csp namespace kubeconfig file path",
-                required=True,
-            )
-            req_parser.add_argument(
-                "namespace",
-                type=str,
-                location="form",
-                help="csp namespace name e.g. csp-app-dev",
-                required=True,
-            )
-
-            args = req_parser.parse_args()
+            args = Authorize.post_req_parser.parse_args()
             kubeconfig_filepath = args.get("kubeconfig_filepath")
             namespace = args.get("namespace")
 
@@ -128,14 +113,31 @@ class Authorize(Resource):
 
 @isu_ns.route("/faults")
 class InternalServiceUnavailabilityFaults(Resource):
-    # @api.doc(model=run_cmd_model)
-    # @api.expect(run_cmd_model)
-    @api.doc(
-        params={
-            "service_name": "service name to be described within a namespace",
-            "namespace": "namespace where you want to describe a service",
-        }
+    post_req_parser = reqparse.RequestParser()
+    post_req_parser.add_argument(
+        "service_name",
+        type=str,
+        location="form",
+        help="csp namespace kubeconfig file path",
+        required=True,
     )
+
+    delete_req_parser = reqparse.RequestParser()
+    delete_req_parser.add_argument(
+        "service_name",
+        type=str,
+        default=None,
+        location="args",
+        help="csp namespace kubeconfig file path",
+    )
+    delete_req_parser.add_argument(
+        "remediate_all_faults",
+        type=inputs.boolean,
+        default=False,
+        location="args",
+        help="if set, remediates all services ignoring service_name param",
+    )
+
     def get(self):
         utils.verify_k8s_client()
         try:
@@ -163,22 +165,14 @@ class InternalServiceUnavailabilityFaults(Resource):
 
         return response, status_code
 
+    @api.expect(post_req_parser)
     def post(self):
         utils.verify_k8s_client()
         try:
             response = OrderedDict({"message": ""})
             status_code = 200
 
-            req_parser = reqparse.RequestParser()
-            req_parser.add_argument(
-                "service_name",
-                type=str,
-                location="form",
-                help="csp namespace kubeconfig file path",
-                required=True,
-            )
-
-            args = req_parser.parse_args()
+            args = InternalServiceUnavailabilityFaults.post_req_parser.parse_args()
             service_name = args.get("service_name")
             service_info = params.K8S_CLIENT.get_service(service_name)
             if (
@@ -208,6 +202,7 @@ class InternalServiceUnavailabilityFaults(Resource):
 
         return response, status_code
 
+    @api.expect(delete_req_parser)
     def delete(self):
         utils.verify_k8s_client()
         try:
@@ -215,23 +210,7 @@ class InternalServiceUnavailabilityFaults(Resource):
             status_code = 200
             remediated_faults = []
 
-            req_parser = reqparse.RequestParser()
-            req_parser.add_argument(
-                "service_name",
-                type=str,
-                default=None,
-                location="args",
-                help="csp namespace kubeconfig file path",
-            )
-            req_parser.add_argument(
-                "remediate_all_faults",
-                type=inputs.boolean,
-                default=False,
-                location="args",
-                help="if set, remediates all services ignoring service_name param",
-            )
-
-            args = req_parser.parse_args()
+            args = InternalServiceUnavailabilityFaults.delete_req_parser.parse_args()
             service_name = args.get("service_name")
             remediate_all_faults = args.get("remediate_all_faults")
             if remediate_all_faults:
@@ -285,6 +264,31 @@ class InternalServiceUnavailabilityFaults(Resource):
 
 @esu_ns.route("/faults")
 class ExternalServiceUnavailabilityFaults(Resource):
+    post_req_parser = reqparse.RequestParser()
+    post_req_parser.add_argument(
+        "network_policy_name",
+        type=str,
+        location="form",
+        help="network policy filename that needs to be applied",
+        required=True,
+    )
+
+    delete_req_parser = reqparse.RequestParser()
+    delete_req_parser.add_argument(
+        "network_policy_name",
+        type=str,
+        default=None,
+        location="args",
+        help="network policy name that needs to be deleted",
+    )
+    delete_req_parser.add_argument(
+        "delete_all_nw_policies",
+        type=inputs.boolean,
+        default=False,
+        location="args",
+        help="if set, deletes all network policies ignoring network_policy_name param",
+    )
+
     def get(self):
         utils.verify_k8s_client()
         try:
@@ -296,9 +300,13 @@ class ExternalServiceUnavailabilityFaults(Resource):
                 nw_policies_found.append(network_policy.metadata.name)
 
             if nw_policies_found:
-                response["message"] = "network policies exist in {} namespace currently".format(params.K8S_NAMESPACE)
+                response["message"] = "network policies exist in {} namespace currently".format(
+                    params.K8S_NAMESPACE
+                )
             else:
-                response["message"] = "no network policy exists in {} namespace currently".format(params.K8S_NAMESPACE)
+                response["message"] = "no network policy exists in {} namespace currently".format(
+                    params.K8S_NAMESPACE
+                )
             response["network_policies_found"] = nw_policies_found
         except Exception as fault:
             try:
@@ -310,22 +318,14 @@ class ExternalServiceUnavailabilityFaults(Resource):
 
         return response, status_code
 
+    @api.expect(post_req_parser)
     def post(self):
         utils.verify_k8s_client()
         try:
             response = OrderedDict({"message": ""})
             status_code = 200
 
-            req_parser = reqparse.RequestParser()
-            req_parser.add_argument(
-                "network_policy_name",
-                type=str,
-                location="form",
-                help="network policy filename that needs to be applied",
-                required=True,
-            )
-
-            args = req_parser.parse_args()
+            args = ExternalServiceUnavailabilityFaults.post_req_parser.parse_args()
             network_policy_name = args.get("network_policy_name")
             network_policy_filename = (
                 params.NETWORK_POLICY_MAP.get(params.K8S_ENV_NAME)
@@ -353,6 +353,7 @@ class ExternalServiceUnavailabilityFaults(Resource):
 
         return response, status_code
 
+    @api.expect(delete_req_parser)
     def delete(self):
         utils.verify_k8s_client()
         try:
@@ -367,23 +368,7 @@ class ExternalServiceUnavailabilityFaults(Resource):
             deleted_nw_policies = []
             failed_to_delete_nw_policies = []
 
-            req_parser = reqparse.RequestParser()
-            req_parser.add_argument(
-                "network_policy_name",
-                type=str,
-                default=None,
-                location="args",
-                help="network policy name that needs to be deleted",
-            )
-            req_parser.add_argument(
-                "delete_all_nw_policies",
-                type=inputs.boolean,
-                default=False,
-                location="args",
-                help="if set, deletes all network policies ignoring network_policy_name param",
-            )
-
-            args = req_parser.parse_args()
+            args = ExternalServiceUnavailabilityFaults.delete_req_parser.parse_args()
             network_policy_name = args.get("network_policy_name")
             delete_all_nw_policies = args.get("delete_all_nw_policies")
             if delete_all_nw_policies:

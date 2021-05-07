@@ -22,14 +22,19 @@ FAULTY_SVC_NAMES_SET = set()
 
 # external service unavailability - network policy
 NETWORK_POLICY_MAP = {
-    "dev": {"commerce-deny-external-egress-on-dev": {"filename": "dev_env_egress_commerce_service.yaml",
-                                                     "description": "this network policy blocks egress traffic from "
-                                                                    "csp-commerce and csp-iam-vmwid service pods in "
-                                                                    "csp-app-dev namespace"},
-            "am-deny-external-egress-on-dev": {"filename": "dev_env_egress_am_service.yaml",
-                                               "description": "this network policy blocks egress traffic from "
-                                                              "csp-account-management-mvc service pods in "
-                                                              "csp-app-dev namespace"}
-            },
+    "dev": {
+        "commerce-deny-external-egress-on-dev": {
+            "filename": "dev_env_egress_commerce_service.yaml",
+            "description": "this network policy blocks egress traffic from "
+            "csp-commerce and csp-iam-vmwid service pods in "
+            "csp-app-dev namespace",
+        },
+        "am-deny-external-egress-on-dev": {
+            "filename": "dev_env_egress_am_service.yaml",
+            "description": "this network policy blocks egress traffic from "
+            "csp-account-management-mvc service pods in "
+            "csp-app-dev namespace",
+        },
+    },
     "preview": {},
 }
