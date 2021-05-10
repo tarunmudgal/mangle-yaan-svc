@@ -1,0 +1,24 @@
+FROM harbor-repo.vmware.com/dockerhub-proxy-cache/library/python:3.8-alpine
+MAINTAINER CSP QE Team "csp-pune-qe@vmware.com"
+
+RUN apk add --update --no-cache \
+    python3 \
+    python3-dev \
+    py-pip \
+    build-base \
+    wget \
+    unzip \
+  && pip install virtualenv \
+  && rm -rf /var/cache/apk/*
+
+RUN python -m pip install -U pip
+
+COPY . /mangle-yaan/
+
+WORKDIR /mangle-yaan
+
+RUN pip install -r /mangle-yaan/dev-requirements.txt
+
+ENV PORT=5000
+
+CMD python /mangle-yaan/src/gameday/app.py --port ${PORT}

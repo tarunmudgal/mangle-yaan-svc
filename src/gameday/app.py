@@ -35,7 +35,7 @@ mylog.info("logger initialized")
 # Flask REST service app initialization
 app = Flask(__name__)
 app.config["RESTPLUS_VALIDATE"] = True
-app.config.SWAGGER_UI_DOC_EXPANSION = "full"  # allowed values are  ('none', 'list' or 'full')
+app.config.SWAGGER_UI_DOC_EXPANSION = "list"  # allowed values are  ('none', 'list' or 'full')
 
 api = Api(
     app,

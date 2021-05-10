@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gameday-deployment
+  labels:
+    app: gameday-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  gameday-service
+  template:
+    metadata:
+      labels:
+        app:  gameday-service
+    spec:
+      containers:
+      - name:  gameday-service
+        image: vmwaresaas.jfrog.io/csp/gameday-service:latest
+        env:
+        - name: MAXIM_DB_URL
+          value: maxim-gun-mysql
+        - name: MAXIM_DB_USER
+          value: maxim_gun
+        - name: MAXIM_DB_PASSWORD
+          value: maxim_gun
+        - name: MAXIM_DB_PORT
+          value: "3306"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5000
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "800m"
+          limits:
+            memory: "1Gi"
+            cpu: "800m"
+      imagePullSecrets:
+      - name: auto-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gameday-svc
+spec:
+  selector:
+    app: gameday-service
+  ports:
+  - port: 5000
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gameday-service-ingress
+  labels:
+    app: gameday-service
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: gameday-service.svc-stage.eng.vmware.com
+    http:
+      paths:
+      - backend:
+          serviceName: gameday-svc
+          servicePort: 5000
+---
+#apiVersion: v1
+#data:
+#  .dockerconfigjson: eyJhdXRocyI6eyJ2bXdhcmVzYWFzLmpmcm9nLmlvIjp7InVzZXJuYW1lIjoiY3NwLXFlLXJ3LXRva2VuIiwicGFzc3dvcmQiOiI5MG5INDdqIWlzJSIsImVtYWlsIjoiYWJhaGV0aUB2bXdhcmUuY29tIiwiYXV0aCI6IlkzTndMWEZsTFhKM0xYUnZhMlZ1T2prd2JrZzBOMm9oYVhNbCJ9fX0=
+#kind: Secret
+#metadata:
+#  creationTimestamp: "2021-01-15T11:34:58Z"
+#  name: auto-secret
+#  namespace: scdc1-staging-cpsbu-maxim-gun
+#  resourceVersion: "1930476046"
+#  selfLink: /api/v1/namespaces/scdc1-staging-cpsbu-maxim-gun/secrets/auto-secret
+#  uid: 31e6faa0-83ae-4885-a505-d12d55e4550e
+#type: kubernetes.io/dockerconfigjson
+
+#kubectl create secret docker-registry auto-secret --docker-server=vmwaresaas.jfrog.io --docker-username=csp-qe-rw-token  --docker-password='***'  --docker-email=abaheti@vmware.com
