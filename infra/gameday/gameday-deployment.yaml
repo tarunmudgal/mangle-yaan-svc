@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name:  gameday-service
-        image: vmwaresaas.jfrog.io/csp/gameday-service:latest
+        image: harbor-repo.vmware.com/csp_qe/gameday-service:latest
         env:
         - name: MAXIM_DB_URL
           value: maxim-gun-mysql

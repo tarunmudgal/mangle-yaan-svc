@@ -20,6 +20,7 @@ import params
 import utils
 from flask import Flask
 from flask_restplus import Api, Namespace, Resource, inputs, reqparse
+from werkzeug.datastructures import FileStorage
 
 from lib.common import logger
 from lib.k8s import k8s_client
@@ -62,10 +63,10 @@ api.add_namespace(esu_ns)
 class Authorize(Resource):
     post_req_parser = reqparse.RequestParser()
     post_req_parser.add_argument(
-        "kubeconfig_filepath",
-        type=str,
-        location="form",
-        help="csp namespace kubeconfig file path",
+        "kubeconfig_file",
+        type=FileStorage,
+        location="files",
+        help="csp namespace kubeconfig file",
         required=True,
     )
     post_req_parser.add_argument(
@@ -83,8 +84,13 @@ class Authorize(Resource):
             status_code = 200
 
             args = Authorize.post_req_parser.parse_args()
-            kubeconfig_filepath = args.get("kubeconfig_filepath")
+            kubeconfig_file = args.get("kubeconfig_file")
             namespace = args.get("namespace")
+
+            kubeconfig_filepath = os.path.join(
+                ROOT_DIR, "config", "kubeconfigs", params.GAMEDAY_KUBECONFIG_FILENAME
+            )
+            kubeconfig_file.save(kubeconfig_filepath)
 
             if not os.path.isfile(kubeconfig_filepath):
                 status_code = 404
@@ -93,7 +99,7 @@ class Authorize(Resource):
                 )
                 return response, status_code
 
-            # config.load_kube_config(config_file=kubeconfig_filepath)
+            # config.load_kube_config(config_file=kubeconfig_file)
             if params.K8S_CLIENT is None:
                 params.K8S_CLIENT = k8s_client.K8SClient(kubeconfig_filepath, namespace)
             params.K8S_NAMESPACE = namespace

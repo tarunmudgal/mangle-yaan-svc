@@ -16,6 +16,9 @@ K8S_CLIENT = None
 K8S_NAMESPACE = None
 K8S_ENV_NAME = None
 
+# Game Day Service
+GAMEDAY_KUBECONFIG_FILENAME = "gameday_kubeconfig.yaml"
+
 # Faults
 FAULTY_SVC_ENV_NAME = "gameday"
 FAULTY_SVC_NAMES_SET = set()
