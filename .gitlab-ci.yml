@@ -17,8 +17,7 @@ pylint_job:
     - echo undefined > public/badges/$CI_JOB_NAME.score
     - pip install -r ci_requirements.txt
   script:
-    - pylint-fail-under --fail_under 9.0 --output-format=text --disable=import-error
-    - --disable=superfluous-parens --disable=line-too-long --disable=missing-docstring --disable=redefined-builtin  --disable=relative-import --disable=len-as-condition --disable=no-member --disable=no-else-return $(find . -path ./.tox -prune -false -o -type f -name "*.py")
+    - pylint-fail-under --fail_under 9.0 --output-format=text --disable=import-error --disable=superfluous-parens --disable=line-too-long --disable=missing-docstring --disable=redefined-builtin  --disable=relative-import --disable=len-as-condition --disable=no-member --disable=no-else-return $(find . -path ./.tox -prune -false -o -type f -name "*.py")
   artifacts:
     paths:
       - public
