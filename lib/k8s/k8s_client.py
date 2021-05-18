@@ -16,9 +16,9 @@ class K8SClient:
 
     __single_instance = None
 
-    def __init__(self, kubeconfig_filename, namespace):
+    def __init__(self, kubeconfig_filename, namespace, skip_singleton_check=False):
 
-        if K8SClient.__single_instance is not None:
+        if K8SClient.__single_instance is not None and not skip_singleton_check:
             raise Exception("K8SClient is a singleton class and cannot have more than one objects")
 
         K8SClient.__single_instance = self

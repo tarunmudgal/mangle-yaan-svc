@@ -12,6 +12,8 @@ import sys
 from collections import OrderedDict
 from pathlib import Path
 
+import yaml
+
 ROOT_DIR = Path(__file__).parent.parent.parent.absolute().as_posix()
 builtins.ROOT_DIR = ROOT_DIR
 sys.path.append(ROOT_DIR)
@@ -45,7 +47,6 @@ api = Api(
     description="Resiliency Service that allows Resiliency faults to be injected/remediated into CSP K8S environments",
 )
 
-
 # Authorize namespace
 auth_ns = Namespace("gameday/authorize", description="CSP Kubernetes Authorize APIs")
 api.add_namespace(auth_ns)
@@ -69,13 +70,6 @@ class Authorize(Resource):
         help="csp namespace kubeconfig file",
         required=True,
     )
-    post_req_parser.add_argument(
-        "namespace",
-        type=str,
-        location="form",
-        help="csp namespace name e.g. csp-app-dev",
-        required=True,
-    )
 
     @api.expect(post_req_parser)
     def post(self):
@@ -85,12 +79,15 @@ class Authorize(Resource):
 
             args = Authorize.post_req_parser.parse_args()
             kubeconfig_file = args.get("kubeconfig_file")
-            namespace = args.get("namespace")
 
             kubeconfig_filepath = os.path.join(
                 ROOT_DIR, "config", "kubeconfigs", params.GAMEDAY_KUBECONFIG_FILENAME
             )
-            kubeconfig_file.save(kubeconfig_filepath)
+
+            kubeconfig_yaml = yaml.load(kubeconfig_file, Loader=yaml.FullLoader)
+            namespace = kubeconfig_yaml["contexts"][0]["context"]["namespace"]
+            with open(kubeconfig_filepath, "w") as kf:
+                yaml.dump(kubeconfig_yaml, kf)
 
             if not os.path.isfile(kubeconfig_filepath):
                 status_code = 404
@@ -99,12 +96,14 @@ class Authorize(Resource):
                 )
                 return response, status_code
 
-            # config.load_kube_config(config_file=kubeconfig_file)
-            if params.K8S_CLIENT is None:
-                params.K8S_CLIENT = k8s_client.K8SClient(kubeconfig_filepath, namespace)
+            params.K8S_CLIENT = k8s_client.K8SClient(
+                kubeconfig_filepath, namespace, skip_singleton_check=True
+            )
             params.K8S_NAMESPACE = namespace
             params.K8S_ENV_NAME = namespace.split("-")[2]
-            response["message"] = "kubeconfig loaded successfully and K8S client initialized"
+            response["message"] = (
+                "kubeconfig loaded successfully and K8S client initialized for namespace={}".format(namespace)
+            )
 
         except Exception as fault:
             try:
@@ -112,6 +111,7 @@ class Authorize(Resource):
             except Exception:
                 status_code = 500
 
+            params.K8S_CLIENT = None
             response["message"] = "error occurred. Error={}".format(fault)
 
         return response, status_code
