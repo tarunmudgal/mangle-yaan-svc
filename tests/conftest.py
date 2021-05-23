@@ -431,7 +431,8 @@ def inject_k8s_infra_fault_block_egress_traffic_for_class(request):
     network_policy_filename = request.param
 
     mylog.debug("creating a network policy using {} file".format(network_policy_filename))
-    response_create = ckclient.create_network_policy(network_policy_filename)
+    response_create, error = ckclient.create_network_policy(network_policy_filename)
+    assert error is None
     assert response_create.metadata
     mylog.debug(
         "network policy {} created successfully using {} file".format(
@@ -443,6 +444,7 @@ def inject_k8s_infra_fault_block_egress_traffic_for_class(request):
 
     mylog.debug("deleting network policy {}".format(response_create.metadata.name))
     response_delete, error = ckclient.delete_network_policy(response_create.metadata.name)
+    assert error is None
     assert response_delete.status == "Success"
     mylog.debug("network policy {} deleted successfully".format(response_delete.details.name))
 
