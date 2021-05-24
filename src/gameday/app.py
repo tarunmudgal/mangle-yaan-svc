@@ -116,6 +116,25 @@ class Authorize(Resource):
 
         return response, status_code
 
+    def delete(self):
+        utils.verify_k8s_client()
+        try:
+            response = OrderedDict({"message": ""})
+            status_code = 200
+
+            params.K8S_CLIENT = None
+            response["message"] = "K8S client is deleted successfully for namespace={}".format(params.K8S_NAMESPACE)
+
+        except Exception as fault:
+            try:
+                status_code = fault.code
+            except Exception:
+                status_code = 500
+
+            response["message"] = "error occurred. Error={}".format(fault)
+
+        return response, status_code
+
 
 @isu_ns.route("/faults")
 class InternalServiceUnavailabilityFaults(Resource):
@@ -124,7 +143,7 @@ class InternalServiceUnavailabilityFaults(Resource):
         "service_name",
         type=str,
         location="form",
-        help="csp namespace kubeconfig file path",
+        help="csp service name",
         required=True,
     )
 
@@ -134,7 +153,7 @@ class InternalServiceUnavailabilityFaults(Resource):
         type=str,
         default=None,
         location="args",
-        help="csp namespace kubeconfig file path",
+        help="csp service name",
     )
     delete_req_parser.add_argument(
         "remediate_all_faults",
@@ -275,7 +294,8 @@ class ExternalServiceUnavailabilityFaults(Resource):
         "network_policy_name",
         type=str,
         location="form",
-        help="network policy filename that needs to be applied",
+        help="network policy name that needs to be applied. To get the list of supported network policies, "
+             "please call GET /gameday/esu/networkpolicies",
         required=True,
     )
 
