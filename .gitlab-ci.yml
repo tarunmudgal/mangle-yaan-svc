@@ -5,7 +5,7 @@ variables:
 image: "harbor-repo.vmware.com/dockerhub-proxy-cache/library/python:3.7.1-slim"
 
 services:
-  - docker:18.09-dind
+  - harbor-repo.vmware.com/dockerhub-proxy-cache/library/docker:18.09-dind
 stages:
   - code_analysis
   - build
