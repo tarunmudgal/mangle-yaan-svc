@@ -33,7 +33,7 @@ class BasePage:
             self.go_to_url("/")
             self.wait_for_element(LoginPageLocators.TXT_LOGIN_TITLE, timeout=self.timeout)
 
-    def wait_until_element_displays(self, timeout: int = None):
+    def wait_until_element_displays(timeout: int = None):
         """
         decorator to wait for an element before performing an action
         Returns:
