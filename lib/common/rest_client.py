@@ -5,7 +5,6 @@
 __author__ = "tarun mudgal"
 
 import abc
-import logging
 import time
 import typing
 
@@ -13,7 +12,6 @@ import requests
 import urllib3
 
 from lib import params
-from lib.common import utils
 
 requests.packages.urllib3.disable_warnings()
 
@@ -100,6 +98,7 @@ class RESTClient(abc.ABC):
 
         # attempts to make explict retries as per retry_count provided
         attempt = 0
+        call_duration = None
         while attempt < retry_count + 1:
             try:
                 attempt += 1
@@ -110,9 +109,16 @@ class RESTClient(abc.ABC):
                 )
 
                 response = session_obj.request(method, url, **kwargs)
+
+                try:
+                    call_duration = response.elapsed.total_seconds()
+                except ValueError as fault:
+                    pass
+
                 mylog.debug(
-                    "RESTClient: request with method={}, resource={} succeeded in ({}) attempt(s)".format(
-                        method, api_resource, attempt
+                    "RESTClient: request with method={}, resource={} succeeded in ({}) attempt(s). call "
+                    "duration={} seconds, status_code={}".format(
+                        method, api_resource, attempt, call_duration, response.status_code
                     )
                 )
                 return response

@@ -30,10 +30,15 @@ class CSPResponse:
         self.headers = response.headers
         self.json = None
         self.text = None
+        self.call_duration = None
         try:
             self.json = response.json()
         except ValueError as fault:
             self.text = response.text
+        try:
+            self.call_duration = response.elapsed.total_seconds()
+        except ValueError as fault:
+            pass
 
     def __repr__(self):
         return "CSPResponse(url={} status_code={} headers={} json={} text={})".format(
