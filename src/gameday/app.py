@@ -71,6 +71,14 @@ class Authorize(Resource):
         required=True,
     )
 
+    post_req_parser.add_argument(
+        "namespace",
+        type=str,
+        location="form",
+        help="csp k8s namespace e.g. csp-app-dev. Optional/ignored if it's present in kubeconfig file",
+        required=False,
+    )
+
     @api.expect(post_req_parser)
     def post(self):
         try:
@@ -79,13 +87,30 @@ class Authorize(Resource):
 
             args = Authorize.post_req_parser.parse_args()
             kubeconfig_file = args.get("kubeconfig_file")
+            namespace_arg = args.get("namespace")
 
             kubeconfig_filepath = os.path.join(
                 ROOT_DIR, "config", "kubeconfigs", params.GAMEDAY_KUBECONFIG_FILENAME
             )
 
             kubeconfig_yaml = yaml.load(kubeconfig_file, Loader=yaml.FullLoader)
-            namespace = kubeconfig_yaml["contexts"][0]["context"]["namespace"]
+
+            namespace_kubeconfig = (
+                kubeconfig_yaml["contexts"][0].get("context", {}).get("namespace", None)
+            )
+            if namespace_kubeconfig is not None:
+                params.K8S_NAMESPACE = namespace_kubeconfig
+            else:
+                if namespace_arg is not None:
+                    params.K8S_NAMESPACE = namespace_arg
+                else:
+                    status_code = 400
+                    response["message"] = (
+                        "namespace is not found neither in kubeconfig nor in request params. "
+                        "Please provide namespace in request params"
+                    )
+                    return response, status_code
+
             with open(kubeconfig_filepath, "w") as kf:
                 yaml.dump(kubeconfig_yaml, kf)
 
@@ -97,12 +122,15 @@ class Authorize(Resource):
                 return response, status_code
 
             params.K8S_CLIENT = k8s_client.K8SClient(
-                kubeconfig_filepath, namespace, skip_singleton_check=True
+                kubeconfig_filepath, params.K8S_NAMESPACE, skip_singleton_check=True
             )
-            params.K8S_NAMESPACE = namespace
-            params.K8S_ENV_NAME = namespace.split("-")[2]
-            response["message"] = (
-                "kubeconfig loaded successfully and K8S client initialized for namespace={}".format(namespace)
+
+            if len(params.K8S_NAMESPACE.split("-")) == 3:
+                params.K8S_ENV_NAME = params.K8S_NAMESPACE.split("-")[2]
+            response[
+                "message"
+            ] = "kubeconfig loaded successfully and K8S client initialized for namespace={}".format(
+                params.K8S_NAMESPACE
             )
 
         except Exception as fault:
@@ -123,7 +151,9 @@ class Authorize(Resource):
             status_code = 200
 
             params.K8S_CLIENT = None
-            response["message"] = "K8S client is deleted successfully for namespace={}".format(params.K8S_NAMESPACE)
+            response["message"] = "K8S client is deleted successfully for namespace={}".format(
+                params.K8S_NAMESPACE
+            )
 
         except Exception as fault:
             try:
@@ -140,20 +170,12 @@ class Authorize(Resource):
 class InternalServiceUnavailabilityFaults(Resource):
     post_req_parser = reqparse.RequestParser()
     post_req_parser.add_argument(
-        "service_name",
-        type=str,
-        location="form",
-        help="csp service name",
-        required=True,
+        "service_name", type=str, location="form", help="csp service name", required=True,
     )
 
     delete_req_parser = reqparse.RequestParser()
     delete_req_parser.add_argument(
-        "service_name",
-        type=str,
-        default=None,
-        location="args",
-        help="csp service name",
+        "service_name", type=str, default=None, location="args", help="csp service name",
     )
     delete_req_parser.add_argument(
         "remediate_all_faults",
@@ -295,7 +317,7 @@ class ExternalServiceUnavailabilityFaults(Resource):
         type=str,
         location="form",
         help="network policy name that needs to be applied. To get the list of supported network policies, "
-             "please call GET /gameday/esu/networkpolicies",
+        "please call GET /gameday/esu/networkpolicies",
         required=True,
     )
 
