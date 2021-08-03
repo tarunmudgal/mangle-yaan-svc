@@ -1,8 +1,8 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: e2e-qe-selenium-node-chrome-dev
-  namespace: scdc1-staging-mangle-yaan
+  namespace: ara-mangle-yaan
   labels:
     app: e2e-qe-selenium-node-chrome-dev
 spec:

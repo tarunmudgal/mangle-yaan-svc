@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: mangle-yaan-job
-          image: vmwaresaas.jfrog.io/csp/mangle-yaan:latest
+          image: vmwaresaas.jfrog.io/csp/mangle-yaan:ara
           imagePullPolicy: Always
           env:
             - name: PROJECT_NAME
