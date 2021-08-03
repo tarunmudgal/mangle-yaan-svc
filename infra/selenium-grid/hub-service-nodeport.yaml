@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: e2e-qe-selenium-hub-service-dev
-  namespace: scdc1-staging-mangle-yaan
+  namespace: ara-mangle-yaan
   labels:
     app: e2e-qe-selenium-hub-dev
 spec:
