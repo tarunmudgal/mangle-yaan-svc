@@ -5,6 +5,7 @@
 __author__ = "tarun mudgal"
 
 import os
+import sys
 from collections import OrderedDict
 
 from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout, SSLError, Timeout
@@ -23,6 +24,10 @@ LOG_FORMAT = (
     "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
 )
 LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
+
+# Mangle Yaan datetime format
+START_DATETIME_FORMAT = "%d%b%Y_%H:%M:%S.%f" if sys.platform != "win32" else "%d%b%Y_%H-%M-%S.%f"
+END_DATETIME_FORMAT = "%d%b%Y_%H:%M:%S.%f" if sys.platform != "win32" else "%d%b%Y_%H-%M-%S.%f"
 
 CONSOLE_LOG_LEVEL = "DEBUG"
 FILE_LOG_FILENAME = "test_runner.log"
