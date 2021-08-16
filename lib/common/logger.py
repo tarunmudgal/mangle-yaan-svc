@@ -75,7 +75,7 @@ def get_logger():
 
     console_handler.flush = sys.stdout.flush
 
-    if os.path.isfile(file_log_filepath) and os.path.getsize(file_log_filepath) > 0:
+    if os.path.isfile(file_log_filepath) and os.path.getsize(file_log_filepath) > 0 and sys.platform != "win32":
         file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
 
     console_handler.setLevel(params.CONSOLE_LOG_LEVEL)
