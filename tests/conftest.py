@@ -18,6 +18,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from lib import params as lib_params
 from lib.common import utils
 from lib.mangle import resources
+from lib.csp import resources as csp_resources
 from lib.maximgun import resources as maxim_gun_resources
 from src.testlib import params as testlib_params
 
@@ -508,3 +509,82 @@ def init_chrome_driver(request):
     yield driver
 
     driver.quit()
+
+
+
+def get_kong_gateway_api_req_termination_details():
+    api_resource = csp_resources.FF.get("GET_CSP_FF_ENVIRONMENTS").format(
+        orgId=myconfig.get("csp").get("defaultOrg").get("id")
+    )
+
+    com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
+
+    if com_resp.json is not None:
+        envIds = [eachEnv["id"] for eachEnv in com_resp.json.get("results")]
+    return envIds
+
+@pytest.fixture(scope="class")
+def test_csp_ui_when_kong_gateway_commerce_api_is_blocked():
+    envIds = get_kong_gateway_api_req_termination_details()
+
+    api_resource = csp_resources.FF.get("PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG").format(
+        orgId=myconfig.get("csp").get("defaultOrg").get("id"),envId=envIds[0]
+    )
+
+    request_body = {            
+        "multivariateToggle": {
+            "defaultValues": {
+                "enabled": "conf",
+                "disabled": "conf"
+            },
+            "toggleOptions": [
+                {
+                    "value": "conf",
+                    "metadata": {
+                        "paths": [
+                            {
+                                "path": "/csp/gateway/commerce/api",
+                                "body": "VMware Cloud commerce Services is undergoing scheduled maintenance right now.",
+                                "exclude": []
+                            }
+                        ]
+                    }
+                },
+                {
+                    "value": "na"
+                }
+            ]
+        }
+    }
+    
+    resp = cclient.make_call(
+      "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
+    )
+
+
+    yield resp
+
+    request_body = {
+        "multivariateToggle": {
+            "defaultValues": {
+                "enabled": "conf",
+                "disabled": "conf"
+            },
+            "toggleOptions": [
+                {
+                    "value": "conf",
+                    "metadata": {
+                        "paths": []
+                    }
+                },
+                {
+                    "value": "na"
+                }
+            ]
+        }
+    }
+
+    resp = cclient.make_call(
+        "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
+    )    
+
