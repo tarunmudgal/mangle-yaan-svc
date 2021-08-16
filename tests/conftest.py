@@ -63,7 +63,10 @@ def pytest_html_results_table_header(cells):
 
 @pytest.mark.optionalhook
 def pytest_html_results_table_row(report, cells):
-    cells.insert(1, html.td(report.description))
+    try:
+        cells.insert(1, html.td(report.description))
+    except Exception as fault:
+        cells.insert(1, html.td(report.longreprtext))
 
 
 @pytest.mark.hookwrapper
