@@ -512,23 +512,30 @@ def init_chrome_driver(request):
 
 
 
-def get_kong_gateway_api_req_termination_details():
+def get_env_id(org_id):
     api_resource = csp_resources.FF.get("GET_CSP_FF_ENVIRONMENTS").format(
-        orgId=myconfig.get("csp").get("defaultOrg").get("id")
+        orgId=org_id
     )
 
     com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
+    assert "results" in com_resp.json, "error occurred while fetching feature flag environment ids"
 
+    env_ids = None
     if com_resp.json is not None:
-        envIds = [eachEnv["id"] for eachEnv in com_resp.json.get("results")]
-    return envIds
+        env_ids = [eachEnv["id"] for eachEnv in com_resp.json.get("results")]
+
+    return env_ids
 
 @pytest.fixture(scope="class")
-def test_csp_ui_when_kong_gateway_commerce_api_is_blocked():
-    envIds = get_kong_gateway_api_req_termination_details()
+def test_csp_ui_when_kong_gateway_commerce_api_is_blocked(request):
+    breakpoint()
+    po_org_id = request.module.PO_ORG_ID
+    ff_config_cache_update_interval = request.module.FF_CONFIG_CACHE_UPDATE_INTERVAL
+    env_ids = get_env_id(po_org_id)
+    mylog.debug("Feature Flag environment ids found are: {}".format(env_ids))
 
     api_resource = csp_resources.FF.get("PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG").format(
-        orgId=myconfig.get("csp").get("defaultOrg").get("id"),envId=envIds[0]
+        orgId=po_org_id,envId=env_ids[0]
     )
 
     request_body = {            
@@ -560,7 +567,8 @@ def test_csp_ui_when_kong_gateway_commerce_api_is_blocked():
     resp = cclient.make_call(
       "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
     )
-
+    assert resp.status_code == 200, "error occurred while updating csp_api_gateway_request_termination feature flag"
+    time.sleep(ff_config_cache_update_interval)
 
     yield resp
 
@@ -586,5 +594,7 @@ def test_csp_ui_when_kong_gateway_commerce_api_is_blocked():
 
     resp = cclient.make_call(
         "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
-    )    
+    )
+    assert resp.status_code == 200, "error occurred while updating csp_api_gateway_request_termination feature flag"
+    time.sleep(ff_config_cache_update_interval)
 
