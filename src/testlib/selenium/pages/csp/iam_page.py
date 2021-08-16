@@ -11,8 +11,17 @@ class ActiveUsersPage(BasePage):
         super().__init__(driver, self.current_url, timeout=timeout)
 
     def goto_active_users(self):
-        print("current_url : ",self.current_url)
-        if not self.find_element(self.iam_locators.Active_users):
-            print("Active users element not found")
-        print("Active users elemnet found")
-        self.find_element(self.iam_locators.Active_users).click()
+        users_element = self.find_element(self.iam_locators.IAM)
+        if users_element:
+            users_element.click()
+            active_users = self.find_element(self.iam_locators.Active_users)
+            if active_users:
+                active_users.click()
+                return self.find_element(self.iam_locators.Active_users_text).text
+            else:
+                print("active users element not found")
+        
+        return None
+
+
+    
