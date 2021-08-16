@@ -55,6 +55,12 @@ class Log:
 def get_logger():
     """ provides console and file loggers """
     log_dir = ROOT_DIR + os.path.sep + "logs"
+
+    # create logs dir if not exist
+    if not os.path.exists(log_dir):
+        print("creating log directory: %s" % log_dir, flush=True)
+        os.makedirs(log_dir)
+
     file_log_filepath = os.path.join(log_dir, params.FILE_LOG_FILENAME)
 
     formatter = logging.Formatter(params.LOG_FORMAT)
