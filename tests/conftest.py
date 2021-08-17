@@ -11,16 +11,16 @@ from collections import OrderedDict
 
 import pytest
 import requests
+from lib import params as lib_params
+from lib.common import utils
+from lib.csp import resources as csp_resources
+from lib.mangle import resources
+from lib.maximgun import resources as maxim_gun_resources
 from py.xml import html
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
-from lib import params as lib_params
-from lib.common import utils
-from lib.mangle import resources
-from lib.csp import resources as csp_resources
-from lib.maximgun import resources as maxim_gun_resources
 from src.testlib import params as testlib_params
+from src.testlib.csp.apis import commerce_apis
 
 
 def pytest_html_report_title(report):
@@ -168,7 +168,7 @@ def pytest_sessionfinish(session, exitstatus):
 my.properties.url=http://yandex.ru"""  # .format(mycache["run_info"]["workload_name"])
 
     if allure_report_dir:
-        with open('{}/{}'.format(allure_report_dir, 'environment.properties'), 'w') as allure_env:
+        with open("{}/{}".format(allure_report_dir, "environment.properties"), "w") as allure_env:
             allure_env.write("{}".format(env_details))
 
 
@@ -282,14 +282,15 @@ def inject_k8s_app_fault_spring_service_latency_for_class(request, scale_deploym
     deployment_names = request.module.DEPLOYMENT_NAMES_TO_BE_SCALED
     new_replica_count = request.module.NEW_REPLICA_COUNT
 
-    status, pod_names = ckclient.wait_for_pods_to_update_state(new_replica_count, label_selector=pod_labels,
-                                            field_selector="status.phase=Running")
+    status, pod_names = ckclient.wait_for_pods_to_update_state(
+        new_replica_count, label_selector=pod_labels, field_selector="status.phase=Running"
+    )
 
     pod_info = {}
     if status:
         for pod_name in pod_names:
-            jvm_process_id = ckclient.execute_cmd_inside_pod(pod_name, 'pgrep java')
-            pod_info[pod_name] = {'process_id': jvm_process_id}
+            jvm_process_id = ckclient.execute_cmd_inside_pod(pod_name, "pgrep java")
+            pod_info[pod_name] = {"process_id": jvm_process_id}
 
             # mangle fault injection
             request_body = {
@@ -301,21 +302,21 @@ def inject_k8s_app_fault_spring_service_latency_for_class(request, scale_deploym
                 "k8sArguments": {
                     "containerName": container_name,
                     "podLabels": pod_labels,
-                    "enableRandomInjection": random_injection
+                    "enableRandomInjection": random_injection,
                 },
                 "jvmProperties": {
                     "javaHomePath": java_home_path,
                     "jvmprocess": jvm_process_id,
-                    "port": port
-                }
+                    "port": port,
+                },
             }
 
             task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
                 "POST", resources.APP_FAULTS.get("SPRING_SERVICE_LATENCY"), json=request_body
             )
 
-            pod_info[pod_name]['fault_task_id'] = task_id
-            pod_info[pod_name]['fault_task_status'] = task_status
+            pod_info[pod_name]["fault_task_id"] = task_id
+            pod_info[pod_name]["fault_task_status"] = task_status
 
             mylog.debug(
                 "task for SPRING_SERVICE_LATENCY fault triggered with task_id={}, task_status={}".format(
@@ -340,7 +341,11 @@ def inject_k8s_app_fault_spring_service_latency_for_class(request, scale_deploym
         for pod_name in pod_info:
             try:
                 # mangle fault remediation
-                api_resource = resources.OTHER_FAULTS.get("REMEDIATION") + "/" + pod_info[pod_name]['fault_task_id']
+                api_resource = (
+                        resources.OTHER_FAULTS.get("REMEDIATION")
+                        + "/"
+                        + pod_info[pod_name]["fault_task_id"]
+                )
                 task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
                     "DELETE", api_resource
                 )
@@ -353,9 +358,7 @@ def inject_k8s_app_fault_spring_service_latency_for_class(request, scale_deploym
             except Exception as fault:
                 mylog.info(
                     "Exception occurred while remediating mangle SPRING_SERVICE_LATENCY fault with id={}. Exception={"
-                    "}".format(
-                        pod_info[pod_name]['fault_task_id'], fault
-                    )
+                    "}".format(pod_info[pod_name]["fault_task_id"], fault)
                 )
 
 
@@ -514,11 +517,8 @@ def init_chrome_driver(request):
     driver.quit()
 
 
-
 def get_env_id(org_id):
-    api_resource = csp_resources.FF.get("GET_CSP_FF_ENVIRONMENTS").format(
-        orgId=org_id
-    )
+    api_resource = csp_resources.FF.get("GET_CSP_FF_ENVIRONMENTS").format(orgId=org_id)
 
     com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
     assert "results" in com_resp.json, "error occurred while fetching feature flag environment ids"
@@ -529,24 +529,21 @@ def get_env_id(org_id):
 
     return env_ids
 
+
 @pytest.fixture(scope="class")
-def test_csp_ui_when_kong_gateway_commerce_api_is_blocked(request):
-    breakpoint()
+def block_commerce_endpoints_using_gateway_api(request):
     po_org_id = request.module.PO_ORG_ID
     ff_config_cache_update_interval = request.module.FF_CONFIG_CACHE_UPDATE_INTERVAL
     env_ids = get_env_id(po_org_id)
     mylog.debug("Feature Flag environment ids found are: {}".format(env_ids))
 
     api_resource = csp_resources.FF.get("PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG").format(
-        orgId=po_org_id,envId=env_ids[0]
+        orgId=po_org_id, envId=env_ids[0]
     )
 
-    request_body = {            
+    request_body = {
         "multivariateToggle": {
-            "defaultValues": {
-                "enabled": "conf",
-                "disabled": "conf"
-            },
+            "defaultValues": {"enabled": "conf", "disabled": "conf"},
             "toggleOptions": [
                 {
                     "value": "conf",
@@ -555,49 +552,54 @@ def test_csp_ui_when_kong_gateway_commerce_api_is_blocked(request):
                             {
                                 "path": "/csp/gateway/commerce/api",
                                 "body": "VMware Cloud commerce Services is undergoing scheduled maintenance right now.",
-                                "exclude": []
+                                "exclude": [],
                             }
                         ]
-                    }
+                    },
                 },
-                {
-                    "value": "na"
-                }
-            ]
-        }
-    }
-    
-    resp = cclient.make_call(
-      "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
-    )
-    assert resp.status_code == 200, "error occurred while updating csp_api_gateway_request_termination feature flag"
-    time.sleep(ff_config_cache_update_interval)
-
-    yield resp
-
-    request_body = {
-        "multivariateToggle": {
-            "defaultValues": {
-                "enabled": "conf",
-                "disabled": "conf"
-            },
-            "toggleOptions": [
-                {
-                    "value": "conf",
-                    "metadata": {
-                        "paths": []
-                    }
-                },
-                {
-                    "value": "na"
-                }
-            ]
+                {"value": "na"},
+            ],
         }
     }
 
     resp = cclient.make_call(
         "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
     )
-    assert resp.status_code == 200, "error occurred while updating csp_api_gateway_request_termination feature flag"
+    assert (
+            resp.status_code == 200
+    ), "error occurred while updating csp_api_gateway_request_termination feature flag"
+    mylog.debug("waiting for {} seconds to get PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG in effect".format(
+        ff_config_cache_update_interval))
     time.sleep(ff_config_cache_update_interval)
+    payment_methods_resp = commerce_apis.get_payment_methods(po_org_id)
+    assert payment_methods_resp.status_code == 503, (
+        "seems csp_api_gateway_request_termination FF is not updated "
+        "correctly. Expected status_code=503, original status_code={}".format(
+            payment_methods_resp.status_code
+        )
+    )
 
+    yield resp
+
+    request_body = {
+        "multivariateToggle": {
+            "defaultValues": {"enabled": "conf", "disabled": "conf"},
+            "toggleOptions": [{"value": "conf", "metadata": {"paths": []}}, {"value": "na"}],
+        }
+    }
+
+    resp = cclient.make_call(
+        "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
+    )
+    assert (
+            resp.status_code == 200
+    ), "error occurred while updating csp_api_gateway_request_termination feature flag"
+
+    mylog.debug("waiting for {} seconds to get PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG in effect".format(
+        ff_config_cache_update_interval))
+    time.sleep(ff_config_cache_update_interval)
+    payment_methods_resp = commerce_apis.get_payment_methods(po_org_id)
+    assert payment_methods_resp.status_code == 200, (
+        "seems csp_api_gateway_request_termination FF is not updated correctly. Expected status_code=200, original status_code={}".format(
+            payment_methods_resp.status_code)
+    )

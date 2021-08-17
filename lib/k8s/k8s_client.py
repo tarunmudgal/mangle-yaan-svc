@@ -4,8 +4,8 @@ import typing
 
 import yaml
 from kubernetes import client, config
-from kubernetes.stream import stream
 from kubernetes.client.rest import ApiException
+from kubernetes.stream import stream
 
 
 class K8SClient:
@@ -55,7 +55,11 @@ class K8SClient:
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        mylog.info("listing pods from {} namespace with following options={}".format(self.namespace, kwargs))
+        mylog.info(
+            "listing pods from {} namespace with following options={}".format(
+                self.namespace, kwargs
+            )
+        )
         try:
             ret = self.core_v1_api_client.list_namespaced_pod(self.namespace, **kwargs)
         except ApiException as fault:
@@ -80,25 +84,36 @@ class K8SClient:
 
     def execute_cmd_inside_pod(self, pod_name, cmd):
 
-        exec_command = ['/bin/sh', '-c', cmd]
+        exec_command = ["/bin/sh", "-c", cmd]
         try:
-            resp = stream(self.core_v1_api_client.connect_get_namespaced_pod_exec,
-                          pod_name,
-                          'csp-app-preview', command=exec_command, stderr=True, stdout=True, stdin=False,
-                          tty=False)
+            resp = stream(
+                self.core_v1_api_client.connect_get_namespaced_pod_exec,
+                pod_name,
+                "csp-app-preview",
+                command=exec_command,
+                stderr=True,
+                stdout=True,
+                stdin=False,
+                tty=False,
+            )
             return resp
         except ApiException as fault:
             mylog.exception(
-                "Exception occurred while executing command='{}' inside pod={}".format(exec_command, pod_name)
+                "Exception occurred while executing command='{}' inside pod={}".format(
+                    exec_command, pod_name
+                )
             )
 
-    def wait_for_pods_to_update_state(self, new_replica_count, timeout=600, sleep_interval=10, **kwargs):
+    def wait_for_pods_to_update_state(
+        self, new_replica_count, timeout=600, sleep_interval=10, **kwargs
+    ):
         replica_count = -1
         start_time = curr_time = time.time()
         while replica_count != new_replica_count and curr_time < start_time + timeout:
             pods_resp = self.get_pods(**kwargs)
-            pod_names = [item.metadata.name for item in pods_resp.items if item.status.phase ==
-                                     "Running"]
+            pod_names = [
+                item.metadata.name for item in pods_resp.items if item.status.phase == "Running"
+            ]
             replica_count = len(pod_names)
             mylog.info(
                 "currently {} pod(s) seem to be running. Expected pod(s) count is {}".format(
@@ -107,19 +122,13 @@ class K8SClient:
             )
 
             if replica_count == new_replica_count:
-                mylog.info(
-                    "pods updated with {} replica count".format(
-                        replica_count
-                    )
-                )
+                mylog.info("pods updated with {} replica count".format(replica_count))
                 return True, pod_names
 
             time.sleep(sleep_interval)
             curr_time = time.time()
 
         return False, []
-
-
 
     def deploy_deployment(self, deployment_fname, app_name, args, labels):
         """
@@ -450,8 +459,7 @@ class K8SClient:
         response = None
         try:
             response = self.networking_v1_api.list_namespaced_network_policy(
-                self.namespace,
-                pretty="true",
+                self.namespace, pretty="true",
             )
         except ApiException as fault:
             mylog.exception(

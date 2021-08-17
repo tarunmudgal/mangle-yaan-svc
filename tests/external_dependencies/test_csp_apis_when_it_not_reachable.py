@@ -99,7 +99,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_http_code = [500,502,504]
+        expected_http_code = [500, 502, 504]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("OFFERS").format(
@@ -277,7 +277,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_http_code = [500,502,504]
+        expected_http_code = [500, 502, 504]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("LIST_SUBSCRIPTIONS")
@@ -304,7 +304,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_http_code = [500,502,504]
+        expected_http_code = [500, 502, 504]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("GET_SUBSCRIPTION").format(

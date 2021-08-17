@@ -7,7 +7,6 @@ import sys
 from lib.common import utils
 from lib.mangle import mangle_client, resources
 
-
 endpoint_cred_obj = None
 endpoint_obj = None
 test_connection_obj = None

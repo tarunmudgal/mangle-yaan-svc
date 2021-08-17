@@ -39,7 +39,9 @@ COMMERCE["GET_ALL_SELLERS_DETAILS"] = "/commerce/api/v3/sellers"
 COMMERCE["GET_ORDERS_FOR_GIVEN_SELLER"] = "/commerce/api/v3/orgs/{orgId}/sellers/{seller}/orders"
 COMMERCE["GET_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts"
 COMMERCE["GET_DEFAULT_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/default"
-COMMERCE["GET_CURRENT_PERIOD_ESTIMATED_COSTS"] = "/commerce/api/v3/billing-accounts/{billingAccountId}/current-costs"
+COMMERCE[
+    "GET_CURRENT_PERIOD_ESTIMATED_COSTS"
+] = "/commerce/api/v3/billing-accounts/{billingAccountId}/current-costs"
 
 # CS resources
 CS = OrderedDict()
@@ -98,6 +100,10 @@ OS["FAQ_TOPIC"] = "/os/api/service-definitions/{serviceDefinitionId}/faq-topics/
 
 # Feature flag services
 FF = OrderedDict()
-FF["GET_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"] = "/ff-service/api/orgs/{orgId}/flags/csp_api_gateway_request_termination?expandEnvs=true"
-FF["PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"] = "/ff-service/api/orgs/{orgId}/environments/{envId}/flags/csp_api_gateway_request_termination"
+FF[
+    "GET_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"
+] = "/ff-service/api/orgs/{orgId}/flags/csp_api_gateway_request_termination?expandEnvs=true"
+FF[
+    "PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"
+] = "/ff-service/api/orgs/{orgId}/environments/{envId}/flags/csp_api_gateway_request_termination"
 FF["GET_CSP_FF_ENVIRONMENTS"] = "/ff-service/api/orgs/{orgId}/environments"

@@ -32,7 +32,7 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
 
     @pytest.mark.dependency()
     def test_get_org_sellers_v3_api_when_db_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_http_code = [500, 504]
@@ -47,12 +47,12 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
 
         # verify csp api returns expected_status_code
         assert (
-                resp.status_code in expected_http_code
+            resp.status_code in expected_http_code
         ), "Database service didn't return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
     def test_get_org_billing_accounts_api_when_db_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_http_code = [500, 504]
@@ -67,12 +67,12 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
 
         # verify csp api returns expected_status_code
         assert (
-                resp.status_code in expected_http_code
+            resp.status_code in expected_http_code
         ), "Database service didn't return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
     def test_get_all_sellers_details_api_when_db_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_http_code = [500, 504]
@@ -85,12 +85,12 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
 
         # verify csp api returns expected_status_code
         assert (
-                resp.status_code in expected_http_code
+            resp.status_code in expected_http_code
         ), "Database service didn't return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
     def test_get_orders_for_given_seller_api_when_db_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_http_code = [500, 504]
@@ -105,12 +105,12 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
 
         # verify csp api returns expected_status_code
         assert (
-                resp.status_code in expected_http_code
+            resp.status_code in expected_http_code
         ), "Database service didn't return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
     def test_get_billing_accounts_api_when_db_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_http_code = [500, 504]
@@ -125,12 +125,12 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
 
         # verify csp api returns expected_status_code
         assert (
-                resp.status_code in expected_http_code
+            resp.status_code in expected_http_code
         ), "Database service didn't return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
     def test_get_default_billing_accounts_api_when_db_service_calls_are_blocked(
-            self, inject_k8s_infra_fault_block_egress_traffic_for_class
+        self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
         expected_http_code = [500, 504]
@@ -145,5 +145,5 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
 
         # verify csp api returns expected_status_code
         assert (
-                resp.status_code in expected_http_code
+            resp.status_code in expected_http_code
         ), "Database service didn't return expected status_code={}".format(expected_http_code)

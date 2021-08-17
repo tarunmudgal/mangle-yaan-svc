@@ -56,7 +56,6 @@ DEPLOYMENTS_COULD_NOT_BE_SCALED = False
 @pytest.mark.usefixtures("init_chrome_driver")
 @pytest.mark.usefixtures("scale_deployments_for_class")
 class TestCSPLoginLogoutWorkflow:
-
     @pytest.mark.skipif(
         DEPLOYMENTS_COULD_NOT_BE_SCALED,
         reason="all deployments could not be scaled to {} replicas".format(NEW_REPLICA_COUNT),

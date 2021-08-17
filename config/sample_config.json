@@ -38,7 +38,7 @@
 		},
 		"mangleYaan": {
 			"webDriver": {
-				"initLocal": false,
+				"initLocal": true,
 				"chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
 			},
 			"testLogPath": "logs/test_runner.log",
