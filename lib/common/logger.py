@@ -66,7 +66,7 @@ def get_logger():
     formatter = logging.Formatter(params.LOG_FORMAT)
     formatter.converter = time.gmtime  # log UTC timestamps
 
-    log = logging.getLogger("root")
+    log = logging.getLogger("mangle_yaan")
     if not log.hasHandlers():
         log.setLevel(logging.DEBUG)
 
@@ -85,7 +85,7 @@ def get_logger():
         if (
             os.path.isfile(file_log_filepath)
             and os.path.getsize(file_log_filepath) > 0
-            and sys.platform != "win32"
+            # and sys.platform != "win32"
         ):
             file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
 
