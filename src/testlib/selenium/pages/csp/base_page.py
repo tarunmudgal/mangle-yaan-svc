@@ -215,7 +215,7 @@ class BasePage:
         Returns:
             True if spinner appeared first and disappeared after some time else False
         """
-        mylog.debug("waiting for spinner to appear upto {} seconds".format(timeout_to_appear))
+        mylog.debug("waiting for spinner to disappear upto {} seconds".format(timeout_to_appear))
 
         spinner_found = False
         try:

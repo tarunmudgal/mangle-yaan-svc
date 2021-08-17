@@ -3,9 +3,9 @@
 """ module description """
 
 import json
+from typing import Dict
 
 from src.testlib import params
-from typing import Dict
 
 __author__ = "tarun mudgal"
 

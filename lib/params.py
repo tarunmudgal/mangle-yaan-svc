@@ -8,7 +8,8 @@ import os
 import sys
 from collections import OrderedDict
 
-from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout, SSLError, Timeout
+from requests.exceptions import (ConnectionError, ConnectTimeout,
+                                 ReadTimeout, SSLError, Timeout)
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 
 # test_runner

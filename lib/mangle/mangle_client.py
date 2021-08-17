@@ -6,12 +6,11 @@ import base64
 import threading
 import time
 import typing
+from collections import defaultdict
 
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-
-from collections import defaultdict
 
 from lib import params
 from lib.common import utils
@@ -280,10 +279,16 @@ class MangleClient(RESTClient):
                     resp = self.make_call(
                         "GET", resources.TASK_CTRLR["TASK"].format(taskId=task_id)
                     )
-                    if resp.json.get("mangleTaskInfo").get("taskStatus") == params.MANGLE_TASK_STATUS["COMPLETED"]:
+                    if (
+                        resp.json.get("mangleTaskInfo").get("taskStatus")
+                        == params.MANGLE_TASK_STATUS["COMPLETED"]
+                    ):
                         child_tasks[task_id] = params.MANGLE_TASK_STATUS["COMPLETED"]
                         completed += 1
-                    elif resp.json.get("mangleTaskInfo").get("taskStatus") == params.MANGLE_TASK_STATUS["FAILED"]:
+                    elif (
+                        resp.json.get("mangleTaskInfo").get("taskStatus")
+                        == params.MANGLE_TASK_STATUS["FAILED"]
+                    ):
                         child_tasks[task_id] = params.MANGLE_TASK_STATUS["FAILED"]
                         failed += 1
                 if completed == child_tasks_count:
@@ -293,5 +298,6 @@ class MangleClient(RESTClient):
                     mylog.error("{} child tasks failed".format(failed))
                     return False
                 else:
-                    mylog.info("waiting for {} tasks to be finished".format(child_tasks_count - completed))
-
+                    mylog.info(
+                        "waiting for {} tasks to be finished".format(child_tasks_count - completed)
+                    )

@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 """ module description """
 
-__author__ = 'tarun mudgal'
+__author__ = "tarun mudgal"
 
 import pytest
 from flaky import flaky
 
 DEPLOYMENTS_COULD_NOT_BE_SCALED = False
-DEPLOYMENT_NAMES_TO_BE_SCALED = ['csp-commerce']
+DEPLOYMENT_NAMES_TO_BE_SCALED = ["csp-commerce"]
 NEW_REPLICA_COUNT = 1
+
 
 @flaky(
     max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
@@ -30,7 +31,6 @@ class TestSSCPAPIsWithHighNetworkLatency:
     RANDOM_INJECTION = False
     JAVA_HOME_PATH = "/opt/jre"
     PORT = 9091
-
 
     def test_sscp_api1(self):
         mylog.info("dummy test 1")

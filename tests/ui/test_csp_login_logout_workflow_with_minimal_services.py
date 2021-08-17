@@ -56,18 +56,18 @@ DEPLOYMENTS_COULD_NOT_BE_SCALED = False
 @pytest.mark.usefixtures("init_chrome_driver")
 @pytest.mark.usefixtures("scale_deployments_for_class")
 class TestCSPLoginLogoutWorkflow:
-
     @pytest.mark.skipif(
         DEPLOYMENTS_COULD_NOT_BE_SCALED,
         reason="all deployments could not be scaled to {} replicas".format(NEW_REPLICA_COUNT),
     )
     def test_csp_login_logout_when_minimal_services_are_up(self):
         loginpage = LoginPage(self.driver, timeout=60)
+        breakpoint()
 
-        login_status = loginpage.do_login(USER, PASSWORD)
+        login_status = loginpage.do_login_with_minimal_services(USER, PASSWORD)
         assert login_status, "user {} could not login to CSP portal".format(USER)
         mylog.debug("user {} logged-in to CSP portal successfully".format(USER))
 
-        logout_status = loginpage.do_logout()
+        logout_status = loginpage.do_logout_with_minimal_services()
         assert logout_status, "user {} could not logout from CSP portal".format(USER)
         mylog.debug("user {} logged-out from CSP portal successfully".format(USER))
