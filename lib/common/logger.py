@@ -67,31 +67,32 @@ def get_logger():
     formatter.converter = time.gmtime  # log UTC timestamps
 
     log = logging.getLogger("root")
-    log.setLevel(logging.DEBUG)
+    if not log.hasHandlers():
+        log.setLevel(logging.DEBUG)
 
-    console_handler = logging.StreamHandler(sys.stdout)
-    file_handler = logging.handlers.RotatingFileHandler(
-        file_log_filepath,
-        maxBytes=params.FILE_LOG_MAX_BYTES,
-        backupCount=params.FILE_LOG_BACKUP_COUNT,
-    )
-    formatter = logging.Formatter(params.LOG_FORMAT, datefmt=params.LOG_DATE_FORMAT)
-    console_handler.setFormatter(formatter)
-    file_handler.setFormatter(formatter)
+        console_handler = logging.StreamHandler(sys.stdout)
+        file_handler = logging.handlers.RotatingFileHandler(
+            file_log_filepath,
+            maxBytes=params.FILE_LOG_MAX_BYTES,
+            backupCount=params.FILE_LOG_BACKUP_COUNT,
+        )
+        formatter = logging.Formatter(params.LOG_FORMAT, datefmt=params.LOG_DATE_FORMAT)
+        console_handler.setFormatter(formatter)
+        file_handler.setFormatter(formatter)
 
-    console_handler.flush = sys.stdout.flush
+        console_handler.flush = sys.stdout.flush
 
-    if (
-        os.path.isfile(file_log_filepath)
-        and os.path.getsize(file_log_filepath) > 0
-        and sys.platform != "win32"
-    ):
-        file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
+        if (
+            os.path.isfile(file_log_filepath)
+            and os.path.getsize(file_log_filepath) > 0
+            and sys.platform != "win32"
+        ):
+            file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
 
-    console_handler.setLevel(params.CONSOLE_LOG_LEVEL)
-    file_handler.setLevel(params.FILE_LOG_LEVEL)
+        console_handler.setLevel(params.CONSOLE_LOG_LEVEL)
+        file_handler.setLevel(params.FILE_LOG_LEVEL)
 
-    log.addHandler(console_handler)
-    log.addHandler(file_handler)
+        log.addHandler(console_handler)
+        log.addHandler(file_handler)
 
     return log

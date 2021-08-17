@@ -5,22 +5,27 @@
 __author__ = "tarun mudgal"
 
 import io
+import logging
 import os
 import time
 from collections import OrderedDict
 
 import pytest
 import requests
+from py.xml import html
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
 from lib import params as lib_params
 from lib.common import utils
 from lib.csp import resources as csp_resources
 from lib.mangle import resources
 from lib.maximgun import resources as maxim_gun_resources
-from py.xml import html
-from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from src.testlib import params as testlib_params
 from src.testlib.csp.apis import commerce_apis
+
+# disable logs from selenium webdriver
+logging.getLogger('selenium.webdriver.remote.remote_connection').setLevel(logging.CRITICAL)
 
 
 def pytest_html_report_title(report):
@@ -502,9 +507,14 @@ def init_chrome_driver(request):
                 + testlib_params.SELENIUM_GRID_PORT
                 + testlib_params.SELENIUM_HUB_URI
         )
+
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--disable-logging')
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         driver = webdriver.Remote(
             command_executor=selenium_hub_fqdn,
-            desired_capabilities=getattr(DesiredCapabilities, "CHROME"),
+            # desired_capabilities=getattr(DesiredCapabilities, "CHROME"),
+            desired_capabilities=chrome_options.to_capabilities(),
         )
     driver.implicitly_wait(testlib_params.WEBDRIVER_IMPLICIT_WAIT)
     driver.maximize_window()
