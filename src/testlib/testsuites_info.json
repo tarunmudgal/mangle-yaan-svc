@@ -52,7 +52,7 @@
     "path": "tests/network_latency/test_sscp_apis_during_high_network_latency.py"
   },
   "test_csp_pages_when_commerce_endpoints_blocked": {
-    "description": "dummy test cases",
+    "description": "Verify different CSP Pages When Commerce Endpoints are Blocked using Kong Gateway APIs",
     "path": "tests/ui/test_csp_pages_when_commerce_endpoints_blocked.py"
   },
   "test_dummy": {
