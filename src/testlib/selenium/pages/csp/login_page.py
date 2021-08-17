@@ -50,9 +50,9 @@ class LoginPage(BasePage):
         ), "could not find SIGN IN button locator={}".format(self.locators.BTN_SIGN_IN)
         self.click(self.locators.BTN_SIGN_IN)
 
-        self.wait_for_spinner_to_disappear()
+        self.wait_for_spinner_to_disappear(timeout_to_appear=60, timeout_to_disappear=120)
 
-        logged_in = self.wait_for_element(self.locators.TXT_HOME_TITLE, timeout=600)
+        logged_in = self.wait_for_element(self.locators.TXT_HOME_TITLE, timeout=300)
 
         return logged_in
 
@@ -80,7 +80,7 @@ class LoginPage(BasePage):
         ), "could not find SIGN IN button locator={}".format(self.locators.BTN_SIGN_IN)
         self.click(self.locators.BTN_SIGN_IN)
 
-        self.wait_for_spinner_to_disappear()
+        self.wait_for_spinner_to_disappear(timeout_to_appear=60, timeout_to_disappear=600)
 
         logged_in = self.wait_for_element(self.locators.TXT_HOME_TITLE, timeout=600)
 
