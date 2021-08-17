@@ -51,7 +51,7 @@
     "description": "Onboardng service APIs execution when service instances go down abruptly",
     "path": "tests/network_latency/test_sscp_apis_during_high_network_latency.py"
   },
-  "test_csp_apis_when_commerce_endpoints_blocked": {
+  "test_csp_pages_when_commerce_endpoints_blocked": {
     "description": "dummy test cases",
     "path": "tests/ui/test_csp_pages_when_commerce_endpoints_blocked.py"
   },
