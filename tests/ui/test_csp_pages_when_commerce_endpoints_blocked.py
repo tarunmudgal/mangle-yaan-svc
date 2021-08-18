@@ -13,6 +13,8 @@ from lib.csp import resources as csp_resources
 from src.testlib.selenium.pages.csp.login_page import LoginPage
 from src.testlib.selenium.pages.csp.iam_active_users_page import ActiveUsersPage
 from src.testlib.selenium.pages.csp.iam_groups_page import GroupsPage
+from src.testlib.selenium.pages.csp.iam_invitations_page import InvitationsPage
+from src.testlib.selenium.pages.csp.iam_oauth_app_page import OauthAppsPage
 from src.testlib.selenium.pages.csp.bs_subscriptions_page import SubscriptionsPage
 
 
@@ -58,7 +60,15 @@ class TestCSPPagesWhenCommerceEndpointsBlocked:
         groups_page = GroupsPage(self.driver,timeout=60)
         groups_page.goto_groups_page()
 
-        mulog.debug("Validating Subscription Page")
+        mylog.debug("Validating Pending Invitations Page")
+        invitations_page = InvitationsPage(self.driver,timeout=60)
+        invitations_page.goto_invitations_page()
+
+        mylog.debug("Validating oAuth Apps Page")
+        oauth_app_page = OauthAppsPage(self.driver,timeout=60)
+        oauth_app_page.goto_oauth_app_page
+
+        mylog.debug("Validating Subscription Page")
         sub_page = SubscriptionsPage(self.driver, timeout=60)
         subscription_status = sub_page.goto_subscriptions_page()
         assert (
