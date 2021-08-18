@@ -12,6 +12,7 @@ from test_runner import create_csp_client
 from lib.csp import resources as csp_resources
 from src.testlib.selenium.pages.csp.login_page import LoginPage
 from src.testlib.selenium.pages.csp.iam_active_users_page import ActiveUsersPage
+from src.testlib.selenium.pages.csp.iam_groups_page import GroupsPage
 from src.testlib.selenium.pages.csp.bs_subscriptions_page import SubscriptionsPage
 
 
@@ -48,12 +49,16 @@ class TestCSPPagesWhenCommerceEndpointsBlocked:
         login_status = loginpage.do_login(USER, PASSWORD)
         assert login_status, "user {} could not login to CSP portal".format(USER)
         mylog.debug("user {} logged-in to CSP portal successfully".format(USER))
-        iam_page = ActiveUsersPage(self.driver, timeout=60)
 
-        active_users = iam_page.goto_active_users()
-        assert active_users == "Active Users", "Active users page is not working as expected"
-        mylog.debug("Active users Page working as expected.")
+        mylog.debug("Validating Active users page")
+        active_users_page = ActiveUsersPage(self.driver, timeout=60)
+        active_users_page.goto_active_users()
 
+        mylog.debug("Validating Groups page")
+        groups_page = GroupsPage(self.driver,timeout=60)
+        groups_page.goto_groups_page()
+
+        mulog.debug("Validating Subscription Page")
         sub_page = SubscriptionsPage(self.driver, timeout=60)
         subscription_status = sub_page.goto_subscriptions_page()
         assert (
