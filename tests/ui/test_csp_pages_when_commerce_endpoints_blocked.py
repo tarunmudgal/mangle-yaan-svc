@@ -4,7 +4,6 @@
 
 __author__ = "Y V Subba Reddy"
 
-from src.testlib.selenium.locators.csp import iam_active_users_page
 import pytest
 import builtins
 
@@ -15,7 +14,11 @@ from src.testlib.selenium.pages.csp.iam_active_users_page import ActiveUsersPage
 from src.testlib.selenium.pages.csp.iam_groups_page import GroupsPage
 from src.testlib.selenium.pages.csp.iam_invitations_page import InvitationsPage
 from src.testlib.selenium.pages.csp.iam_oauth_app_page import OauthAppsPage
+from src.testlib.selenium.pages.csp.bs_overview_page import OverviewPage
+from src.testlib.selenium.pages.csp.bs_payments_page import PaymentsPage
 from src.testlib.selenium.pages.csp.bs_subscriptions_page import SubscriptionsPage
+from src.testlib.selenium.pages.csp.bs_promotional_credits_page import PromotionalCreditsPage
+from src.testlib.selenium.pages.csp.bs_invoices_page import InvoicesPage
 
 
 USER = "lhruser3usd@yahoo.com"
@@ -68,14 +71,25 @@ class TestCSPPagesWhenCommerceEndpointsBlocked:
         oauth_app_page = OauthAppsPage(self.driver,timeout=60)
         oauth_app_page.goto_oauth_app_page
 
+        mylog.debug("Validating Billing and Subscription Overview Page")
+        overview_page = OverviewPage(self.driver, timeout=60)
+        overview_page.goto_overview_page()
+
+        mylog.debug("Validating Manage Payments Method Page")
+        payments_page = PaymentsPage(self.driver, timeout=60)
+        payments_page.goto_payments_page()
+
         mylog.debug("Validating Subscription Page")
         sub_page = SubscriptionsPage(self.driver, timeout=60)
-        subscription_status = sub_page.goto_subscriptions_page()
-        assert (
-            subscription_status
-            == "VMware Cloud commerce Services is undergoing scheduled maintenance right now."
-        ), "scbscription page not working as expected"
-        mylog.debug("Subscription Page working as expected.")
+        sub_page.goto_subscriptions_page()
+        
+        mylog.debug("Validating Promotional Credits Page")
+        credits_page = PromotionalCreditsPage(self.driver,timeout=60)
+        credits_page.goto_promotional_credits_page()
+
+        mylog.debug("Validating Invoice and Statements Page")
+        invoice_page = InvoicesPage(self.driver, timeout=60)
+        invoice_page.goto_invoices_page()
 
         logout_status = loginpage.do_logout()
         assert logout_status, "user {} could not logout from CSP portal".format(USER)
