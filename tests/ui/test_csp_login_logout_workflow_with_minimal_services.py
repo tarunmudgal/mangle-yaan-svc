@@ -62,7 +62,6 @@ class TestCSPLoginLogoutWorkflow:
     )
     def test_csp_login_logout_when_minimal_services_are_up(self):
         loginpage = LoginPage(self.driver, timeout=60)
-        breakpoint()
 
         login_status = loginpage.do_login_with_minimal_services(USER, PASSWORD)
         assert login_status, "user {} could not login to CSP portal".format(USER)
