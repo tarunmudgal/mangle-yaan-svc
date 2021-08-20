@@ -1,8 +1,7 @@
-
 from selenium.webdriver.common.by import By
 
 
-class IdentityAndAccessGroupsLocators:
+class IAMGroupsLocators:
     BTN_IDENTITY_AND_ACCESS_MANAGEMENT = (By.XPATH, "//div/button/div")
     NAV_GROUPS = (By.XPATH, "//span[contains(.,'Groups')]")
     TXT_GROUPS = (By.XPATH, "//h2[contains(text(),'Groups')]")
