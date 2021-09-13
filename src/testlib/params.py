@@ -5,8 +5,8 @@
 __author__ = "tarun mudgal"
 
 # selenium grid
-SELENIUM_GRID_HOST = "selenium-mangle-yaan.svc-stage.eng.vmware.com"
-SELENIUM_GRID_PORT = "31001"
+SELENIUM_GRID_HOST = "selenium-hub-svc"
+SELENIUM_GRID_PORT = "4444"
 SELENIUM_GRID_CONSOLE_URI = "/grid/console"
 SELENIUM_HUB_URI = "/wd/hub"
 

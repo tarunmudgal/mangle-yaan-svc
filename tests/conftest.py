@@ -554,17 +554,17 @@ def init_chrome_driver_with_call_interceptor(request):
         sw_options = {
             'suppress_connection_errors': False,
             'auto_config': False,
-            'addr': '0.0.0.0',
+                'addr': '0.0.0.0',
             'port': 8087
         }
 
         pod_ip = utils.run_cmd("hostname -i")
-        pod_ip = pod_ip.strip()
+        pod_ip = pod_ip.decode('utf-8').strip()
 
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--disable-logging')
-        chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
-        chrome_options.add_argument('--proxy-server={}'.format(pod_ip))
+        # chrome_options.add_argument('--disable-logging')
+        # chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        chrome_options.add_argument('--proxy-server={}:8087'.format(pod_ip))
         chrome_options.add_argument('--ignore-certificate-errors')
         driver = webdriver.Remote(
             command_executor=selenium_hub_fqdn,
