@@ -60,6 +60,8 @@ wcwidth==0.2.5            # via -r dev-requirements.txt, pytest
 websocket-client==0.57.0  # via kubernetes
 pylint==2.6.0
 selenium==3.141.0
+cryptography==3.4.8
+selenium-wire==4.5.2
 pre-commit==2.9.2
 flask-restplus==0.13.0
 Werkzeug==0.16.0

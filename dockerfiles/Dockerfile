@@ -1,6 +1,8 @@
 FROM harbor-repo.vmware.com/dockerhub-proxy-cache/library/python:3.8-alpine
 MAINTAINER CSP QE Team "csp-pune-qe@vmware.com"
 
+ARG CRYPTOGRAPHY_DONT_BUILD_RUST=1
+
 RUN apk add --update --no-cache \
     python3 \
     python3-dev \
@@ -9,6 +11,11 @@ RUN apk add --update --no-cache \
     openjdk11-jre \
     wget \
     unzip \
+    gcc \
+    openssl-dev \
+    musl-dev \
+    cargo \
+    libffi-dev \
   && pip install virtualenv \
   && rm -rf /var/cache/apk/*
 
