@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: e2e-qe-selenium-hub-service-dev
+  name: selenium-hub-svc
   namespace: ara-mangle-yaan
   labels:
-    app: e2e-qe-selenium-hub-dev
+    app: selenium-hub
 spec:
   type: NodePort
   ports:
-    - name: e2e-qe-selenium-hub-port-dev
+    - name: web
+      protocol: TCP
       port: 4444
       targetPort: 4444
       nodePort: 31001
   selector:
-    app: e2e-qe-selenium-hub-dev
-    environment: auto
+    app: selenium-hub
   sessionAffinity: None

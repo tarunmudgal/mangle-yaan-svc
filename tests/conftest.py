@@ -527,6 +527,61 @@ def init_chrome_driver(request):
     driver.quit()
 
 
+@pytest.fixture(scope="class")
+def init_chrome_driver_with_call_interceptor(request):
+    from seleniumwire import webdriver
+    from lib.k8s import k8s_client
+    from lib.common import utils
+    
+    K8S_CLIENT = k8s_client.K8SClient(
+        testlib_params.DECC_MANGLE_YAAN_KUBECONFIG, testlib_params.DECC_MANGLE_YAAN_NAMESPACE, skip_singleton_check=True
+    )
+    if myconfig.get("mangleYaan").get("webDriver").get("initLocal"):
+        driver = webdriver.Chrome(
+            myconfig.get("mangleYaan").get("webDriver").get("chromeDriverPath")
+        )
+    else:
+        # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub'
+        #                                           , desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
+        selenium_hub_fqdn = (
+                "http://"
+                + testlib_params.SELENIUM_GRID_HOST
+                + ":"
+                + testlib_params.SELENIUM_GRID_PORT
+                + testlib_params.SELENIUM_HUB_URI
+        )
+
+        sw_options = {
+            'suppress_connection_errors': False,
+            'auto_config': False,
+            'addr': '0.0.0.0',
+            'port': 8087
+        }
+
+        pod_ip = utils.run_cmd("hostname -i")
+        pod_ip = pod_ip.strip()
+
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--disable-logging')
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        chrome_options.add_argument('--proxy-server={}'.format(pod_ip))
+        chrome_options.add_argument('--ignore-certificate-errors')
+        driver = webdriver.Remote(
+            command_executor=selenium_hub_fqdn,
+            desired_capabilities=chrome_options.to_capabilities(),
+            seleniumwire_options=sw_options,
+        )
+    driver.implicitly_wait(testlib_params.WEBDRIVER_IMPLICIT_WAIT)
+    driver.maximize_window()
+
+    # assign driver as a class variable to the class consuming fixture
+    request.cls.driver = driver
+
+    yield driver
+
+    driver.quit()
+
+
 def get_env_id(org_id):
     api_resource = csp_resources.FF.get("GET_CSP_FF_ENVIRONMENTS").format(orgId=org_id)
 

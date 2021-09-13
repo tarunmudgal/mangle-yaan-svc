@@ -3,19 +3,16 @@ from datetime import datetime
 import pytest
 from flaky import flaky
 
-# import pytest
+import pytest
 
+def interceptor(request):
+    if request.url == 'https://console-preview.cloud.vmware.com/csp/gateway/ff-service/api/sdk/public-flags':
+        request.create_response(
+            status_code=503,
+            headers={'Content-Type': 'application/json'},  # Optional headers dictionary
+            body='<html>Hello World!</html>'  # Optional body
+        )
 
-# @pytest.mark.test3
-# def test_after_cpu_fault_injected_3(get_fault_end_ts):
-#     print("Execute test-3")
-#     if datetime.now().timestamp() > float(get_fault_end_ts):
-#         pytest.skip("*** Skipping test_after_cpu_fault_injected_3 ***")
-#     print(get_fault_end_ts)
-#     print(datetime.fromtimestamp(float(get_fault_end_ts)))
-#     print("in test_after_cpu_fault_injected_3")
-#
-#
 # @pytest.mark.test1
 # def test_after_cpu_fault_injected_1(get_fault_end_ts):
 #     print("Execute test-1")
@@ -27,8 +24,9 @@ from flaky import flaky
 # from tests import conftest
 
 
-@flaky(max_runs=2, min_passes=1, rerun_filter=None)
+# @flaky(max_runs=2, min_passes=1, rerun_filter=None)
 # @pytest.mark.usefixtures("init_chrome_driver")
+@pytest.mark.usefixtures("init_chrome_driver_with_call_interceptor")
 class TestDummy:
     def test_example1(self):
         """
@@ -37,9 +35,8 @@ class TestDummy:
             None
         """
         print("test_example1 called")
-        import time
-
-        # time.sleep(60)
+        self.driver.request_interceptor = interceptor
+        self.driver.get('https://console-preview.cloud.vmware.com')
 
     def test_example2(self):
         """

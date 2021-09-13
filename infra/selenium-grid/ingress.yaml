@@ -1,14 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mcsp-e2e-qe-ingress
+  name: selenium-hub-ingress
   namespace: ara-mangle-yaan
   labels:
-    app: csp-e2e-qe
+    app: selenium-hub
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: avi-lb
+  defaultBackend:
+    service:
+      name: selenium-hub-svc
+      port:
+        number: 4444
   rules:
     - host: selenium-mangle-yaan.ara.decc.vmware.com
       http:
@@ -17,9 +22,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: e2e-qe-selenium-hub-service-dev
+                name: selenium-hub-svc
                 port:
-                  number: 31001
+                  number: 4444
         # - path:
         #   backend:
         #     serviceName: e2e-qe-mysql

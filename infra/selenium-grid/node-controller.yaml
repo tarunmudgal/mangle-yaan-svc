@@ -1,27 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: e2e-qe-selenium-node-chrome-dev
+  name: selenium-node-chrome
   namespace: ara-mangle-yaan
   labels:
-    app: e2e-qe-selenium-node-chrome-dev
+    app: selenium-node-chrome
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: e2e-qe-selenium-node-chrome-dev
-      environment: auto
+      app: selenium-node-chrome
   template:
     metadata:
       labels:
-        app: e2e-qe-selenium-node-chrome-dev
-        environment: auto
+        app: selenium-node-chrome
     spec:
       containers:
-        - name: e2e-qe-selenium-node-chrome-dev
-#          image: selenium/node-chrome-debug:3.141
+        - name: selenium-node-chrome
           image: harbor-repo.vmware.com/csp_qe/selenium/node-chrome-debug:3.141
-#          imagePullPolicy: "Always"
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5900
@@ -33,8 +29,12 @@ spec:
               memory: "2048M"
               cpu: "1000m"
           env:
+            - name: HUB_HOST
+              value: "selenium-hub-svc"
+            - name: HUB_PORT
+              value: "4444"
             - name: HUB_PORT_4444_TCP_ADDR
-              value: "e2e-qe-selenium-hub-service-dev"
+              value: "selenium-hub-svc"
             - name: HUB_PORT_4444_TCP_PORT
               value: "4444"
             - name: NODE_MAX_INSTANCES

@@ -1,35 +1,28 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: mangle-yaan-job
+  name: resiliency-all-workloads-csp-apis-preview
 spec:
   template:
     spec:
       containers:
-        - name: mangle-yaan-job
-          image: vmwaresaas.jfrog.io/csp/mangle-yaan:ara
+        - name: resiliency-all-workloads-csp-apis-preview
+          image: vmwaresaas.jfrog.io/csp/resiliency-workload:latest
           imagePullPolicy: Always
           env:
-            - name: PROJECT_NAME
-              value: "MANGLE_YAAN_TEST"
-            - name: WORKLOAD_NAME
-              value: "Test-workload"
-            - name: TESTSUITE_NAMES
-              value: "test_commerce_api_when_a_service_down"
-            - name: PYTEST_ARGS
-              value: ""
-            - name: MYCONFIG
-              value: ""
-            - name: run_id
-              value: ""
+            - name: WORKLOAD_ID
+              value: "2e3TRSByiiSa2yWqzrahFb"
+            - name: VERSION
+              value: "0"
+            - name: TAG
+              value: "RunByCronJob"
+            - name: TEST_SUITE_NAME
+              value: "test_csp_apis_when_it_not_reachable,test_csp_apis_when_gaz_not_reachable,test_sscp_apis_when_gaz_not_reachable,test_paginated_api_when_one_service_instance_down,test_am_api_when_a_service_down,test_slc_api_when_a_service_down,test_onboarding_api_when_a_service_down,test_commerce_api_when_a_service_down,test_csp_login_logout_workflow_with_minimal_services,test_csp_pages_when_commerce_endpoints_blocked"
           resources:
-            requests:
-              memory: "1Gi"
-              cpu: "500m"
             limits:
               memory: "2Gi"
               cpu: "1000m"
       restartPolicy: "Never"
       imagePullSecrets:
         - name: auto-secret
-  backoffLimit: 3
+  backoffLimit: 1

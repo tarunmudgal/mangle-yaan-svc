@@ -14,6 +14,10 @@ SELENIUM_HUB_URI = "/wd/hub"
 WEBDRIVER_DEFAULT_WAIT = 120
 WEBDRIVER_IMPLICIT_WAIT = 5
 
+# DECC ara cluster for mangle-yaan
+DECC_MANGLE_YAAN_KUBECONFIG = "ara-mangle-yaan.yaml"
+DECC_MANGLE_YAAN_NAMESPACE = "ara-mangle-yaan"
+
 # CSP error code files
 CSP_MODULE_CODE_FILE = "src/testlib/csp/errors/module_code.json"
 CSP_MODULE_SERVICE_ERROR_CODE_FILES_MAP = {
