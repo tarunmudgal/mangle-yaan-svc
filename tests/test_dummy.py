@@ -37,6 +37,17 @@ class TestDummy:
         print("test_example1 called")
         self.driver.request_interceptor = interceptor
         self.driver.get('https://console-preview.cloud.vmware.com')
+        for request in self.driver.requests:
+            if request.response:
+                print(
+                    request.url,
+                    request.response.status_code,
+                    request.response.headers['Content-Type']
+                )
+                if 'csp/gateway/ff-service/api/sdk/public-flags' in request.url:
+                    assert request.response.status_code == 503, "API csp/gateway/ff-service/api/sdk/public-flags " \
+                                                                "didn't return 503 status"
+                    mylog.debug("API csp/gateway/ff-service/api/sdk/public-flags returned 503 status code")
 
     def test_example2(self):
         """
