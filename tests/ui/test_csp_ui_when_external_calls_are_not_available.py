@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+""" module description """
+
+__author__ = "tarun mudgal"
+
+import pytest
+from src.testlib.selenium.pages.csp.login_page import LoginPage
+
+USER = "lhruser3usd@yahoo.com"
+PASSWORD = "Test@123"
+PO_ORG_ID = "1c6f6c98-28bd-47b4-83f6-cad067495fce"
+FF_CONFIG_CACHE_UPDATE_INTERVAL = 300
+
+
+def interceptor(request):
+    if request.url == 'https://console-preview.cloud.vmware.com/csp/gateway/ff-service/api/sdk/public-flags':
+        request.create_response(
+            status_code=503,
+            headers={'Content-Type': 'application/json'},  # Optional headers dictionary
+            body='<html>Hello World!</html>'  # Optional body
+        )
+
+
+@pytest.mark.usefixtures("init_chrome_driver_with_call_interceptor")
+class TestCSPUIWhenExternalCallsBlocked:
+
+    def test_csp_login_logout_when_intercom_call_is_blocked(self, mock_response_interceptor):
+        breakpoint()
+        interceptor_ref = mock_response_interceptor(
+            'https://console-preview.cloud.vmware.com/csp/gateway/cs/api/loggedin/user/intercom', 503,
+            {'Content-Type': 'application/json'}, '<html>Intercom call mocked!</html>')
+        self.driver.request_interceptor = interceptor_ref
+
+        loginpage = LoginPage(self.driver, timeout=60)
+        login_status = loginpage.do_login(USER, PASSWORD)
+        assert login_status, "user {} could not login to CSP portal".format(USER)
+        mylog.debug("user {} logged-in to CSP portal successfully".format(USER))
+
+        is_intercom_call_found = False
+        for request in self.driver.requests:
+            if request.response:
+                print(
+                    request.url,
+                    request.response.status_code,
+                    request.response.headers['Content-Type']
+                )
+                if '/csp/gateway/cs/api/loggedin/user/intercom' in request.url:
+                    assert request.response.status_code == 503, "API /csp/gateway/cs/api/loggedin/user/intercom " \
+                                                                "didn't return 503 status"
+                    mylog.debug("API /csp/gateway/cs/api/loggedin/user/intercom returned 503 status code")
+                    is_intercom_call_found = True
+
+        assert is_intercom_call_found, "it seems intercom call is not found in CSP requests"

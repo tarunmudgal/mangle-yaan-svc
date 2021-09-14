@@ -55,6 +55,10 @@
     "description": "Verify different CSP Pages When Commerce Endpoints are Blocked using Kong Gateway APIs",
     "path": "tests/ui/test_csp_pages_when_commerce_endpoints_blocked.py"
   },
+   "test_csp_ui_when_external_calls_are_not_available": {
+    "description": "Verify different CSP Pages When Commerce Endpoints are Blocked using Kong Gateway APIs",
+    "path": "tests/ui/test_csp_ui_when_external_calls_are_not_available.py"
+  },
   "test_dummy": {
     "description": "dummy test cases",
     "path": "tests/test_dummy.py"

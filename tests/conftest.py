@@ -531,7 +531,7 @@ def init_chrome_driver(request):
 def init_chrome_driver_with_call_interceptor(request):
     from seleniumwire import webdriver
     from lib.k8s import k8s_client
-    from lib.common import utils
+    # from lib.common import utils
     
     K8S_CLIENT = k8s_client.K8SClient(
         testlib_params.DECC_MANGLE_YAAN_KUBECONFIG, testlib_params.DECC_MANGLE_YAAN_NAMESPACE, skip_singleton_check=True
@@ -554,7 +554,7 @@ def init_chrome_driver_with_call_interceptor(request):
         sw_options = {
             'suppress_connection_errors': False,
             'auto_config': False,
-                'addr': '0.0.0.0',
+            'addr': '0.0.0.0',
             'port': 8087
         }
 
@@ -580,6 +580,21 @@ def init_chrome_driver_with_call_interceptor(request):
     yield driver
 
     driver.quit()
+
+
+@pytest.fixture(scope="function")
+def mock_response_interceptor():
+    def _mock_response_interceptor(request_url, response_status_code, response_headers, response_body):
+        def _interceptor(request):
+            if request.url == request_url:
+                request.create_response(
+                    status_code=response_status_code,
+                    headers=response_headers,
+                    body=response_body,
+                )
+        return _interceptor
+    return _mock_response_interceptor
+
 
 
 def get_env_id(org_id):
