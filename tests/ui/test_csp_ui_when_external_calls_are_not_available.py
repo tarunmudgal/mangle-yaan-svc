@@ -26,7 +26,6 @@ def interceptor(request):
 class TestCSPUIWhenExternalCallsBlocked:
 
     def test_csp_login_logout_when_intercom_call_is_blocked(self, mock_response_interceptor):
-        breakpoint()
         interceptor_ref = mock_response_interceptor(
             'https://console-preview.cloud.vmware.com/csp/gateway/cs/api/loggedin/user/intercom', 503,
             {'Content-Type': 'application/json'}, '<html>Intercom call mocked!</html>')
@@ -40,11 +39,12 @@ class TestCSPUIWhenExternalCallsBlocked:
         is_intercom_call_found = False
         for request in self.driver.requests:
             if request.response:
-                print(
+                mylog.debug("request.url={}, request.response.status_code={}, request.response.headers["
+                            "'Content-Type']={}".format(
                     request.url,
                     request.response.status_code,
                     request.response.headers['Content-Type']
-                )
+                ))
                 if '/csp/gateway/cs/api/loggedin/user/intercom' in request.url:
                     assert request.response.status_code == 503, "API /csp/gateway/cs/api/loggedin/user/intercom " \
                                                                 "didn't return 503 status"
@@ -52,3 +52,7 @@ class TestCSPUIWhenExternalCallsBlocked:
                     is_intercom_call_found = True
 
         assert is_intercom_call_found, "it seems intercom call is not found in CSP requests"
+
+        logout_status = loginpage.do_logout()
+        assert logout_status, "user {} could not logout from CSP portal".format(USER)
+        mylog.debug("user {} logged-out from CSP portal successfully".format(USER))
