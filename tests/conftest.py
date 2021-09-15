@@ -584,9 +584,15 @@ def init_chrome_driver_with_call_interceptor(request):
 
 @pytest.fixture(scope="function")
 def mock_response_interceptor():
-    def _mock_response_interceptor(request_url, response_status_code, response_headers, response_body):
+    def _mock_response_interceptor(request_url, response_status_code, response_headers, response_body,
+                                   exact_url_match=False):
         def _interceptor(request):
-            if request.url == request_url:
+            url_matched = False
+            if exact_url_match:
+                url_matched = request_url == request.url
+            else:
+                url_matched = request_url in request.url
+            if url_matched:
                 request.create_response(
                     status_code=response_status_code,
                     headers=response_headers,

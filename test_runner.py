@@ -8,11 +8,10 @@ import argparse
 import builtins
 import datetime
 import inspect
-import logging
 import os
 import pprint
+import socket
 import sys
-import time
 import typing
 
 import boto3
@@ -21,14 +20,11 @@ import requests
 
 from lib import params as lib_params
 from lib.aws import s3
-from lib.common import config_reader, logger, rest_client, utils
+from lib.common import config_reader, logger, utils
 from lib.csp import csp_client
-from lib.csp import resources as csp_resources
 from lib.k8s import k8s_client
 from lib.mangle import endpoint, mangle_client
-from lib.maximgun import agent as mg_agent
-from lib.maximgun import maximgun_client
-from lib.maximgun import resources as mg_resources
+from lib.maximgun import agent as mg_agent, maximgun_client, resources as mg_resources
 
 requests.packages.urllib3.disable_warnings()
 # logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -61,12 +57,22 @@ def check_network_availability() -> None:
     Returns:
       None
     """
-    request_url = "https://www.google.com"
-    resp_code_exp = requests.codes.ok
+    # request_url = "https://www.google.com"
+    # resp_code_exp = requests.codes.ok
+    #
+    # try:
+    #     resp = requests.get(request_url, verify=False)
+    #     assert resp.status_code == resp_code_exp
+    #     mylog.info("Network Availability Check: OK")
+    # except Exception as fault:
+    #     mylog.error("Network Availability Check: Failed")
+    #     mylog.error("Error: %s. Exiting %s" % (fault, sys.argv[0]))
+    #     sys.exit(1)
 
     try:
-        resp = requests.get(request_url, verify=False)
-        assert resp.status_code == resp_code_exp
+        sock = socket.create_connection(("8.8.8.8", 53))
+        if sock is not None:
+            sock.close()
         mylog.info("Network Availability Check: OK")
     except Exception as fault:
         mylog.error("Network Availability Check: Failed")
@@ -89,7 +95,7 @@ def create_maxim_gun_client(timeout: int = 120) -> maximgun_client.MGClient:
 
     # maxim-gun client
     mg_conf = my_json.get("maximGun")
-    mgclient = maximgun_client.MGClient(mg_conf.get("host"), timeout=timeout,)
+    mgclient = maximgun_client.MGClient(mg_conf.get("host"), timeout=timeout, )
 
     return mgclient
 
@@ -244,10 +250,10 @@ def cleanup_old_reports(log_dir: str, max_count: int = 5) -> None:
 
 
 def prepare_setup(
-    myconf_file: str = None,
-    project_name: str = None,
-    workload_name: str = None,
-    run_id: str = None,
+        myconf_file: str = None,
+        project_name: str = None,
+        workload_name: str = None,
+        run_id: str = None,
 ) -> None:
     """Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
     config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
@@ -425,21 +431,21 @@ def generate_and_copy_result_trends(bucket: str, result_key: str, history_key: s
         copy_status (True or False)
     """
     workload_history_key = (
-        history_key.rstrip("/") + "/" + mycache["run_info"]["workload_name"] + "/" + "history"
+            history_key.rstrip("/") + "/" + mycache["run_info"]["workload_name"] + "/" + "history"
     )
     workload_history_backup_key = (
-        history_key.rstrip("/")
-        + "/"
-        + mycache["run_info"]["workload_name"]
-        + "/"
-        + "backup-history"
+            history_key.rstrip("/")
+            + "/"
+            + mycache["run_info"]["workload_name"]
+            + "/"
+            + "backup-history"
     )
 
     allure_raw = lib_params.ALLURE_LOG_DIR + os.path.sep + "raw"
     allure_html = lib_params.ALLURE_LOG_DIR + os.path.sep + "html"
     allure_raw_history = lib_params.ALLURE_LOG_DIR + os.path.sep + "raw" + os.path.sep + "history"
     allure_html_history = (
-        lib_params.ALLURE_LOG_DIR + os.path.sep + "html" + os.path.sep + "history"
+            lib_params.ALLURE_LOG_DIR + os.path.sep + "html" + os.path.sep + "history"
     )
 
     if s3_client.if_key_exists(bucket, workload_history_key):
@@ -562,7 +568,7 @@ def main() -> None:
         type=str,
         default="",
         help="mangle-yaan config file path. If this option is used, "
-        "it will ovverride default config file config/my.json",
+             "it will ovverride default config file config/my.json",
     )
     parser.add_argument(
         "--pytest_args",
