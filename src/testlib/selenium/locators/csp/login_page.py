@@ -21,3 +21,4 @@ class LoginPageLocators:
     BTN_USER_MENU = (By.ID, "btn-csp-user")
     BTN_SIGN_OUT = (By.ID, "csp-sign-out-btn")
     TXT_LOGOUT_MSG = (By.CLASS_NAME, "logout-message")
+    LNK_SIGN_IN_USING_ANOTHER_ACCT = (By.LINK_TEXT, "Sign in using another account")

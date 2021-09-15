@@ -29,6 +29,9 @@ class LoginPage(BasePage):
     def do_login(self, email, password):
         self.goto_login_page()
 
+        if self.if_element_exists(self.locators.LNK_SIGN_IN_USING_ANOTHER_ACCT):
+            self.click(self.locators.LNK_SIGN_IN_USING_ANOTHER_ACCT)
+
         assert self.if_element_exists(
             self.locators.TB_EMAIL
         ), "could not find email text box locator={}".format(self.locators.TB_EMAIL)
@@ -39,7 +42,6 @@ class LoginPage(BasePage):
         ), "could not find NEXT button locator={}".format(self.locators.BTN_NEXT)
         self.click(self.locators.BTN_NEXT)
 
-        self.wait_for_element(self.locators.TB_PASSWORD)
         assert self.if_element_exists(
             self.locators.TB_PASSWORD
         ), "could not find password text box locator={}".format(self.locators.TB_PASSWORD)
