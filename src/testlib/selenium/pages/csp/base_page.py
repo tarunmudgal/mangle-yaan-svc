@@ -170,7 +170,7 @@ class BasePage:
         web_element.click()
         return True
 
-    def wait_for_element(self, locator, timeout=10):
+    def wait_for_element(self, locator, timeout=20):
         """
         waits for a web-element to appear until timeout occurs
         Args:
