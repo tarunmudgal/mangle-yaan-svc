@@ -23,7 +23,8 @@ class LoginPage(BasePage):
                 )
             )
             self.go_to_url("/")
-            self.wait_for_element(self.locators.TXT_LOGIN_TITLE)
+            self.wait_until_any_element_exists([self.locators.TXT_LOGIN_TITLE, self.locators.TXT_PASSWORD_FORM],
+                                               timeout=self.timeout)
         mylog.info("reached on login page")
 
     def do_login(self, email, password):
@@ -31,26 +32,22 @@ class LoginPage(BasePage):
 
         if self.if_element_exists(self.locators.LNK_SIGN_IN_USING_ANOTHER_ACCT):
             self.click(self.locators.LNK_SIGN_IN_USING_ANOTHER_ACCT)
+        elif self.if_element_exists(self.locators.BTN_BACK_TO_LOGIN):
+            self.click(self.locators.BTN_BACK_TO_LOGIN)
 
-        assert self.if_element_exists(
-            self.locators.TB_EMAIL
-        ), "could not find email text box locator={}".format(self.locators.TB_EMAIL)
-        self.send_keys(self.locators.TB_EMAIL, email)
+        if self.if_element_exists(self.locators.TB_EMAIL):
+            self.send_keys(self.locators.TB_EMAIL, email)
+            assert self.if_element_exists(
+                self.locators.BTN_NEXT
+            ), "could not find NEXT button locator={}".format(self.locators.BTN_NEXT)
+            self.click(self.locators.BTN_NEXT)
 
-        assert self.if_element_exists(
-            self.locators.BTN_NEXT
-        ), "could not find NEXT button locator={}".format(self.locators.BTN_NEXT)
-        self.click(self.locators.BTN_NEXT)
-
-        assert self.if_element_exists(
-            self.locators.TB_PASSWORD
-        ), "could not find password text box locator={}".format(self.locators.TB_PASSWORD)
-        self.send_keys(self.locators.TB_PASSWORD, password)
-
-        assert self.if_element_exists(
-            self.locators.BTN_SIGN_IN
-        ), "could not find SIGN IN button locator={}".format(self.locators.BTN_SIGN_IN)
-        self.click(self.locators.BTN_SIGN_IN)
+        if self.if_element_exists(self.locators.TB_PASSWORD):
+            self.send_keys(self.locators.TB_PASSWORD, password)
+            assert self.if_element_exists(
+                self.locators.BTN_SIGN_IN
+            ), "could not find SIGN IN button locator={}".format(self.locators.BTN_SIGN_IN)
+            self.click(self.locators.BTN_SIGN_IN)
 
         self.wait_for_spinner_to_disappear(timeout_to_appear=60, timeout_to_disappear=120)
 

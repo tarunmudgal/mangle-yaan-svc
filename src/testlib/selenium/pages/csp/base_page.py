@@ -4,6 +4,7 @@
 
 __author__ = "tarun mudgal"
 
+import time
 import urllib.parse
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -31,7 +32,8 @@ class BasePage:
 
         if BasePage.browser_session is None:
             self.go_to_url("/")
-            self.wait_for_element(LoginPageLocators.TXT_LOGIN_TITLE, timeout=self.timeout)
+            self.wait_until_any_element_exists([self.locators.TXT_LOGIN_TITLE, self.locators.TXT_PASSWORD_FORM],
+                                               timeout=self.timeout)
 
     def wait_until_element_displays(timeout: int = None):
         """
@@ -198,6 +200,34 @@ class BasePage:
             )
 
         return False
+
+    def wait_until_any_element_exists(self, locators, timeout=20):
+        """
+        waits for multiple web-elements to appear until timeout occurs
+        Args:
+            locators: list of locators to be found as a web-element
+            timeout: timeout for web-elements to appear
+
+        Returns:
+           Returns True of any of the web-element is found before timeout else False
+        """
+        mylog.debug("waiting for locators={} upto {} seconds".format(locators, timeout))
+        try:
+            initial_time = current_time = time.time()
+            while current_time <= initial_time + timeout:
+                for locator in locators:
+                    if self.if_element_exists(locator):
+                        mylog.debug("element={} found".format(locator))
+                        return True, locator
+                current_time = time.time()
+            mylog.error(
+                "None of the locators {} found on url {} within {} seconds".format(
+                    locators, self.get_url(), timeout
+                )
+            )
+            return False, ()
+        except Exception as fault:
+            mylog.exception(fault)
 
     def wait_for_spinner_to_disappear(
         self,

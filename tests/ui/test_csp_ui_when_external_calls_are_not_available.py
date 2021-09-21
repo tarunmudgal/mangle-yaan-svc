@@ -72,6 +72,9 @@ class TestCSPUIWhenExternalCallsBlocked:
         assert logout_status, "user {} could not logout from CSP portal".format(USER)
         mylog.debug("user {} logged-out from CSP portal successfully".format(USER))
 
+        del self.driver.request_interceptor
+        del self.driver.requests
+
     def test_csp_login_logout_when_feedback_call_is_blocked(self, mock_response_interceptor):
         request_url = "https://feedback.esp-staging.vmware-aws.com/api/feedback/v1/trigger-rules"
         request_response = 503
@@ -116,6 +119,9 @@ class TestCSPUIWhenExternalCallsBlocked:
         logout_status = loginpage.do_logout()
         assert logout_status, "user {} could not logout from CSP portal".format(USER)
         mylog.debug("user {} logged-out from CSP portal successfully".format(USER))
+
+        del self.driver.request_interceptor
+        del self.driver.requests
 
     @pytest.mark.skip(reason="incomplete test case")
     def test_csp_login_logout_when_translation_call_is_blocked(self, mock_response_interceptor):
@@ -162,3 +168,6 @@ class TestCSPUIWhenExternalCallsBlocked:
         logout_status = loginpage.do_logout()
         assert logout_status, "user {} could not logout from CSP portal".format(USER)
         mylog.debug("user {} logged-out from CSP portal successfully".format(USER))
+
+        del self.driver.request_interceptor
+        del self.driver.requests

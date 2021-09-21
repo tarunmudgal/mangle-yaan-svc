@@ -586,14 +586,14 @@ def init_chrome_driver_with_call_interceptor(request):
 def mock_response_interceptor():
     def _mock_response_interceptor(request_url, response_status_code, response_headers, response_body,
                                    exact_url_match=False):
-        def _interceptor(request):
+        def _interceptor(req):
             url_matched = False
             if exact_url_match:
-                url_matched = request_url == request.url
+                url_matched = request_url == req.url
             else:
-                url_matched = request_url in request.url
+                url_matched = request_url in req.url
             if url_matched:
-                request.create_response(
+                req.create_response(
                     status_code=response_status_code,
                     headers=response_headers,
                     body=response_body,
