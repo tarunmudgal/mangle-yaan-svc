@@ -46,4 +46,3 @@ class OverviewPage(BasePage):
                         self.commerce_overview_locators.NAV_OVERVIEW
                     )
                 )
-

@@ -7,6 +7,7 @@ __author__ = "tarun mudgal"
 import pytest
 
 from src.testlib.selenium.pages.csp.login_page import LoginPage
+from src.testlib.selenium.pages.csp.my_account_page import MyAccountPage
 
 USER = "lhruser3usd@yahoo.com"
 PASSWORD = "Test@123"
@@ -25,6 +26,7 @@ FF_CONFIG_CACHE_UPDATE_INTERVAL = 300
 
 @pytest.mark.usefixtures("init_chrome_driver_with_call_interceptor")
 class TestCSPUIWhenExternalCallsBlocked:
+    # @pytest.mark.skip(reason="incomplete test case")
     def test_csp_login_logout_when_intercom_call_is_blocked(self, mock_response_interceptor):
         request_url = (
             "https://console-preview.cloud.vmware.com/csp/gateway/cs/api/loggedin/user/intercom"
@@ -75,6 +77,7 @@ class TestCSPUIWhenExternalCallsBlocked:
         del self.driver.request_interceptor
         del self.driver.requests
 
+    # @pytest.mark.skip(reason="incomplete test case")
     def test_csp_login_logout_when_feedback_call_is_blocked(self, mock_response_interceptor):
         request_url = "https://feedback.esp-staging.vmware-aws.com/api/feedback/v1/trigger-rules"
         request_response = 503
@@ -123,12 +126,12 @@ class TestCSPUIWhenExternalCallsBlocked:
         del self.driver.request_interceptor
         del self.driver.requests
 
-    @pytest.mark.skip(reason="incomplete test case")
+    # @pytest.mark.skip(reason="incomplete test case")
     def test_csp_login_logout_when_translation_call_is_blocked(self, mock_response_interceptor):
-        request_url = "https://feedback.esp-staging.vmware-aws.com/api/feedback/v1/trigger-rules"
+        request_url = "https://console-preview.cloud.vmware.com/i18n/api/v2/combination/translationsAndPattern"
         request_response = 503
         request_headers = {"Content-Type": "application/json"}
-        request_body = "<html>feedback call mocked!</html>"
+        request_body = "<html>translationsAndPattern call mocked!</html>"
         interceptor_ref = mock_response_interceptor(
             request_url, request_response, request_headers, request_body
         )
@@ -139,6 +142,9 @@ class TestCSPUIWhenExternalCallsBlocked:
         assert login_status, "user {} could not login to CSP portal".format(USER)
         mylog.debug("user {} logged-in to CSP portal successfully".format(USER))
 
+        my_account_page = MyAccountPage(self.driver, timeout=60)
+        my_account_page.goto_my_account_page()
+        my_account_page.update_language_preference("Deutsch")
         is_translation_call_found = False
         for request in self.driver.requests:
             if request.response:
@@ -163,7 +169,7 @@ class TestCSPUIWhenExternalCallsBlocked:
                     )
                     is_translation_call_found = True
 
-        assert is_translation_call_found, "it seems intercom call is not found in CSP requests"
+        assert is_translation_call_found, "it seems translation call is not found in CSP requests"
 
         logout_status = loginpage.do_logout()
         assert logout_status, "user {} could not logout from CSP portal".format(USER)

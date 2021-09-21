@@ -34,4 +34,3 @@ class InvoicesPage(BasePage):
                     self.commerce_invoice_locators.NAV_INVOICES
                 )
             )
-

@@ -1,5 +1,5 @@
-
 from selenium.webdriver.common.by import By
+
 
 class CommercePromotionalCreditsLocators:
     NAV_CREDITS = (By.XPATH, "//span[contains(text(),'Promotional Credits')]")

@@ -39,4 +39,3 @@ class SubscriptionsPage(BasePage):
                     self.commerce_sub_locators.NAV_SUBSCRIPTIONS
                 )
             )
-

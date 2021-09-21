@@ -32,8 +32,11 @@ class BasePage:
 
         if BasePage.browser_session is None:
             self.go_to_url("/")
-            self.wait_until_any_element_exists([self.locators.TXT_LOGIN_TITLE, self.locators.TXT_PASSWORD_FORM],
-                                               timeout=self.timeout)
+            self.wait_until_any_element_exists(
+                [self.locators.TXT_LOGIN_TITLE, self.locators.TXT_PASSWORD_FORM],
+                timeout=self.timeout,
+            )
+            BasePage.browser_session = self.driver.session_id
 
     def wait_until_element_displays(timeout: int = None):
         """
@@ -53,7 +56,7 @@ class BasePage:
                 except TimeoutException as fault:
                     mylog.exception(
                         "exception occurred as locator {} could not be found within {} seconds. Exception={}".format(
-                            locator, params.WEBDRIVER_DEFAULT_WAIT, fault
+                            locator, wd_timeout, fault
                         )
                     )
                 return func(self, *args, **kwargs)
@@ -108,6 +111,26 @@ class BasePage:
             return False
 
         return True
+
+    def if_any_element_exists(self, locators):
+        """
+        checks if any of the web-element exists
+        Args:
+            locators: list of locators to be looked for
+
+        Returns:
+            True if any of the locators match to a web-element else False
+        """
+        web_elements_found = []
+        for locator in locators:
+            try:
+                web_element = self.driver.find_element(*locator)
+                mylog.debug("web_element found using locator={}".format(locator))
+                web_elements_found.append(web_element)
+            except NoSuchElementException:
+                pass
+
+        return True if web_elements_found else False
 
     def get_title(self):
         """ returns the title of the current page """

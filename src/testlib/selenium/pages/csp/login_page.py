@@ -5,7 +5,6 @@
 __author__ = "tarun mudgal"
 
 from src.testlib.selenium.locators.csp import login_page
-from src.testlib.selenium.locators.csp.base_page import BasePageLocators
 from src.testlib.selenium.pages.csp.base_page import BasePage
 
 
@@ -16,15 +15,13 @@ class LoginPage(BasePage):
         super().__init__(driver, self.base_url, timeout=timeout)
 
     def goto_login_page(self):
-        if not self.find_element(self.locators.TXT_LOGIN_TITLE):
+        login_page_locators = [self.locators.TXT_LOGIN_TITLE, self.locators.TXT_PASSWORD_FORM]
+        if not self.if_any_element_exists(login_page_locators):
             mylog.info(
-                "locator={} not found. redirecting to login page".format(
-                    self.locators.TXT_LOGIN_TITLE
-                )
+                "locators={} not found. redirecting to login page".format(login_page_locators)
             )
             self.go_to_url("/")
-            self.wait_until_any_element_exists([self.locators.TXT_LOGIN_TITLE, self.locators.TXT_PASSWORD_FORM],
-                                               timeout=self.timeout)
+            self.wait_until_any_element_exists(login_page_locators, timeout=self.timeout)
         mylog.info("reached on login page")
 
     def do_login(self, email, password):
