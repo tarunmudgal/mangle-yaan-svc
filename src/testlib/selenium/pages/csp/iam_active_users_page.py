@@ -15,7 +15,7 @@ class ActiveUsersPage(BasePage):
             self.iam_active_users_locators.NAV_ACTIVE_USERS_SEARCH
         )
         assert self.if_element_exists(
-            self.iam_locators.BTN_ADD_USER
+            self.iam_active_users_locators.BTN_ADD_USER
         ), "could not find add user locator={}".format(self.iam_active_users_locators.BTN_ADD_USER)
 
     def goto_active_users(self):
