@@ -5,6 +5,15 @@ from flaky import flaky
 
 import pytest
 
+from src.testlib.selenium.pages.csp.login_page import LoginPage
+
+USER = "lhruser3usd@yahoo.com"
+PASSWORD = "Test@123"
+PO_ORG_ID = "1c6f6c98-28bd-47b4-83f6-cad067495fce"
+FF_CONFIG_CACHE_UPDATE_INTERVAL = 300
+
+
+
 def interceptor(request):
     if request.url == 'https://console-preview.cloud.vmware.com/csp/gateway/ff-service/api/sdk/public-flags':
         request.create_response(
@@ -25,9 +34,10 @@ def interceptor(request):
 
 
 # @flaky(max_runs=2, min_passes=1, rerun_filter=None)
-# @pytest.mark.usefixtures("init_chrome_driver")
-@pytest.mark.usefixtures("init_chrome_driver_with_call_interceptor")
+@pytest.mark.usefixtures("init_chrome_driver")
+# @pytest.mark.usefixtures("init_chrome_driver_with_call_interceptor")
 class TestDummy:
+    @pytest.mark.skip(reason="incomplete test case")
     def test_example1(self):
         """
         test_example1 description
@@ -55,8 +65,24 @@ class TestDummy:
         Returns:
             None
         """
-        print("test_example2 called")
-        assert 0 == 1
+        # print("test_example2 called")
+        # assert 0 == 1
+        breakpoint()
+        loginpage = LoginPage(self.driver, timeout=60)
+        login_status = loginpage.do_login(USER, PASSWORD)
+        assert login_status, "user {} could not login to CSP portal".format(USER)
+        mylog.debug("user {} logged-in to CSP portal successfully".format(USER))
+
+        logout_status = loginpage.do_logout()
+        assert logout_status, "user {} could not logout from CSP portal".format(USER)
+        mylog.debug("user {} logged-out from CSP portal successfully".format(USER))
+
+        login_status = loginpage.do_login(USER, PASSWORD)
+        assert login_status, "user {} could not login to CSP portal".format(USER)
+        mylog.debug("user {} logged-in to CSP portal successfully".format(USER))
+
+
+
 
     def test_example3(self):
         """

@@ -189,7 +189,7 @@ def inject_k8s_infra_fault_service_unavailable_for_func():
 
         # mangle fault injection
         request_body = {
-            "endpointName": myconfig.get("k8sCluster").get("endpointName"),
+            "endpointName": myconfig.get("k8sCluster").get(csp_env).get("endpointName"),
             "resourceName": resource_name,
             "randomInjection": random_injection,
         }
@@ -242,7 +242,7 @@ def inject_k8s_infra_fault_service_unavailable_for_func():
                 )
             )
             service_info.spec.selector["environment"] = (
-                myconfig.get("k8sCluster").get("namespace").split("-")[2]
+                myconfig.get("k8sCluster").get(csp_env).get("namespace").split("-")[2]
             )
             ckclient.patch_service(service_name, service_info)
             mylog.info(
@@ -299,7 +299,7 @@ def inject_k8s_app_fault_spring_service_latency_for_class(request, scale_deploym
 
             # mangle fault injection
             request_body = {
-                "endpointName": myconfig.get("k8sCluster").get("endpointName"),
+                "endpointName": myconfig.get("k8sCluster").get(csp_env).get("endpointName"),
                 "injectionHomeDir": "/tmp/",
                 "latency": service_latency,
                 "servicesString": service_uri,
@@ -373,7 +373,7 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
 
     # mangle fault injection
     request_body = {
-        "endpointName": myconfig.get("k8sCluster").get("endpointName"),
+        "endpointName": myconfig.get("k8sCluster").get(csp_env).get("endpointName"),
         "resourceName": faulty_svc_name,
         "randomInjection": False,
     }
@@ -422,7 +422,7 @@ def inject_k8s_infra_fault_service_unavailable_for_class(request):
                 )
             )
             service_info.spec.selector["environment"] = (
-                myconfig.get("k8sCluster").get("namespace").split("-")[2]
+                myconfig.get("k8sCluster").get(csp_env).get("namespace").split("-")[2]
             )
             ckclient.patch_service(faulty_svc_name, service_info)
             mylog.info(

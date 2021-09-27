@@ -10,12 +10,12 @@ import typing
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
-from requests.exceptions import ConnectionError, ConnectTimeout, ReadTimeout, SSLError, Timeout
+from requests.exceptions import (ConnectionError, ConnectTimeout,
+                                 ReadTimeout, SSLError, Timeout)
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 from requests.packages.urllib3.util.retry import Retry
 
 requests.packages.urllib3.disable_warnings()
-
 
 mylog = logging.getLogger("root")
 mylog.setLevel(logging.DEBUG)
@@ -313,54 +313,34 @@ class CSPClient(RESTClient):
 
 
 if __name__ == "__main__":
-    import pdb
 
     # pdb.set_trace()
     cclient = CSPClient(
         "console-preview.cloud.vmware.com",
-        "5GcznFtRSQFqUMPFN7ON4jHQUHHhiRY52rS9Qi9Pq1vPSdGWF0N4RvpmpADzfZn6",
+        "UJ60suohD3beAX0Z6OmuYS9IcQNcAy8KUQWP4B28CHyVSruwjjbAW3pRJCZ74DNJ",
         timeout=120,
     )
 
-    api_resource = "/am/api/orgs/60a3904d-3354-4422-9e8a-347585537826/oauth-apps"
+    api_resource = "/iam-roles-mgmt/api/services/84e97404-a3b6-419f-a447-75759dcc2b52/roles"
     payload = {
-        "refreshTokenTTL": None,
-        "accessTokenTTL": 1800,
-        "grantTypes": ["client_credentials"],
-        "description": "Test2",
-        "displayName": "res_oauth_app_2",
-        "publicClient": False,
-        "allowedScopes": {
-            "generalScopes": [],
-            "allRoles": False,
-            "servicesScopes": [
-                {
-                    "allRoles": False,
-                    "serviceDefinitionId": "11ff011a-0811-4523-9afb-2bf9808223d3",
-                    "roles": [
-                        {"resource": None, "name": "srv_name:user"},
-                        {"resource": None, "name": "srv_name:admin", "selected": 1},
-                    ],
-                }
-            ],
-            "organizationScopes": {
-                "allRoles": False,
-                "roles": [
-                    {"name": "org_owner"},
-                    {"name": "support_user"},
-                    {"name": "project_admin"},
-                ],
-            },
-        },
-        "redirectUris": [],
+        "visible": True,
+        "onAccess": True,
+        "displayName": "test1_app role1",
+        "description": "test1_app role1",
+        "type": "CUSTOMER",
+        "composable": True,
+        "name": "srv_name:test1_app_role1",
+        "isDefault": False,
+        "isHidden": False,
     }
 
-    call_count_start = 1
+    call_count_start = 2
     call_count_end = 100
     for cnt in range(call_count_start, call_count_end + 1):
         mylog.info("call has been made for cnt={}".format(cnt))
-        payload.update(description="Test_OAuth_{}".format(cnt))
-        payload.update(displayName="resiliency_oauth_app_{}".format(cnt))
+        payload.update(displayName="test1_app role{}".format(cnt))
+        payload.update(description="test1_app role{}".format(cnt))
+        payload.update(name="srv_name:test1_app_role{}".format(cnt))
         am_resp = cclient.make_call("POST", api_resource, json=payload)
         mylog.info("am_resp={}".format(am_resp))
         if am_resp.status_code != 200:

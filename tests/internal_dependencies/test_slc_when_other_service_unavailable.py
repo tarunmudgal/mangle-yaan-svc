@@ -36,7 +36,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.SLC.get("SERVICES").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
         slc_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
 
@@ -55,7 +55,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.SLC.get("GET_SVC_DEF").format(
-            id=myconfig.get("csp").get("defaultService").get("id")
+            id=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         slc_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
 
@@ -74,7 +74,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.SLC.get("GET_SVC_DEF_ROLES").format(
-            id=myconfig.get("csp").get("defaultService").get("id")
+            id=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         slc_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
 
@@ -108,7 +108,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.SLC.get("OPERATIONAL_DATA").format(
-            serviceId=myconfig.get("csp").get("defaultService").get("id")
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
 
         request_body = {
@@ -139,7 +139,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.SLC.get("OPERATIONAL_DATA").format(
-            serviceId=myconfig.get("csp").get("defaultService").get("id")
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
 
         request_body = {
@@ -163,7 +163,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.SLC.get("OPERATIONAL_DATA").format(
-            serviceId=myconfig.get("csp").get("defaultService").get("id")
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
 
         slc_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -202,7 +202,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.SLC.get("SERVICE_INSTANCES").format(
-            serviceId=myconfig.get("csp").get("defaultService").get("id")
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         request_body = {"url": "https://dummyurl.com", "displayName": "res test svc instance"}
 
@@ -228,7 +228,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.SLC.get("SERVICE_INSTANCES").format(
-            serviceId=myconfig.get("csp").get("defaultService").get("id")
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
 
         slc_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -249,7 +249,7 @@ class TestSLCDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.SLC.get("SERVICE_INSTANCE").format(
-            serviceId=myconfig.get("csp").get("defaultService").get("id"),
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
             instanceId=mycache["test_info"][CURRENT_FILENAME]["service_instance_id"],
         )
 

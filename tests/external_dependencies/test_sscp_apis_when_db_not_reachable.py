@@ -40,7 +40,7 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
         # make csp api call
 
         api_resource = resources.COMMERCE.get("GET_SELLERS_CREATED_IN_ORGANIZATION_V3").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -60,7 +60,7 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
         # make csp api call
 
         api_resource = resources.COMMERCE.get("GET_ORG_BILLING_ACCOUNTS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -98,7 +98,7 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
         # make csp api call
 
         api_resource = resources.COMMERCE.get("GET_ORDERS_FOR_GIVEN_SELLER").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -118,7 +118,7 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
         # make csp api call
 
         api_resource = resources.COMMERCE.get("GET_ORG_BILLING_ACCOUNTS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -138,7 +138,7 @@ class TestSSCPAPIsWhenDBServiceNotReachable:
         # make csp api call
 
         api_resource = resources.COMMERCE.get("GET_ORG_BILLING_ACCOUNTS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)

@@ -223,7 +223,7 @@ class MangleClient(RESTClient):
             event: threading.Event,
         ):
             request_body = {
-                "endpointName": myconfig.get("k8sCluster").get("endpointName"),
+                "endpointName": myconfig.get("k8sCluster").get(csp_env).get("endpointName"),
                 "resourceType": "POD",
                 "resourceLabels": resource_labels,
                 "randomInjection": random_injection,

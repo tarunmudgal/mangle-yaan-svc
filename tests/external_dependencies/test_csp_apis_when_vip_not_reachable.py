@@ -45,7 +45,7 @@ class TestCSPAPIsWhenVIPServiceNotReachable:
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         request_body = {
             "seller": "VMWARE",
@@ -75,7 +75,7 @@ class TestCSPAPIsWhenVIPServiceNotReachable:
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPICS").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         request_body = {
             "linkUrl": "https://jira.eng.vmware.com/",

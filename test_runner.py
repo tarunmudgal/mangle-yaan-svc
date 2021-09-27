@@ -120,7 +120,7 @@ def create_mangle_client(timeout: int = 120) -> mangle_client.MangleClient:
     return mclient
 
 
-def create_csp_client(timeout: int = 120) -> csp_client.CSPClient:
+def create_csp_client(csp_env="preview", timeout: int = 120) -> csp_client.CSPClient:
     """
     creates CSP REST client
     Args:
@@ -129,7 +129,8 @@ def create_csp_client(timeout: int = 120) -> csp_client.CSPClient:
     Returns:
        CSPClient instance
     """
-    csp_conf = myconfig.get("csp")
+    breakpoint()
+    csp_conf = myconfig.get("csp").get(csp_env)
     cclient = csp_client.CSPClient(
         csp_conf.get("host"), csp_conf.get("defaultUser").get("refreshToken"), timeout=timeout,
     )
@@ -207,11 +208,13 @@ def get_mangle_yaan_config(myconf_file: str = None, workload_name: str = None) -
     return myconfig
 
 
-def setup_mangle_infra() -> None:
+def setup_mangle_infra(csp_env: str = "preview") -> None:
     """
     takes care of mangle infra setup e.g. CSP endpoint creation and connectivity with CSP K8S check
+    Args:
+        csp_env: CSP environment name e.g. preview, dev
     """
-    endpoint.create_and_test_mangle_endpoint(mclient)
+    endpoint.create_and_test_mangle_endpoint(mclient, csp_env=csp_env)
 
 
 def cleanup_old_reports(log_dir: str, max_count: int = 5) -> None:
@@ -254,16 +257,18 @@ def prepare_setup(
         project_name: str = None,
         workload_name: str = None,
         run_id: str = None,
+        csp_env: str = None,
 ) -> None:
     """Performs setup preparation tasks i.e. ensuring network connectivity, reading mangle-yaan
     config file, initializing Mangle and CSP REST clients, creating Mangle endpoint credential
     and endpoint for CSP K8S cluster etc.
 
     Args:
-      myconf_file: mangle-yaan configuration (json) file. If provided, It overrides default config file config/my.json
+      myconf_file: mangle-yaan configuration (json) file. If provided, it overrides default config file config/my.json
       project_name: project name created on maxim-gun UI
       workload_name: workload name created on maxim-gun UI
       run_id: run id received from maxim-gun
+      csp_env: csp environment name e.g. preview, dev
 
     Returns:
       None
@@ -290,10 +295,10 @@ def prepare_setup(
     builtins.mclient = create_mangle_client()
 
     # creates csp REST client
-    builtins.cclient = create_csp_client()
+    builtins.cclient = create_csp_client(csp_env=csp_env)
 
     # creates csp kubernetes client
-    csp_k8s_info = myconfig.get("k8sCluster")
+    csp_k8s_info = myconfig.get("k8sCluster").get(csp_env)
     builtins.ckclient = create_csp_k8s_client(
         csp_k8s_info.get("kubeConfigFileName"), csp_k8s_info.get("namespace")
     )
@@ -305,7 +310,7 @@ def prepare_setup(
     )
 
     # creates mangle endpoint and confirms its connectivity
-    setup_mangle_infra()
+    setup_mangle_infra(csp_env=csp_env)
 
     # cleanup older mangle-yaan-test-reports
     cleanup_old_reports(lib_params.LOG_DIR, max_count=5)
@@ -320,6 +325,10 @@ def prepare_setup(
     mycache["run_info"]["project_name"] = project_name
     mycache["run_info"]["workload_name"] = workload_name
     mycache["run_info"]["run_id"] = run_id
+    mycache["run_info"]["csp_env"] = csp_env
+
+    # adding csp_env in builtins as it would be used frequently
+    builtins.csp_env = csp_env
 
     mylog.info("setup is ready to run resiliency tests now")
 
@@ -585,6 +594,14 @@ def main() -> None:
         help="run_id of the job triggered at Maxim-Gun",
     )
     parser.add_argument(
+        "--csp_env",
+        action="store",
+        type=str,
+        default="preview",
+        choices=["preview", "dev"],
+        help="CSP environment where you want to run tests. Allowed values are preview and dev for now.",
+    )
+    parser.add_argument(
         "--list_testsuite_names", action="store_true", help="list of available testsuites",
     )
     parser.add_argument(
@@ -646,6 +663,7 @@ def main() -> None:
         project_name=args.project_name,
         workload_name=args.workload_name,
         run_id=args.run_id,
+        csp_env=args.csp_env
     )
 
     pytest_status = run_pytest(pytest_cmdline, run_id=args.run_id)

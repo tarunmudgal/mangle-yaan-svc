@@ -48,7 +48,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ESTIMATED_CHARGES").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         # verify csp api raises exception for 'too many 500 error responses'
@@ -103,7 +103,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("OFFERS").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         request_body = {"billingEngine": "SAP"}
 
@@ -127,7 +127,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ORG_PAYMENT_METHODS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -179,7 +179,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("USER_PAYMENT_METHODS").format(
-            userEmail=myconfig.get("csp").get("defaultUser").get("email")
+            userEmail=myconfig.get("csp").get(csp_env).get("defaultUser").get("email")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -231,7 +231,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("PROMOTIONS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -281,7 +281,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("LIST_SUBSCRIPTIONS")
-        params = {"orgId": myconfig.get("csp").get("defaultOrg").get("id")}
+        params = {"orgId": myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")}
 
         resp = cclient.make_call(
             "GET", api_resource, params=params, retry_count=0, disable_implicit_retry=True
@@ -329,7 +329,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("INOVICES").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -381,7 +381,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("SATATEMENT").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
         params = {"count": "15"}
 
@@ -436,7 +436,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("PROMOTIONS_TYPE")
-        params = {"orgId": myconfig.get("csp").get("defaultOrg").get("id"), "promotionType": "ORG"}
+        params = {"orgId": myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"), "promotionType": "ORG"}
 
         resp = cclient.make_call(
             "GET", api_resource, params=params, retry_count=0, disable_implicit_retry=True

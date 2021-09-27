@@ -39,7 +39,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("BILLING_ACCOUNTS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -71,7 +71,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("BILLING_ACCOUNT_BY_ID").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id"),
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
             billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"],
         )
 
@@ -95,7 +95,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ORG_PAYMENT_METHODS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -119,7 +119,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("CURRENT_COSTS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id"),
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
             billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"],
         )
         params = {"locale": "en_US"}
@@ -146,7 +146,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("PROMOTIONS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -169,7 +169,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ESTIMATED_CHARGES").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -192,7 +192,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("OFFERS").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         request_body = {"billingEngine": "SAP"}
 
@@ -218,7 +218,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("LIST_SUBSCRIPTIONS")
-        params = {"orgId": myconfig.get("csp").get("defaultOrg").get("id")}
+        params = {"orgId": myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")}
 
         com_resp = cclient.make_call(
             "GET", api_resource, params=params, retry_count=0, disable_implicit_retry=True
@@ -242,7 +242,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("INOVICES").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         com_resp = cclient.make_call(
@@ -267,7 +267,7 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("SATATEMENT").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
         params = {"count": "15"}
 

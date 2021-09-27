@@ -36,7 +36,7 @@ class TestOnboardingServiceAPIs:
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         request_body = {"title": "test onboarding", "description": "test onboarding"}
 

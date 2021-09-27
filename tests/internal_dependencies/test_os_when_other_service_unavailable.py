@@ -46,7 +46,7 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         request_body = {"title": "test onboarding", "description": "test onboarding"}
 
@@ -76,7 +76,7 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
             onboardingContextId=mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"],
         )
 
@@ -100,7 +100,7 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
 
         os_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -124,7 +124,7 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
             onboardingContextId=mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"],
         )
 
@@ -153,7 +153,7 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPICS").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
 
         request_body = {
@@ -190,7 +190,7 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPICS").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id")
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
 
         os_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -212,7 +212,7 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPIC").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
             topicId=mycache["test_info"][CURRENT_FILENAME]["faq_topic_id"],
         )
 
@@ -235,7 +235,7 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPIC").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
             topicId=mycache["test_info"][CURRENT_FILENAME]["faq_topic_id"],
         )
         request_body = {
@@ -267,7 +267,7 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPIC").format(
-            serviceDefinitionId=myconfig.get("csp").get("defaultService").get("id"),
+            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
             topicId=mycache["test_info"][CURRENT_FILENAME]["faq_topic_id"],
         )
 

@@ -35,7 +35,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_ROLES").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
         params = {"expand": True}
 
@@ -52,7 +52,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_CLIENTS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -68,7 +68,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_USERS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -84,7 +84,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_USERS_V2").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -100,7 +100,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_GROUPS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -116,11 +116,11 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_USER_SEARCH").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         params = {
-            "orgId": myconfig.get("csp").get("defaultOrg").get("id"),
+            "orgId": myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
             "userSearchTerm": "test",
         }
 
@@ -151,7 +151,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_DETAIL").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -167,7 +167,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_OAUTH_APPS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -215,7 +215,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT").format(
-            acct=myconfig.get("csp").get("defaultUser").get("email")
+            acct=myconfig.get("csp").get(csp_env).get("defaultUser").get("email")
         )
 
         params = {"expandProfile": True}
@@ -233,7 +233,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_V2").format(
-            userId=myconfig.get("csp").get("defaultUser").get("id")
+            userId=myconfig.get("csp").get(csp_env).get("defaultUser").get("id")
         )
 
         params = {"expandProfile": True}
@@ -253,8 +253,8 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_SVC_ROLES").format(
-            acct=myconfig.get("csp").get("defaultUser").get("email"),
-            orgId=myconfig.get("csp").get("defaultOrg").get("id"),
+            acct=myconfig.get("csp").get(csp_env).get("defaultUser").get("email"),
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -272,8 +272,8 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_SVC_ROLES_V2").format(
-            userId=myconfig.get("csp").get("defaultUser").get("id"),
-            orgId=myconfig.get("csp").get("defaultOrg").get("id"),
+            userId=myconfig.get("csp").get(csp_env).get("defaultUser").get("id"),
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -291,8 +291,8 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_ORG_INFO").format(
-            acct=myconfig.get("csp").get("defaultUser").get("email"),
-            orgId=myconfig.get("csp").get("defaultOrg").get("id"),
+            acct=myconfig.get("csp").get(csp_env).get("defaultUser").get("email"),
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -310,8 +310,8 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_ORG_INFO_V2").format(
-            userId=myconfig.get("csp").get("defaultUser").get("id"),
-            orgId=myconfig.get("csp").get("defaultOrg").get("id"),
+            userId=myconfig.get("csp").get(csp_env).get("defaultUser").get("id"),
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -329,8 +329,8 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_ORG_ROLES").format(
-            acct=myconfig.get("csp").get("defaultUser").get("email"),
-            orgId=myconfig.get("csp").get("defaultOrg").get("id"),
+            acct=myconfig.get("csp").get(csp_env).get("defaultUser").get("email"),
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -348,8 +348,8 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_ORG_ROLES_V2").format(
-            userId=myconfig.get("csp").get("defaultUser").get("id"),
-            orgId=myconfig.get("csp").get("defaultOrg").get("id"),
+            userId=myconfig.get("csp").get(csp_env).get("defaultUser").get("id"),
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -367,7 +367,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_ORGS").format(
-            acct=myconfig.get("csp").get("defaultUser").get("email")
+            acct=myconfig.get("csp").get(csp_env).get("defaultUser").get("email")
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -385,7 +385,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_ORGS_V2").format(
-            userId=myconfig.get("csp").get("defaultUser").get("id"),
+            userId=myconfig.get("csp").get(csp_env).get("defaultUser").get("id"),
         )
 
         am_resp = cclient.make_call("GET", api_resource)
@@ -403,7 +403,7 @@ class TestAMDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT_ORG_INVITATIONS").format(
-            acct=myconfig.get("csp").get("defaultUser").get("email")
+            acct=myconfig.get("csp").get(csp_env).get("defaultUser").get("email")
         )
 
         am_resp = cclient.make_call("GET", api_resource)

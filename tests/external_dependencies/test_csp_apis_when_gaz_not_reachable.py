@@ -47,7 +47,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_ROLES").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
         params = {"expand": True}
 
@@ -98,7 +98,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_CLIENTS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -143,7 +143,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_USERS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -188,7 +188,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_USERS_V2").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -233,7 +233,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_GROUPS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -278,10 +278,10 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_USER_SEARCH").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
         params = {
-            "orgId": myconfig.get("csp").get("defaultOrg").get("id"),
+            "orgId": myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
             "userSearchTerm": "test",
         }
 
@@ -329,7 +329,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("USER_ACCT").format(
-            acct=myconfig.get("csp").get("defaultUser").get("email")
+            acct=myconfig.get("csp").get(csp_env).get("defaultUser").get("email")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -374,7 +374,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_DETAIL").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -419,7 +419,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_OAUTH_APPS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -461,7 +461,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
         # make csp api call
 
         api_resource = resources.COMMERCE.get("ORG_DETAILS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)

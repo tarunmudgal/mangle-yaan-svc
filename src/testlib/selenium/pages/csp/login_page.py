@@ -10,7 +10,7 @@ from src.testlib.selenium.pages.csp.base_page import BasePage
 
 class LoginPage(BasePage):
     def __init__(self, driver, timeout=30):
-        self.base_url = "https://" + myconfig.get("csp").get("host")
+        self.base_url = "https://" + myconfig.get("csp").get(csp_env).get("host")
         self.locators = login_page.LoginPageLocators
         super().__init__(driver, self.base_url, timeout=timeout)
 

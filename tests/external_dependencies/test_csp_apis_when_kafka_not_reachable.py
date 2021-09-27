@@ -44,7 +44,7 @@ class TestCSPAPIsWhenKafkaServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_USER_INVITATION").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -67,7 +67,7 @@ class TestCSPAPIsWhenKafkaServiceNotReachable:
 
         # make csp api call
         api_resource = resources.AM.get("ORG_USER_INVITATION").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
         params = {"action": "revoke"}
         resp = cclient.make_call(
@@ -93,7 +93,7 @@ class TestCSPAPIsWhenKafkaServiceNotReachable:
         req_body = {
             "description": "res-service-family1",
             "name": "res-service-family1",
-            "parentServiceDefinitionId": myconfig.get("csp").get("defaultService").get("id"),
+            "parentServiceDefinitionId": myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
             "services": [SECOND_SERVICE_ID],
         }
 

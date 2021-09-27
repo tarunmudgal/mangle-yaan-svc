@@ -188,7 +188,7 @@ class TestConnection(EndPointBase):
         )
 
 
-def _create_credentials_k8s(mclient: mangle_client.MangleClient):
+def _create_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
     global endpoint_cred_obj
     if endpoint_cred_obj is None:
         endpoint_cred_obj = EndpointCredential(mclient)
@@ -200,36 +200,36 @@ def _create_credentials_k8s(mclient: mangle_client.MangleClient):
         sys.exit(2)
 
     for cred in response.json:
-        if cred.get("name") == myconfig.get("k8sCluster").get("credentialName"):
+        if cred.get("name") == myconfig.get("k8sCluster").get(csp_env).get("credentialName"):
             does_cred_exist = True
             break
     if not does_cred_exist:
         status, response = endpoint_cred_obj.create_credential_k8s_cluster(
-            myconfig.get("k8sCluster").get("credentialName"),
-            myconfig.get("k8sCluster").get("kubeConfigFileName"),
+            myconfig.get("k8sCluster").get(csp_env).get("credentialName"),
+            myconfig.get("k8sCluster").get(csp_env).get("kubeConfigFileName"),
         )
         if not status:
             mylog.error(
                 "Failed to create k8s cluster credential for credentialName={}, kubeConfigFileName={}".format(
-                    myconfig.get("k8sCluster").get("credentialName"),
-                    myconfig.get("k8sCluster").get("kubeConfigFileName"),
+                    myconfig.get("k8sCluster").get(csp_env).get("credentialName"),
+                    myconfig.get("k8sCluster").get(csp_env).get("kubeConfigFileName"),
                 )
             )
             sys.exit(2)
         mylog.info(
             "credential '{}' for k8s cluster created successfully".format(
-                myconfig.get("k8sCluster").get("credentialName")
+                myconfig.get("k8sCluster").get(csp_env).get("credentialName")
             )
         )
     else:
         mylog.info(
             "credential '{}' for k8s cluster already exist".format(
-                myconfig.get("k8sCluster").get("credentialName")
+                myconfig.get("k8sCluster").get(csp_env).get("credentialName")
             )
         )
 
 
-def _update_credentials_k8s(mclient: mangle_client.MangleClient):
+def _update_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
     global endpoint_cred_obj
     if endpoint_cred_obj is None:
         endpoint_cred_obj = EndpointCredential(mclient)
@@ -241,36 +241,36 @@ def _update_credentials_k8s(mclient: mangle_client.MangleClient):
         sys.exit(2)
 
     for cred in response.json:
-        if cred.get("name") == myconfig.get("k8sCluster").get("credentialName"):
+        if cred.get("name") == myconfig.get("k8sCluster").get(csp_env).get("credentialName"):
             does_cred_exist = True
             break
     if does_cred_exist:
         status, response = endpoint_cred_obj.update_credential_k8s_cluster(
-            myconfig.get("k8sCluster").get("credentialName"),
-            myconfig.get("k8sCluster").get("kubeConfigFileName"),
+            myconfig.get("k8sCluster").get(csp_env).get("credentialName"),
+            myconfig.get("k8sCluster").get(csp_env).get("kubeConfigFileName"),
         )
         if not status:
             mylog.error(
                 "Failed to update k8s cluster credential for credentialName={}, kubeConfigFileName={}".format(
-                    myconfig.get("k8sCluster").get("credentialName"),
-                    myconfig.get("k8sCluster").get("kubeConfigFileName"),
+                    myconfig.get("k8sCluster").get(csp_env).get("credentialName"),
+                    myconfig.get("k8sCluster").get(csp_env).get("kubeConfigFileName"),
                 )
             )
             sys.exit(2)
         mylog.info(
             "credential '{}' for k8s cluster updated successfully".format(
-                myconfig.get("k8sCluster").get("credentialName")
+                myconfig.get("k8sCluster").get(csp_env).get("credentialName")
             )
         )
     else:
         mylog.info(
             "credential '{}' for k8s cluster does not exist".format(
-                myconfig.get("k8sCluster").get("credentialName")
+                myconfig.get("k8sCluster").get(csp_env).get("credentialName")
             )
         )
 
 
-def _delete_credentials_k8s(mclient: mangle_client.MangleClient):
+def _delete_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
     global endpoint_cred_obj
     if endpoint_cred_obj is None:
         endpoint_cred_obj = EndpointCredential(mclient)
@@ -282,34 +282,34 @@ def _delete_credentials_k8s(mclient: mangle_client.MangleClient):
         sys.exit(2)
 
     for cred in response.json:
-        if cred.get("name") == myconfig.get("k8sCluster").get("credentialName"):
+        if cred.get("name") == myconfig.get("k8sCluster").get(csp_env).get("credentialName"):
             does_cred_exist = True
             break
     if does_cred_exist:
         status, response = endpoint_cred_obj.delete_credential(
-            myconfig.get("k8sCluster").get("credentialName")
+            myconfig.get("k8sCluster").get(csp_env).get("credentialName")
         )
         if not status:
             mylog.error(
                 "Failed to delete k8s cluster credential for credentialName={}".format(
-                    myconfig.get("k8sCluster").get("credentialName")
+                    myconfig.get("k8sCluster").get(csp_env).get("credentialName")
                 )
             )
             sys.exit(2)
         mylog.info(
             "credential '{}' for k8s cluster deleted successfully".format(
-                myconfig.get("k8sCluster").get("credentialName")
+                myconfig.get("k8sCluster").get(csp_env).get("credentialName")
             )
         )
     else:
         mylog.info(
             "credential '{}' for k8s cluster does not exist".format(
-                myconfig.get("k8sCluster").get("credentialName")
+                myconfig.get("k8sCluster").get(csp_env).get("credentialName")
             )
         )
 
 
-def _create_endpoint_k8s(mclient: mangle_client.MangleClient):
+def _create_endpoint_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
     global endpoint_obj
     if endpoint_obj is None:
         endpoint_obj = Endpoint(mclient)
@@ -320,78 +320,78 @@ def _create_endpoint_k8s(mclient: mangle_client.MangleClient):
         mylog.error("Failed to fetch endpoints from mangle")
         sys.exit(2)
     for ep in response.json:
-        if ep.get("name") == myconfig.get("k8sCluster").get("endpointName"):
+        if ep.get("name") == myconfig.get("k8sCluster").get(csp_env).get("endpointName"):
             does_endpoint_exist = True
             break
     if not does_endpoint_exist:
         try:
             status, response = endpoint_obj.create_endpoint_k8s_cluster(
-                myconfig.get("k8sCluster").get("endpointName"),
-                myconfig.get("k8sCluster").get("credentialName"),
-                myconfig.get("k8sCluster").get("namespace"),
+                myconfig.get("k8sCluster").get(csp_env).get("endpointName"),
+                myconfig.get("k8sCluster").get(csp_env).get("credentialName"),
+                myconfig.get("k8sCluster").get(csp_env).get("namespace"),
             )
         except Exception as fault:
             # fallback for updating credentials as mostly exception occurs due to incorrect credentials
             _update_credentials_k8s(mclient)
             status, response = endpoint_obj.create_endpoint_k8s_cluster(
-                myconfig.get("k8sCluster").get("endpointName"),
-                myconfig.get("k8sCluster").get("credentialName"),
-                myconfig.get("k8sCluster").get("namespace"),
+                myconfig.get("k8sCluster").get(csp_env).get("endpointName"),
+                myconfig.get("k8sCluster").get(csp_env).get("credentialName"),
+                myconfig.get("k8sCluster").get(csp_env).get("namespace"),
             )
         if not status:
             mylog.error(
                 "Failed to create k8s cluster endpoint for endpointName={}, credentialName={}, namespace={}".format(
-                    myconfig.get("k8sCluster").get("endpointName"),
-                    myconfig.get("k8sCluster").get("credentialName"),
-                    myconfig.get("k8sCluster").get("namespace"),
+                    myconfig.get("k8sCluster").get(csp_env).get("endpointName"),
+                    myconfig.get("k8sCluster").get(csp_env).get("credentialName"),
+                    myconfig.get("k8sCluster").get(csp_env).get("namespace"),
                 )
             )
             sys.exit(2)
         mylog.info(
             "endpoint '{}' for k8s cluster created successfully".format(
-                myconfig.get("k8sCluster").get("endpointName")
+                myconfig.get("k8sCluster").get(csp_env).get("endpointName")
             )
         )
     else:
         mylog.info(
             "Endpoint '{}' for k8s cluster already exist".format(
-                myconfig.get("k8sCluster").get("endpointName")
+                myconfig.get("k8sCluster").get(csp_env).get("endpointName")
             )
         )
 
 
-def _test_endpoint_k8s(mclient: mangle_client.MangleClient):
+def _test_endpoint_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
     global test_connection_obj
     if test_connection_obj is None:
         test_connection_obj = TestConnection(mclient)
 
     try:
         status, response = test_connection_obj.test_endpoint(
-            myconfig.get("k8sCluster").get("endpointName")
+            myconfig.get("k8sCluster").get(csp_env).get("endpointName")
         )
     except Exception as fault:
         # fallback for updating credentials as mostly exception occurs due to incorrect credentials
         _update_credentials_k8s(mclient)
         status, response = test_connection_obj.test_endpoint(
-            myconfig.get("k8sCluster").get("endpointName")
+            myconfig.get("k8sCluster").get(csp_env).get("endpointName")
         )
 
     if not status:
         mylog.error(
             "Test connection for endpoint {} failed".format(
-                myconfig.get("k8sCluster").get("endpointName")
+                myconfig.get("k8sCluster").get(csp_env).get("endpointName")
             )
         )
         sys.exit(2)
     else:
         mylog.info(
             "Test connection for endpoint {} passed".format(
-                myconfig.get("k8sCluster").get("endpointName")
+                myconfig.get("k8sCluster").get(csp_env).get("endpointName")
             )
         )
 
 
-def create_and_test_mangle_endpoint(mclient: mangle_client.MangleClient):
-    _create_credentials_k8s(mclient)
-    _create_endpoint_k8s(mclient)
-    _test_endpoint_k8s(mclient)
+def create_and_test_mangle_endpoint(mclient: mangle_client.MangleClient, csp_env="preview"):
+    _create_credentials_k8s(mclient, csp_env=csp_env)
+    _create_endpoint_k8s(mclient, csp_env=csp_env)
+    _test_endpoint_k8s(mclient, csp_env=csp_env)

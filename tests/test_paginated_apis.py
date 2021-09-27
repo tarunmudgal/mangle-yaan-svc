@@ -32,10 +32,10 @@ class TestPaginatedAPIs:
 
         # make csp api call and read first page when fault is not injected
         api_resource = resources.AM.get("ORG_OAUTH_APPS").format(
-            orgId=myconfig.get("csp").get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
         )
         params = {
-            "OrgId": myconfig.get("csp").get("defaultOrg").get("id"),
+            "OrgId": myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
             "pageStart": 0,
             "pageLimit": 10,
         }
