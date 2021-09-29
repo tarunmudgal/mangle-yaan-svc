@@ -27,18 +27,18 @@
 			}
 		},
             "dev": {
-                "host": "console-preview.cloud.vmware.com",
+                "host": "console-dev.cloud.vmware.com",
                 "defaultOrg": {
-                    "id": "f09537d7-633a-4204-891e-2fe6e58265a7"
+                    "id": "78cf9533-05b5-460a-b785-66e373aaf095"
                 },
                 "defaultUser": {
-                    "id": "preview_vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
+                    "id": "vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
                     "email": "mtarun@vmware.com",
                     "accessToken": "",
-                    "refreshToken": "LgFiS5ux7tsmRSffVrULnhDz74Z9bRAkmo0R1V8xSQ2pkqO3RG2byF78W6T3a98o"
+                    "refreshToken": "zM8cN2CZQlkE7jEiqboPnCKUNmFLUjoavvIblaRlZ35frdLLxxC9Z8l5qDlZ1SaI"
                 },
                 "defaultService": {
-                    "id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
+                    "id": "yrNXxccXBjH3-OMUSj8AZIFYzJ8_"
                 }
             }
 		},
@@ -63,7 +63,7 @@
         },
 		"mangleYaan": {
 			"webDriver": {
-				"initLocal": false,
+				"initLocal": true,
 				"chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
 			},
 			"testLogPath": "logs/test_runner.log",

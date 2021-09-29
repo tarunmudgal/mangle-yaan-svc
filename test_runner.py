@@ -129,7 +129,6 @@ def create_csp_client(csp_env="preview", timeout: int = 120) -> csp_client.CSPCl
     Returns:
        CSPClient instance
     """
-    breakpoint()
     csp_conf = myconfig.get("csp").get(csp_env)
     cclient = csp_client.CSPClient(
         csp_conf.get("host"), csp_conf.get("defaultUser").get("refreshToken"), timeout=timeout,
@@ -297,11 +296,12 @@ def prepare_setup(
     # creates csp REST client
     builtins.cclient = create_csp_client(csp_env=csp_env)
 
-    # creates csp kubernetes client
-    csp_k8s_info = myconfig.get("k8sCluster").get(csp_env)
-    builtins.ckclient = create_csp_k8s_client(
-        csp_k8s_info.get("kubeConfigFileName"), csp_k8s_info.get("namespace")
-    )
+    # creates csp kubernetes client (currently skipping kubernetes client for dev env)
+    if csp_env != "dev":
+        csp_k8s_info = myconfig.get("k8sCluster").get(csp_env)
+        builtins.ckclient = create_csp_k8s_client(
+            csp_k8s_info.get("kubeConfigFileName"), csp_k8s_info.get("namespace")
+        )
 
     # create s3 client
     builtins.s3_client = create_s3_client(

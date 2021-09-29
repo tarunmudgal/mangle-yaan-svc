@@ -90,9 +90,11 @@ class LoginPage(BasePage):
         self.click(self.locators.BTN_USER_MENU)
         self.click(self.locators.BTN_SIGN_OUT)
 
-        logged_out = self.wait_for_element(self.locators.TXT_LOGOUT_MSG, timeout=180)
+        # logged_out = self.wait_for_element(self.locators.TXT_LOGOUT_MSG, timeout=180)
+        logged_out_status, found_element = self.wait_until_any_element_exists([self.locators.TXT_LOGOUT_MSG,
+                                                            self.locators.TXT_LOGIN_TITLE], timeout=180)
 
-        return logged_out
+        return logged_out_status
 
     def do_logout_with_minimal_services(self):
         assert self.if_element_exists(
