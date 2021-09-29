@@ -59,6 +59,7 @@ class TestDummy:
                                                                 "didn't return 503 status"
                     mylog.debug("API csp/gateway/ff-service/api/sdk/public-flags returned 503 status code")
 
+    @pytest.mark.skip(reason="incomplete test case")
     def test_example2(self):
         """
         test_example2 description
