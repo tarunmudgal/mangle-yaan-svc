@@ -37,6 +37,7 @@ ENV TESTSUITE_NAMES=''
 ENV PYTEST_ARGS='""'
 ENV MYCONFIG='""'
 ENV run_id='""'
+ENV CSP_ENV=''
 
 CMD python /mangle-yaan/test_runner.py \
     --project_name ${PROJECT_NAME} \
@@ -44,5 +45,5 @@ CMD python /mangle-yaan/test_runner.py \
     --testsuite_names ${TESTSUITE_NAMES} \
     --pytest_args ${PYTEST_ARGS:-' '} \
     --myconfig ${MYCONFIG:-' '} \
-    --run_id ${run_id:-' '}
+    --run_id ${run_id:-' '} \
     --csp_env ${CSP_ENV:-'preview'}
