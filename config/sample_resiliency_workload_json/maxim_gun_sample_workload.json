@@ -69,7 +69,7 @@
             }
 		},
 		"mangle": {
-			"host": "10.79.129.70",
+			"host": "10.216.242.9",
 			"password": "admin",
 			"username": "admin@mangle.local"
 		},
