@@ -33,7 +33,7 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500]
+            expected_response = [500, 502]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -51,7 +51,7 @@ class TestCommerceDependencyOnDifferentServices:
             com_resp.status_code, expected_response
         )
 
-        if com_resp.json is not None:
+        if com_resp.status_code == 200:
             # add a value in cache dict to use it in other test cases
             mycache["test_info"][CURRENT_FILENAME] = {}
             mycache["test_info"][CURRENT_FILENAME]["billing_account_id"] = com_resp.json.get(
@@ -65,7 +65,7 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500]
+            expected_response = [500, 502]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -89,7 +89,7 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -107,13 +107,13 @@ class TestCommerceDependencyOnDifferentServices:
             com_resp.status_code, expected_response
         )
 
-    @pytest.mark.skip(reason="this API is the part of commerce 2.0 and under development")
+    # @pytest.mark.skip(reason="this API is the part of commerce 2.0 and under development")
     @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
     def test_api_get_current_costs(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500]
+            expected_response = [500, 502]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -140,7 +140,7 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -163,9 +163,9 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500]
+            expected_response = [500, 502]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
-            expected_response = [200]
+            expected_response = [500, 502]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ESTIMATED_CHARGES").format(
@@ -185,10 +185,12 @@ class TestCommerceDependencyOnDifferentServices:
     def test_api_get_offers(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
-        # if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-        #     expected_response = [500, 504]
-        # elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
-        #     expected_response = [200]
+        # TODO : even at normal conditions , offers api returning 500 error , internal server error
+        # need to verify once the confirmation from IT
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [500, 504]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
+            expected_response = [200]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("OFFERS").format(
@@ -211,10 +213,12 @@ class TestCommerceDependencyOnDifferentServices:
     def test_api_list_subscriptions(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
-        # if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-        #     expected_response = [500, 504]
-        # elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
-        #     expected_response = [200]
+        # TODO : even at normal conditions ,subscription api returning 500 error , internal server error
+        # need to verify once the confirmation from IT
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [500, 504]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
+            expected_response = [200]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("LIST_SUBSCRIPTIONS")
@@ -236,7 +240,7 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500, 504]
+            expected_response = [500, 502, 504]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -261,7 +265,7 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500, 504]
+            expected_response = [500, 502, 504]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
