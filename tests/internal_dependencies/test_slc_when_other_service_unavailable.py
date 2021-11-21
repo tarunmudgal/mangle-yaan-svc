@@ -15,6 +15,10 @@ CURRENT_FILENAME = os.path.basename(__file__)
 LIST_DEPENDENT_SERVICES = ["csp-account-management-mvc", "csp-onboarding"]
 
 
+# TODO : create confulence page with commerce api's internal api call's workflow if it has
+# and there response when faults are injected in  ("csp-onboarding", "csp-account-management-mvc") services
+
+
 @flaky(
     max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
     min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
@@ -30,7 +34,7 @@ class TestSLCDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500]
+            expected_response = [500, 502]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -65,6 +69,34 @@ class TestSLCDependencyOnDifferentServices:
         ), "SLC service returned status_code={} whereas expected status_code={}".format(
             slc_resp.status_code, expected_response
         )
+
+    @pytest.mark.dependency(name="test_api_create_service_instance")
+    def test_api_create_service_instance(
+        self, inject_k8s_infra_fault_service_unavailable_for_class
+    ):
+        # expected csp api response (status_code)
+        expected_response = [201]
+
+        # make csp api call
+        api_resource = resources.SLC.get("SERVICE_INSTANCES").format(
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
+        )
+        request_body = {"url": "https://dummyurl.com", "displayName": "res test svc instance"}
+
+        slc_resp = cclient.make_call(
+            "POST", api_resource, json=request_body, disable_implicit_retry=True
+        )
+        # verify csp api actual status_code with expected status code when fault is present
+        assert (
+            slc_resp.status_code in expected_response
+        ), "SLC service returned status_code={} whereas expected status_code={}".format(
+            slc_resp.status_code, expected_response
+        )
+
+        if slc_resp.json is not None:
+            # add a value in cache dict to use it in other test cases
+            mycache["test_info"][CURRENT_FILENAME] = {}
+            mycache["test_info"][CURRENT_FILENAME]["service_instance_id"] = slc_resp.json.get("id")
 
     def test_api_get_service_definition_roles(
         self, inject_k8s_infra_fault_service_unavailable_for_class
@@ -116,7 +148,7 @@ class TestSLCDependencyOnDifferentServices:
             "serviceCostCenter": "US1079608",
             "serviceEngineeringOwnerEmail": "test@vmware.com",
             "pagerDutyEscalationPolicy": "CSP-ENG-PRODUCTION",
-            "status": "PRODUCTION_AVAILABLE",
+            "status": "GENERAL_AVAILABILITY",
             "serviceAdditionalKeyContactsEmail": "test@vmware.com",
         }
 
@@ -136,6 +168,10 @@ class TestSLCDependencyOnDifferentServices:
     ):
         # expected csp api response (status_code)
         expected_response = [200]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [502]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
+            expected_response = [200]
 
         # make csp api call
         api_resource = resources.SLC.get("OPERATIONAL_DATA").format(
@@ -193,35 +229,6 @@ class TestSLCDependencyOnDifferentServices:
             slc_resp.status_code, expected_response
         )
 
-    @pytest.mark.dependency(name="test_api_create_service_instance")
-    def test_api_create_service_instance(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
-    ):
-        # expected csp api response (status_code)
-        expected_response = [201]
-
-        # make csp api call
-        api_resource = resources.SLC.get("SERVICE_INSTANCES").format(
-            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
-        )
-        request_body = {"url": "https://dummyurl.com", "displayName": "res test svc instance"}
-
-        slc_resp = cclient.make_call(
-            "POST", api_resource, json=request_body, disable_implicit_retry=True
-        )
-
-        # verify csp api actual status_code with expected status code when fault is present
-        assert (
-            slc_resp.status_code in expected_response
-        ), "SLC service returned status_code={} whereas expected status_code={}".format(
-            slc_resp.status_code, expected_response
-        )
-
-        if slc_resp.json is not None:
-            # add a value in cache dict to use it in other test cases
-            mycache["test_info"][CURRENT_FILENAME] = {}
-            mycache["test_info"][CURRENT_FILENAME]["service_instance_id"] = slc_resp.json.get("id")
-
     def test_api_get_service_instances(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -240,6 +247,7 @@ class TestSLCDependencyOnDifferentServices:
             slc_resp.status_code, expected_response
         )
 
+    @pytest.mark.last
     @pytest.mark.dependency(depends=["test_api_create_service_instance"])
     def test_api_delete_service_instance(
         self, inject_k8s_infra_fault_service_unavailable_for_class
