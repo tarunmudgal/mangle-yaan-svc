@@ -22,6 +22,8 @@ CURRENT_FILENAME = os.path.basename(__file__)
 LIST_DEPENDENT_SERVICES = ["csp-account-management-mvc", "csp-service-lifecycle", "csp-commerce"]
 
 
+# TODO : create confulence page with onboarding api's internal api call's workflow if it has
+# and there response when faults are injected in  ("csp-commerce", "csp-account-management-mvc") services
 @flaky(
     max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
     min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
@@ -72,7 +74,14 @@ class TestOSDependencyOnDifferentServices:
         self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
-        expected_response = requests.codes.ok
+        # expected_response = requests.codes.ok
+        expected_response = [200]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [200]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
+            expected_response = [500]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
+            expected_response = [200]
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
@@ -87,7 +96,7 @@ class TestOSDependencyOnDifferentServices:
             os_resp.json is not None
         ), "response could not be converted to json. resp.text={}".format(os_resp.text)
         assert (
-            os_resp.status_code == expected_response
+            os_resp.status_code in expected_response
         ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
             os_resp.status_code, expected_response
         )
@@ -120,7 +129,13 @@ class TestOSDependencyOnDifferentServices:
         self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
-        expected_response = requests.codes.ok
+        expected_response = [200]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [200]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
+            expected_response = [404]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
+            expected_response = [200]
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
@@ -139,7 +154,7 @@ class TestOSDependencyOnDifferentServices:
             os_resp.json is not None
         ), "response could not be converted to json. resp.text={}".format(os_resp.text)
         assert (
-            os_resp.status_code == expected_response
+            os_resp.status_code in expected_response
         ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
             os_resp.status_code, expected_response
         )
@@ -149,7 +164,13 @@ class TestOSDependencyOnDifferentServices:
     )
     def test_api_create_faq_topics(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
-        expected_response = 201
+        expected_response = [201]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [201]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
+            expected_response = [400]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
+            expected_response = [201]
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPICS").format(
@@ -175,7 +196,7 @@ class TestOSDependencyOnDifferentServices:
             os_resp.json is not None
         ), "response could not be converted to json. resp.text={}".format(os_resp.text)
         assert (
-            os_resp.status_code == expected_response
+            os_resp.status_code in expected_response
         ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
             os_resp.status_code, expected_response
         )
@@ -208,7 +229,13 @@ class TestOSDependencyOnDifferentServices:
     @pytest.mark.dependency(depends=["test_api_create_faq_topics"])
     def test_api_get_faq_topic(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
-        expected_response = requests.codes.ok
+        expected_response = [200]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [200]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
+            expected_response = [500]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
+            expected_response = [200]
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPIC").format(
@@ -223,7 +250,7 @@ class TestOSDependencyOnDifferentServices:
             os_resp.json is not None
         ), "response could not be converted to json. resp.text={}".format(os_resp.text)
         assert (
-            os_resp.status_code == expected_response
+            os_resp.status_code in expected_response
         ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
             os_resp.status_code, expected_response
         )
@@ -231,7 +258,13 @@ class TestOSDependencyOnDifferentServices:
     @pytest.mark.dependency(depends=["test_api_create_faq_topics"])
     def test_api_patch_faq_topic(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
-        expected_response = requests.codes.ok
+        expected_response = [200]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [200]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
+            expected_response = [400]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
+            expected_response = [200]
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPIC").format(
@@ -255,7 +288,7 @@ class TestOSDependencyOnDifferentServices:
             os_resp.json is not None
         ), "response could not be converted to json. resp.text={}".format(os_resp.text)
         assert (
-            os_resp.status_code == expected_response
+            os_resp.status_code in expected_response
         ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
             os_resp.status_code, expected_response
         )
@@ -263,7 +296,14 @@ class TestOSDependencyOnDifferentServices:
     @pytest.mark.dependency(depends=["test_api_create_faq_topics"])
     def test_api_delete_faq_topic(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
-        expected_response = requests.codes.ok
+        # expected_response = requests.codes.ok
+        expected_response = [200]
+        if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
+            expected_response = [200]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
+            expected_response = [400]
+        elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
+            expected_response = [200]
 
         # make csp api call
         api_resource = resources.OS.get("FAQ_TOPIC").format(
@@ -278,7 +318,7 @@ class TestOSDependencyOnDifferentServices:
         #         os_resp.json is not None
         # ), "response could not be converted to json. resp.text={}".format(os_resp.text)
         assert (
-            os_resp.status_code == expected_response
+            os_resp.status_code in expected_response
         ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
             os_resp.status_code, expected_response
         )
