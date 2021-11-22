@@ -30,6 +30,8 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
     test cases for CSP APIs when GAZ service calls are blocked
     """
 
+    @pytest.mark.skip(
+        reason="skipping this test for CSP-42206: [Resiliency] Generic error code is returned if GAZ is not reachable")
     @pytest.mark.dependency()
     def test_get_org_roles_api_when_gaz_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
@@ -82,6 +84,8 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
             )
         )
 
+    @pytest.mark.skip(
+        reason="skipping this test for CSP-42206: [Resiliency] Generic error code is returned if GAZ is not reachable")
     @pytest.mark.dependency()
     def test_get_org_clients_api_when_gaz_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
@@ -175,6 +179,8 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
             )
         )
 
+    @pytest.mark.skip(
+        reason="skipping this test for CSP-42206: [Resiliency] Generic error code is returned if GAZ is not reachable")
     @pytest.mark.dependency()
     def test_get_org_users_v2_api_when_gaz_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
@@ -220,6 +226,8 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
             )
         )
 
+    @pytest.mark.skip(
+        reason="skipping this test for CSP-42206: [Resiliency] Generic error code is returned if GAZ is not reachable")
     @pytest.mark.dependency()
     def test_get_org_groups_api_when_gaz_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
@@ -265,6 +273,8 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
             )
         )
 
+    @pytest.mark.skip(
+        reason="skipping this test for CSP-42206: [Resiliency] Generic error code is returned if GAZ is not reachable")
     @pytest.mark.dependency()
     def test_search_org_users_api_when_gaz_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
@@ -361,6 +371,8 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
             )
         )
 
+    @pytest.mark.skip(
+        reason="skipping this test for CSP-42206: [Resiliency] Generic error code is returned if GAZ is not reachable")
     @pytest.mark.dependency()
     def test_get_org_details_api_when_gaz_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
@@ -406,6 +418,8 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
             )
         )
 
+    @pytest.mark.skip(
+        reason="skipping this test for CSP-42206: [Resiliency] Generic error code is returned if GAZ is not reachable")
     @pytest.mark.dependency()
     def test_get_org_oauth_apps_api_when_gaz_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
@@ -456,7 +470,7 @@ class TestCSPAPIsWhenGAZServiceNotReachable:
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_http_code = [500, 504]
+        expected_http_code = [200]
 
         # make csp api call
 

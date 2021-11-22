@@ -1,78 +1,78 @@
 {
-		"aws": {
-			"s3": {
-				"bucketName": "csp-e2e-qe",
-				"testLogPath": "mangle-yaan/logs/",
-				"awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
-				"testReportPath": "mangle-yaan/results/",
-				"awsSecretAccessKey": "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",
-				"resultTrendsBucketName": "csp-qe-res",
-				"resultTrendsHistoryPath": "workloads-history/"
-			}
-		},
-		"csp": {
-			"preview": {
-			"host": "console-preview.cloud.vmware.com",
-			"defaultOrg": {
-				"id": "f09537d7-633a-4204-891e-2fe6e58265a7"
-			},
-			"defaultUser": {
-				"id": "preview_vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
-				"email": "mtarun@vmware.com",
-				"accessToken": "",
-				"refreshToken": "GQUl1K9vuK5oQPtluGxEvi4wmMNJl5VWH05XUSSF1tUeKiAkplXjLfl0ws7XLd9w"
-			},
-			"defaultService": {
-				"id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
-			}
-		},
-            "dev": {
-                "host": "console-dev.cloud.vmware.com",
-                "defaultOrg": {
-                    "id": "78cf9533-05b5-460a-b785-66e373aaf095"
-                },
-                "defaultUser": {
-                    "id": "vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
-                    "email": "mtarun@vmware.com",
-                    "accessToken": "",
-                    "refreshToken": "zM8cN2CZQlkE7jEiqboPnCKUNmFLUjoavvIblaRlZ35frdLLxxC9Z8l5qDlZ1SaI"
-                },
-                "defaultService": {
-                    "id": "yrNXxccXBjH3-OMUSj8AZIFYzJ8_"
-                }
-            }
-		},
-		"mangle": {
-			"host": "10.216.242.9",
-			"password": "admin",
-			"username": "admin@mangle.local"
-		},
-		"k8sCluster": {
-            "preview": {
-              "namespace": "csp-app-preview",
-              "endpointName": "csp-app-preview",
-              "credentialName": "csp-app-preview",
-              "kubeConfigFileName": "csp-app-preview.yaml"
-            },
-            "dev": {
-              "namespace": "csp-app-dev",
-              "endpointName": "csp-app-dev",
-              "credentialName": "csp-app-dev",
-              "kubeConfigFileName": "csp-app-dev.yaml"
-            }
-        },
-		"mangleYaan": {
-			"webDriver": {
-				"initLocal": false,
-				"chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
-			},
-			"testLogPath": "logs/test_runner.log",
-			"testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",
-			"retryFailedTests": {
-				"maxRuns": 2,
-				"minPasses": 1
-			}
-		},
-		"projectName": "csp_resiliency",
-		"projectDescription": "CSP Resiliency Test Suite"
-	}
+  "aws": {
+    "s3": {
+      "bucketName": "csp-e2e-qe",
+      "testLogPath": "mangle-yaan/logs/",
+      "awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
+      "testReportPath": "mangle-yaan/results/",
+      "awsSecretAccessKey": "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",
+      "resultTrendsBucketName": "csp-qe-res",
+      "resultTrendsHistoryPath": "workloads-history/"
+    }
+  },
+  "csp": {
+    "preview": {
+      "host": "console-preview.cloud.vmware.com",
+      "defaultOrg": {
+        "id": "f09537d7-633a-4204-891e-2fe6e58265a7"
+      },
+      "defaultUser": {
+        "id": "preview_vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
+        "email": "mtarun@vmware.com",
+        "accessToken": "",
+        "refreshToken": "GQUl1K9vuK5oQPtluGxEvi4wmMNJl5VWH05XUSSF1tUeKiAkplXjLfl0ws7XLd9w"
+      },
+      "defaultService": {
+        "id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
+      }
+    },
+    "dev": {
+      "host": "console-dev.cloud.vmware.com",
+      "defaultOrg": {
+        "id": "78cf9533-05b5-460a-b785-66e373aaf095"
+      },
+      "defaultUser": {
+        "id": "vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
+        "email": "mtarun@vmware.com",
+        "accessToken": "",
+        "refreshToken": "zM8cN2CZQlkE7jEiqboPnCKUNmFLUjoavvIblaRlZ35frdLLxxC9Z8l5qDlZ1SaI"
+      },
+      "defaultService": {
+        "id": "yrNXxccXBjH3-OMUSj8AZIFYzJ8_"
+      }
+    }
+  },
+  "mangle": {
+    "host": "10.216.242.9",
+    "password": "admin",
+    "username": "admin@mangle.local"
+  },
+  "k8sCluster": {
+    "preview": {
+      "namespace": "csp-app-preview",
+      "endpointName": "csp-app-preview",
+      "credentialName": "csp-app-preview",
+      "kubeConfigFileName": "csp-app-preview.yaml"
+    },
+    "dev": {
+      "namespace": "csp-app-dev",
+      "endpointName": "csp-app-dev",
+      "credentialName": "csp-app-dev",
+      "kubeConfigFileName": "csp-app-dev.yaml"
+    }
+  },
+  "mangleYaan": {
+    "webDriver": {
+      "initLocal": false,
+      "chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
+    },
+    "testLogPath": "logs/test_runner.log",
+    "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",
+    "retryFailedTests": {
+      "maxRuns": 2,
+      "minPasses": 1
+    }
+  },
+  "projectName": "csp_resiliency",
+  "projectDescription": "CSP Resiliency Test Suite"
+}

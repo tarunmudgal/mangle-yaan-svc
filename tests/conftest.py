@@ -649,7 +649,7 @@ def block_commerce_endpoints_using_gateway_api(request):
     }
 
     resp = cclient.make_call(
-        "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
+        "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=False
     )
     assert (
             resp.status_code == 200
@@ -675,7 +675,7 @@ def block_commerce_endpoints_using_gateway_api(request):
     }
 
     resp = cclient.make_call(
-        "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=True
+        "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=False
     )
     assert (
             resp.status_code == 200

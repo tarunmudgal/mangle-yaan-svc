@@ -30,7 +30,6 @@ DEPLOYMENT_NAMES_TO_BE_SCALED = [
     "csp-iam-roles-mgmt",
     "csp-iam-vmwid",
     "csp-lake-consumer",
-    "csp-message-driver",
     "csp-msp",
     "csp-onboarding",
     "csp-operator-portal",
