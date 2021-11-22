@@ -16,7 +16,8 @@ from src.testlib.pytest import utils
 CURRENT_FILENAME = os.path.basename(__file__)
 LIST_DEPENDENT_SERVICES = ["csp-onboarding", "csp-account-management-mvc"]
 
-
+# TODO : create confulence page with commerce api's internal api call's workflow if it has
+# and there response when they ("csp-onboarding", "csp-account-management-mvc") blocked
 @flaky(
     max_runs=myconfig.get("mangleYaan").get("retryFailedTests").get("maxRuns"),
     min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
