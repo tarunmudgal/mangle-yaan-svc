@@ -28,9 +28,7 @@ FF_CONFIG_CACHE_UPDATE_INTERVAL = 300
 
 
 @pytest.mark.usefixtures(
-    "update_csp_access_token",
-    "block_commerce_endpoints_using_gateway_api",
-    "init_chrome_driver",
+    "update_csp_access_token", "block_commerce_endpoints_using_gateway_api", "init_chrome_driver",
 )
 class TestCSPPagesWhenCommerceEndpointsBlocked:
 
@@ -60,15 +58,15 @@ class TestCSPPagesWhenCommerceEndpointsBlocked:
         active_users_page.goto_active_users()
 
         mylog.debug("Validating Groups page")
-        groups_page = GroupsPage(self.driver,timeout=60)
+        groups_page = GroupsPage(self.driver, timeout=60)
         groups_page.goto_groups_page()
 
         mylog.debug("Validating Pending Invitations Page")
-        invitations_page = InvitationsPage(self.driver,timeout=60)
+        invitations_page = InvitationsPage(self.driver, timeout=60)
         invitations_page.goto_invitations_page()
 
         mylog.debug("Validating oAuth Apps Page")
-        oauth_app_page = OauthAppsPage(self.driver,timeout=60)
+        oauth_app_page = OauthAppsPage(self.driver, timeout=60)
         oauth_app_page.goto_oauth_app_page
 
         mylog.debug("Validating Billing and Subscription Overview Page")
@@ -82,9 +80,9 @@ class TestCSPPagesWhenCommerceEndpointsBlocked:
         mylog.debug("Validating Subscription Page")
         sub_page = SubscriptionsPage(self.driver, timeout=60)
         sub_page.goto_subscriptions_page()
-        
+
         mylog.debug("Validating Promotional Credits Page")
-        credits_page = PromotionalCreditsPage(self.driver,timeout=60)
+        credits_page = PromotionalCreditsPage(self.driver, timeout=60)
         credits_page.goto_promotional_credits_page()
 
         mylog.debug("Validating Invoice and Statements Page")
