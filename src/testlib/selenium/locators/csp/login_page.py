@@ -25,3 +25,5 @@ class LoginPageLocators:
     BTN_SIGN_OUT = (By.ID, "csp-sign-out-btn")
     TXT_LOGOUT_MSG = (By.CLASS_NAME, "logout-message")
     LNK_SIGN_IN_USING_ANOTHER_ACCT = (By.LINK_TEXT, "Sign in using another account")
+    TXT_ERROR_OCCURRED = (By.XPATH, "//h3[contains(.,'An Error Occurred')]")
+    BTN_OK = (By.XPATH, "//button[contains(.,'Ok')]")

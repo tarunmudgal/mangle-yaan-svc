@@ -52,8 +52,8 @@ class TestCSPUIWhenExternalCallsBlocked:
         assert login_status, "user {} could not login to CSP portal".format(USER)
         mylog.debug("user {} logged-in to CSP portal successfully".format(USER))
 
-        ## there was a delay for intercom call to be made on dev env. adding this sleep for dev
-        if csp_env == "dev":
+        ## there was a delay for intercom call to be made on dev and preview env. adding this sleep for dev
+        if csp_env == "dev" or csp_env == "preview":
             mylog.info("waiting for 120 seconds before checking requests")
             time.sleep(120)
 
@@ -94,7 +94,7 @@ class TestCSPUIWhenExternalCallsBlocked:
         del self.driver.request_interceptor
         del self.driver.requests
 
-        request_url = "https://feedback.esp-staging.vmware-aws.com/api/feedback/v1/trigger-rules"
+        request_url = "https://feedback.esp-staging.vmware-aws.com/api/feedback/v1/trigger-events"
         request_response = 503
         request_headers = {"Content-Type": "application/json"}
         request_body = "<html>feedback call mocked!</html>"

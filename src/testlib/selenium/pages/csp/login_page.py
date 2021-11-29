@@ -80,6 +80,9 @@ class LoginPage(BasePage):
 
         logged_in = self.wait_for_element(self.locators.TXT_HOME_TITLE, timeout=600)
 
+        if self.if_element_exists(self.locators.TXT_ERROR_OCCURRED):
+            self.click(self.locators.BTN_OK)
+
         return logged_in
 
     def do_logout(self):
@@ -91,8 +94,9 @@ class LoginPage(BasePage):
         self.click(self.locators.BTN_SIGN_OUT)
 
         # logged_out = self.wait_for_element(self.locators.TXT_LOGOUT_MSG, timeout=180)
-        logged_out_status, found_element = self.wait_until_any_element_exists([self.locators.TXT_LOGOUT_MSG,
-                                                            self.locators.TXT_LOGIN_TITLE], timeout=180)
+        logged_out_status, found_element = self.wait_until_any_element_exists(
+            [self.locators.TXT_LOGOUT_MSG, self.locators.TXT_LOGIN_TITLE], timeout=180
+        )
 
         return logged_out_status
 
