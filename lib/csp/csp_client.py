@@ -41,8 +41,8 @@ class CSPResponse:
             pass
 
     def __repr__(self):
-        return "CSPResponse(url={} status_code={} headers={} json={} text={})".format(
-            self.url, self.status_code, self.headers, self.json, self.text
+        return "CSPResponse(url={} status_code={} headers={} json={} text={} call_duration={})".format(
+            self.url, self.status_code, self.headers, self.json, self.text, self.call_duration
         )
 
 
