@@ -8,11 +8,16 @@ import io
 import logging
 import os
 import time
+from attr import s
+import pkce
 from collections import OrderedDict
 
 import pytest
 import requests
+from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 from py.xml import html
+from requests.sessions import session
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
@@ -25,7 +30,7 @@ from src.testlib import params as testlib_params
 from src.testlib.csp.apis import commerce_apis
 
 # disable logs from selenium webdriver
-logging.getLogger('selenium.webdriver.remote.remote_connection').setLevel(logging.CRITICAL)
+logging.getLogger("selenium.webdriver.remote.remote_connection").setLevel(logging.CRITICAL)
 
 
 def pytest_html_report_title(report):
@@ -111,8 +116,8 @@ def pytest_configure(config):
     if not config.option.htmlpath:
         config.option.htmlpath = (
             myconfig.get("mangleYaan")
-                .get("testReportPath")
-                .format(timeStamp=mycache["run_info"].get("test_start_timestamp"))
+            .get("testReportPath")
+            .format(timeStamp=mycache["run_info"].get("test_start_timestamp"))
         )
         config.option.self_contained_html = True
 
@@ -347,9 +352,9 @@ def inject_k8s_app_fault_spring_service_latency_for_class(request, scale_deploym
             try:
                 # mangle fault remediation
                 api_resource = (
-                        resources.OTHER_FAULTS.get("REMEDIATION")
-                        + "/"
-                        + pod_info[pod_name]["fault_task_id"]
+                    resources.OTHER_FAULTS.get("REMEDIATION")
+                    + "/"
+                    + pod_info[pod_name]["fault_task_id"]
                 )
                 task_id, task_status = mclient.trigger_fault_task_and_wait_for_completion(
                     "DELETE", api_resource
@@ -501,15 +506,15 @@ def init_chrome_driver(request):
         # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub'
         #                                           , desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
         selenium_hub_fqdn = (
-                "http://"
-                + testlib_params.SELENIUM_GRID_HOST
-                + ":"
-                + testlib_params.SELENIUM_GRID_PORT
-                + testlib_params.SELENIUM_HUB_URI
+            "http://"
+            + testlib_params.SELENIUM_GRID_HOST
+            + ":"
+            + testlib_params.SELENIUM_GRID_PORT
+            + testlib_params.SELENIUM_HUB_URI
         )
 
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--disable-logging')
+        chrome_options.add_argument("--disable-logging")
         chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         driver = webdriver.Remote(
             command_executor=selenium_hub_fqdn,
@@ -531,10 +536,13 @@ def init_chrome_driver(request):
 def init_chrome_driver_with_call_interceptor(request):
     from seleniumwire import webdriver
     from lib.k8s import k8s_client
+
     # from lib.common import utils
-    
+
     K8S_CLIENT = k8s_client.K8SClient(
-        testlib_params.DECC_MANGLE_YAAN_KUBECONFIG, testlib_params.DECC_MANGLE_YAAN_NAMESPACE, skip_singleton_check=True
+        testlib_params.DECC_MANGLE_YAAN_KUBECONFIG,
+        testlib_params.DECC_MANGLE_YAAN_NAMESPACE,
+        skip_singleton_check=True,
     )
     if myconfig.get("mangleYaan").get("webDriver").get("initLocal"):
         driver = webdriver.Chrome(
@@ -544,28 +552,28 @@ def init_chrome_driver_with_call_interceptor(request):
         # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub'
         #                                           , desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
         selenium_hub_fqdn = (
-                "http://"
-                + testlib_params.SELENIUM_GRID_HOST
-                + ":"
-                + testlib_params.SELENIUM_GRID_PORT
-                + testlib_params.SELENIUM_HUB_URI
+            "http://"
+            + testlib_params.SELENIUM_GRID_HOST
+            + ":"
+            + testlib_params.SELENIUM_GRID_PORT
+            + testlib_params.SELENIUM_HUB_URI
         )
 
         sw_options = {
-            'suppress_connection_errors': False,
-            'auto_config': False,
-            'addr': '0.0.0.0',
-            'port': 8087
+            "suppress_connection_errors": False,
+            "auto_config": False,
+            "addr": "0.0.0.0",
+            "port": 8087,
         }
 
         pod_ip = utils.run_cmd("hostname -i")
-        pod_ip = pod_ip.decode('utf-8').strip()
+        pod_ip = pod_ip.decode("utf-8").strip()
 
         chrome_options = webdriver.ChromeOptions()
         # chrome_options.add_argument('--disable-logging')
         # chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
-        chrome_options.add_argument('--proxy-server={}:8087'.format(pod_ip))
-        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--proxy-server={}:8087".format(pod_ip))
+        chrome_options.add_argument("--ignore-certificate-errors")
         driver = webdriver.Remote(
             command_executor=selenium_hub_fqdn,
             desired_capabilities=chrome_options.to_capabilities(),
@@ -584,8 +592,9 @@ def init_chrome_driver_with_call_interceptor(request):
 
 @pytest.fixture(scope="function")
 def mock_response_interceptor():
-    def _mock_response_interceptor(request_url, response_status_code, response_headers, response_body,
-                                   exact_url_match=False):
+    def _mock_response_interceptor(
+        request_url, response_status_code, response_headers, response_body, exact_url_match=False
+    ):
         def _interceptor(req):
             url_matched = False
             if exact_url_match:
@@ -594,13 +603,12 @@ def mock_response_interceptor():
                 url_matched = request_url in req.url
             if url_matched:
                 req.create_response(
-                    status_code=response_status_code,
-                    headers=response_headers,
-                    body=response_body,
+                    status_code=response_status_code, headers=response_headers, body=response_body,
                 )
-        return _interceptor
-    return _mock_response_interceptor
 
+        return _interceptor
+
+    return _mock_response_interceptor
 
 
 def get_env_id(org_id):
@@ -652,10 +660,13 @@ def block_commerce_endpoints_using_gateway_api(request):
         "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=False
     )
     assert (
-            resp.status_code == 200
+        resp.status_code == 200
     ), "error occurred while updating csp_api_gateway_request_termination feature flag"
-    mylog.debug("waiting for {} seconds to get PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG in effect".format(
-        ff_config_cache_update_interval))
+    mylog.debug(
+        "waiting for {} seconds to get PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG in effect".format(
+            ff_config_cache_update_interval
+        )
+    )
     time.sleep(ff_config_cache_update_interval)
     payment_methods_resp = commerce_apis.get_payment_methods(po_org_id)
     assert payment_methods_resp.status_code == 503, (
@@ -678,14 +689,110 @@ def block_commerce_endpoints_using_gateway_api(request):
         "PATCH", api_resource, json=request_body, retry_count=0, disable_implicit_retry=False
     )
     assert (
-            resp.status_code == 200
+        resp.status_code == 200
     ), "error occurred while updating csp_api_gateway_request_termination feature flag"
 
-    mylog.debug("waiting for {} seconds to get PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG in effect".format(
-        ff_config_cache_update_interval))
+    mylog.debug(
+        "waiting for {} seconds to get PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG in effect".format(
+            ff_config_cache_update_interval
+        )
+    )
     time.sleep(ff_config_cache_update_interval)
     payment_methods_resp = commerce_apis.get_payment_methods(po_org_id)
-    assert payment_methods_resp.status_code == 200, (
-        "seems csp_api_gateway_request_termination FF is not updated correctly. Expected status_code=200, original status_code={}".format(
-            payment_methods_resp.status_code)
+    assert (
+        payment_methods_resp.status_code == 200
+    ), "seems csp_api_gateway_request_termination FF is not updated correctly. Expected status_code=200, original status_code={}".format(
+        payment_methods_resp.status_code
     )
+
+
+@pytest.fixture(scope="function")
+class GetAuthCode:
+    def __init__(self):
+        vidm_url = "https://csp-preview.preprod.vidmlabs.com/SAAS/auth/saml/response"
+        username = ("perf_preview_oo_100x_1@mailsac.com",)
+        password = ("Test!preview@90",)
+        code_verifier_const = (pkce.generate_code_verifier(length=43),)
+        code_challenge_const = (pkce.get_code_challenge(code_verifier_const),)
+        env = myconfig.get("csp").get(csp_env)
+        url_prefix = ("https://" + env + "/csp/gateway",)
+        session = requests.session()
+        get_analytics_session()
+
+    def get_analytics_session(self):
+        url_endpoint = csp_resources.AM.get("ANALYTICS")
+        analytics_url = url_prefix + url_endpoint
+        resp_analytics = session.get(analytics_url)
+
+    def get_idp_login_url(self):
+        idpLoginUrl = None
+        url_endpoint = csp_resources.AM.get("AUTH_DISCOVERY")
+        discovery_url = url_prefix + url_endpoint
+        params = {
+            "username": username,
+            "state": "test",
+            "redirect_uri": "https://console-preview.cloud.vmware.com/csp/gateway/discovery",
+            "client_id": "csp_preview_pkce_portal_client_id",
+            "code_challenge": code_challenge_const,
+            "code_challenge_method": "S256",
+        }
+        resp_discovery = session.get(discovery_url, params)
+        if 200 == resp_discovery.status_code:
+            idpLoginUrl = resp_discovery.json().get("idpLoginUrl")
+        else:
+            mylog.debug(
+                f"Failed to get idp login url, dicovery api status code : {resp_discovery.status_code}"
+            )
+
+        return idpLoginUrl
+
+    def get_oam_form_params(self):
+        form_params = {}
+        idpLoginUrl = get_idp_login_url()
+        resp_idpLoginUrl = session.get(idpLoginUrl)
+        oamRedirectedUrl = resp_idpLoginUrl.url
+        oamRedirectedUrlParsed = urlparse(oamRedirectedUrl)
+        oamUrl = "{uri.scheme}://{uri.netloc}/".format(uri=oamRedirectedUrlParsed)
+        oamHeaders = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Requested-With": "XMLHttpRequest",
+            "Referer": oamUrl,
+        }
+        oamRedirectedUrl = oamUrl + "oam/server/auth_cred_submit"
+        resp_oamRedirectedUrl = session.post(
+            oamRedirectedUrl,
+            headers=oamHeaders,
+            data={"username": username, "password": password},
+        )
+        if 200 == resp_oamRedirectedUrl.status_code:
+            html_data = resp_oamRedirectedUrl.text
+            soup = BeautifulSoup(html_data, "html.parser")
+            for name in soup.find_all("input"):
+                form_params.update({name.get("name"): name.get("value")})
+        else:
+            mylog.debug(
+                f"Failed to get oam form parms , oam redirected api status code : {resp_oamRedirectedUrl.status_code}"
+            )
+
+        return oamHeaders, form_params
+
+    def get_authorization_code(self):
+        authorization_code = None
+        oamHeaders, form_params = get_oam_form_params()
+        resp_saml_resp = session.post(vidm_url, headers=oamHeaders, data=form_params)
+        if 200 == resp_saml_resp.status_code:
+            resp_saml_resp_url_parsed = urlparse(resp_saml_resp.url)
+            resp_saml_resp_url_parsed_params = {}
+            for p in resp_saml_resp_url_parsed.query.split("&"):
+                k, v = p.split("=")
+                resp_saml_resp_url_parsed_params[k] = v
+            authorization_code = resp_saml_resp_url_parsed_params.get("code")
+        else:
+            mylog.debug(
+                f"Failed to get Authorization code , vidm api status code : {resp_saml_resp.status_code}"
+            )
+
+        return authorization_code
+
