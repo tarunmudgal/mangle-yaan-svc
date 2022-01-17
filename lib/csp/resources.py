@@ -74,7 +74,7 @@ AM["USER_ACCT_ORGS"] = "/am/api/users/{acct}/orgs"
 AM["USER_ACCT_ORGS_V2"] = "/am/api/v2/users/{userId}/orgs"
 AM["USER_ACCT_ORG_INVITATIONS"] = "/am/api/orgs/invitations/{acct}"
 AM["AUTH_DISCOVERY"] = "/am/api/auth/discovery"
-AM["ANALYTICS"] = "am/api/configuration/analytics?locale=en_US"
+AM["ANALYTICS"] = "/am/api/configuration/analytics"
 
 # SLC resources
 SLC = OrderedDict()

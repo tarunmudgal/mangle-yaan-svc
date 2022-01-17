@@ -34,7 +34,7 @@ def interceptor(request):
 
 
 # @flaky(max_runs=2, min_passes=1, rerun_filter=None)
-@pytest.mark.usefixtures("init_chrome_driver")
+# @pytest.mark.usefixtures("init_chrome_driver")
 # @pytest.mark.usefixtures("init_chrome_driver_with_call_interceptor")
 class TestDummy:
     @pytest.mark.skip(reason="incomplete test case")
@@ -109,15 +109,15 @@ class TestDummy:
         """
         print("test_example5 called")
 
-    def test_example6(self):
+    def test_example6(self, get_auth_code_using_csp_ui_workflow):
         """
         test_example6 description
         Returns:
             None
         """
-        print("test_example6 called")
-        self.driver.get("https://google.com")
-        assert False
+        code = get_auth_code_using_csp_ui_workflow("perf_preview_oo_100x_1@mailsac.com", "Test!preview@90")
+        mylog.debug("code={} found in test case execution".format(code))
+
 
 
 # @pytest.fixture

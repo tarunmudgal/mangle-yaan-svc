@@ -67,6 +67,9 @@ flask-restplus==0.13.0
 Werkzeug==0.16.0
 Flask==1.1.2
 PyYAML==5.3.1
+bs4==0.0.1
+pkce==1.0.3
+
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
 

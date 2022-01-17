@@ -8,13 +8,13 @@ import io
 import logging
 import os
 import time
-from attr import s
-import pkce
 from collections import OrderedDict
+from urllib.parse import urlparse
 
+import pkce
 import pytest
 import requests
-from urllib.parse import urlparse
+from attr import s
 from bs4 import BeautifulSoup
 from py.xml import html
 from requests.sessions import session
@@ -535,6 +535,7 @@ def init_chrome_driver(request):
 @pytest.fixture(scope="class")
 def init_chrome_driver_with_call_interceptor(request):
     from seleniumwire import webdriver
+
     from lib.k8s import k8s_client
 
     # from lib.common import utils
@@ -707,92 +708,95 @@ def block_commerce_endpoints_using_gateway_api(request):
 
 
 @pytest.fixture(scope="function")
-class GetAuthCode:
-    def __init__(self):
-        vidm_url = "https://csp-preview.preprod.vidmlabs.com/SAAS/auth/saml/response"
-        username = ("perf_preview_oo_100x_1@mailsac.com",)
-        password = ("Test!preview@90",)
-        code_verifier_const = (pkce.generate_code_verifier(length=43),)
-        code_challenge_const = (pkce.get_code_challenge(code_verifier_const),)
-        env = myconfig.get("csp").get(csp_env)
-        url_prefix = ("https://" + env + "/csp/gateway",)
+def get_auth_code_using_csp_ui_workflow():
+    def _get_auth_code_using_csp_ui_workflow(csp_user_email, csp_user_password):
+        code_verifier_const = pkce.generate_code_verifier(length=43)
+        code_challenge_const = pkce.get_code_challenge(code_verifier_const)
+        csp_host = myconfig.get("csp").get(csp_env).get("host")
+        csp_uri = "https://" + csp_host + "/csp/gateway"
+
+        vidm_host = None
+        if csp_env == "stg":
+            vidm_host = "csp-stg.vidmpreview.com"
+        elif csp_env == "dev":
+            vidm_host = "csp-dev.vidmpreview.com"
+        elif csp_env == "prd":
+            vidm_host = "csp-prod.vmwareidentity.com"
+        else:
+            vidm_host = "csp-preview.preprod.vidmlabs.com"
+
+        vidm_uri = "https://" + vidm_host
+
         session = requests.session()
-        get_analytics_session()
 
-    def get_analytics_session(self):
-        url_endpoint = csp_resources.AM.get("ANALYTICS")
-        analytics_url = url_prefix + url_endpoint
-        resp_analytics = session.get(analytics_url)
+        csp_headers = {"Content-type": "application/json"}
+        csp_analytics_url = csp_uri + csp_resources.AM.get("ANALYTICS")
+        params = {"locale": "en_US"}
+        resp_analytics = session.get(csp_analytics_url, params=params)
+        mylog.info(
+            "GET {} with params={} response={}".format(
+                csp_analytics_url, params, resp_analytics.json()
+            )
+        )
 
-    def get_idp_login_url(self):
-        idpLoginUrl = None
-        url_endpoint = csp_resources.AM.get("AUTH_DISCOVERY")
-        discovery_url = url_prefix + url_endpoint
+        discovery_url = csp_uri + csp_resources.AM.get("AUTH_DISCOVERY")
         params = {
-            "username": username,
+            "username": csp_user_email,
             "state": "test",
-            "redirect_uri": "https://console-preview.cloud.vmware.com/csp/gateway/discovery",
+            "redirect_uri": csp_uri + "/discovery",
             "client_id": "csp_preview_pkce_portal_client_id",
             "code_challenge": code_challenge_const,
             "code_challenge_method": "S256",
         }
-        resp_discovery = session.get(discovery_url, params)
-        if 200 == resp_discovery.status_code:
-            idpLoginUrl = resp_discovery.json().get("idpLoginUrl")
-        else:
-            mylog.debug(
-                f"Failed to get idp login url, dicovery api status code : {resp_discovery.status_code}"
+
+        resp_discovery = session.get(discovery_url, params=params)
+        mylog.info(
+            "GET {} with params={} response={}".format(
+                discovery_url, params, resp_discovery.json()
             )
+        )
 
-        return idpLoginUrl
+        idp_login_url = resp_discovery.json().get("idpLoginUrl")
+        resp_idp_login_url = session.get(idp_login_url)
+        mylog.info("GET {} response.url={}".format(idp_login_url, resp_idp_login_url.url))
 
-    def get_oam_form_params(self):
-        form_params = {}
-        idpLoginUrl = get_idp_login_url()
-        resp_idpLoginUrl = session.get(idpLoginUrl)
-        oamRedirectedUrl = resp_idpLoginUrl.url
-        oamRedirectedUrlParsed = urlparse(oamRedirectedUrl)
-        oamUrl = "{uri.scheme}://{uri.netloc}/".format(uri=oamRedirectedUrlParsed)
-        oamHeaders = {
+        oam_redirect_url = resp_idp_login_url.url
+        oam_redirect_url_parsed = urlparse(oam_redirect_url)
+        oam_url = "{uri.scheme}://{uri.netloc}/".format(uri=oam_redirect_url_parsed)
+        oam_headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Accept-Encoding": "gzip, deflate, br",
             "Content-Type": "application/x-www-form-urlencoded",
             "X-Requested-With": "XMLHttpRequest",
-            "Referer": oamUrl,
+            "Referer": oam_url,
         }
-        oamRedirectedUrl = oamUrl + "oam/server/auth_cred_submit"
-        resp_oamRedirectedUrl = session.post(
-            oamRedirectedUrl,
-            headers=oamHeaders,
-            data={"username": username, "password": password},
+        oam_redirect_url = oam_url + "oam/server/auth_cred_submit"
+        resp_oam_redirect_url = session.post(
+            oam_redirect_url,
+            headers=oam_headers,
+            data={"username": csp_user_email, "password": csp_user_password},
         )
-        if 200 == resp_oamRedirectedUrl.status_code:
-            html_data = resp_oamRedirectedUrl.text
-            soup = BeautifulSoup(html_data, "html.parser")
-            for name in soup.find_all("input"):
-                form_params.update({name.get("name"): name.get("value")})
-        else:
-            mylog.debug(
-                f"Failed to get oam form parms , oam redirected api status code : {resp_oamRedirectedUrl.status_code}"
-            )
+        mylog.info("POST {} response={}".format(oam_redirect_url, resp_oam_redirect_url.text))
 
-        return oamHeaders, form_params
+        html_data = resp_oam_redirect_url.text
+        soup = BeautifulSoup(html_data, "html.parser")
 
-    def get_authorization_code(self):
-        authorization_code = None
-        oamHeaders, form_params = get_oam_form_params()
-        resp_saml_resp = session.post(vidm_url, headers=oamHeaders, data=form_params)
-        if 200 == resp_saml_resp.status_code:
-            resp_saml_resp_url_parsed = urlparse(resp_saml_resp.url)
-            resp_saml_resp_url_parsed_params = {}
-            for p in resp_saml_resp_url_parsed.query.split("&"):
-                k, v = p.split("=")
-                resp_saml_resp_url_parsed_params[k] = v
-            authorization_code = resp_saml_resp_url_parsed_params.get("code")
-        else:
-            mylog.debug(
-                f"Failed to get Authorization code , vidm api status code : {resp_saml_resp.status_code}"
-            )
+        form_params = {}
+        for name in soup.find_all("input"):
+            form_params.update({name.get("name"): name.get("value")})
 
-        return authorization_code
+        saml_resp_url = vidm_uri + "/SAAS/auth/saml/response"
+        resp_saml_resp = session.post(saml_resp_url, headers=oam_headers, data=form_params)
+        mylog.info("POST {} with data={} response.url={}".format(saml_resp_url, form_params, resp_saml_resp.url))
+
+        resp_saml_resp_url_parsed = urlparse(resp_saml_resp.url)
+        resp_saml_resp_url_parsed_params = {}
+        for p in resp_saml_resp_url_parsed.query.split("&"):
+            k, v = p.split("=")
+            resp_saml_resp_url_parsed_params[k] = v
+
+        mylog.info("resp_saml_resp_url_parsed_params={}".format(resp_saml_resp_url_parsed_params))
+        return resp_saml_resp_url_parsed_params.get("code")
+
+    return _get_auth_code_using_csp_ui_workflow
 
