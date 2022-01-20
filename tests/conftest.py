@@ -4,6 +4,7 @@
 
 __author__ = "tarun mudgal"
 
+import base64
 import io
 import logging
 import os
@@ -712,6 +713,7 @@ def get_auth_code_using_csp_ui_workflow():
     def _get_auth_code_using_csp_ui_workflow(csp_user_email, csp_user_password):
         code_verifier_const = pkce.generate_code_verifier(length=43)
         code_challenge_const = pkce.get_code_challenge(code_verifier_const)
+        client_id_const = "csp_preview_pkce_portal_client_id"
         csp_host = myconfig.get("csp").get(csp_env).get("host")
         csp_uri = "https://" + csp_host + "/csp/gateway"
 
@@ -744,7 +746,7 @@ def get_auth_code_using_csp_ui_workflow():
             "username": csp_user_email,
             "state": "test",
             "redirect_uri": csp_uri + "/discovery",
-            "client_id": "csp_preview_pkce_portal_client_id",
+            "client_id": client_id_const,
             "code_challenge": code_challenge_const,
             "code_challenge_method": "S256",
         }
@@ -787,7 +789,11 @@ def get_auth_code_using_csp_ui_workflow():
 
         saml_resp_url = vidm_uri + "/SAAS/auth/saml/response"
         resp_saml_resp = session.post(saml_resp_url, headers=oam_headers, data=form_params)
-        mylog.info("POST {} with data={} response.url={}".format(saml_resp_url, form_params, resp_saml_resp.url))
+        mylog.info(
+            "POST {} with data={} response.url={}".format(
+                saml_resp_url, form_params, resp_saml_resp.url
+            )
+        )
 
         resp_saml_resp_url_parsed = urlparse(resp_saml_resp.url)
         resp_saml_resp_url_parsed_params = {}
@@ -796,7 +802,13 @@ def get_auth_code_using_csp_ui_workflow():
             resp_saml_resp_url_parsed_params[k] = v
 
         mylog.info("resp_saml_resp_url_parsed_params={}".format(resp_saml_resp_url_parsed_params))
-        return resp_saml_resp_url_parsed_params.get("code")
+
+        response_obj = {}
+        response_obj["session"] = session
+        response_obj["code"] = resp_saml_resp_url_parsed_params.get("code")
+        response_obj["code_verifier_const"] = code_verifier_const
+        response_obj["client_id_const"] = client_id_const
+
+        return response_obj
 
     return _get_auth_code_using_csp_ui_workflow
-
