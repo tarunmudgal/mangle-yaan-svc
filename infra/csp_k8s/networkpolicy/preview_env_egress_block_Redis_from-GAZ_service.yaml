@@ -1,0 +1,99 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gaz-deny-external-egress-on-preview
+  namespace: csp-app-preview
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: [ csp-gaz-core ]
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 53          #DNS resolution UDP
+          protocol: UDP
+        - port: 53          #DNS resolution TCP
+          protocol: TCP
+        - port: 8140        #CSP_IAM_VMWID_URL
+          protocol: TCP
+        - port: 8330        #CSP_DATA_ENRICHMENT_URL
+          protocol: TCP
+        - port: 8060        #CSP_ACCOUNT_MANAGEMENT_MVC_URL
+          protocol: TCP
+        - port: 8150        #CSP_AUDIT_CONSUMER_URL
+          protocol: TCP
+        - port: 8160        #NS_INAPP_URL, CSP_USAGE_METER_URL
+          protocol: TCP
+        - port: 8090        #CSP_EMAIL_MANAGEMENT_URL
+          protocol: TCP
+        - port: 8360        #CSP_FEDERATION_URL
+          protocol: TCP
+        - port: 8170        #EXT_EVENT_SERVICE_URL, CSP_BILLING_SDP_URL
+          protocol: TCP
+        - port: 8180        #CSP_MESSAGE_DRIVER_URL
+          protocol: TCP
+        - port: 8000        #CSP_SERVICE_LIFECYCLE_URL, CSP_ACCOUNT_MANAGEMENT_URL, CSP_HOST_URL
+          protocol: TCP
+        - port: 8050        #CSP_BILLING_MVC_URL
+          protocol: TCP
+        - port: 8380        #CSP_DATA_AGGREGATOR_URL
+          protocol: TCP
+        - port: 8300        #CSP_RESOURCE_MANAGER_URL
+          protocol: TCP
+        - port: 8030        #CSP_FEATURE_FLAGS_URL
+          protocol: TCP
+        - port: 8320        #CSP_FF_SERVICE_URL
+          protocol: TCP
+        - port: 8400        #CSP_IDENTITY_GOVERNANCE_URL
+          protocol: TCP
+        - port: 8080        #CSP_POST_OFFICE_URL
+          protocol: TCP
+        - port: 8340        #CSP_DATA_MEDIATOR_URL
+          protocol: TCP
+        - port: 8210        #CSP_ONBOARDING_URL
+          protocol: TCP
+        - port: 8130        #CSP_MSP_URL
+          protocol: TCP
+        - port: 8010        #CSP_OPERATOR_PORTAL_URL
+          protocol: TCP
+        - port: 8350        #CSP_BRANDING_URL
+          protocol: TCP
+        - port: 8390        #CSP_COMMERCE_NOTIFICATIONS_URL
+          protocol: TCP
+        - port: 8120        #CSP_COMMERCE_URL
+          protocol: TCP
+        - port: 8020        #CSP_CUSTOMER_SUPPORT_URL
+          protocol: TCP
+        - port: 8190        #NS_EVENT_SERVICE_URL
+          protocol: TCP
+        - port: 8410        #CSP_FRAUD_MANAGEMENT_URL
+          protocol: TCP
+        - port: 8280        #CSP_LAKE_CONSUMER_URL
+          protocol: TCP
+        - port: 8290        #CSP_AUTHN_URL
+          protocol: TCP
+        - port: 8310        #CSP_IAM_ROLES_MGMT_URL, CSP_COMMERCE_AWS_ADAPTER_URL
+          protocol: TCP
+        - port: 8600        #CSP_EMAIL_URL
+          protocol: TCP
+        - port: 8370        #CSP_MULTI_CLOUD_MANAGEMENT_URL
+          protocol: TCP
+        - port: 8110        #CSP_SERVICE_LIFECYCLE_MVC_URL
+          protocol: TCP
+        - port: 443        #CSP_SERVICE_LIFECYCLE_MVC_URL
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchExpressions:
+              - key: name
+                operator: In
+                values:
+                  - csp-app-preview
+                  - kube-system
+        - ipBlock:
+            cidr: 35.71.178.137/24   # nslookup csp-preview.gaz-dev.csp-vidm-prod.com
+        - ipBlock:
+            cidr: 52.223.20.14/24  # nslookup csp-preview.gaz-dev.csp-vidm-prod.com
