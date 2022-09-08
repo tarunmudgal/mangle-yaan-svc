@@ -19,23 +19,24 @@ DEPLOYMENT_NAMES_TO_BE_SCALED = [
     "csp-commerce-aws-adapter",
     "csp-commerce-notifications",
     "csp-commerce-sap-adapter",
+    "csp-customer-management",
     "csp-customer-support",
     "csp-data-aggregator",
     "csp-data-enrichment",
     "csp-data-mediator",
     "csp-email",
-    "csp-feature-flags",
     "csp-federation",
     "csp-ff-service",
     "csp-fraud-management",
     "csp-iam-vmwid",
+    "csp-identity-governance",
     "csp-lake-consumer",
-    "csp-msp",
     "csp-onboarding",
     "csp-operator-portal",
     "csp-post-office",
+    "csp-promotional-info",
     "csp-resource-manager",
-    "csp-service-lifecycle",
+    "csp-rtc",
     "csp-usage-meter",
     "ns-event-service",
     "ns-inapp",
@@ -52,8 +53,7 @@ DEPLOYMENTS_COULD_NOT_BE_SCALED = False
     min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
     rerun_filter=None,
 )
-@pytest.mark.usefixtures("init_chrome_driver")
-@pytest.mark.usefixtures("scale_deployments_for_class")
+@pytest.mark.usefixtures("scale_deployments_for_class", "init_chrome_driver")
 class TestCSPLoginLogoutWorkflow:
     @pytest.mark.skipif(
         DEPLOYMENTS_COULD_NOT_BE_SCALED,

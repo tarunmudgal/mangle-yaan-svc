@@ -34,7 +34,7 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500, 502]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
