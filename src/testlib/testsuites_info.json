@@ -29,7 +29,7 @@
   },
   "test_csp_apis_when_gaz_not_reachable": {
     "description": "paginated APIs test cases while GAZ service is down",
-    "path": "tests/external_dependencies/test_csp_apis_when_gaz_not_reachable.py"
+    "path": "tests/internal_dependencies/test_csp-apis_when_gaz_service_unavaliable.py"
   },
   "test_sscp_apis_when_gaz_not_reachable": {
     "description": "paginated APIs test cases while GAZ service is down",
