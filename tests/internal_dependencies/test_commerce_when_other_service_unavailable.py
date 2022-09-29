@@ -66,14 +66,14 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500, 502]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("BILLING_ACCOUNT_BY_ID").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"],
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -85,7 +85,7 @@ class TestCommerceDependencyOnDifferentServices:
             com_resp.status_code, expected_response
         )
 
-    @pytest.mark.dependency()
+    @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
     def test_api_get_payment_methods(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -96,7 +96,8 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ORG_PAYMENT_METHODS").format(
-            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -110,6 +111,7 @@ class TestCommerceDependencyOnDifferentServices:
 
     # @pytest.mark.skip(reason="this API is the part of commerce 2.0 and under development")
     @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
+    @pytest.mark.skip(reason="Open Thread : https://vmware.slack.com/archives/C1K5Q80SW/p1664377422413779")
     def test_api_get_current_costs(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -147,7 +149,8 @@ class TestCommerceDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("PROMOTIONS").format(
-            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -189,7 +192,7 @@ class TestCommerceDependencyOnDifferentServices:
         # TODO : even at normal conditions , offers api returning 500 error , internal server error
         # need to verify once the confirmation from IT
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500, 504]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -217,7 +220,7 @@ class TestCommerceDependencyOnDifferentServices:
         # TODO : even at normal conditions ,subscription api returning 500 error , internal server error
         # need to verify once the confirmation from IT
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500, 504]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -236,7 +239,8 @@ class TestCommerceDependencyOnDifferentServices:
             com_resp.status_code, expected_response
         )
 
-    @pytest.mark.dependency()
+    @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
+    @pytest.mark.skip(reason="Open Thread : https://vmware.slack.com/archives/C1K5Q80SW/p1664377422413779")
     def test_api_get_inovice(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -246,12 +250,14 @@ class TestCommerceDependencyOnDifferentServices:
             expected_response = [200]
 
         # make csp api call
-        api_resource = resources.COMMERCE.get("INOVICES").format(
-            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
+        api_resource = resources.COMMERCE.get("INVOICES").format(
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
         )
+        params = {"count": "15"}
 
         com_resp = cclient.make_call(
-            "GET", api_resource, retry_count=0, disable_implicit_retry=True
+            "GET", api_resource, params=params, retry_count=0, disable_implicit_retry=True
         )
 
         # verify csp api actual status_code with expected status code when fault is present
@@ -261,7 +267,8 @@ class TestCommerceDependencyOnDifferentServices:
             com_resp.status_code, expected_response
         )
 
-    @pytest.mark.dependency()
+    @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
+    @pytest.mark.skip(reason="Open Thread : https://vmware.slack.com/archives/C1K5Q80SW/p1664377422413779")
     def test_api_get_statement(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -271,8 +278,9 @@ class TestCommerceDependencyOnDifferentServices:
             expected_response = [200]
 
         # make csp api call
-        api_resource = resources.COMMERCE.get("SATATEMENT").format(
-            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
+        api_resource = resources.COMMERCE.get("STATEMENT").format(
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
         )
         params = {"count": "15"}
 
