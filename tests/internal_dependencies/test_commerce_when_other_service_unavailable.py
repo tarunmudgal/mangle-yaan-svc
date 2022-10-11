@@ -73,7 +73,7 @@ class TestCommerceDependencyOnDifferentServices:
         # make csp api call
         api_resource = resources.COMMERCE.get("BILLING_ACCOUNT_BY_ID").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"],
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -86,6 +86,7 @@ class TestCommerceDependencyOnDifferentServices:
         )
 
     @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
+    @pytest.mark.skip(reason="https://vmware.slack.com/archives/C1K5Q80SW/p1665400530463819")
     def test_api_get_payment_methods(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -97,7 +98,7 @@ class TestCommerceDependencyOnDifferentServices:
         # make csp api call
         api_resource = resources.COMMERCE.get("ORG_PAYMENT_METHODS").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"],
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -150,7 +151,7 @@ class TestCommerceDependencyOnDifferentServices:
         # make csp api call
         api_resource = resources.COMMERCE.get("PROMOTIONS").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"],
         )
 
         com_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -186,6 +187,7 @@ class TestCommerceDependencyOnDifferentServices:
         )
 
     @pytest.mark.dependency()
+    @pytest.mark.skip(reason="https://vmware.slack.com/archives/C1K5Q80SW/p1665400530463819")
     def test_api_get_offers(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -214,6 +216,7 @@ class TestCommerceDependencyOnDifferentServices:
         )
 
     @pytest.mark.dependency()
+    @pytest.mark.skip(reason="https://vmware.slack.com/archives/C1K5Q80SW/p1665400530463819")
     def test_api_list_subscriptions(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -241,7 +244,7 @@ class TestCommerceDependencyOnDifferentServices:
 
     @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
     @pytest.mark.skip(reason="Open Thread : https://vmware.slack.com/archives/C1K5Q80SW/p1664377422413779")
-    def test_api_get_inovice(self, inject_k8s_infra_fault_service_unavailable_for_class):
+    def test_api_get_invoice(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
@@ -252,7 +255,7 @@ class TestCommerceDependencyOnDifferentServices:
         # make csp api call
         api_resource = resources.COMMERCE.get("INVOICES").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"],
         )
         params = {"count": "15"}
 
@@ -280,7 +283,7 @@ class TestCommerceDependencyOnDifferentServices:
         # make csp api call
         api_resource = resources.COMMERCE.get("STATEMENT").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"]
+            billingAccountId=mycache["test_info"][CURRENT_FILENAME]["billing_account_id"],
         )
         params = {"count": "15"}
 

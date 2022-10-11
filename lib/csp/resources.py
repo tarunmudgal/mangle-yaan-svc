@@ -20,7 +20,7 @@ COMMERCE[ "CURRENT_COSTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{bi
 COMMERCE["PROMOTIONS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/promotions"
 COMMERCE["ESTIMATED_CHARGES"] = "/commerce/api/v1/orgs/{orgId}/estimated-charges"
 COMMERCE["OFFERS"] = "/commerce/api/v1/service-definitions/{serviceDefinitionId}/offers"
-COMMERCE["LIST_SUBSCRIPTIONS"] = "/commerce/api/v2/subscriptions"
+COMMERCE["LIST_SUBSCRIPTIONS"] = "/commerce/api/v3/subscriptions"
 COMMERCE["GET_SUBSCRIPTION"] = "/commerce/api/v1/subscriptions/{subscriptionId}"
 COMMERCE["STATEMENT"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/statements"
 COMMERCE["INVOICES"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/invoices"
@@ -35,9 +35,7 @@ COMMERCE["GET_ALL_SELLERS_DETAILS"] = "/commerce/api/v3/sellers"
 COMMERCE["GET_ORDERS_FOR_GIVEN_SELLER"] = "/commerce/api/v3/orgs/{orgId}/sellers/{seller}/orders"
 COMMERCE["GET_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts"
 COMMERCE["GET_DEFAULT_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/default"
-COMMERCE[
-    "GET_CURRENT_PERIOD_ESTIMATED_COSTS"
-] = "/commerce/api/v3/billing-accounts/{billingAccountId}/current-costs"
+COMMERCE["GET_CURRENT_PERIOD_ESTIMATED_COSTS"] = "/commerce/api/v3/billing-accounts/{billingAccountId}/current-costs"
 
 # CS resources
 CS = OrderedDict()
@@ -84,9 +82,7 @@ SLC["SVC_FAMILY_REGISTER"] = "/slc/api/family/{serviceFamilyId}/register-service
 SLC["OPERATIONAL_DATA"] = "/slc/api/definitions/external/{serviceId}/operational-data"
 SLC["ALL_OPERATIONAL_DATA"] = "/slc/api/definitions/external/operational-data"
 SLC["SERVICE_INSTANCES"] = "/slc/api/definitions/external/{serviceId}/service-instances"
-SLC[
-    "SERVICE_INSTANCE"
-] = "/slc/api/definitions/external/{serviceId}/service-instances/{instanceId}"
+SLC["SERVICE_INSTANCE"] = "/slc/api/definitions/external/{serviceId}/service-instances/{instanceId}"
 
 # OS resources
 OS = OrderedDict()
