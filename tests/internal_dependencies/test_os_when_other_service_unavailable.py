@@ -35,7 +35,7 @@ LIST_DEPENDENT_SERVICES = ["csp-account-management-mvc", "csp-service-lifecycle"
 )
 # @pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
 class TestOSDependencyOnDifferentServices:
-    @pytest.mark.dependency(name="test_api_create_onboarding_context")
+    @pytest.mark.dependency()
     def test_api_create_onboarding_context(
         self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
@@ -160,7 +160,7 @@ class TestOSDependencyOnDifferentServices:
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
             expected_response = [201]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
-            expected_response = [200]
+            expected_response = [201]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
             expected_response = [201]
 
@@ -173,7 +173,9 @@ class TestOSDependencyOnDifferentServices:
             "linkUrl": "https://dummyurl.com",
             "title": "dummy faq topic",
             "linkTitle": "dummy faq topic",
-            "onboardingContextIds": "6a7c7309-4600-488b-bc7b-ae00a26a8327",
+            "onboardingContextIds": [
+                "6a7c7309-4600-488b-bc7b-ae00a26a8327"
+            ],
             "text": "dummy faq topic",
         }
 
@@ -193,6 +195,7 @@ class TestOSDependencyOnDifferentServices:
 
         if os_resp.json is not None:
             # add a value in cache dict to use it in other test cases
+            mycache["test_info"][CURRENT_FILENAME] = {}
             mycache["test_info"][CURRENT_FILENAME]["faq_topic_id"] = os_resp.json.get("id")
 
     def test_api_get_faq_topics(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -263,7 +266,9 @@ class TestOSDependencyOnDifferentServices:
         )
         request_body = {
             "title": "new dummy faq topic",
-            "onboardingContextIds": "6a7c7309-4600-488b-bc7b-ae00a26a8327",
+            "onboardingContextIds": [
+                "6a7c7309-4600-488b-bc7b-ae00a26a8327"
+            ],
             "text": "new dummy faq topic",
         }
 
