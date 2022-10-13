@@ -79,8 +79,8 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
-            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
-            onboardingContextId=myconfig.get("csp").get(csp_env).get("onboardingContextId")
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
+            onboardingContextId=myconfig.get("csp").get(csp_env).get("defaultOnboardingContext").get("id"),
         )
 
         os_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -133,8 +133,8 @@ class TestOSDependencyOnDifferentServices:
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
-            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
-            onboardingContextId=myconfig.get("csp").get(csp_env).get("onboardingContextId"),
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
+            onboardingContextId=myconfig.get("csp").get(csp_env).get("defaultOnboardingContext").get("id"),
         )
 
         request_body = {"title": "new test onboarding", "description": "new test onboarding"}
