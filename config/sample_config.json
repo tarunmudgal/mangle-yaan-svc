@@ -25,8 +25,12 @@
       "defaultService": {
         "id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
       },
-      "billingAccountId" : "14c064a7-5f5c-46b1-b255-7009807ae5bc",
-      "onboardingContextId" : "6a7c7309-4600-488b-bc7b-ae00a26a8327"
+      "defaultBillingAccount": {
+        "id": "14c064a7-5f5c-46b1-b255-7009807ae5bc"
+      },
+       "defaultOnboardingContext": {
+        "id": "6a7c7309-4600-488b-bc7b-ae00a26a8327"
+      }
     },
     "dev": {
       "host": "console-dev.cloud.vmware.com",

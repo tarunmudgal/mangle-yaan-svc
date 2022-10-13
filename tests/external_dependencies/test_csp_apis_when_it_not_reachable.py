@@ -128,7 +128,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         # make csp api call
         api_resource = resources.COMMERCE.get("ORG_PAYMENT_METHODS").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=myconfig.get("csp").get(csp_env).get("billingAccountId")
+            billingAccountId=myconfig.get("csp").get(csp_env).get("defaultBillingAccount").get("id"),
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -233,7 +233,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         # make csp api call
         api_resource = resources.COMMERCE.get("PROMOTIONS").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=myconfig.get("csp").get(csp_env).get("billingAccountId")
+            billingAccountId=myconfig.get("csp").get(csp_env).get("defaultBillingAccount").get("id"),
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -332,7 +332,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         # make csp api call
         api_resource = resources.COMMERCE.get("INVOICES").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=myconfig.get("csp").get(csp_env).get("billingAccountId")
+            billingAccountId=myconfig.get("csp").get(csp_env).get("defaultBillingAccount").get("id"),
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -385,7 +385,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         # make csp api call
         api_resource = resources.COMMERCE.get("STATEMENT").format(
             orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
-            billingAccountId=myconfig.get("csp").get(csp_env).get("billingAccountId")
+            billingAccountId=myconfig.get("csp").get(csp_env).get("defaultBillingAccount").get("id"),
         )
         params = {"count": "15"}
 

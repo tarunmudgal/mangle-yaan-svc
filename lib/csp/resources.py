@@ -87,18 +87,14 @@ SLC["SERVICE_INSTANCE"] = "/slc/api/definitions/external/{serviceId}/service-ins
 # OS resources
 OS = OrderedDict()
 OS["ONBOARDING_CONTEXTS"] = "/os/api/service-definitions/{serviceDefinitionId}/onboarding-contexts"
-OS[
-    "ONBOARDING_CONTEXTS_BY_ID"
-] = "/os/api/service-definitions/{serviceDefinitionId}/onboarding-contexts/{onboardingContextId}"
+OS["ONBOARDING_CONTEXTS_BY_ID"] = "/os/api/service-definitions/{serviceId}/onboarding-contexts/{onboardingContextId}"
 OS["FAQ_TOPICS"] = "/os/api/service-definitions/{serviceDefinitionId}/faq-topics"
 OS["FAQ_TOPIC"] = "/os/api/service-definitions/{serviceDefinitionId}/faq-topics/{topicId}"
 
 # Feature flag services
 FF = OrderedDict()
-FF[
-    "GET_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"
-] = "/ff-service/api/orgs/{orgId}/flags/csp_api_gateway_request_termination?expandEnvs=true"
-FF[
-    "PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"
-] = "/ff-service/api/orgs/{orgId}/environments/{envId}/flags/csp_api_gateway_request_termination"
+FF["GET_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"] =\
+    "/ff-service/api/orgs/{orgId}/flags/csp_api_gateway_request_termination?expandEnvs=true"
+FF["PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"] = \
+    "/ff-service/api/orgs/{orgId}/environments/{envId}/flags/csp_api_gateway_request_termination"
 FF["GET_CSP_FF_ENVIRONMENTS"] = "/ff-service/api/orgs/{orgId}/environments"
