@@ -5,6 +5,7 @@
 import abc
 import inspect
 import logging
+import logging.handlers
 import os
 import tempfile
 import time
@@ -341,16 +342,15 @@ if __name__ == "__main__":
     )
 
     api_resource = "/am/api/orgs/{orgId}"
+    api_resource1 = "/slc/api/v2/orgs/{{orgId}}/services"
     filepath = 'OrgList.txt'
-    try:
-        with open(filepath, 'r') as fp:
-            org = fp.readline()
-            while org:
-                mylog.info("call has been made for org={}".format(org))
-                get_org_resp = cclient.get_org("GET", api_resource.format(orgId=org))
-                mylog.info("get_org_resp={}".format(get_org_resp))
-                if get_org_resp.status_code != 200:
-                    mylog.error("call failed for org={}".format(org))
-    finally:
-        fp.close()
-
+    with open(filepath, 'r') as fp:
+        while True:
+            org = fp.readline().strip()
+            if not org:
+                break
+            mylog.info("call has been made for org={}".format(org))
+            get_org_resp = cclient.get_org("GET", api_resource.format(orgId=org))
+            mylog.info("get_org_resp={}".format(get_org_resp))
+            if get_org_resp.status_code != 200:
+                mylog.error("call failed for org={}".format(org))
