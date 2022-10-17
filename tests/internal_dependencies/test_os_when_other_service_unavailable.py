@@ -35,7 +35,7 @@ LIST_DEPENDENT_SERVICES = ["csp-account-management-mvc", "csp-service-lifecycle"
 )
 # @pytest.mark.usefixtures("inject_k8s_infra_fault_service_unavailable_for_class")
 class TestOSDependencyOnDifferentServices:
-    @pytest.mark.dependency(name="test_api_create_onboarding_context")
+    @pytest.mark.dependency()
     def test_api_create_onboarding_context(
         self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
@@ -62,14 +62,8 @@ class TestOSDependencyOnDifferentServices:
         ), "Onboarding service returned status_code={} whereas expected status_code={}".format(
             os_resp.status_code, expected_response
         )
-        if os_resp.json is not None:
-            # add a value in cache dict to use it in other test cases
-            mycache["test_info"][CURRENT_FILENAME] = {}
-            mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"] = os_resp.json.get(
-                "onboardingContextId"
-            )
 
-    @pytest.mark.dependency(depends=["test_api_create_onboarding_context"])
+    @pytest.mark.dependency()
     def test_api_get_onboarding_context_using_id(
         self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
@@ -79,14 +73,14 @@ class TestOSDependencyOnDifferentServices:
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
             expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
-            expected_response = [500]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
             expected_response = [200]
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
-            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
-            onboardingContextId=mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"],
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
+            onboardingContextId=myconfig.get("csp").get(csp_env).get("defaultOnboardingContext").get("id"),
         )
 
         os_resp = cclient.make_call("GET", api_resource, disable_implicit_retry=True)
@@ -124,7 +118,7 @@ class TestOSDependencyOnDifferentServices:
             os_resp.status_code, expected_response
         )
 
-    @pytest.mark.dependency(depends=["test_api_create_onboarding_context"])
+    @pytest.mark.dependency()
     def test_api_patch_onboarding_context_using_id(
         self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
@@ -133,14 +127,14 @@ class TestOSDependencyOnDifferentServices:
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
             expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
-            expected_response = [404]
+            expected_response = [500]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
             expected_response = [200]
 
         # make csp api call
         api_resource = resources.OS.get("ONBOARDING_CONTEXTS_BY_ID").format(
-            serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
-            onboardingContextId=mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"],
+            serviceId=myconfig.get("csp").get(csp_env).get("defaultService").get("id"),
+            onboardingContextId=myconfig.get("csp").get(csp_env).get("defaultOnboardingContext").get("id"),
         )
 
         request_body = {"title": "new test onboarding", "description": "new test onboarding"}
@@ -159,16 +153,14 @@ class TestOSDependencyOnDifferentServices:
             os_resp.status_code, expected_response
         )
 
-    @pytest.mark.dependency(
-        name="test_api_create_faq_topics", depends=["test_api_create_onboarding_context"]
-    )
+    @pytest.mark.dependency(name="test_api_create_faq_topics")
     def test_api_create_faq_topics(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [201]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
             expected_response = [201]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
-            expected_response = [400]
+            expected_response = [201]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
             expected_response = [201]
 
@@ -182,7 +174,7 @@ class TestOSDependencyOnDifferentServices:
             "title": "dummy faq topic",
             "linkTitle": "dummy faq topic",
             "onboardingContextIds": [
-                "{}".format(mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"])
+                "6a7c7309-4600-488b-bc7b-ae00a26a8327"
             ],
             "text": "dummy faq topic",
         }
@@ -203,6 +195,7 @@ class TestOSDependencyOnDifferentServices:
 
         if os_resp.json is not None:
             # add a value in cache dict to use it in other test cases
+            mycache["test_info"][CURRENT_FILENAME] = {}
             mycache["test_info"][CURRENT_FILENAME]["faq_topic_id"] = os_resp.json.get("id")
 
     def test_api_get_faq_topics(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -233,7 +226,7 @@ class TestOSDependencyOnDifferentServices:
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
             expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
-            expected_response = [500]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
             expected_response = [200]
 
@@ -262,7 +255,7 @@ class TestOSDependencyOnDifferentServices:
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
             expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
-            expected_response = [400]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
             expected_response = [200]
 
@@ -274,7 +267,7 @@ class TestOSDependencyOnDifferentServices:
         request_body = {
             "title": "new dummy faq topic",
             "onboardingContextIds": [
-                "{}".format(mycache["test_info"][CURRENT_FILENAME]["onboarding_context_id"])
+                "6a7c7309-4600-488b-bc7b-ae00a26a8327"
             ],
             "text": "new dummy faq topic",
         }
@@ -301,7 +294,7 @@ class TestOSDependencyOnDifferentServices:
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
             expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-service-lifecycle":
-            expected_response = [400]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-commerce":
             expected_response = [200]
 

@@ -127,7 +127,8 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ORG_PAYMENT_METHODS").format(
-            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
+            billingAccountId=myconfig.get("csp").get(csp_env).get("defaultBillingAccount").get("id"),
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -231,7 +232,8 @@ class TestCSPAPIsWhenITServiceNotReachable:
 
         # make csp api call
         api_resource = resources.COMMERCE.get("PROMOTIONS").format(
-            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
+            billingAccountId=myconfig.get("csp").get(csp_env).get("defaultBillingAccount").get("id"),
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -319,7 +321,7 @@ class TestCSPAPIsWhenITServiceNotReachable:
         ), "Commerce service did not return expected status_code={}".format(expected_http_code)
 
     @pytest.mark.dependency()
-    def test_inovice_api_when_it_service_calls_are_blocked(
+    def test_invoice_api_when_it_service_calls_are_blocked(
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
@@ -328,8 +330,9 @@ class TestCSPAPIsWhenITServiceNotReachable:
         expected_svc_error_type = "SERVICE_ERROR"
 
         # make csp api call
-        api_resource = resources.COMMERCE.get("INOVICES").format(
-            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
+        api_resource = resources.COMMERCE.get("INVOICES").format(
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
+            billingAccountId=myconfig.get("csp").get(csp_env).get("defaultBillingAccount").get("id"),
         )
 
         resp = cclient.make_call("GET", api_resource, retry_count=0, disable_implicit_retry=True)
@@ -380,8 +383,9 @@ class TestCSPAPIsWhenITServiceNotReachable:
         expected_svc_error_type = "SERVICE_ERROR"
 
         # make csp api call
-        api_resource = resources.COMMERCE.get("SATATEMENT").format(
-            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id")
+        api_resource = resources.COMMERCE.get("STATEMENT").format(
+            orgId=myconfig.get("csp").get(csp_env).get("defaultOrg").get("id"),
+            billingAccountId=myconfig.get("csp").get(csp_env).get("defaultBillingAccount").get("id"),
         )
         params = {"count": "15"}
 

@@ -13,21 +13,17 @@ API_PREFIX = "/csp/gateway"
 COMMERCE = OrderedDict()
 COMMERCE["BILLING_ENGINES"] = "/commerce/api/v1/orgs/billing-engines"
 COMMERCE["BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts"
-COMMERCE[
-    "BILLING_ACCOUNT_BY_ID"
-] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}"
-COMMERCE["ORG_PAYMENT_METHODS"] = "/commerce/api/v1/orgs/{orgId}/payment-methods"
+COMMERCE["BILLING_ACCOUNT_BY_ID"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}"
+COMMERCE["ORG_PAYMENT_METHODS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/payment-methods"
 COMMERCE["USER_PAYMENT_METHODS"] = "/commerce/api/v1/users/{userEmail}/payment-methods"
-COMMERCE[
-    "CURRENT_COSTS"
-] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/current-costs"
-COMMERCE["PROMOTIONS"] = "/commerce/api/v1/orgs/{orgId}/promotions"
+COMMERCE["CURRENT_COSTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/current-costs"
+COMMERCE["PROMOTIONS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/promotions"
 COMMERCE["ESTIMATED_CHARGES"] = "/commerce/api/v1/orgs/{orgId}/estimated-charges"
 COMMERCE["OFFERS"] = "/commerce/api/v1/service-definitions/{serviceDefinitionId}/offers"
-COMMERCE["LIST_SUBSCRIPTIONS"] = "/commerce/api/v2/subscriptions"
+COMMERCE["LIST_SUBSCRIPTIONS"] = "/commerce/api/v3/subscriptions"
 COMMERCE["GET_SUBSCRIPTION"] = "/commerce/api/v1/subscriptions/{subscriptionId}"
-COMMERCE["SATATEMENT"] = "/commerce/api/v1/orgs/{orgId}/statements"
-COMMERCE["INOVICES"] = "/commerce/api/v1/orgs/{orgId}/invoices"
+COMMERCE["STATEMENT"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/statements"
+COMMERCE["INVOICES"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/{billingAccountId}/invoices"
 COMMERCE["PROMOTIONS_TYPE"] = "/commerce/api/v1/promotions"
 COMMERCE["ORG_DETAILS"] = "/commerce/api/v1/orgs/{orgId}/details"
 
@@ -39,9 +35,7 @@ COMMERCE["GET_ALL_SELLERS_DETAILS"] = "/commerce/api/v3/sellers"
 COMMERCE["GET_ORDERS_FOR_GIVEN_SELLER"] = "/commerce/api/v3/orgs/{orgId}/sellers/{seller}/orders"
 COMMERCE["GET_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts"
 COMMERCE["GET_DEFAULT_BILLING_ACCOUNTS"] = "/commerce/api/v3/orgs/{orgId}/billing-accounts/default"
-COMMERCE[
-    "GET_CURRENT_PERIOD_ESTIMATED_COSTS"
-] = "/commerce/api/v3/billing-accounts/{billingAccountId}/current-costs"
+COMMERCE["GET_CURRENT_PERIOD_ESTIMATED_COSTS"] = "/commerce/api/v3/billing-accounts/{billingAccountId}/current-costs"
 
 # CS resources
 CS = OrderedDict()
@@ -88,25 +82,19 @@ SLC["SVC_FAMILY_REGISTER"] = "/slc/api/family/{serviceFamilyId}/register-service
 SLC["OPERATIONAL_DATA"] = "/slc/api/definitions/external/{serviceId}/operational-data"
 SLC["ALL_OPERATIONAL_DATA"] = "/slc/api/definitions/external/operational-data"
 SLC["SERVICE_INSTANCES"] = "/slc/api/definitions/external/{serviceId}/service-instances"
-SLC[
-    "SERVICE_INSTANCE"
-] = "/slc/api/definitions/external/{serviceId}/service-instances/{instanceId}"
+SLC["SERVICE_INSTANCE"] = "/slc/api/definitions/external/{serviceId}/service-instances/{instanceId}"
 
 # OS resources
 OS = OrderedDict()
 OS["ONBOARDING_CONTEXTS"] = "/os/api/service-definitions/{serviceDefinitionId}/onboarding-contexts"
-OS[
-    "ONBOARDING_CONTEXTS_BY_ID"
-] = "/os/api/service-definitions/{serviceDefinitionId}/onboarding-contexts/{onboardingContextId}"
+OS["ONBOARDING_CONTEXTS_BY_ID"] = "/os/api/service-definitions/{serviceId}/onboarding-contexts/{onboardingContextId}"
 OS["FAQ_TOPICS"] = "/os/api/service-definitions/{serviceDefinitionId}/faq-topics"
 OS["FAQ_TOPIC"] = "/os/api/service-definitions/{serviceDefinitionId}/faq-topics/{topicId}"
 
 # Feature flag services
 FF = OrderedDict()
-FF[
-    "GET_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"
-] = "/ff-service/api/orgs/{orgId}/flags/csp_api_gateway_request_termination?expandEnvs=true"
-FF[
-    "PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"
-] = "/ff-service/api/orgs/{orgId}/environments/{envId}/flags/csp_api_gateway_request_termination"
+FF["GET_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"] =\
+    "/ff-service/api/orgs/{orgId}/flags/csp_api_gateway_request_termination?expandEnvs=true"
+FF["PATCH_CSP_API_GATEWAY_REQUEST_TERMINATION_FLAG"] = \
+    "/ff-service/api/orgs/{orgId}/environments/{envId}/flags/csp_api_gateway_request_termination"
 FF["GET_CSP_FF_ENVIRONMENTS"] = "/ff-service/api/orgs/{orgId}/environments"

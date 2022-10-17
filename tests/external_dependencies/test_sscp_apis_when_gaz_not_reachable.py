@@ -35,7 +35,7 @@ class TestSSCPAPIsWhenGAZServiceNotReachable:
         self, inject_k8s_infra_fault_block_egress_traffic_for_class
     ):
         # expected csp api response (status_code)
-        expected_http_code = [500, 504]
+        expected_http_code = [200]
 
         # make csp api call
 
