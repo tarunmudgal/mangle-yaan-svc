@@ -4,10 +4,9 @@
 
 import abc
 import inspect
-import logging
 import logging.handlers
 import os
-import tempfile
+import sys
 import time
 import typing
 
@@ -21,26 +20,39 @@ from requests.packages.urllib3.util.retry import Retry
 
 requests.packages.urllib3.disable_warnings()
 
+
+# initialize logger
+CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+LOGFILE_PATH = CURRENT_DIR + os.path.sep + "csp_client_standalone.log"
+LOG_FORMAT = (
+    "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
+)
+LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
+
 mylog = logging.getLogger("csp_client_standalone")
 mylog.setLevel(logging.DEBUG)
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-LOGFILE_PATH = CURRENT_DIR + os.path.sep + "csp_client_standalone.log"
 file_handler = logging.handlers.RotatingFileHandler(
-    LOGFILE_PATH,
-    maxBytes=10_000_000,
-    backupCount=10,
+    LOGFILE_PATH, maxBytes=10_000_000, backupCount=10,
 )
 if (
-        os.path.isfile(LOGFILE_PATH)
-        and os.path.getsize(LOGFILE_PATH) > 0
-        # and sys.platform != "win32"
+    os.path.isfile(LOGFILE_PATH)
+    and os.path.getsize(LOGFILE_PATH) > 0
+    # and sys.platform != "win32"
 ):
     file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
 
-mylog.addHandler(logging.StreamHandler())
+console_handler = logging.StreamHandler(sys.stdout)
+
+formatter = logging.Formatter(LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+
+mylog.addHandler(console_handler)
 mylog.addHandler(file_handler)
 
+
+# define constants
 HTTP_RETRIABLE_ERRORS = (
     ConnectionError,
     ConnectTimeout,
@@ -59,6 +71,7 @@ DEFAULT_RETRY_OBJ = Retry(
 )
 
 
+# core methods that can be consumed in different use cases
 def rest_request(
     method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str
 ) -> requests.Response:
@@ -222,8 +235,8 @@ class CSPResponse:
             self.text = response.text
 
     def __repr__(self):
-        return "CSPResponse(url={} status_code={} headers={} json={} text={})".format(
-            self.url, self.status_code, self.headers, self.json, self.text
+        return "CSPResponse(url={} status_code={} resp_time={}(seconds) headers={} json={} text={})".format(
+            self.url, self.status_code, self.resp_time, self.headers, self.json, self.text
         )
 
 
@@ -334,45 +347,88 @@ class CSPClient(RESTClient):
 
 if __name__ == "__main__":
 
+    # define constants for current use case
     SERVICE_ID = "142cd4ab-5727-4e7d-9cc2-a87ff8998635"
-    ORGS_FILE_PATH = 'OrgList.txt'
+    ORGS_FILE_PATH = "OrgList.txt"
 
-    # pdb.set_trace()
+    ORG_RESOURCE = "/am/api/orgs/{orgId}"
+    ORG_ACCESS_RESOURCE = "/slc/api/definitions/external/{serviceId}/org-access/actions"
+    SERVICE_ACCESS_RESOURCE = "/slc/api/service-access"
+    SUBSCRIPTION_RESOURCE = "/commerce/api/v3/subscriptions"
+
+    # initialize csp rest client
     cclient = CSPClient(
         "console-preview.cloud.vmware.com",
         "cMtNzVdi8mLwfFR2bllMLtgVLSWo7QfJV5TegQlM0R-KYf7z5SHPCjC7Y4I7bCDT",
         timeout=120,
     )
 
-    api_resource = "/am/api/orgs/{orgId}"
-    org_access_resource = "/slc/api/definitions/external/{serviceId}/org-access/actions"
-    service_access_resource = "/slc/api/service-access"
+    # use case: remove service access from given orgs
+    with open(ORGS_FILE_PATH) as fp:
+        for org_id in fp:
+            org_id = org_id.strip()
 
-    with open(ORGS_FILE_PATH, 'r') as fp:
-        while True:
-            org_id = fp.readline().strip()
-            if not org_id:
-                break
+            mylog.info("processing org_id={}".format(org_id))
 
-            mylog.info("call has been made for org={}".format(org_id))
-            org_access_resp = cclient.make_call("POST", org_access_resource.format(serviceId=SERVICE_ID),
-                                                params={"action": "DENY_ACCESS"}, json={"orgId": org_id})
+            # Get list of subscriptions in an org
+            get_subscriptions_resp = cclient.make_call(
+                "GET",
+                SUBSCRIPTION_RESOURCE,
+                params={"orgId": org_id}
+            )
+            mylog.info("get_subscriptions_resp={}".format(get_subscriptions_resp))
+
+            # Perform important verifications before processing further for a given org_id
+            if get_subscriptions_resp.status_code != 200:
+                mylog.error(
+                    "Error occurred for POST {} for org={}".format(SUBSCRIPTION_RESOURCE, org_id)
+                )
+                mylog.info("skipping processing org_id={} as get subscriptions call failed".format(org_id))
+                continue
+            else:
+                if get_subscriptions_resp.json.get("totalResults") > 0:
+                    mylog.error("active subscriptions observed for org_id={}. Therefore, skipping processing for this org")
+                    continue
+
+
+            # Set DENY_ACCESS for a service in an org
+            org_access_resp = cclient.make_call(
+                "POST",
+                ORG_ACCESS_RESOURCE.format(serviceId=SERVICE_ID),
+                params={"action": "DENY_ACCESS"},
+                json={"orgId": org_id},
+            )
             # mylog.info("org_access_resp={}".format(org_access_resp))
             if org_access_resp.status_code != 202:
-                mylog.error("Error occurred for POST {} for org={}".format(org_access_resource, org_id))
+                mylog.error(
+                    "Error occurred for POST {} for org={}".format(ORG_ACCESS_RESOURCE, org_id)
+                )
 
-
-            delete_service_access_resp = cclient.make_call("DELETE", service_access_resource, json={"orgId": org_id,
-                                                                                       "serviceDefinitionId": SERVICE_ID})
+            # Delete service access from an org
+            delete_service_access_resp = cclient.make_call(
+                "DELETE",
+                SERVICE_ACCESS_RESOURCE,
+                json={"orgId": org_id, "serviceDefinitionId": SERVICE_ID},
+            )
             # mylog.info("service_access_resp={}".format(delete_service_access_resp))
             if delete_service_access_resp.status_code != 200:
-                mylog.error("Error occurred for DELETE {} for org={}".format(service_access_resource, org_id))
+                mylog.error(
+                    "Error occurred for DELETE {} for org={}".format(
+                        SERVICE_ACCESS_RESOURCE, org_id
+                    )
+                )
 
-
-            add_service_access_resp = cclient.make_call("POST", service_access_resource, json={"orgId": org_id,
-                                                                                       "serviceDefinitionId":
-                                                                                           SERVICE_ID,
-                                                                                           "isTosPreSigned": True})
+            # Add service access to an org
+            #ToDo: this call is for testing purpose and should be removed later
+            add_service_access_resp = cclient.make_call(
+                "POST",
+                SERVICE_ACCESS_RESOURCE,
+                json={"orgId": org_id, "serviceDefinitionId": SERVICE_ID, "isTosPreSigned": True},
+            )
             # mylog.info("add_service_access_resp={}".format(add_service_access_resp))
             if add_service_access_resp.status_code != 202:
-                mylog.error("Error occurred for POST {} for org={}\n".format(service_access_resource, org_id))
+                mylog.error(
+                    "Error occurred for POST {} for org={}\n".format(
+                        SERVICE_ACCESS_RESOURCE, org_id
+                    )
+                )
