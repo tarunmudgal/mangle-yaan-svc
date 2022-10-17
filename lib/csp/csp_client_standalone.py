@@ -3,7 +3,9 @@
 """ Mangle REST Client """
 
 import abc
+import inspect
 import logging
+import os
 import time
 import typing
 
@@ -17,9 +19,25 @@ from requests.packages.urllib3.util.retry import Retry
 
 requests.packages.urllib3.disable_warnings()
 
-mylog = logging.getLogger("root")
+mylog = logging.getLogger("csp_client_standalone")
 mylog.setLevel(logging.DEBUG)
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+LOGFILE_PATH = CURRENT_DIR + os.path.sep + "csp_client_standalone.log"
+file_handler = logging.handlers.RotatingFileHandler(
+    LOGFILE_PATH,
+    maxBytes=10_000_000,
+    backupCount=10,
+)
+if (
+        os.path.isfile(LOGFILE_PATH)
+        and os.path.getsize(LOGFILE_PATH) > 0
+        # and sys.platform != "win32"
+):
+    file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
+
 mylog.addHandler(logging.StreamHandler())
+mylog.addHandler(file_handler)
 
 HTTP_RETRIABLE_ERRORS = (
     ConnectionError,
@@ -317,7 +335,7 @@ if __name__ == "__main__":
     # pdb.set_trace()
     cclient = CSPClient(
         "console-preview.cloud.vmware.com",
-        "UJ60suohD3beAX0Z6OmuYS9IcQNcAy8KUQWP4B28CHyVSruwjjbAW3pRJCZ74DNJ",
+        "WWqBlyRP5J2kc7n2Nsi1gGU_kOPSy_N5Z9fjHET7vV8s8OwD2bICjpEyaIJXlrh5",
         timeout=120,
     )
 
