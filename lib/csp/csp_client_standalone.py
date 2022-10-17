@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-""" Mangle REST Client """
+""" CSP REST Client (standalone) for different use-cases"""
 
 import abc
 import inspect
@@ -13,43 +13,11 @@ import typing
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
-from requests.exceptions import (ConnectionError, ConnectTimeout,
-                                 ReadTimeout, SSLError, Timeout)
+from requests.exceptions import (ConnectTimeout, ConnectionError, ReadTimeout, SSLError, Timeout)
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 from requests.packages.urllib3.util.retry import Retry
 
 requests.packages.urllib3.disable_warnings()
-
-
-# initialize logger
-CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-LOGFILE_PATH = CURRENT_DIR + os.path.sep + "csp_client_standalone.log"
-LOG_FORMAT = (
-    "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
-)
-LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
-
-mylog = logging.getLogger("csp_client_standalone")
-mylog.setLevel(logging.DEBUG)
-
-file_handler = logging.handlers.RotatingFileHandler(
-    LOGFILE_PATH, maxBytes=10_000_000, backupCount=10,
-)
-if (
-    os.path.isfile(LOGFILE_PATH)
-    and os.path.getsize(LOGFILE_PATH) > 0
-    # and sys.platform != "win32"
-):
-    file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
-
-console_handler = logging.StreamHandler(sys.stdout)
-
-formatter = logging.Formatter(LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
-console_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)
-
-mylog.addHandler(console_handler)
-mylog.addHandler(file_handler)
 
 
 # define constants
@@ -61,19 +29,50 @@ HTTP_RETRIABLE_ERRORS = (
     SSLError,
     Timeout,
 )
-
 # http://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html
 DEFAULT_RETRY_OBJ = Retry(
     total=3,
     status_forcelist=[429, 500, 502, 503, 504],
-    method_whitelist=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PUT", "HEAD", "TRACE",],
+    method_whitelist=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PUT", "HEAD", "TRACE", ],
     backoff_factor=1,
 )
+CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+LOGFILE_PATH = CURRENT_DIR + os.path.sep + "csp_client_standalone.log"
+LOG_FORMAT = (
+    "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
+)
+LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
+
+
+# initialize logger
+mylog = logging.getLogger("csp_client_standalone")
+mylog.setLevel(logging.DEBUG)
+
+file_handler = logging.handlers.RotatingFileHandler(
+    LOGFILE_PATH, maxBytes=10_000_000, backupCount=10,
+)
+if (
+        os.path.isfile(LOGFILE_PATH)
+        and os.path.getsize(LOGFILE_PATH) > 0
+        # and sys.platform != "win32"
+):
+    file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
+
+console_handler = logging.StreamHandler(sys.stdout)
+
+formatter = logging.Formatter(LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
+formatter.converter = time.gmtime  # log UTC timestamps
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+console_handler.flush = sys.stdout.flush
+
+mylog.addHandler(console_handler)
+mylog.addHandler(file_handler)
 
 
 # core methods that can be consumed in different use cases
 def rest_request(
-    method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str
+        method: str, url: str, retry_count: int = 1, retry_sleep: int = 5, **kwargs: str
 ) -> requests.Response:
     """thin wrapper over requests.request API with retry logic implemented
     Args:
@@ -128,7 +127,7 @@ class RESTClient(abc.ABC):
     """
 
     def __init__(
-        self, scheme="https://", host="", port=443, api_prefix="", ssl_verify=False, timeout=None,
+            self, scheme="https://", host="", port=443, api_prefix="", ssl_verify=False, timeout=None,
     ):
         self._base_url = scheme + host + ":" + str(port) + api_prefix
         self._ssl_verify = ssl_verify
@@ -149,12 +148,12 @@ class RESTClient(abc.ABC):
 
     # @utils.log_args
     def request(
-        self,
-        method: str,
-        api_resource: str,
-        retry_count: int = 1,
-        retry_sleep: int = 5,
-        **kwargs: str,
+            self,
+            method: str,
+            api_resource: str,
+            retry_count: int = 1,
+            retry_sleep: int = 5,
+            **kwargs: str,
     ) -> typing.NewType("Response", requests.Response):
         """sends HTTP request for RESTClient
 
@@ -248,14 +247,14 @@ class CSPClient(RESTClient):
     __single_instance = None
 
     def __init__(
-        self,
-        host: str,
-        refresh_token: str,
-        api_prefix: str = "/csp/gateway",
-        scheme: str = "https://",
-        retry_obj: Retry = DEFAULT_RETRY_OBJ,
-        ssl_verify: bool = False,
-        timeout: int = None,
+            self,
+            host: str,
+            refresh_token: str,
+            api_prefix: str = "/csp/gateway",
+            scheme: str = "https://",
+            retry_obj: Retry = DEFAULT_RETRY_OBJ,
+            ssl_verify: bool = False,
+            timeout: int = None,
     ) -> None:
         """Initializes singleton CSPClient that is used to make CSP API calls
         Args:
@@ -387,9 +386,9 @@ if __name__ == "__main__":
                 continue
             else:
                 if get_subscriptions_resp.json.get("totalResults") > 0:
-                    mylog.error("active subscriptions observed for org_id={}. Therefore, skipping processing for this org")
+                    mylog.error(
+                        "active subscriptions observed for org_id={}. Therefore, skipping processing for this org")
                     continue
-
 
             # Set DENY_ACCESS for a service in an org
             org_access_resp = cclient.make_call(
@@ -419,7 +418,7 @@ if __name__ == "__main__":
                 )
 
             # Add service access to an org
-            #ToDo: this call is for testing purpose and should be removed later
+            # ToDo: this call is for testing purpose and should be removed later
             add_service_access_resp = cclient.make_call(
                 "POST",
                 SERVICE_ACCESS_RESOURCE,
