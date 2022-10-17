@@ -314,7 +314,7 @@ class CSPClient(RESTClient):
             )
 
     # @utils.log_args
-    def get_org(self, verb: str, api_resource: str, **kwargs: str) -> CSPResponse:
+    def make_call(self, verb: str, api_resource: str, **kwargs: str) -> CSPResponse:
         """
         makes a HTTP call using RESTClient.request API
         Args:
@@ -334,6 +334,9 @@ class CSPClient(RESTClient):
 
 if __name__ == "__main__":
 
+    SERVICE_ID = "142cd4ab-5727-4e7d-9cc2-a87ff8998635"
+    ORGS_FILE_PATH = 'OrgList.txt'
+
     # pdb.set_trace()
     cclient = CSPClient(
         "console-preview.cloud.vmware.com",
@@ -342,15 +345,34 @@ if __name__ == "__main__":
     )
 
     api_resource = "/am/api/orgs/{orgId}"
-    api_resource1 = "/slc/api/v2/orgs/{{orgId}}/services"
-    filepath = 'OrgList.txt'
-    with open(filepath, 'r') as fp:
+    org_access_resource = "/slc/api/definitions/external/{serviceId}/org-access/actions"
+    service_access_resource = "/slc/api/service-access"
+
+    with open(ORGS_FILE_PATH, 'r') as fp:
         while True:
-            org = fp.readline().strip()
-            if not org:
+            org_id = fp.readline().strip()
+            if not org_id:
                 break
-            mylog.info("call has been made for org={}".format(org))
-            get_org_resp = cclient.get_org("GET", api_resource.format(orgId=org))
-            mylog.info("get_org_resp={}".format(get_org_resp))
-            if get_org_resp.status_code != 200:
-                mylog.error("call failed for org={}".format(org))
+
+            mylog.info("call has been made for org={}".format(org_id))
+            org_access_resp = cclient.make_call("POST", org_access_resource.format(serviceId=SERVICE_ID),
+                                                params={"action": "DENY_ACCESS"}, json={"orgId": org_id})
+            # mylog.info("org_access_resp={}".format(org_access_resp))
+            if org_access_resp.status_code != 202:
+                mylog.error("Error occurred for POST {} for org={}".format(org_access_resource, org_id))
+
+
+            delete_service_access_resp = cclient.make_call("DELETE", service_access_resource, json={"orgId": org_id,
+                                                                                       "serviceDefinitionId": SERVICE_ID})
+            # mylog.info("service_access_resp={}".format(delete_service_access_resp))
+            if delete_service_access_resp.status_code != 200:
+                mylog.error("Error occurred for DELETE {} for org={}".format(service_access_resource, org_id))
+
+
+            add_service_access_resp = cclient.make_call("POST", service_access_resource, json={"orgId": org_id,
+                                                                                       "serviceDefinitionId":
+                                                                                           SERVICE_ID,
+                                                                                           "isTosPreSigned": True})
+            # mylog.info("add_service_access_resp={}".format(add_service_access_resp))
+            if add_service_access_resp.status_code != 202:
+                mylog.error("Error occurred for POST {} for org={}\n".format(service_access_resource, org_id))
