@@ -6,6 +6,7 @@ import abc
 import inspect
 import logging
 import os
+import tempfile
 import time
 import typing
 
@@ -312,7 +313,7 @@ class CSPClient(RESTClient):
             )
 
     # @utils.log_args
-    def make_call(self, verb: str, api_resource: str, **kwargs: str) -> CSPResponse:
+    def get_org(self, verb: str, api_resource: str, **kwargs: str) -> CSPResponse:
         """
         makes a HTTP call using RESTClient.request API
         Args:
@@ -335,31 +336,21 @@ if __name__ == "__main__":
     # pdb.set_trace()
     cclient = CSPClient(
         "console-preview.cloud.vmware.com",
-        "WWqBlyRP5J2kc7n2Nsi1gGU_kOPSy_N5Z9fjHET7vV8s8OwD2bICjpEyaIJXlrh5",
+        "cMtNzVdi8mLwfFR2bllMLtgVLSWo7QfJV5TegQlM0R-KYf7z5SHPCjC7Y4I7bCDT",
         timeout=120,
     )
 
-    api_resource = "/iam-roles-mgmt/api/services/84e97404-a3b6-419f-a447-75759dcc2b52/roles"
-    payload = {
-        "visible": True,
-        "onAccess": True,
-        "displayName": "test1_app role1",
-        "description": "test1_app role1",
-        "type": "CUSTOMER",
-        "composable": True,
-        "name": "srv_name:test1_app_role1",
-        "isDefault": False,
-        "isHidden": False,
-    }
+    api_resource = "/am/api/orgs/{orgId}"
+    filepath = 'OrgList.txt'
+    try:
+        with open(filepath, 'r') as fp:
+            org = fp.readline()
+            while org:
+                mylog.info("call has been made for org={}".format(org))
+                get_org_resp = cclient.get_org("GET", api_resource.format(orgId=org))
+                mylog.info("get_org_resp={}".format(get_org_resp))
+                if get_org_resp.status_code != 200:
+                    mylog.error("call failed for org={}".format(org))
+    finally:
+        fp.close()
 
-    call_count_start = 2
-    call_count_end = 100
-    for cnt in range(call_count_start, call_count_end + 1):
-        mylog.info("call has been made for cnt={}".format(cnt))
-        payload.update(displayName="test1_app role{}".format(cnt))
-        payload.update(description="test1_app role{}".format(cnt))
-        payload.update(name="srv_name:test1_app_role{}".format(cnt))
-        am_resp = cclient.make_call("POST", api_resource, json=payload)
-        mylog.info("am_resp={}".format(am_resp))
-        if am_resp.status_code != 200:
-            mylog.error("call failed for cnt={}".format(cnt))
