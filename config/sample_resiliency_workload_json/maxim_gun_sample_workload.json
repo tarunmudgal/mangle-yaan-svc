@@ -38,35 +38,41 @@
 		},
 		"csp": {
 			"preview": {
-			"host": "console-preview.cloud.vmware.com",
-			"defaultOrg": {
-				"id": "f09537d7-633a-4204-891e-2fe6e58265a7"
+				"host": "console-preview.cloud.vmware.com",
+				"defaultOrg": {
+					"id": "f09537d7-633a-4204-891e-2fe6e58265a7"
+				},
+				 "defaultUser": {
+					"id": "preview_vmware.com:02a0ab43-a8f8-41f6-acb0-cb8c4309d820",
+					"email": "adityak3@vmware.com",
+					"accessToken": "",
+					"refreshToken": "cMtNzVdi8mLwfFR2bllMLtgVLSWo7QfJV5TegQlM0R-KYf7z5SHPCjC7Y4I7bCDT"
+				  },
+				"defaultService": {
+					"id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
+				},
+				"defaultBillingAccount": {
+					"id": "14c064a7-5f5c-46b1-b255-7009807ae5bc"
+				},
+				"defaultOnboardingContext": {
+					"id": "6a7c7309-4600-488b-bc7b-ae00a26a8327"
+				}
 			},
-			"defaultUser": {
-				"id": "preview_vmware.com:a84b35b5-c3a3-4c9a-98a5-8dadeb5c05d7",
-				"email": "venkatare@vmware.com",
-				"accessToken": "",
-				"refreshToken": "WWqBlyRP5J2kc7n2Nsi1gGU_kOPSy_N5Z9fjHET7vV8s8OwD2bICjpEyaIJXlrh5"
-			},
-			"defaultService": {
-				"id": "514b6d89-b22b-482a-96fb-cfcab3137ccf"
+			"dev": {
+				"host": "console-dev.cloud.vmware.com",
+				"defaultOrg": {
+					"id": "78cf9533-05b5-460a-b785-66e373aaf095"
+				},
+				"defaultUser": {
+					"id": "vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
+					"email": "mtarun@vmware.com",
+					"accessToken": "",
+					"refreshToken": "zM8cN2CZQlkE7jEiqboPnCKUNmFLUjoavvIblaRlZ35frdLLxxC9Z8l5qDlZ1SaI"
+				},
+				"defaultService": {
+					"id": "yrNXxccXBjH3-OMUSj8AZIFYzJ8_"
+				}
 			}
-		},
-            "dev": {
-                "host": "console-dev.cloud.vmware.com",
-                "defaultOrg": {
-                    "id": "78cf9533-05b5-460a-b785-66e373aaf095"
-                },
-                "defaultUser": {
-                    "id": "vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
-                    "email": "mtarun@vmware.com",
-                    "accessToken": "",
-                    "refreshToken": "zM8cN2CZQlkE7jEiqboPnCKUNmFLUjoavvIblaRlZ35frdLLxxC9Z8l5qDlZ1SaI"
-                },
-                "defaultService": {
-                    "id": "yrNXxccXBjH3-OMUSj8AZIFYzJ8_"
-                }
-            }
 		},
 		"mangle": {
 			"host": "10.216.242.9",
@@ -99,7 +105,7 @@
 				"minPasses": 1
 			}
 		},
-		"projectName": "csp_resiliency",
+		"projectName": "Test-run-all-testsuites",
 		"projectDescription": "CSP Resiliency Test Suite"
 	},
 	"workload_profile": {
@@ -113,5 +119,5 @@
 	},
 	"pre_workload_image": null,
 	"post_workload_image": null,
-	"workload_testsuites": "test_csp_apis_when_it_not_reachable,test_csp_apis_when_gaz_not_reachable,test_sscp_apis_when_gaz_not_reachable,test_sscp_apis_when_db_not_reachable,test_paginated_api_when_one_service_instance_down,test_am_api_when_a_service_down,test_slc_api_when_a_service_down,test_onboarding_api_when_a_service_down,test_commerce_api_when_a_service_down"
+	"workload_testsuites": "test_csp_apis_when_it_not_reachable,test_csp_apis_when_gaz_not_reachable,test_paginated_api_when_one_service_instance_down,test_am_api_when_a_service_down,test_slc_api_when_a_service_down,test_onboarding_api_when_a_service_down,test_commerce_api_when_a_service_down,test_csp_pages_when_commerce_endpoints_blocked"
 }
