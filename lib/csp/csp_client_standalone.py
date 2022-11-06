@@ -347,17 +347,15 @@ class CSPClient(RESTClient):
 if __name__ == "__main__":
 
     # define constants for current use case
-    SERVICE_ID = "142cd4ab-5727-4e7d-9cc2-a87ff8998635"
+    SERVICE_ID = "87e50f21-c111-4f17-8646-2a29a8816161"
     ORGS_FILE_PATH = "OrgList.txt"
 
-    ORG_RESOURCE = "/am/api/orgs/{orgId}"
     ORG_ACCESS_RESOURCE = "/slc/api/definitions/external/{serviceId}/org-access/actions"
     SERVICE_ACCESS_RESOURCE = "/slc/api/service-access"
-    SUBSCRIPTION_RESOURCE = "/commerce/api/v3/subscriptions"
 
     # initialize csp rest client
     cclient = CSPClient(
-        "console-preview.cloud.vmware.com",
+        "console.cloud.vmware.com",
         "cMtNzVdi8mLwfFR2bllMLtgVLSWo7QfJV5TegQlM0R-KYf7z5SHPCjC7Y4I7bCDT",
         timeout=120,
     )
@@ -369,27 +367,6 @@ if __name__ == "__main__":
 
             mylog.info("processing org_id={}".format(org_id))
 
-            # Get list of subscriptions in an org
-            get_subscriptions_resp = cclient.make_call(
-                "GET",
-                SUBSCRIPTION_RESOURCE,
-                params={"orgId": org_id}
-            )
-            mylog.info("get_subscriptions_resp={}".format(get_subscriptions_resp))
-
-            # Perform important verifications before processing further for a given org_id
-            if get_subscriptions_resp.status_code != 200:
-                mylog.error(
-                    "Error occurred for POST {} for org={}".format(SUBSCRIPTION_RESOURCE, org_id)
-                )
-                mylog.info("skipping processing org_id={} as get subscriptions call failed".format(org_id))
-                continue
-            else:
-                if get_subscriptions_resp.json.get("totalResults") > 0:
-                    mylog.error(
-                        "active subscriptions observed for org_id={}. Therefore, skipping processing for this org")
-                    continue
-
             # Set DENY_ACCESS for a service in an org
             org_access_resp = cclient.make_call(
                 "POST",
@@ -397,7 +374,7 @@ if __name__ == "__main__":
                 params={"action": "DENY_ACCESS"},
                 json={"orgId": org_id},
             )
-            # mylog.info("org_access_resp={}".format(org_access_resp))
+            mylog.info("org_access_resp={}".format(org_access_resp))
             if org_access_resp.status_code != 202:
                 mylog.error(
                     "Error occurred for POST {} for org={}".format(ORG_ACCESS_RESOURCE, org_id)
@@ -409,25 +386,10 @@ if __name__ == "__main__":
                 SERVICE_ACCESS_RESOURCE,
                 json={"orgId": org_id, "serviceDefinitionId": SERVICE_ID},
             )
-            # mylog.info("service_access_resp={}".format(delete_service_access_resp))
+            mylog.info("service_access_resp={}".format(delete_service_access_resp))
             if delete_service_access_resp.status_code != 200:
                 mylog.error(
                     "Error occurred for DELETE {} for org={}".format(
-                        SERVICE_ACCESS_RESOURCE, org_id
-                    )
-                )
-
-            # Add service access to an org
-            # ToDo: this call is for testing purpose and should be removed later
-            add_service_access_resp = cclient.make_call(
-                "POST",
-                SERVICE_ACCESS_RESOURCE,
-                json={"orgId": org_id, "serviceDefinitionId": SERVICE_ID, "isTosPreSigned": True},
-            )
-            # mylog.info("add_service_access_resp={}".format(add_service_access_resp))
-            if add_service_access_resp.status_code != 202:
-                mylog.error(
-                    "Error occurred for POST {} for org={}\n".format(
                         SERVICE_ACCESS_RESOURCE, org_id
                     )
                 )
