@@ -104,6 +104,8 @@ class AuthToken(object):
             "Content-type": "application/x-www-form-urlencoded"}
         resp = REQUEST_SESSION.post(csp_vidm_host + '/SAAS/auth/saml/response', data=fetched_saml_relay_response_dict,
                                     verify=False, headers=oamheaders, allow_redirects=True)
+        if resp.status_code == 400:
+            breakpoint()
         return resp
 
     def execute_local_vidm_flow(self, idp_login_url, csp_url, username, password, gaz_host):
@@ -226,10 +228,10 @@ class AuthToken(object):
                                                  "authorization": authrization_str})
             return self.fetch_tokens(resp, type="access_token")
         else:
-            mylog.error("Something went wrong for user={}. status_code={} response={}".format(user_email,
+            mylog.error("Something went wrong for user={}. url={} status_code={} response={}".format(user_email,
                                                                                               resp.status_code,
-                                                                                              resp.text))
-            breakpoint()
+                                                                                              resp.url,
+                                                                                              resp.content))
             sys.exit()
 
     def create_new_api_token(self, csp_url, user_email, auth_token):
@@ -342,6 +344,7 @@ if __name__ == '__main__':
     CSP_URL = "https://console-preview.cloud.vmware.com"
     INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
     OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"
+    global REQUEST_SESSION
 
     token = AuthToken()
 
