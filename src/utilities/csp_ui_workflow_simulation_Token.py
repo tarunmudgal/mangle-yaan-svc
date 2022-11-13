@@ -1,6 +1,7 @@
 import argparse
+import csv
+import datetime
 import inspect
-import logging
 import logging.handlers
 import os
 import re
@@ -13,19 +14,16 @@ import requests
 import urllib3
 from bs4 import BeautifulSoup
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-import csv
 
 urllib3.disable_warnings()
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
 
 code_verifier_const = pkce.generate_code_verifier(length=43)
 code_challenge_const = pkce.get_code_challenge(code_verifier_const)
 REQUEST_SESSION = requests.session()
 
-
 CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-LOGFILE_PATH = CURRENT_DIR + os.path.sep + "{}.log".format(os.path.splitext(__file__)[0])
+LOGFILE_PATH = CURRENT_DIR + os.path.sep + "{}.log".format(os.path.splitext(os.path.split(__file__)[1])[0])
 LOG_FORMAT = (
     "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
 )
@@ -230,7 +228,7 @@ class AuthToken(object):
         else:
             mylog.error("Something went wrong for user={}. status_code={} response={}".format(user_email,
                                                                                               resp.status_code,
-                                                                                            resp.text))
+                                                                                              resp.text))
             breakpoint()
             sys.exit()
 
@@ -286,7 +284,6 @@ class AuthToken(object):
 
         return api_token
 
-
     def clean_all_api_tokens(self, csp_url, user_email, auth_token):
         default_org_uri = f"{csp_url}/csp/gateway/am/api/loggedin/user/default-org"
         resp_default_org = REQUEST_SESSION.get(default_org_uri, headers={'csp-auth-token': auth_token})
@@ -300,7 +297,6 @@ class AuthToken(object):
         if resp_delete_api_tokens.status_code != 200:
             mylog.error("Error occurred while deleting api tokens for user={}".format(user_email))
             sys.exit()
-
 
     def extract_all_input_type_parameters_from_html(self, html_data, parameter_name):
         """
@@ -349,6 +345,7 @@ if __name__ == '__main__':
 
     token = AuthToken()
 
+    mylog.info("Script start time: {}".format(datetime.datetime.now()))
     with open(INPUT_API_TOKENS_FILE) as api_token_reader:
         csv_reader = csv.DictReader(api_token_reader)
         with open(OUTPUT_API_TOKEN_FILE, 'w', newline='\n') as api_token_writer:
@@ -358,7 +355,8 @@ if __name__ == '__main__':
             for user_row in csv_reader:
                 REQUEST_SESSION = requests.session()
                 mylog.debug("processing user={}".format(user_row))
-                fetched_access_token = token.generate_auth_token(CSP_URL, user_row.get('user'), user_row.get('password'))
+                fetched_access_token = token.generate_auth_token(CSP_URL, user_row.get('user'),
+                                                                 user_row.get('password'))
                 # mylog.info("fetched_access_token={}".format(fetched_access_token))
 
                 token.clean_all_api_tokens(CSP_URL, user_row.get('user'), fetched_access_token)
@@ -369,3 +367,4 @@ if __name__ == '__main__':
                 csv_writer.writerow(user_row)
                 mylog.debug("processing done for user={}".format(user_row.get('user')))
 
+    mylog.info("Script end time: {}".format(datetime.datetime.now()))
