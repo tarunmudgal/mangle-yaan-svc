@@ -3,16 +3,17 @@
 """ CSP REST Client (standalone) for different use-cases"""
 
 import abc
+import csv
 import inspect
 import logging.handlers
 import os
 import sys
 import time
 import typing
-import math
 
 import requests
 import urllib3
+import jwt
 from requests.adapters import HTTPAdapter
 from requests.exceptions import (ConnectTimeout, ConnectionError, ReadTimeout, SSLError, Timeout)
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
@@ -38,7 +39,7 @@ DEFAULT_RETRY_OBJ = Retry(
     backoff_factor=1,
 )
 CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-LOGFILE_PATH = CURRENT_DIR + os.path.sep + "csp_client_get_org_owners.log"
+LOGFILE_PATH = CURRENT_DIR + os.path.sep + "csp_client_standalone.log"
 LOG_FORMAT = (
     "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
 )
@@ -46,7 +47,7 @@ LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
 
 
 # initialize logger
-mylog = logging.getLogger("csp_client_get_orgs")
+mylog = logging.getLogger("csp_client_standalone")
 mylog.setLevel(logging.DEBUG)
 
 file_handler = logging.handlers.RotatingFileHandler(
@@ -83,7 +84,7 @@ def rest_request(
       retry_sleep: sleep (in seconds) in between retries
 
     Returns:
-      requests.Response
+      object: requests.Response
     """
     if retry_count < 0:
         retry_count = 0
@@ -186,19 +187,19 @@ class RESTClient(abc.ABC):
         while attempt < retry_count + 1:
             try:
                 attempt += 1
-                # mylog.debug(
-                #     "RESTClient: Sending a request with method=%s, resource=%s",
-                #     method,
-                #     api_resource,
-                # )
+                mylog.debug(
+                    "RESTClient: Sending a request with method=%s, resource=%s",
+                    method,
+                    api_resource,
+                )
 
                 response = self._session.request(method, url, **kwargs)
-                # mylog.debug(
-                #     "RESTClient: request with method=%s, resource=%s succeeded in (%d) attempt(s)",
-                #     method,
-                #     api_resource,
-                #     attempt,
-                # )
+                mylog.debug(
+                    "RESTClient: request with method=%s, resource=%s succeeded in (%d) attempt(s)",
+                    method,
+                    api_resource,
+                    attempt,
+                )
                 return response
             except HTTP_RETRIABLE_ERRORS as fault:
                 mylog.debug(
@@ -346,68 +347,46 @@ class CSPClient(RESTClient):
 
 
 if __name__ == "__main__":
-    import csv
+
     # define constants for current use case
-    ORG_ID = "144f737a-19fa-4175-842a-c199698c52e6"
+    API_TOKENS_FILE_PATH = "preview_300x_users.csv"
+    USER_API_TOKEN_FILE_PATH = "preview_300x_users_updated.csv"
 
-    ORG_USERS_RESOURCE = "/am/api/v2/orgs/{orgId}/users"
-    PAGE_SIZE = 100
+    BASE_URL = "https://console-preview.cloud.vmware.com/csp/gateway"
+    PO_REFRESH_TOKEN = "8Bj3wiATU_3gg1Bm2OBDdOIW2IxwB0rWR9RHdYqWIQR5VsOiWir702h4wHIb2Wm7"
 
-    # initialize csp rest client
-    cclient = CSPClient(
-        "console-stg.cloud.vmware.com",
-        "OQXUGqSbAz5A4QE4arU8j1rI0AxIl8drNgicKO1nIsYMgfusG8XUK5xUKzeRA5Rp",
-        timeout=120,
-    )
+    # use case: remove service access from given orgs
+    with open(API_TOKENS_FILE_PATH) as api_token_file_reader:
+        with open(USER_API_TOKEN_FILE_PATH, 'w') as csvfile:
+            csv_writer = csv.DictWriter(csvfile, fieldnames=["user_email", "api_token"])
+            csv_writer.writeheader()
+            for api_token in api_token_file_reader:
+                api_token = api_token.strip()
 
-    with open('stg_org_users.csv', 'w', newline='') as csvfile:
-        fieldnames = ['user_email', 'user_role']
-        csv_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        csv_writer.writeheader()
+                mylog.info("processing api_token={}".format(api_token))
 
-        org_id = ORG_ID
+                access_token_url = BASE_URL + "/am/api/auth/api-tokens/authorize"
+                headers = {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Cookie": "visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==",
+                }
+                payload = "refresh_token={}".format(PO_REFRESH_TOKEN)
 
-        # mylog.info("processing org_id={}".format(org_id))
-
-        # Get list of subscriptions in an org
-        get_org_users_resp = cclient.make_call(
-            "GET",
-            ORG_USERS_RESOURCE.format(orgId=org_id),
-            params={"orgId": org_id}
-        )
-        # mylog.info("get_org_users_resp={}".format(get_org_users_resp))
-
-        # Perform important verifications before processing further for a given org_id
-        if get_org_users_resp.status_code != 200:
-            mylog.error(
-                "Error occurred for GET {} for org={}".format(ORG_USERS_RESOURCE, org_id)
-            )
-        else:
-            loop_count = math.ceil(get_org_users_resp.json.get("totalResults") / PAGE_SIZE)
-
-            page_start = 1
-            for count in range(loop_count):
-                # breakpoint()
-                get_org_users_resp = cclient.make_call(
-                    "GET",
-                    ORG_USERS_RESOURCE.format(orgId=org_id),
-                    params={"orgId": org_id, 'pageStart': page_start, 'pageLimit': PAGE_SIZE}
+                mylog.debug("fetching access_token for CSP API calls")
+                # response = requests.request("POST", access_token_url, headers=headers, data=payload)
+                response = rest_request(
+                    "POST", access_token_url, retry_count=1, retry_sleep=5, headers=headers, data=payload,
                 )
-                mylog.info("results count: {}".format(len(get_org_users_resp.json.get('results'))))
-                for result in get_org_users_resp.json.get('results'):
-                    mylog.info("reading result email: {} org_roles: {}".format(result.get("user").get("email"),
-                                                                             result.get("organizationRoles")))
-                    org_roles = []
-                    for org_role in result.get('organizationRoles'):
-                        if org_role.get('name') == "org_owner":
-                            org_roles.append('org_owner')
-                            break
-                    if 'org_owner' in org_roles:
-                        csv_writer.writerow(
-                            {'user_email': result.get("user").get("email"), 'user_role': 'org_owner'})
-                    else:
-                        csv_writer.writerow(
-                            {'user_email': result.get("user").get("email"), 'user_role': 'org_member'})
-                page_start += PAGE_SIZE
 
+                if response.status_code == requests.codes.ok:
+                    access_token_encoded = response.json().get("access_token")
+                    access_token_decoded = jwt.decode(access_token_encoded, options={"verify_signature": False}, algorithms=["RS256"])
+                    csv_writer.writerow(
+                        {'user_email': access_token_decoded.get("acct"), 'api_token': api_token})
 
+                else:
+                    raise Exception(
+                        "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})".format(
+                            access_token_url, headers, payload, response.status_code, response.text,
+                        )
+                    )
