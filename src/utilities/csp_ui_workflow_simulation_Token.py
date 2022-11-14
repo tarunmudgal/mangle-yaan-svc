@@ -234,14 +234,8 @@ class AuthToken(object):
                                                                                               resp.content))
             sys.exit()
 
-    def create_new_api_token(self, csp_url, user_email, auth_token):
-        default_org_uri = f"{csp_url}/csp/gateway/am/api/loggedin/user/default-org"
-        resp_default_org = REQUEST_SESSION.get(default_org_uri, headers={'csp-auth-token': auth_token})
-        if not resp_default_org.status_code == 200:
-            mylog.error("Error occurred while fetching default org for user={}".format(user_email))
-            sys.exit()
+    def create_new_api_token(self, csp_url, user_email, auth_token, default_org_id):
 
-        default_org_id = resp_default_org.json().get('refLink').split('/')[-1]
         loggedin_api_tokens_uri = f"{csp_url}/csp/gateway/am/api/loggedin/user/orgs/{default_org_id}/api-tokens"
         loggedin_api_tokens_payload = {
             "tokenName": "Test",
@@ -286,7 +280,7 @@ class AuthToken(object):
 
         return api_token
 
-    def clean_all_api_tokens(self, csp_url, user_email, auth_token):
+    def clean_all_api_tokens(self, csp_url, user_email, auth_token, default_org_id_expected):
         default_org_uri = f"{csp_url}/csp/gateway/am/api/loggedin/user/default-org"
         resp_default_org = REQUEST_SESSION.get(default_org_uri, headers={'csp-auth-token': auth_token})
         if not resp_default_org.status_code == 200:
@@ -294,6 +288,15 @@ class AuthToken(object):
             sys.exit()
 
         default_org_id = resp_default_org.json().get('refLink').split('/')[-1]
+        if default_org_id != default_org_id_expected:
+            default_org_uri = f"{csp_url}/csp/gateway/am/api/v2/users/{user_email}/profile/default-org"
+            default_org_payload = {'id': default_org_id_expected}
+            resp_default_org = REQUEST_SESSION.put(default_org_uri, headers={'csp-auth-token': auth_token},
+                                                   json=default_org_payload)
+            if not resp_default_org.status_code == 200:
+                mylog.error("Error occurred while updating default org for user={}".format(user_email))
+                sys.exit()
+
         loggedin_api_tokens_uri = f"{csp_url}/csp/gateway/am/api/loggedin/user/orgs/{default_org_id}/api-tokens"
         resp_delete_api_tokens = REQUEST_SESSION.delete(loggedin_api_tokens_uri, headers={'csp-auth-token': auth_token})
         if resp_delete_api_tokens.status_code != 200:
@@ -361,8 +364,8 @@ if __name__ == '__main__':
                                                                  user_row.get('password'))
                 # mylog.info("fetched_access_token={}".format(fetched_access_token))
 
-                token.clean_all_api_tokens(CSP_URL, user_row.get('user'), fetched_access_token)
-                new_api_token = token.create_new_api_token(CSP_URL, user_row.get('user'), fetched_access_token)
+                token.clean_all_api_tokens(CSP_URL, user_row.get('user'), fetched_access_token, user_row.get('orgId'))
+                new_api_token = token.create_new_api_token(CSP_URL, user_row.get('user'), fetched_access_token, user_row.get('orgId'))
                 mylog.info("new_api_token={}".format(new_api_token))
 
                 user_row['refreshToken'] = new_api_token
