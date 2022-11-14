@@ -344,7 +344,6 @@ if __name__ == '__main__':
     CSP_URL = "https://console-preview.cloud.vmware.com"
     INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
     OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"
-    global REQUEST_SESSION
 
     token = AuthToken()
 
