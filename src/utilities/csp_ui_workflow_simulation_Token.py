@@ -21,6 +21,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 code_verifier_const = pkce.generate_code_verifier(length=43)
 code_challenge_const = pkce.get_code_challenge(code_verifier_const)
 REQUEST_SESSION = requests.session()
+PO_AUTH_TOKEN = ""
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 LOGFILE_PATH = CURRENT_DIR + os.path.sep + "{}.log".format(os.path.splitext(os.path.split(__file__)[1])[0])
@@ -281,14 +282,15 @@ class AuthToken(object):
         return api_token
 
     def clean_all_api_tokens(self, csp_url, user_email, auth_token, default_org_id_expected):
-        default_org_uri = f"{csp_url}/csp/gateway/am/api/loggedin/user/default-org"
+        breakpoint()
+        default_org_uri = f"{csp_url}/csp/gateway/am/api/users/{user_email}/default-org"
         resp_default_org = REQUEST_SESSION.get(default_org_uri, headers={'csp-auth-token': auth_token})
         if not resp_default_org.status_code == 200:
             mylog.error("Error occurred while fetching default org for user={}".format(user_email))
             sys.exit()
 
-        default_org_id = resp_default_org.json().get('refLink').split('/')[-1]
-        if default_org_id != default_org_id_expected:
+        # default_org_id = resp_default_org.json().get('refLink').split('/')[-1]
+        if resp_default_org.json().get('refLink') is None or resp_default_org.json().get('refLink').split('/')[-1] != default_org_id_expected:
             default_org_uri = f"{csp_url}/csp/gateway/am/api/v2/users/{user_email}/profile/default-org"
             default_org_payload = {'id': default_org_id_expected}
             resp_default_org = REQUEST_SESSION.put(default_org_uri, headers={'csp-auth-token': auth_token},
@@ -297,7 +299,7 @@ class AuthToken(object):
                 mylog.error("Error occurred while updating default org for user={}".format(user_email))
                 sys.exit()
 
-        loggedin_api_tokens_uri = f"{csp_url}/csp/gateway/am/api/loggedin/user/orgs/{default_org_id}/api-tokens"
+        loggedin_api_tokens_uri = f"{csp_url}/csp/gateway/am/api/loggedin/user/orgs/{default_org_id_expected}/api-tokens"
         resp_delete_api_tokens = REQUEST_SESSION.delete(loggedin_api_tokens_uri, headers={'csp-auth-token': auth_token})
         if resp_delete_api_tokens.status_code != 200:
             mylog.error("Error occurred while deleting api tokens for user={}".format(user_email))
