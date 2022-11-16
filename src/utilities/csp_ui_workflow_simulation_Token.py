@@ -8,6 +8,7 @@ import sys
 import time
 import urllib.parse as urlparse
 from builtins import getattr
+import concurrent.futures
 
 import pkce
 import requests
@@ -192,7 +193,6 @@ class CSPAPIFlows(object):
                 f"{req_resp.status_code}, response_text={req_resp.text}, Request headers={headers}, "
                 f"kwargs={kwargs}"
             )
-            sys.exit()
 
         return req_resp
 
@@ -236,7 +236,8 @@ class CSPUIFlows(object):
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "en-US,en;q=0.5",
-            "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+            "Content-Type": "application/x-www-form-urlencoded"
         }
 
     def execute_my_vmware_flow(self, idp_login_url, csp_url, username, password):
@@ -306,6 +307,7 @@ class CSPUIFlows(object):
             headers=oamheaders,
             allow_redirects=True,
         )
+
         if resp.status_code == 400:
             mylog.error(
                 "Error occurred while executing {} url. status_code={} response={}".format(
@@ -490,6 +492,7 @@ class CSPUIFlows(object):
                 headers={
                     "Content-type": "application/x-www-form-urlencoded",
                     "authorization": authrization_str,
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
                 },
             )
             return self.fetch_tokens(resp, type="access_token")
@@ -499,7 +502,6 @@ class CSPUIFlows(object):
                     user_email, resp.status_code, resp.url, resp.content
                 )
             )
-            sys.exit()
 
     def create_new_api_token(self, csp_url, user_email, auth_token, default_org_id):
 
@@ -527,7 +529,6 @@ class CSPUIFlows(object):
             mylog.error(
                 "Error occurred while creating new api token for user={}".format(user_email)
             )
-            sys.exit()
         idp_login_url = resp_create_api_token.get("idpLoginUrl")
         resp_idp_login = REQUEST_SESSION.get(idp_login_url, headers={"csp-auth-token": auth_token})
         api_token = ""
@@ -541,7 +542,6 @@ class CSPUIFlows(object):
             mylog.error(
                 "Error occurred while fetching new api auth token for user={}".format(user_email)
             )
-            sys.exit()
 
         return api_token
 
@@ -572,11 +572,35 @@ class CSPUIFlows(object):
         return value
 
 
+def processUserInformation(api_flow, ui_flow, user_row):
+    try:
+        global REQUEST_SESSION
+        REQUEST_SESSION = requests.session()
+        mylog.debug("processing user={}".format(user_row))
+        fetched_access_token = ui_flow.generate_auth_token(
+            CSP_URL, user_row.get("user"), user_row.get("password")
+        )
+        # mylog.info("fetched_access_token={}".format(fetched_access_token))
+
+        api_flow.perform_corrections(user_row.get("user"), user_row.get("orgId"))
+        new_api_token = ui_flow.create_new_api_token(
+            CSP_URL, user_row.get("user"), fetched_access_token, user_row.get("orgId")
+        )
+        mylog.info("new_api_token={}".format(new_api_token))
+
+        user_row["refreshToken"] = new_api_token
+        mylog.debug("processing done for user={}".format(user_row.get("user")))
+        user_row["status"] = "PASS"
+        return user_row
+    except Exception as e:
+        user_row["status"] = "FAIL"
+        return user_row
+
+
 # main block #
 if __name__ == "__main__":
-
-    ui_flow = CSPUIFlows()
     api_flow = CSPAPIFlows(csp_url=CSP_URL, api_token=PO_AUTH_TOKEN)
+    ui_flow = CSPUIFlows()
 
     mylog.info("Script start time: {}".format(datetime.datetime.now(datetime.timezone.utc)))
     with open(INPUT_API_TOKENS_FILE) as api_token_reader:
@@ -585,22 +609,16 @@ if __name__ == "__main__":
             csv_writer = csv.DictWriter(api_token_writer, fieldnames=csv_reader.fieldnames)
             csv_writer.writeheader()
 
-            for user_row in csv_reader:
-                REQUEST_SESSION = requests.session()
-                mylog.debug("processing user={}".format(user_row))
-                fetched_access_token = ui_flow.generate_auth_token(
-                    CSP_URL, user_row.get("user"), user_row.get("password")
-                )
-                # mylog.info("fetched_access_token={}".format(fetched_access_token))
+            #parallely generating refresh tokens
+            with concurrent.futures.ProcessPoolExecutor(max_workers=15) as executor:
+                execution_result = (executor.submit(processUserInformation,api_flow,ui_flow,user_row) for user_row in csv_reader)
+                for future in concurrent.futures.as_completed(execution_result):
+                    try:
+                        #resultstr = future.result()
+                        #mylog.info("Writing to the file for user {}".format(resultstr))
+                        csv_writer.writerow(future.result())
 
-                api_flow.perform_corrections(user_row.get("user"), user_row.get("orgId"))
-                new_api_token = ui_flow.create_new_api_token(
-                    CSP_URL, user_row.get("user"), fetched_access_token, user_row.get("orgId")
-                )
-                mylog.info("new_api_token={}".format(new_api_token))
-
-                user_row["refreshToken"] = new_api_token
-                csv_writer.writerow(user_row)
-                mylog.debug("processing done for user={}".format(user_row.get("user")))
+                    except Exception as e:
+                        mylog.exception(e.args)
 
     mylog.info("Script end time: {}".format(datetime.datetime.now(datetime.timezone.utc)))
