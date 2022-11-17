@@ -34,16 +34,16 @@ HTTP_RETRIABLE_ERRORS = (
 CODE_VERIFIER_CONST = pkce.generate_code_verifier(length=43)
 CODE_CHALLENGE_CONST = pkce.get_code_challenge(CODE_VERIFIER_CONST)
 REQUEST_SESSION = requests.session()
-PO_AUTH_TOKEN = "8Bj3wiATU_3gg1Bm2OBDdOIW2IxwB0rWR9RHdYqWIQR5VsOiWir702h4wHIb2Wm7"
+PO_AUTH_TOKEN = ""
 CSP_URL = "https://console-preview.cloud.vmware.com"
 INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
 OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"
-MAX_WORKERS = 60
+MAX_WORKERS = 1
 
 # initialize logger #
 CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 LOGFILE_PATH = (
-    CURRENT_DIR + os.path.sep + "{}.log".format(os.path.splitext(os.path.split(__file__)[1])[0])
+        CURRENT_DIR + os.path.sep + "{}.log".format(os.path.splitext(os.path.split(__file__)[1])[0])
 )
 LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(funcName)s] [pid=%(process)d] [%(lineno)d]: %(message)s"
 LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
@@ -78,12 +78,12 @@ class CSPAPIFlows(object):
         self.update_access_token()
 
     def rest_request(
-        self,
-        method: str,
-        csp_api_url: str,
-        retry_count: int = 1,
-        retry_sleep: int = 5,
-        **kwargs: str,
+            self,
+            method: str,
+            csp_api_url: str,
+            retry_count: int = 1,
+            retry_sleep: int = 5,
+            **kwargs: str,
     ) -> requests.Response:
         """thin wrapper over requests.request API with retry logic implemented
         Args:
@@ -159,7 +159,7 @@ class CSPAPIFlows(object):
             )
 
     def make_call(
-        self, verb: str, api_resource: str, expected_status_code=200, **kwargs: str
+            self, verb: str, api_resource: str, expected_status_code=200, **kwargs: str
     ) -> Response:
         """
         makes a HTTP call using RESTClient.request API
@@ -193,8 +193,8 @@ class CSPAPIFlows(object):
 
         # default_org_id = resp_default_org.json().get('refLink').split('/')[-1]
         if (
-            resp_default_org.json().get("refLink") is None
-            or resp_default_org.json().get("refLink").split("/")[-1] != default_org_id_expected
+                resp_default_org.json().get("refLink") is None
+                or resp_default_org.json().get("refLink").split("/")[-1] != default_org_id_expected
         ):
             user_orgs_res = f"/am/api/users/{user_email}/orgs"
             resp_user_orgs = self.make_call("GET", user_orgs_res)
@@ -240,13 +240,13 @@ class CSPUIFlows(object):
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "en-US,en;q=0.8",
             "Referer": csp_url
-            + "/csp/gateway/discovery"
-            + "?state="
-            + csp_url
-            + "%2Fcsp%2Fgateway%2Fportal%2F"
-            + "&redirect_uri="
-            + csp_url
-            + "%2Fcsp%2Fgateway%2Fportal%2Fauth%2Fcallback",
+                       + "/csp/gateway/discovery"
+                       + "?state="
+                       + csp_url
+                       + "%2Fcsp%2Fgateway%2Fportal%2F"
+                       + "&redirect_uri="
+                       + csp_url
+                       + "%2Fcsp%2Fgateway%2Fportal%2Fauth%2Fcallback",
         }
         # Execute
         resp = REQUEST_SESSION.get(
@@ -254,9 +254,9 @@ class CSPUIFlows(object):
         )
         # Fetch post parameters
         csp_vidm_host = (
-            urlparse.urlparse(resp.history[3].url).scheme
-            + "://"
-            + urlparse.urlparse(resp.history[3].url).netloc
+                urlparse.urlparse(resp.history[3].url).scheme
+                + "://"
+                + urlparse.urlparse(resp.history[3].url).netloc
         )
         OAMHOST = urlparse.urlparse(resp.url).scheme + "://" + urlparse.urlparse(resp.url).netloc
 
@@ -366,31 +366,45 @@ class CSPUIFlows(object):
         csp_discovery_url = ""
         if "dev" in csp_url:
             csp_discovery_url = (
-                "https://console-dev.cloud.vmware.com/csp/gateway/am/api/auth/discovery?"
-                + "username="
-                + username
-                + "&"
-                + "state=test.&"
-                + "redirect_uri=https://console-dev.cloud.vmware.com/csp/gateway/portal&"
-                + "client_id=csp_gaz_pkce_portal_client_id&"
-                + "code_challenge="
-                + str(CODE_CHALLENGE_CONST)
-                + "&"
-                + "code_challenge_method=S256"
+                    "https://console-dev.cloud.vmware.com/csp/gateway/am/api/auth/discovery?"
+                    + "username="
+                    + username
+                    + "&"
+                    + "state=test.&"
+                    + "redirect_uri=https://console-dev.cloud.vmware.com/csp/gateway/portal&"
+                    + "client_id=csp_gaz_pkce_portal_client_id&"
+                    + "code_challenge="
+                    + str(CODE_CHALLENGE_CONST)
+                    + "&"
+                    + "code_challenge_method=S256"
             )
         elif "preview" in csp_url:
             csp_discovery_url = (
-                "https://console-preview.cloud.vmware.com/csp/gateway/am/api/auth/discovery?"
-                + "username="
-                + username
-                + "&"
-                + "state=test.&"
-                + "redirect_uri=https://console-preview.cloud.vmware.com/csp/gateway/portal&"
-                + "client_id=csp_preview_pkce_portal_client_id&"
-                + "code_challenge="
-                + str(CODE_CHALLENGE_CONST)
-                + "&"
-                + "code_challenge_method=S256"
+                    "https://console-preview.cloud.vmware.com/csp/gateway/am/api/auth/discovery?"
+                    + "username="
+                    + username
+                    + "&"
+                    + "state=test.&"
+                    + "redirect_uri=https://console-preview.cloud.vmware.com/csp/gateway/portal&"
+                    + "client_id=csp_preview_pkce_portal_client_id&"
+                    + "code_challenge="
+                    + str(CODE_CHALLENGE_CONST)
+                    + "&"
+                    + "code_challenge_method=S256"
+            )
+        elif "stg" in csp_url:
+            csp_discovery_url = (
+                    "https://console-stg.cloud.vmware.com/csp/gateway/am/api/auth/discovery?"
+                    + "username="
+                    + username
+                    + "&"
+                    + "state=test.&"
+                    + "redirect_uri=https://console-stg.cloud.vmware.com/csp/gateway/portal&"
+                    + "client_id=csp_stg_pkce_portal_client_id&"
+                    + "code_challenge="
+                    + str(CODE_CHALLENGE_CONST)
+                    + "&"
+                    + "code_challenge_method=S256"
             )
 
         return csp_discovery_url
@@ -451,9 +465,9 @@ class CSPUIFlows(object):
         resp = None
         if "@csp.local" in user_email:
             gaz_host = (
-                urlparse.urlparse(idp_login_url).scheme
-                + "://"
-                + urlparse.urlparse(idp_login_url).netloc
+                    urlparse.urlparse(idp_login_url).scheme
+                    + "://"
+                    + urlparse.urlparse(idp_login_url).netloc
             )
             resp = self.execute_local_vidm_flow(
                 idp_login_url, csp_url, user_email, password, gaz_host
@@ -470,16 +484,16 @@ class CSPUIFlows(object):
             authrization_str = ""
             if "dev" in csp_url:
                 csp_authorize_uri = (
-                    csp_url
-                    + authorize_uri
-                    + "?grant_type=authorization_code&"
-                    + "client_id=csp_gaz_pkce_portal_client_id&"
-                    + "redirect_uri=https%3A%2F%2Fconsole-dev.cloud.vmware.com%2Fcsp%2Fgateway%2Fportal&"
-                    + "code="
-                    + str(code)
-                    + "&"
-                    + "code_verifier="
-                    + str(CODE_VERIFIER_CONST)
+                        csp_url
+                        + authorize_uri
+                        + "?grant_type=authorization_code&"
+                        + "client_id=csp_gaz_pkce_portal_client_id&"
+                        + "redirect_uri=https%3A%2F%2Fconsole-dev.cloud.vmware.com%2Fcsp%2Fgateway%2Fportal&"
+                        + "code="
+                        + str(code)
+                        + "&"
+                        + "code_verifier="
+                        + str(CODE_VERIFIER_CONST)
                 )
                 authrization_str = "Basic Y3NwX2dhel9wa2NlX3BvcnRhbF9jbGllbnRfaWQ6"
             elif "preview" in csp_url:
@@ -489,6 +503,16 @@ class CSPUIFlows(object):
                     CODE_VERIFIER_CONST
                 )
                 authrization_str = "Basic Y3NwX3ByZXZpZXdfcGtjZV9wb3J0YWxfY2xpZW50X2lkOg=="
+            elif "stg" in csp_url:
+                csp_authorize_uri = csp_url + authorize_uri + "?grant_type=authorization_code&" + \
+                                    "client_id=csp_stg_pkce_portal_client_id&" + \
+                                    "redirect_uri=https%3A%2F%2Fconsole-stg.cloud.vmware.com%2Fcsp%2Fgateway" \
+                                    "%2Fportal&" + "code=" + str(
+                    code
+                ) + "&" + "code_verifier=" + str(
+                    CODE_VERIFIER_CONST
+                )
+                authrization_str = "Basic Y3NwX3N0Z19wa2NlX3BvcnRhbF9jbGllbnRfaWQ6"
 
             mylog.debug("csp_authorize_uri={}".format(csp_authorize_uri))
             resp = REQUEST_SESSION.post(
@@ -539,7 +563,7 @@ class CSPUIFlows(object):
         api_token = ""
         for resp_history in resp_idp_login.history:
             if "/csp/gateway/portal/#/user/tokens?success#" in resp_history.headers.get(
-                "Location", ""
+                    "Location", ""
             ):
                 api_token = resp_history.headers.get("Location", "").split("success#")[1]
 
@@ -605,7 +629,11 @@ def process_user_information(api_flow, ui_flow, user_row):
 
 
 # main block #
-if __name__ == "__main__":
+def main():
+    if not PO_AUTH_TOKEN:
+        mylog.error("PO_AUTH_TOKEN needs to be supplied. Global vars are defined at the top")
+        sys.exit()
+
     api_flow = CSPAPIFlows(csp_url=CSP_URL, api_token=PO_AUTH_TOKEN)
     ui_flow = CSPUIFlows()
 
@@ -616,7 +644,7 @@ if __name__ == "__main__":
             csv_writer = csv.DictWriter(api_token_writer, fieldnames=csv_reader.fieldnames)
             csv_writer.writeheader()
 
-            # in-parallel refresh tokens generation
+            # in-parallel execution
             with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
                 execution_result = (
                     executor.submit(process_user_information, api_flow, ui_flow, user_row)
@@ -628,4 +656,13 @@ if __name__ == "__main__":
                     except Exception as fault:
                         mylog.exception(fault)
 
+            # code to debug any issue in process_user_information call. To debug, above 'in-parallel execution' block
+            # can be commented and below section should be uncommented.
+            # for user_row in csv_reader:
+            #     process_user_information(api_flow, ui_flow, user_row)
+
     mylog.info("Script end time: {}".format(datetime.datetime.now(datetime.timezone.utc)))
+
+
+if __name__ == "__main__":
+    main()
