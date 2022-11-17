@@ -1,3 +1,4 @@
+import concurrent.futures
 import csv
 import datetime
 import inspect
@@ -8,7 +9,6 @@ import sys
 import time
 import urllib.parse as urlparse
 from builtins import getattr
-import concurrent.futures
 
 import pkce
 import requests
@@ -38,30 +38,21 @@ PO_AUTH_TOKEN = "8Bj3wiATU_3gg1Bm2OBDdOIW2IxwB0rWR9RHdYqWIQR5VsOiWir702h4wHIb2Wm
 CSP_URL = "https://console-preview.cloud.vmware.com"
 INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
 OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"
+MAX_WORKERS = 60
 
 # initialize logger #
 CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 LOGFILE_PATH = (
     CURRENT_DIR + os.path.sep + "{}.log".format(os.path.splitext(os.path.split(__file__)[1])[0])
 )
-LOG_FORMAT = (
-    "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
-)
+LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(funcName)s] [pid=%(process)d] [%(lineno)d]: %(message)s"
 LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
 
 # initialize logger
 mylog = logging.getLogger("mylogger")
 mylog.setLevel(logging.DEBUG)
 
-file_handler = logging.handlers.RotatingFileHandler(
-    LOGFILE_PATH, maxBytes=10_000_000, backupCount=10,
-)
-if (
-    os.path.isfile(LOGFILE_PATH)
-    and os.path.getsize(LOGFILE_PATH) > 0
-    # and sys.platform != "win32"
-):
-    file_handler.doRollover()  # Recycle log name: .1 -> .2, ..., .max_logs
+file_handler = logging.FileHandler(LOGFILE_PATH)
 
 console_handler = logging.StreamHandler(sys.stdout)
 
@@ -237,7 +228,7 @@ class CSPUIFlows(object):
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "en-US,en;q=0.5",
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
-            "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/x-www-form-urlencoded",
         }
 
     def execute_my_vmware_flow(self, idp_login_url, csp_url, username, password):
@@ -268,6 +259,10 @@ class CSPUIFlows(object):
             + urlparse.urlparse(resp.history[3].url).netloc
         )
         OAMHOST = urlparse.urlparse(resp.url).scheme + "://" + urlparse.urlparse(resp.url).netloc
+
+        mylog.debug("csp_vidm_host={}".format(csp_vidm_host))
+        mylog.debug("OAMHOST={}".format(OAMHOST))
+
         fetchedReferer = resp.url
 
         ####### Request 4 UAT - OAM HOST POST CREDIT SUBMIT USER password
@@ -309,11 +304,12 @@ class CSPUIFlows(object):
         )
 
         if resp.status_code == 400:
-            mylog.error(
+            raise Exception(
                 "Error occurred while executing {} url. status_code={} response={}".format(
                     resp.url, resp.status_code, resp.text
                 )
             )
+
         return resp
 
     def execute_local_vidm_flow(self, idp_login_url, csp_url, username, password, gaz_host):
@@ -410,9 +406,15 @@ class CSPUIFlows(object):
         }
 
         resp = REQUEST_SESSION.get(discovery_url, verify=False, headers=cspheaders)
-        json_data = resp.json()
+        try:
+            json_data = resp.json()
+        except Exception as fault:
+            mylog.debug("Exception occurred while fetching idp_login_url")
+            raise
+
         idp_login_url = json_data["idpLoginUrl"]
 
+        mylog.debug("idp_login_url={}".format(idp_login_url))
         return idp_login_url
 
     def fetch_tokens(self, resp, type="access_token"):
@@ -458,6 +460,7 @@ class CSPUIFlows(object):
             )
         else:
             resp = self.execute_my_vmware_flow(idp_login_url, csp_url, user_email, password)
+            mylog.debug("execute_my_vmware_flow resp.url={}".format(resp.url))
 
         if csp_url in resp.url:
             code = self.extract_token_from_url(resp.url, "code")[0]
@@ -486,18 +489,20 @@ class CSPUIFlows(object):
                     CODE_VERIFIER_CONST
                 )
                 authrization_str = "Basic Y3NwX3ByZXZpZXdfcGtjZV9wb3J0YWxfY2xpZW50X2lkOg=="
+
+            mylog.debug("csp_authorize_uri={}".format(csp_authorize_uri))
             resp = REQUEST_SESSION.post(
                 csp_authorize_uri,
                 verify=False,
                 headers={
                     "Content-type": "application/x-www-form-urlencoded",
                     "authorization": authrization_str,
-                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
                 },
             )
             return self.fetch_tokens(resp, type="access_token")
         else:
-            mylog.error(
+            raise Exception(
                 "Something went wrong for user={}. url={} status_code={} response={}".format(
                     user_email, resp.status_code, resp.url, resp.content
                 )
@@ -539,7 +544,7 @@ class CSPUIFlows(object):
                 api_token = resp_history.headers.get("Location", "").split("success#")[1]
 
         if not api_token:
-            mylog.error(
+            raise Exception(
                 "Error occurred while fetching new api auth token for user={}".format(user_email)
             )
 
@@ -572,7 +577,7 @@ class CSPUIFlows(object):
         return value
 
 
-def processUserInformation(api_flow, ui_flow, user_row):
+def process_user_information(api_flow, ui_flow, user_row):
     try:
         global REQUEST_SESSION
         REQUEST_SESSION = requests.session()
@@ -589,12 +594,14 @@ def processUserInformation(api_flow, ui_flow, user_row):
         mylog.info("new_api_token={}".format(new_api_token))
 
         user_row["refreshToken"] = new_api_token
-        mylog.debug("processing done for user={}".format(user_row.get("user")))
         user_row["status"] = "PASS"
-        return user_row
+        mylog.debug("processing done for user={}".format(user_row.get("user")))
     except Exception as e:
         user_row["status"] = "FAIL"
-        return user_row
+        mylog.debug("processing failed for user={}".format(user_row.get("user")))
+        raise
+
+    return user_row
 
 
 # main block #
@@ -609,16 +616,16 @@ if __name__ == "__main__":
             csv_writer = csv.DictWriter(api_token_writer, fieldnames=csv_reader.fieldnames)
             csv_writer.writeheader()
 
-            #parallely generating refresh tokens
-            with concurrent.futures.ProcessPoolExecutor(max_workers=15) as executor:
-                execution_result = (executor.submit(processUserInformation,api_flow,ui_flow,user_row) for user_row in csv_reader)
+            # in-parallel refresh tokens generation
+            with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                execution_result = (
+                    executor.submit(process_user_information, api_flow, ui_flow, user_row)
+                    for user_row in csv_reader
+                )
                 for future in concurrent.futures.as_completed(execution_result):
                     try:
-                        #resultstr = future.result()
-                        #mylog.info("Writing to the file for user {}".format(resultstr))
                         csv_writer.writerow(future.result())
-
-                    except Exception as e:
-                        mylog.exception(e.args)
+                    except Exception as fault:
+                        mylog.exception(fault)
 
     mylog.info("Script end time: {}".format(datetime.datetime.now(datetime.timezone.utc)))
