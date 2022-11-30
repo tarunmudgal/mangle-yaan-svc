@@ -1,4 +1,5 @@
 import concurrent.futures
+import copy
 import csv
 import datetime
 import inspect
@@ -191,7 +192,7 @@ class CSPAPIFlows(object):
         default_org_resource_v1 = f"/am/api/users/{user_email}/default-org"
         resp_default_org = self.make_call("GET", default_org_resource_v1)
 
-        # default_org_id = resp_default_org.json().get('refLink').split('/')[-1]
+        # make sure current default org id for user is set as default_org_id_expected
         if (
                 resp_default_org.json().get("refLink") is None
                 or resp_default_org.json().get("refLink").split("/")[-1] != default_org_id_expected
@@ -214,6 +215,7 @@ class CSPAPIFlows(object):
                 "PUT", default_org_resource_v2, json=default_org_payload
             )
 
+        # remove all older API tokens for user
         api_tokens_resource = (
             f"/am/api/users/{user_email}/orgs/{default_org_id_expected}/api-tokens"
         )
@@ -362,6 +364,94 @@ class CSPUIFlows(object):
         )
         return resp
 
+    def execute_federation_flow(self, idp_login_url, csp_url, username, password):
+        # sample idp_login_url='https://gaz-preview.csp-vidm-prod.com/oauth/authorize?idp_id=00a291e5-e699-40a3-94ba
+        # -fc80b697f486&response_type=code&login_hint=cspperf_user20002@cspperf.com&client_id=csp_stg_pkce_portal_client_id&
+        # redirect_uri=https://console-stg.cloud.vmware.com/csp/gateway/portal&state=test.&
+        # code_challenge=u4vtn7A5lyQnHWCEYiqhT_wnmZutzN_lNHGspqfXJM8&code_challenge_method=S256&
+        # context_id=e759d7ca-3e8a-4b91-9826-017f80bb1c92'
+
+        context_id_prefix = ""
+        if 'preview' in csp_url:
+            context_id_prefix = 'CSPPERF-CSP-PREVIEW-BRSY'
+        elif 'stg' in csp_url:
+            context_id_prefix = "CSPPERF-CSP-STG-CXCL"
+
+        gaz_url = urlparse.urlparse(idp_login_url).scheme + "://" + urlparse.urlparse(idp_login_url).netloc
+        gazheaders = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Referer": csp_url + '/',
+        }
+        # /oauth/authorize call
+        resp_idp = REQUEST_SESSION.get(
+            idp_login_url, verify=False, headers=gazheaders, allow_redirects=True
+        )
+        saas_auth_login_url = resp_idp.history[-1].headers['Location']
+
+        # csp-preview.gaz-dev.csp-vidm-prod.com/oauth/authorize call
+        resp_saas_auth_login = REQUEST_SESSION.get(saas_auth_login_url, verify=False, headers=gazheaders,
+                                                   allow_redirects=True)
+        jwt = re.findall('jwt" value="(.*)"', resp_saas_auth_login.text)[0]
+        relay_state = re.findall('relay-state" value="(.*)"', resp_saas_auth_login.text)[0]
+
+        vidm_host_url = urlparse.urlparse(saas_auth_login_url).scheme + "://" + urlparse.urlparse(
+            saas_auth_login_url).netloc
+
+        vidm_headers = copy.deepcopy(gazheaders)
+        vidm_headers.update({'Referer': saas_auth_login_url, 'Host': urlparse.urlparse(saas_auth_login_url).netloc,
+                             'Origin': vidm_host_url, 'Content-Type': 'application/x-www-form-urlencoded',
+                             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"})
+        data_auth_req = {'is-local-admin': False, 'jwt': jwt, 'relay-state': relay_state}
+
+        vidm_auth_req_url = vidm_host_url + '/authcontrol/auth/request'
+        # cspperf-csp-preview-brsy.hwslabs.com/authcontrol/auth/request call
+        resp_vidm_auth_req = REQUEST_SESSION.post(vidm_auth_req_url, data=data_auth_req, verify=False,
+                                                  headers=vidm_headers,
+                                                  allow_redirects=True)
+
+        context_id = context_id_prefix + \
+                     re.findall('value="{}(.*)"'.format(context_id_prefix), resp_vidm_auth_req.text)[0]
+        data_authc_auth = {
+            "userInput": username.split("@")[0],
+            "password": password,
+            "contextId": context_id,
+        }
+        vidm_authc_auth_url = vidm_host_url + '/authcontrol/authenticate'
+        # cspperf-csp-preview-brsy.hwslabs.com/authcontrol/authenticate call
+        resp_vidm_authc_auth = REQUEST_SESSION.post(vidm_authc_auth_url, data=data_authc_auth, verify=False,
+                                                    headers=vidm_headers,
+                                                    allow_redirects=True)
+
+        jwt = re.findall('jwt" value="(.*)"', resp_vidm_authc_auth.text)[0]
+        relay_state = re.findall('relay-state" value="(.*)"', resp_vidm_authc_auth.text)[0]
+
+        # Request 6 /federation/auth/response/internal
+        fed_internal_url = vidm_host_url + '/federation/auth/response/internal'
+        vidm_headers.update({'Referer': vidm_authc_auth_url})
+        # cspperf-csp-preview-brsy.hwslabs.com/federation/auth/response/internal call
+        resp_fed_internal = REQUEST_SESSION.post(
+            fed_internal_url,
+            data={"jwt": jwt, "relay-state": relay_state},
+            verify=False,
+            headers=vidm_headers,
+            allow_redirects=True,
+        )
+        parsed_url = urlparse.urlparse(resp_fed_internal.url)
+        qparams = urlparse.parse_qs(parsed_url.query)
+        code = qparams['code'][0]
+        state = qparams['state'][0]
+
+        gaz_login_url = urlparse.urlparse(idp_login_url).scheme + "://" + urlparse.urlparse(
+            idp_login_url).netloc + '/login?code={}&state={}'.format(code, state)
+        vidm_headers.update({'Referer': vidm_host_url, 'Host': gaz_url})
+        # csp-preview.gaz-dev.csp-vidm-prod.com/login call
+        resp_gaz_login = REQUEST_SESSION.get(gaz_login_url, verify=False, headers=gazheaders,
+                                             allow_redirects=True)
+
+        return resp_gaz_login
+
     def extract_discovery_url_from_csp_url(self, csp_url, username):
         csp_discovery_url = ""
         if "dev" in csp_url:
@@ -472,6 +562,10 @@ class CSPUIFlows(object):
             resp = self.execute_local_vidm_flow(
                 idp_login_url, csp_url, user_email, password, gaz_host
             )
+        # currently federated user workflow is tested with cspperf.com domain on stg and preview. For different
+        # federation types, it may be extended later
+        elif "cspperf.com" in user_email:
+            resp = self.execute_federation_flow(idp_login_url, csp_url, user_email, password)
         else:
             resp = self.execute_my_vmware_flow(idp_login_url, csp_url, user_email, password)
             mylog.debug("execute_my_vmware_flow resp.url={}".format(resp.url))
