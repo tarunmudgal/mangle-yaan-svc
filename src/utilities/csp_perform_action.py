@@ -332,6 +332,30 @@ class CSPAPIFlows(object):
         resp_orgs_user_details = self.make_call("POST", user_addition, expected_status_code=202, json=payload)
         mylog.debug("Processing Done for user_addition")
 
+    def patch_organization_roles(self, default_org_id_expected):
+        # Update Organization roles
+        patch_org_roles = f"/am/api/orgs/{default_org_id_expected}/roles"
+        org_roles_payload = {
+            "roleNamesToAdd": [
+                "service_owner",
+                "feature_flag_manager"
+            ]
+        }
+        resp_patch_org_roles = self.make_call("PATCH", patch_org_roles, json=org_roles_payload)
+
+    def check_refresh_token(self, refresh_token):
+        mylog.debug("Processing Started for token validation")
+        check = f"/am/api/auth/api-tokens/authorize?refresh_token={refresh_token}"
+        resp_orgs_user_details = self.make_call("POST", check, expected_status_code=200)
+        status = resp_orgs_user_details.status_code
+        if status != 200:
+            status = "FAIL"
+        else:
+            status = "PASS"
+        mylog.debug("Processing Done for token validation")
+
+        return status
+
 
 def process_user_information(api_flow, user_row):
     try:
@@ -347,9 +371,11 @@ def process_user_information(api_flow, user_row):
         # user_row["clientId"] = clientId
         # user_row["status"] = "PASS"
         # mylog.debug("processing done for user={}".format(user_row.get("user")))
-        mylog.debug("processing org={}".format(user_row.get("user")))
-        api_flow.add_user_organization(user_row.get("user"))
-        mylog.debug("processing done for org={}".format(user_row.get("user")))
+        # mylog.debug("processing org={}".format(user_row.get("user")))
+        # api_flow.add_user_organization(user_row.get("user"))
+        # mylog.debug("processing done for org={}".format(user_row.get("user")))
+        status = api_flow.check_refresh_token(user_row.get("refreshToken"))
+        user_row["status"] = status
     except Exception as e:
         user_row["status"] = "FAIL"
         mylog.debug("processing failed for user={}".format(user_row.get("user")))
