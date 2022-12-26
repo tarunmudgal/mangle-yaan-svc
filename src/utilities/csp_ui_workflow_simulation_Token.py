@@ -221,7 +221,6 @@ class CSPAPIFlows(object):
         )
         resp_delete_api_tokens = self.make_call("DELETE", api_tokens_resource)
 
-
 # class to perform CSP UI calls simulation #
 class CSPUIFlows(object):
     def __init__(self):
@@ -637,7 +636,8 @@ class CSPUIFlows(object):
             "allowedScopes": {
                 "allRoles": False,
                 "generalScopes": ["openid", "group_names", "group_ids"],
-                "organizationScopes": {"roles": [{"name": "org_owner"}, {"name": "org_member"}]},
+                "organizationScopes": {"roles": [{"name": "org_owner"}, {"name": "org_member"},
+                                                 {"name": "feature_flag_manager"}, {"name": "service_owner"}]},
                 "servicesScopes": [],
             },
         }
