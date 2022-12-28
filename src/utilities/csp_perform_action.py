@@ -200,6 +200,13 @@ class CSPAPIFlows(object):
 
         return group_id
 
+    def new_organization_group(self, default_org_id_expected):
+        mylog.debug("Processing Started for Group")
+        orgs_group = f"/am/api/orgs/{default_org_id_expected}/groups"
+        payload = {"description": "Custom User Group" + str(uuid.uuid4()), "name": "Custom User" + str(uuid.uuid4())}
+        resp_group = self.make_call("POST", orgs_group, expected_status_code=200, json=payload)
+        mylog.debug("Processing End for Group")
+
     def organization_group_role(self, default_org_id_expected, group_id):
         mylog.debug("Processing Started for Group Role")
         orgs_group_role = f"/am/api/orgs/{default_org_id_expected}/groups/{group_id}/roles"
@@ -207,10 +214,7 @@ class CSPAPIFlows(object):
             "organizationRoles": {
                 "rolesToAdd": [
                     {
-                        "name": "billing_user"
-                    },
-                    {
-                        "name": "org_member"
+                        "name": "developer"
                     }
                 ]
             },
@@ -280,6 +284,65 @@ class CSPAPIFlows(object):
 
         return service_id
 
+    def new_organization_services(self, default_org_id_expected):
+        mylog.debug("Processing Started for services")
+        new_service_creation = f"/slc/api/definitions"
+        payload = {
+            "name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
+            "display-name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
+            "isDisabled": False,
+            "desc-long": "This service used for testing in Dev",
+            "gated": True,
+            "service-roles": [
+                {
+                    "type": "CUSTOMER",
+                    "name": "srv_name:user",
+                    "display-name": "user",
+                    "default": True,
+                    "hidden": False
+                },
+                {
+                    "type": "CUSTOMER",
+                    "name": "srv_name:admin",
+                    "display-name": "admin",
+                    "default": True,
+                    "hidden": False
+                }
+            ],
+            "visible": True,
+            "product-identifier": "VMC-AWS",
+            "supported-billing-engines": [
+                {
+                    "name": "SAP",
+                    "default": True
+                }
+            ],
+            "service-type": "FREE",
+            "sellers": [
+                {
+                    "enabled": True,
+                    "seller": "VMWARE"
+                }
+            ],
+            "service-urls": {
+                "service-home": "www.cloud.vmware.com"
+            },
+            "org-id": default_org_id_expected
+        }
+        resp_services = self.make_call("POST", new_service_creation, expected_status_code=201, json=payload)
+        services = resp_services.json().get("refLink")
+        service_id = services.split("/")[-1]
+        mylog.debug("new_service_id={}".format(service_id))
+
+        grant_service_access = f"/slc/api/service-access"
+        payload = {
+            "orgId": default_org_id_expected,
+            "serviceDefinitionId": service_id,
+            "isTosPreSigned": True
+        }
+        resp_grant_access = self.make_call("POST", grant_service_access, expected_status_code=202, json=payload)
+        mylog.debug("Processing End for services")
+
     def organization_oauth_app(self, default_org_id_expected):
         mylog.debug("Processing Started for oauth_app")
         orgs_oauth_apps = f"/am/api/orgs/{default_org_id_expected}/oauth-apps"
@@ -316,6 +379,34 @@ class CSPAPIFlows(object):
 
         return oauth_apps_id
 
+    def new_organization_oauth_app(self, default_org_id_expected):
+        mylog.debug("Processing Started for oauth_app")
+        orgs_oauth_apps = f"/am/api/orgs/{default_org_id_expected}/oauth-apps"
+        payload = {
+            "accessTokenTTL": 18000,
+            "allowedScopes": {
+                "allRoles": False,
+                "generalScopes": [],
+                "organizationScopes": {
+                    "allRoles": False,
+                    "roles": [
+                        {
+                            "name": "org_owner"
+                        }
+                    ]
+                }
+            },
+            "displayName": "test_oauth_app",
+            "description": "test_oauth_app",
+            "publicClient": False,
+            "grantTypes": [
+                "client_credentials"
+            ],
+            "redirectUris": []
+        }
+        resp_group = self.make_call("POST", orgs_oauth_apps, expected_status_code=200, json=payload)
+        mylog.debug("Processing End for oauth_app")
+
     def add_user_organization(self, email):
         mylog.debug("Processing Started for user_addition")
         user_addition = f"/am/api/orgs/55e921ca-8131-4c95-a90f-647f5db4953f/invitations"
@@ -342,6 +433,18 @@ class CSPAPIFlows(object):
             ]
         }
         resp_patch_org_roles = self.make_call("PATCH", patch_org_roles, json=org_roles_payload)
+
+    def add_user_roles(self, default_org_id_expected, email):
+        # Update Organization roles
+        patch_user_roles = f"/am/api/users/{email}/orgs/{default_org_id_expected}/roles"
+        user_roles_payload = {
+            "rolesToAdd": [
+                {
+                    "name": "service_owner"
+                }
+            ]
+        }
+        resp_patch_org_roles = self.make_call("PATCH", patch_user_roles, json=user_roles_payload)
 
     def check_refresh_token(self, refresh_token):
         mylog.debug("Processing Started for token validation")
@@ -374,11 +477,16 @@ def process_user_information(api_flow, user_row):
         # mylog.debug("processing org={}".format(user_row.get("user")))
         # api_flow.add_user_organization(user_row.get("user"))
         # mylog.debug("processing done for org={}".format(user_row.get("user")))
-        status = api_flow.check_refresh_token(user_row.get("refreshToken"))
-        user_row["status"] = status
+        # status = api_flow.check_refresh_token(user_row.get("refreshToken"))
+        # user_row["status"] = status
+        # api_flow.new_organization_group(user_row.get("orgId"))
+        # api_flow.new_organization_services(user_row.get("orgId"))
+        # api_flow.new_organization_oauth_app(user_row.get("orgId"))
+        api_flow.add_user_roles(user_row.get("orgId"), user_row.get("user"))
     except Exception as e:
         user_row["status"] = "FAIL"
         mylog.debug("processing failed for user={}".format(user_row.get("user")))
+        # mylog.debug("processing failed for org={}".format(user_row.get("orgId")))
         raise
 
     return user_row
