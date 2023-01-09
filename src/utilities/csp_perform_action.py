@@ -446,6 +446,66 @@ class CSPAPIFlows(object):
         }
         resp_patch_org_roles = self.make_call("PATCH", patch_user_roles, json=user_roles_payload)
 
+    def get_service_onboarded_in_orgs(self, default_org_id_expected):
+        # Service Onboarded in Org
+        get_service = f"/slc/api/definitions?orgLink=/csp/gateway/am/api/orgs/{default_org_id_expected}"
+        resp_get_service = self.make_call("GET", get_service)
+        if resp_get_service.json().get("totalResults") != 0:
+            services_url = resp_get_service.json().get("serviceDefinitionLinks")[0]
+            service_id = services_url.split("/")[-1]
+            mylog.debug("service_id={}".format(service_id))
+        else:
+            new_service_creation = f"/slc/api/definitions"
+            payload = {
+                "name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
+                "display-name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
+                "isDisabled": False,
+                "desc-long": "This service used for testing in Preview",
+                "gated": True,
+                "service-roles": [
+                    {
+                        "type": "CUSTOMER",
+                        "name": "srv_name:user",
+                        "display-name": "admin user",
+                        "default": True,
+                        "hidden": False
+                    }
+                ],
+                "visible": True,
+                "product-identifier": "VMC-AWS",
+                "supported-billing-engines": [
+                    {
+                        "name": "SAP",
+                        "default": True
+                    }
+                ],
+                "service-type": "FREE",
+                "sellers": [
+                    {
+                        "enabled": True,
+                        "seller": "VMWARE"
+                    }
+                ],
+                "service-urls": {
+                    "service-home": "www.cloud.vmware.com"
+                },
+                "org-id": default_org_id_expected
+            }
+            resp_services = self.make_call("POST", new_service_creation, expected_status_code=201, json=payload)
+            services = resp_services.json().get("refLink")
+            service_id = services.split("/")[-1]
+            mylog.debug("new_service_id={}".format(service_id))
+
+            grant_service_access = f"/slc/api/service-access"
+            payload = {
+                "orgId": default_org_id_expected,
+                "serviceDefinitionId": service_id,
+                "isTosPreSigned": True
+            }
+            resp_grant_access = self.make_call("POST", grant_service_access, expected_status_code=202, json=payload)
+
+        return service_id
+
     def check_refresh_token(self, refresh_token):
         mylog.debug("Processing Started for token validation")
         check = f"/am/api/auth/api-tokens/authorize?refresh_token={refresh_token}"
@@ -459,12 +519,46 @@ class CSPAPIFlows(object):
 
         return status
 
+    def update_service_definition_with_service_ticker(self, service_id):
+        # Update Organization roles
+        patch_service_definition = f"/slc/api/definitions/external/{service_id}"
+        patch_service_definition_payload = {
+            "serviceTicker": "tes"
+        }
+        self.make_call("PATCH", patch_service_definition, json=patch_service_definition_payload)
+
+    def remove_service_from_org(self, service_id):
+        deny_service_access = f"/slc/api/definitions/external/{service_id}/org-access/actions?action=DENY_ACCESS"
+        deny_service_access_payload = {
+            "orgId": "19a053ad-9cc3-4aa3-831c-5d3fe2ca0a28"
+        }
+        self.make_call("POST", deny_service_access, json=deny_service_access_payload)
+
+        delete_service_access = f"/slc/api/service-access"
+        delete_service_access_payload = {
+            "serviceDefinitionId": {service_id},
+            "orgId": "19a053ad-9cc3-4aa3-831c-5d3fe2ca0a28"
+        }
+        self.make_call("DELETE", delete_service_access, json=delete_service_access_payload)
+
+    def get_instance_count(self, service_id):
+        get_instance = f"/slc/api/definitions/external/{service_id}/service-instances"
+        instance_response = self.make_call("GET", get_instance)
+        count = instance_response.json().get("totalResults")
+        return count
+
+    def get_oauth_app_count(self, default_org_id_expected):
+        get_oauth_app = f"/am/api/orgs/{default_org_id_expected}/oauth-apps"
+        get_oauth_app_response = self.make_call("GET", get_oauth_app)
+        count = get_oauth_app_response.json().get("totalResults")
+        return count
+
 
 def process_user_information(api_flow, user_row):
     try:
         global REQUEST_SESSION
         REQUEST_SESSION = requests.session()
-        # mylog.debug("processing user={}".format(user_row))
+        mylog.debug("processing user={}".format(user_row))
         # groupId = api_flow.organization_group(user_row.get("orgId"))
         # user_row["groupId"] = groupId
         # api_flow.organization_group_role(user_row.get("orgId"), user_row.get("groupId"))
@@ -482,13 +576,19 @@ def process_user_information(api_flow, user_row):
         # api_flow.new_organization_group(user_row.get("orgId"))
         # api_flow.new_organization_services(user_row.get("orgId"))
         # api_flow.new_organization_oauth_app(user_row.get("orgId"))
-        api_flow.add_user_roles(user_row.get("orgId"), user_row.get("user"))
+        # api_flow.add_user_roles(user_row.get("orgId"), user_row.get("user"))
+        # service_id = api_flow.get_service_onboarded_in_orgs(user_row.get("orgId"))
+        # user_row["ServiceDefinitionId"] = service_id
+        # api_flow.update_service_definition_with_service_ticker(user_row.get("ServiceDefinitionId"))
+        # api_flow.remove_service_from_org(user_row.get("ServiceDefinitionId"))
+        # user_row["status"] = "PASS"
+        # count = api_flow.get_instance_count(user_row.get("ServiceDefinitionId"))
+        count = api_flow.get_oauth_app_count(user_row.get("org_id"))
+        user_row["count"] = count
     except Exception as e:
         user_row["status"] = "FAIL"
-        mylog.debug("processing failed for user={}".format(user_row.get("user")))
-        # mylog.debug("processing failed for org={}".format(user_row.get("orgId")))
+        mylog.debug("processing failed for user={}".format(user_row.get("org_id")))
         raise
-
     return user_row
 
 
