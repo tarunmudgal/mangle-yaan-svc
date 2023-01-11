@@ -3,6 +3,7 @@
 """ CSP REST Client (standalone) for different use-cases"""
 
 import abc
+import datetime
 import inspect
 import logging.handlers
 import os
@@ -11,6 +12,7 @@ import time
 import typing
 import csv
 import re
+import concurrent.futures
 
 import requests
 import urllib3
@@ -20,7 +22,6 @@ from requests.packages.urllib3.exceptions import ConnectTimeoutError
 from requests.packages.urllib3.util.retry import Retry
 
 requests.packages.urllib3.disable_warnings()
-
 
 # define constants
 HTTP_RETRIABLE_ERRORS = (
@@ -44,7 +45,6 @@ LOG_FORMAT = (
     "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
 )
 LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
-
 
 # initialize logger
 mylog = logging.getLogger("csp_client_standalone_get_data_org")
@@ -346,23 +346,11 @@ class CSPClient(RESTClient):
         return CSPResponse(req_resp)
 
 
-if __name__ == "__main__":
+# Get all the services present in the environment
+def get_service_def_ids(cclient):
+    try:
 
-    # define constants for current use case
-    GET_SERVICES  = "/slc/api/ui/definitions"
-
-    # initialize csp rest client
-    cclient = CSPClient(
-        "console-preview.cloud.vmware.com",
-        "zihPqKgyjyxoGYAB8vTHUPJSXuOG6FxsEnUnRsRyMApaD2SwQwF1x8JHkqbcqJ52",
-        timeout=120,
-    )
-
-    # use case: remove service access from given orgs
-    with open("preview_service_definitions.csv", "w") as csvfile:
-        fields = ["display_name", "serviceDefinitionId"]
-        csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(fields)
+        GET_SERVICES = "/slc/api/ui/definitions"
 
         # Get all services in an environment
         get_services_resp = cclient.make_call(
@@ -375,9 +363,60 @@ if __name__ == "__main__":
                 "Error occurred, unable to fetch services"
             )
 
-        all_services = get_services_resp.json.get("results")[:100]
-        for item in all_services:
-            if re.match("CSP-Test-Service-Child.*", item["displayName"]):
-                print(item["displayName"], item["serviceDefinitionId"])
+        all_services = get_services_resp.json.get("results")
+        return all_services
+
+    except Exception as e:
+        mylog.error(
+            "Error occurred while fetching service definition Ids"
+        )
+        raise
 
 
+# Return displayName and ServiceDefinition id in list format
+def return_service_def_ids(item):
+
+    try:
+        if re.match("CSP-Test-Service-Child.*", item["displayName"]):
+            return [item["displayName"], item["serviceDefinitionId"]]
+
+    except Exception as e:
+        mylog.error(
+            "Error in writing serviceDefinitionIds"
+        )
+        raise
+
+
+def main():
+
+    # initialize csp rest client
+    cclient = CSPClient(
+        "console-preview.cloud.vmware.com",
+        "zihPqKgyjyxoGYAB8vTHUPJSXuOG6FxsEnUnRsRyMApaD2SwQwF1x8JHkqbcqJ52",
+        timeout=120,
+    )
+
+    all_services = get_service_def_ids(cclient)
+    with open("preview_service_definitions.csv", "w") as csvfile:
+        fields = ["displayName", "serviceDefinitionId"]
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(fields)
+
+        # in-parallel execution
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            execution_result = (
+                executor.submit(return_service_def_ids, item)
+                for item in all_services
+            )
+            for future in concurrent.futures.as_completed(execution_result):
+                mylog.info("Service definition id fetched for {}".format(future.result()))
+                try:
+                    csv_writer.writerow(future.result())
+                except Exception as fault:
+                    mylog.exception(fault)
+
+    mylog.info("Script end time: {}".format(datetime.datetime.now(datetime.timezone.utc)))
+
+
+if __name__ == "__main__":
+    main()
