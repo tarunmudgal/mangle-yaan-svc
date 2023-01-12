@@ -377,7 +377,7 @@ def get_service_def_ids(cclient):
 def return_service_def_ids(item):
 
     try:
-        if re.match("CSP-Test-Service-Child.*", item["displayName"]):
+        if re.match("CSP-Test-Service.*", item["displayName"]):
             return [item["displayName"], item["serviceDefinitionId"]]
 
     except Exception as e:
