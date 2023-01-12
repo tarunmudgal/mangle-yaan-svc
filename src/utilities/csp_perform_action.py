@@ -7,6 +7,8 @@ import os
 import sys
 import time
 import uuid
+import random
+import string
 from builtins import getattr
 
 import pkce
@@ -38,6 +40,7 @@ CSP_URL = "https://console-preview.cloud.vmware.com"
 INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
 OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"
 MAX_WORKERS = 10
+service_tickers = []
 
 # initialize logger #
 CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -62,6 +65,18 @@ console_handler.flush = sys.stdout.flush
 mylog.addHandler(console_handler)
 mylog.addHandler(file_handler)
 
+
+def create_service_ticker():
+
+    # choose from all lowercase letter
+    length = random.randrange(2, 6)
+    letters = string.ascii_lowercase
+    service_ticker = ''.join(random.choice(letters) for i in range(length))
+    while service_tickers.count(service_ticker) != 0:
+        length = random.randrange(2, 6)
+        result_str = ''.join(random.choice(letters) for i in range(length))
+    service_tickers.append(service_ticker)
+    return service_ticker
 
 # class to execute CSP API calls #
 class CSPAPIFlows(object):
@@ -523,7 +538,7 @@ class CSPAPIFlows(object):
         # Update Organization roles
         patch_service_definition = f"/slc/api/definitions/external/{service_id}"
         patch_service_definition_payload = {
-            "serviceTicker": "tes"
+            "serviceTicker": create_service_ticker()
         }
         self.make_call("PATCH", patch_service_definition, json=patch_service_definition_payload)
 
