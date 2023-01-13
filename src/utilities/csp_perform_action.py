@@ -35,9 +35,9 @@ HTTP_RETRIABLE_ERRORS = (
 CODE_VERIFIER_CONST = pkce.generate_code_verifier(length=43)
 CODE_CHALLENGE_CONST = pkce.get_code_challenge(CODE_VERIFIER_CONST)
 REQUEST_SESSION = requests.session()
-PO_AUTH_TOKEN = "mqiEhTN_gp8EEczLjTbXBQMSUeqDF8-h0-gSiGuF_w6gz7Wcc5kERuWvlSQa4Wk3"
+PO_AUTH_TOKEN = ""
 CSP_URL = "https://console-preview.cloud.vmware.com"
-INPUT_API_TOKENS_FILE = "preview_orgs_data.csv"
+INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
 OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"
 MAX_WORKERS = 10
 service_tickers = []
