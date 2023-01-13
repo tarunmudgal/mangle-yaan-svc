@@ -7,6 +7,8 @@ import os
 import sys
 import time
 import uuid
+import random
+import string
 from builtins import getattr
 
 import pkce
@@ -38,6 +40,7 @@ CSP_URL = "https://console-preview.cloud.vmware.com"
 INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
 OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"
 MAX_WORKERS = 10
+service_tickers = []
 
 # initialize logger #
 CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -62,6 +65,18 @@ console_handler.flush = sys.stdout.flush
 mylog.addHandler(console_handler)
 mylog.addHandler(file_handler)
 
+
+def create_service_ticker():
+
+    # choose from all lowercase letter
+    length = random.randrange(2, 6)
+    letters = string.ascii_lowercase
+    service_ticker = ''.join(random.choice(letters) for i in range(length))
+    while service_tickers.count(service_ticker) != 0:
+        length = random.randrange(2, 6)
+        result_str = ''.join(random.choice(letters) for i in range(length))
+    service_tickers.append(service_ticker)
+    return service_ticker
 
 # class to execute CSP API calls #
 class CSPAPIFlows(object):
@@ -267,6 +282,7 @@ class CSPAPIFlows(object):
                 "service-urls": {
                     "service-home": "www.cloud.vmware.com"
                 },
+                "serviceTicker": create_service_ticker(),
                 "org-id": default_org_id_expected
             }
             resp_services = self.make_call("POST", new_service_creation, expected_status_code=201, json=payload)
@@ -523,7 +539,7 @@ class CSPAPIFlows(object):
         # Update Organization roles
         patch_service_definition = f"/slc/api/definitions/external/{service_id}"
         patch_service_definition_payload = {
-            "serviceTicker": "tes"
+            "serviceTicker": create_service_ticker()
         }
         self.make_call("PATCH", patch_service_definition, json=patch_service_definition_payload)
 
@@ -562,8 +578,8 @@ def process_user_information(api_flow, user_row):
         # groupId = api_flow.organization_group(user_row.get("orgId"))
         # user_row["groupId"] = groupId
         # api_flow.organization_group_role(user_row.get("orgId"), user_row.get("groupId"))
-        # serviceId = api_flow.organization_services(user_row.get("orgId"))
-        # user_row["ServiceDefinitionId"] = serviceId
+        serviceId = api_flow.organization_services(user_row.get("orgId"))
+        user_row["ServiceDefinitionId"] = serviceId
         # clientId = api_flow.organization_oauth_app(user_row.get("orgId"))
         # user_row["clientId"] = clientId
         # user_row["status"] = "PASS"
@@ -583,8 +599,8 @@ def process_user_information(api_flow, user_row):
         # api_flow.remove_service_from_org(user_row.get("ServiceDefinitionId"))
         # user_row["status"] = "PASS"
         # count = api_flow.get_instance_count(user_row.get("ServiceDefinitionId"))
-        count = api_flow.get_oauth_app_count(user_row.get("org_id"))
-        user_row["count"] = count
+        # count = api_flow.get_oauth_app_count(user_row.get("org_id"))
+        # user_row["count"] = count
     except Exception as e:
         user_row["status"] = "FAIL"
         mylog.debug("processing failed for user={}".format(user_row.get("org_id")))
@@ -618,6 +634,7 @@ def main():
                         csv_writer.writerow(future.result())
                     except Exception as fault:
                         mylog.exception(fault)
+
 
             # code to debug any issue in process_user_information call. To debug, above 'in-parallel execution' block
             # can be commented and below section should be uncommented.
