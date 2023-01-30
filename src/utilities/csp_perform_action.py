@@ -67,7 +67,6 @@ mylog.addHandler(file_handler)
 
 
 def create_service_ticker():
-
     # choose from all lowercase letter
     length = random.randrange(2, 6)
     letters = string.ascii_lowercase
@@ -304,10 +303,10 @@ class CSPAPIFlows(object):
         mylog.debug("Processing Started for services")
         new_service_creation = f"/slc/api/definitions"
         payload = {
-            "name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
-            "display-name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
+            "name": "CSP-Astra-Test-Service_" + str(uuid.uuid4()),
+            "display-name": "CSP-Astra-Test-Service_" + str(uuid.uuid4()),
             "isDisabled": False,
-            "desc-long": "This service used for testing in Dev",
+            "desc-long": "This service used for testing in Preview.",
             "gated": True,
             "service-roles": [
                 {
@@ -343,6 +342,7 @@ class CSPAPIFlows(object):
             "service-urls": {
                 "service-home": "www.cloud.vmware.com"
             },
+            "serviceTicker": create_service_ticker(),
             "org-id": default_org_id_expected
         }
         resp_services = self.make_call("POST", new_service_creation, expected_status_code=201, json=payload)
@@ -358,6 +358,8 @@ class CSPAPIFlows(object):
         }
         resp_grant_access = self.make_call("POST", grant_service_access, expected_status_code=202, json=payload)
         mylog.debug("Processing End for services")
+
+        return service_id
 
     def organization_oauth_app(self, default_org_id_expected):
         mylog.debug("Processing Started for oauth_app")
@@ -473,8 +475,8 @@ class CSPAPIFlows(object):
         else:
             new_service_creation = f"/slc/api/definitions"
             payload = {
-                "name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
-                "display-name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
+                "name": "CSP-Astra-Test-Service_" + str(uuid.uuid4()),
+                "display-name": "CSP-Astra-Test-Service_" + str(uuid.uuid4()),
                 "isDisabled": False,
                 "desc-long": "This service used for testing in Preview",
                 "gated": True,
@@ -505,6 +507,7 @@ class CSPAPIFlows(object):
                 "service-urls": {
                     "service-home": "www.cloud.vmware.com"
                 },
+                "serviceTicker": create_service_ticker(),
                 "org-id": default_org_id_expected
             }
             resp_services = self.make_call("POST", new_service_creation, expected_status_code=201, json=payload)
@@ -519,6 +522,16 @@ class CSPAPIFlows(object):
                 "isTosPreSigned": True
             }
             resp_grant_access = self.make_call("POST", grant_service_access, expected_status_code=202, json=payload)
+
+        return service_id
+
+    def get_service_onboarded_in_orgs1(self, default_org_id_expected):
+        # Service Onboarded in Org
+        get_service = f"/slc/api/definitions?orgLink=/csp/gateway/am/api/orgs/{default_org_id_expected}"
+        resp_get_service = self.make_call("GET", get_service)
+        services_url = resp_get_service.json().get("serviceDefinitionLinks")[0]
+        service_id = services_url.split("/")[-1]
+        mylog.debug("service_id={}".format(service_id))
 
         return service_id
 
@@ -578,8 +591,8 @@ def process_user_information(api_flow, user_row):
         # groupId = api_flow.organization_group(user_row.get("orgId"))
         # user_row["groupId"] = groupId
         # api_flow.organization_group_role(user_row.get("orgId"), user_row.get("groupId"))
-        serviceId = api_flow.organization_services(user_row.get("orgId"))
-        user_row["ServiceDefinitionId"] = serviceId
+        # serviceId = api_flow.organization_services(user_row.get("orgId"))
+        # user_row["ServiceDefinitionId"] = serviceId
         # clientId = api_flow.organization_oauth_app(user_row.get("orgId"))
         # user_row["clientId"] = clientId
         # user_row["status"] = "PASS"
@@ -590,20 +603,21 @@ def process_user_information(api_flow, user_row):
         # status = api_flow.check_refresh_token(user_row.get("refreshToken"))
         # user_row["status"] = status
         # api_flow.new_organization_group(user_row.get("orgId"))
-        # api_flow.new_organization_services(user_row.get("orgId"))
+        # service_id = api_flow.new_organization_services(user_row.get("orgId"))
+        # user_row["ServiceDefinitionId"] = service_id
         # api_flow.new_organization_oauth_app(user_row.get("orgId"))
         # api_flow.add_user_roles(user_row.get("orgId"), user_row.get("user"))
-        # service_id = api_flow.get_service_onboarded_in_orgs(user_row.get("orgId"))
-        # user_row["ServiceDefinitionId"] = service_id
+        service_id = api_flow.get_service_onboarded_in_orgs1(user_row.get("orgId"))
+        user_row["ServiceDefinitionId"] = service_id
         # api_flow.update_service_definition_with_service_ticker(user_row.get("ServiceDefinitionId"))
         # api_flow.remove_service_from_org(user_row.get("ServiceDefinitionId"))
-        # user_row["status"] = "PASS"
+        user_row["status"] = "PASS"
         # count = api_flow.get_instance_count(user_row.get("ServiceDefinitionId"))
         # count = api_flow.get_oauth_app_count(user_row.get("org_id"))
         # user_row["count"] = count
     except Exception as e:
         user_row["status"] = "FAIL"
-        mylog.debug("processing failed for user={}".format(user_row.get("org_id")))
+        mylog.debug("processing failed for user={}".format(user_row.get("orgId")))
         raise
     return user_row
 
@@ -634,7 +648,6 @@ def main():
                         csv_writer.writerow(future.result())
                     except Exception as fault:
                         mylog.exception(fault)
-
 
             # code to debug any issue in process_user_information call. To debug, above 'in-parallel execution' block
             # can be commented and below section should be uncommented.
