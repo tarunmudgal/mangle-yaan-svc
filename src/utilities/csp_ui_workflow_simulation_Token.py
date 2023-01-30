@@ -140,7 +140,11 @@ class CSPAPIFlows(object):
         access_token_url = self.base_url + "/am/api/auth/api-tokens/authorize"
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Cookie": "visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==",
+            "Cookie": "visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; "
+                      "nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; "
+                      "incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; "
+                      "incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; "
+                      "incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==",
         }
         payload = "refresh_token={}".format(self.api_token)
 
@@ -154,7 +158,8 @@ class CSPAPIFlows(object):
             self.access_token = response.json().get("access_token")
         else:
             raise Exception(
-                "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})".format(
+                "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, "
+                "text={})".format(
                     access_token_url, headers, payload, response.status_code, response.text,
                 )
             )
@@ -221,6 +226,7 @@ class CSPAPIFlows(object):
         )
         resp_delete_api_tokens = self.make_call("DELETE", api_tokens_resource)
 
+
 # class to perform CSP UI calls simulation #
 class CSPUIFlows(object):
     def __init__(self):
@@ -228,7 +234,8 @@ class CSPUIFlows(object):
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "en-US,en;q=0.5",
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/105.0.0.0 Safari/537.36",
             "Content-Type": "application/x-www-form-urlencoded",
         }
 
@@ -614,7 +621,8 @@ class CSPUIFlows(object):
                 headers={
                     "Content-type": "application/x-www-form-urlencoded",
                     "authorization": authrization_str,
-                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, "
+                                  "like Gecko) Chrome/105.0.0.0 Safari/537.36",
                 },
             )
             return self.fetch_tokens(resp, type="access_token")
