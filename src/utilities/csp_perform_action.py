@@ -77,6 +77,7 @@ def create_service_ticker():
     service_tickers.append(service_ticker)
     return service_ticker
 
+
 # class to execute CSP API calls #
 class CSPAPIFlows(object):
     def __init__(self, csp_url="https://console-preview.cloud.vmware.com", api_token=""):
@@ -556,19 +557,23 @@ class CSPAPIFlows(object):
         }
         self.make_call("PATCH", patch_service_definition, json=patch_service_definition_payload)
 
-    def remove_service_from_org(self, service_id):
+    def remove_service_from_org(self, service_id, org_id):
         deny_service_access = f"/slc/api/definitions/external/{service_id}/org-access/actions?action=DENY_ACCESS"
         deny_service_access_payload = {
-            "orgId": "19a053ad-9cc3-4aa3-831c-5d3fe2ca0a28"
+            "orgId": {org_id}
         }
         self.make_call("POST", deny_service_access, json=deny_service_access_payload)
 
         delete_service_access = f"/slc/api/service-access"
         delete_service_access_payload = {
             "serviceDefinitionId": {service_id},
-            "orgId": "19a053ad-9cc3-4aa3-831c-5d3fe2ca0a28"
+            "orgId": {org_id}
         }
         self.make_call("DELETE", delete_service_access, json=delete_service_access_payload)
+
+    def delete_service_from_org(self, service_id):
+        delete_service = f"/slc/api/definitions/external/{service_id}"
+        self.make_call("DELETE", delete_service)
 
     def get_instance_count(self, service_id):
         get_instance = f"/slc/api/definitions/external/{service_id}/service-instances"
@@ -581,6 +586,46 @@ class CSPAPIFlows(object):
         get_oauth_app_response = self.make_call("GET", get_oauth_app)
         count = get_oauth_app_response.json().get("totalResults")
         return count
+
+    def create_environment(self, default_org_id_expected):
+        post_environment = f"/ff-service/api/orgs/{default_org_id_expected}/environments"
+        post_environment_payload = {
+            "name": "Dummy_Flag_Environment" + str(uuid.uuid4()),
+            "description": "Dummy_Flag_Environment_Perf_Test",
+            "colorCode": "#00FF00",
+            "displayName": "Environment" + str(uuid.uuid4())
+        }
+        self.make_call("POST", post_environment, json=post_environment_payload)
+
+    def update_org_scope(self, default_org_id_expected):
+        patch_org_scope = f"/am/api/orgs/{default_org_id_expected}/roles"
+        patch_org_scope_payload = {
+            "roleNamesToAdd": [
+                "service_owner",
+                "feature_flag_manager"
+            ]
+        }
+        self.make_call("PATCH", patch_org_scope, json=patch_org_scope_payload)
+
+    def update_user_scope(self, default_org_id_expected, user):
+        patch_user_scope = f"/am/api/users/{user}/orgs/{default_org_id_expected}/roles"
+        patch_user_scope_payload = {
+            "rolesToAdd": [
+                {
+                    "name": "feature_flag_manager"
+                },
+                {
+                    "name": "service_owner"
+                }
+            ]
+        }
+        self.make_call("PATCH", patch_user_scope, json=patch_user_scope_payload)
+
+    def get_acct_userid(self, user):
+        get_user_id = f"/am/api/v2/users/{user}"
+        get_user_id_response = self.make_call("GET", get_user_id)
+        userid = get_user_id_response.json().get("userId")
+        return userid
 
 
 def process_user_information(api_flow, user_row):
@@ -607,17 +652,23 @@ def process_user_information(api_flow, user_row):
         # user_row["ServiceDefinitionId"] = service_id
         # api_flow.new_organization_oauth_app(user_row.get("orgId"))
         # api_flow.add_user_roles(user_row.get("orgId"), user_row.get("user"))
-        service_id = api_flow.get_service_onboarded_in_orgs1(user_row.get("orgId"))
-        user_row["ServiceDefinitionId"] = service_id
+        # service_id = api_flow.get_service_onboarded_in_orgs1(user_row.get("orgId"))
+        # user_row["ServiceDefinitionId"] = service_id
         # api_flow.update_service_definition_with_service_ticker(user_row.get("ServiceDefinitionId"))
-        # api_flow.remove_service_from_org(user_row.get("ServiceDefinitionId"))
+        # api_flow.create_environment(user_row.get("orgId"))
+        # api_flow.update_org_scope(user_row.get("orgId"))
+        api_flow.update_user_scope(user_row.get("orgId"), user_row.get("user"))
+        # api_flow.remove_service_from_org(user_row.get("ServiceDefinitionId"), user_row.get("orgId"))
+        # api_flow.delete_service_from_org(user_row.get("ServiceDefinitionId"))
+        # userid = api_flow.get_acct_userid(user_row.get("user"))
+        # user_row["userId"] = userid
         user_row["status"] = "PASS"
         # count = api_flow.get_instance_count(user_row.get("ServiceDefinitionId"))
         # count = api_flow.get_oauth_app_count(user_row.get("org_id"))
         # user_row["count"] = count
     except Exception as e:
         user_row["status"] = "FAIL"
-        mylog.debug("processing failed for user={}".format(user_row.get("orgId")))
+        mylog.debug("processing failed for user={}".format(user_row.get("user")))
         raise
     return user_row
 

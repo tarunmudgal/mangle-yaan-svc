@@ -377,7 +377,7 @@ def get_service_def_ids(cclient):
 def return_service_def_ids(item):
 
     try:
-        if re.match("CSP-Test-Service.*", item["displayName"]):
+        if re.match("CSP-Test-Service-.*", item["displayName"]):
             return [item["displayName"], item["serviceDefinitionId"]]
 
     except Exception as e:
@@ -391,13 +391,13 @@ def main():
 
     # initialize csp rest client
     cclient = CSPClient(
-        "console-preview.cloud.vmware.com",
-        "zihPqKgyjyxoGYAB8vTHUPJSXuOG6FxsEnUnRsRyMApaD2SwQwF1x8JHkqbcqJ52",
+        "console-stg.cloud.vmware.com",
+        "",
         timeout=120,
     )
 
     all_services = get_service_def_ids(cclient)
-    with open("preview_service_definitions.csv", "w") as csvfile:
+    with open("stg_service_definitions.csv", "w") as csvfile:
         fields = ["displayName", "serviceDefinitionId"]
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(fields)
