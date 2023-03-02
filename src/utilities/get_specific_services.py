@@ -273,6 +273,7 @@ class CSPClient(RESTClient):
             CSPClient object
         """
 
+        self._access_token = None
         adapter = HTTPAdapter(max_retries=retry_obj)
 
         if CSPClient.__single_instance is not None:
@@ -308,7 +309,11 @@ class CSPClient(RESTClient):
         access_token_url = self._base_url + "/am/api/auth/api-tokens/authorize"
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Cookie": "visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==",
+            "Cookie": "visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; "
+                      "nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; "
+                      "incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; "
+                      "incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; "
+                      "incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==",
         }
         payload = "refresh_token={}".format(self._refresh_token)
 
@@ -322,7 +327,8 @@ class CSPClient(RESTClient):
             return response.json().get("access_token")
         else:
             raise Exception(
-                "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})".format(
+                "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, "
+                "text={})".format(
                     access_token_url, headers, payload, response.status_code, response.text,
                 )
             )
@@ -347,13 +353,13 @@ class CSPClient(RESTClient):
 
 
 # Get all the services present in the environment
-def get_service_def_ids(cclient):
+def get_service_def_ids(client):
     try:
 
         GET_SERVICES = "/slc/api/ui/definitions"
 
         # Get all services in an environment
-        get_services_resp = cclient.make_call(
+        get_services_resp = client.make_call(
             "GET",
             GET_SERVICES
         )
@@ -375,7 +381,6 @@ def get_service_def_ids(cclient):
 
 # Return displayName and ServiceDefinition id in list format
 def return_service_def_ids(item):
-
     try:
         if re.match("CSP-Test-Service-.*", item["displayName"]):
             return [item["displayName"], item["serviceDefinitionId"]]
@@ -388,15 +393,14 @@ def return_service_def_ids(item):
 
 
 def main():
-
     # initialize csp rest client
-    cclient = CSPClient(
+    client = CSPClient(
         "console-stg.cloud.vmware.com",
         "",
         timeout=120,
     )
 
-    all_services = get_service_def_ids(cclient)
+    all_services = get_service_def_ids(client)
     with open("stg_service_definitions.csv", "w") as csvfile:
         fields = ["displayName", "serviceDefinitionId"]
         csv_writer = csv.writer(csvfile)

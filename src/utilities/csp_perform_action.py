@@ -250,8 +250,8 @@ class CSPAPIFlows(object):
         else:
             new_service_creation = f"/slc/api/definitions"
             payload = {
-                "name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
-                "display-name": "CSP-Test-Service-Child_" + str(uuid.uuid4()),
+                "name": "CSP-Astra-Test-Service_" + str(uuid.uuid4()),
+                "display-name": "CSP-Astra-Test-Service_" + str(uuid.uuid4()),
                 "isDisabled": False,
                 "desc-long": "This service used for testing in Dev",
                 "gated": True,
@@ -296,7 +296,7 @@ class CSPAPIFlows(object):
                 "serviceDefinitionId": service_id,
                 "isTosPreSigned": True
             }
-            resp_grant_access = self.make_call("POST", grant_service_access, expected_status_code=202, json=payload)
+            self.make_call("POST", grant_service_access, expected_status_code=202, json=payload)
 
         return service_id
 
@@ -607,6 +607,16 @@ class CSPAPIFlows(object):
         }
         self.make_call("PATCH", patch_org_scope, json=patch_org_scope_payload)
 
+    def create_org_metadata(self, default_org_id_expected, service_id):
+        post_org_metadata = f"/slc/api/definitions/external/{service_id}/orgs/{default_org_id_expected}/metadata"
+        post_org_metadata_payload = {
+            "empty": True,
+            "additionalProp1": "DummyService",
+            "additionalProp2": "For Testing Purpose",
+            "additionalProp3": "CSP_Astra"
+        }
+        self.make_call("POST", post_org_metadata, json=post_org_metadata_payload)
+
     def update_user_scope(self, default_org_id_expected, user):
         patch_user_scope = f"/am/api/users/{user}/orgs/{default_org_id_expected}/roles"
         patch_user_scope_payload = {
@@ -657,18 +667,20 @@ def process_user_information(api_flow, user_row):
         # api_flow.update_service_definition_with_service_ticker(user_row.get("ServiceDefinitionId"))
         # api_flow.create_environment(user_row.get("orgId"))
         # api_flow.update_org_scope(user_row.get("orgId"))
-        api_flow.update_user_scope(user_row.get("orgId"), user_row.get("user"))
+        # api_flow.update_user_scope(user_row.get("orgId"), user_row.get("user"))
+        # api_flow.create_org_metadata(user_row.get("orgId"), user_row.get("ServiceDefinitionId"))
+        # api_flow.organization_services(user_row.get("orgId"), user_row.get("ServiceDefinitionId"))
         # api_flow.remove_service_from_org(user_row.get("ServiceDefinitionId"), user_row.get("orgId"))
-        # api_flow.delete_service_from_org(user_row.get("ServiceDefinitionId"))
+        api_flow.delete_service_from_org(user_row.get("ServiceDefinitionId"))
         # userid = api_flow.get_acct_userid(user_row.get("user"))
         # user_row["userId"] = userid
-        user_row["status"] = "PASS"
+        # user_row["status"] = "PASS"
         # count = api_flow.get_instance_count(user_row.get("ServiceDefinitionId"))
         # count = api_flow.get_oauth_app_count(user_row.get("org_id"))
         # user_row["count"] = count
     except Exception as e:
         user_row["status"] = "FAIL"
-        mylog.debug("processing failed for user={}".format(user_row.get("user")))
+        mylog.debug("processing failed for user={}".format(user_row.get("ServiceDefinitionId")))
         raise
     return user_row
 
