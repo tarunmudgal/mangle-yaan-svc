@@ -46,6 +46,21 @@
       "defaultService": {
         "id": "yrNXxccXBjH3-OMUSj8AZIFYzJ8_"
       }
+    },
+    "decc": {
+      "host": "csp-console-ara-csp-smantu.ara.decc.vmware.com",
+      "defaultOrg": {
+        "id": "65f565b9-9dbc-4cd1-8123-ecd03ff2b8c7"
+      },
+      "defaultUser": {
+        "id": "vmware.com:84783bf4-2bd4-490d-866a-83a82b9fc953",
+        "email": "smantu@vmware.com",
+        "accessToken": "",
+        "refreshToken": "eroeRhcRpLXXBWhbX72zKgDe9gOfrDVUwvjbXvN05FYtdqElXX8q8fc9SE4aBmVh"
+      },
+      "defaultService": {
+        "id": "yrNXxccXBjH3-OMUSj8AZIFYzJ8_"
+      }
     }
   },
   "mangle": {
@@ -65,6 +80,12 @@
       "endpointName": "csp-app-dev",
       "credentialName": "csp-app-dev",
       "kubeConfigFileName": "csp-app-dev.yaml"
+    },
+    "decc": {
+      "namespace": "ara-csp-smantu",
+      "endpointName": "ara-csp-smantu",
+      "credentialName": "ara-csp-smantu",
+      "kubeConfigFileName": "ara-csp-smantu.yaml"
     }
   },
   "mangleYaan": {
