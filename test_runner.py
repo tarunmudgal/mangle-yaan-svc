@@ -597,9 +597,9 @@ def main() -> None:
         "--csp_env",
         action="store",
         type=str,
-        default="preview",
-        choices=["preview", "dev"],
-        help="CSP environment where you want to run tests. Allowed values are preview and dev for now.",
+        default="decc",
+        choices=["preview", "dev", "decc"],
+        help="CSP environment where you want to run tests. Allowed values are preview,dev and decc for now.",
     )
     parser.add_argument(
         "--list_testsuite_names", action="store_true", help="list of available testsuites",
