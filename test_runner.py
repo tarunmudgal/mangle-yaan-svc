@@ -211,7 +211,7 @@ def setup_mangle_infra(csp_env: str = "decc") -> None:
     """
     takes care of mangle infra setup e.g. CSP endpoint creation and connectivity with CSP K8S check
     Args:
-        csp_env: CSP environment name e.g. preview, dev, preview
+        csp_env: CSP environment name e.g. preview, dev, decc
     """
     endpoint.create_and_test_mangle_endpoint(mclient, csp_env=csp_env)
 
