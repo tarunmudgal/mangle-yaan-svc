@@ -188,7 +188,7 @@ class TestConnection(EndPointBase):
         )
 
 
-def _create_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
+def _create_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = "decc"):
     global endpoint_cred_obj
     if endpoint_cred_obj is None:
         endpoint_cred_obj = EndpointCredential(mclient)
@@ -229,7 +229,7 @@ def _create_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = 
         )
 
 
-def _update_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
+def _update_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = "decc"):
     global endpoint_cred_obj
     if endpoint_cred_obj is None:
         endpoint_cred_obj = EndpointCredential(mclient)
@@ -270,7 +270,7 @@ def _update_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = 
         )
 
 
-def _delete_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
+def _delete_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = "decc"):
     global endpoint_cred_obj
     if endpoint_cred_obj is None:
         endpoint_cred_obj = EndpointCredential(mclient)
@@ -309,7 +309,7 @@ def _delete_credentials_k8s(mclient: mangle_client.MangleClient, csp_env: str = 
         )
 
 
-def _create_endpoint_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
+def _create_endpoint_k8s(mclient: mangle_client.MangleClient, csp_env: str = "decc"):
     global endpoint_obj
     if endpoint_obj is None:
         endpoint_obj = Endpoint(mclient)
@@ -360,7 +360,7 @@ def _create_endpoint_k8s(mclient: mangle_client.MangleClient, csp_env: str = "pr
         )
 
 
-def _test_endpoint_k8s(mclient: mangle_client.MangleClient, csp_env: str = "preview"):
+def _test_endpoint_k8s(mclient: mangle_client.MangleClient, csp_env: str = "decc"):
     global test_connection_obj
     if test_connection_obj is None:
         test_connection_obj = TestConnection(mclient)
@@ -391,7 +391,7 @@ def _test_endpoint_k8s(mclient: mangle_client.MangleClient, csp_env: str = "prev
         )
 
 
-def create_and_test_mangle_endpoint(mclient: mangle_client.MangleClient, csp_env="preview"):
+def create_and_test_mangle_endpoint(mclient: mangle_client.MangleClient, csp_env="decc"):
     _create_credentials_k8s(mclient, csp_env=csp_env)
     _create_endpoint_k8s(mclient, csp_env=csp_env)
     _test_endpoint_k8s(mclient, csp_env=csp_env)
