@@ -86,7 +86,6 @@ class TestCommerceDependencyOnDifferentServices:
         )
 
     @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
-    @pytest.mark.skip(reason="https://vmware.slack.com/archives/C1K5Q80SW/p1665400530463819")
     def test_api_get_payment_methods(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -110,14 +109,12 @@ class TestCommerceDependencyOnDifferentServices:
             com_resp.status_code, expected_response
         )
 
-    # @pytest.mark.skip(reason="this API is the part of commerce 2.0 and under development")
     @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
-    @pytest.mark.skip(reason="Open Thread : https://vmware.slack.com/archives/C1K5Q80SW/p1664377422413779")
     def test_api_get_current_costs(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500, 502]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
             expected_response = [200]
 
@@ -168,9 +165,9 @@ class TestCommerceDependencyOnDifferentServices:
         # expected csp api response (status_code)
         expected_response = [200]
         if inject_k8s_infra_fault_service_unavailable_for_class == "csp-account-management-mvc":
-            expected_response = [500, 502]
+            expected_response = [200]
         elif inject_k8s_infra_fault_service_unavailable_for_class == "csp-onboarding":
-            expected_response = [500, 502]
+            expected_response = [200]
 
         # make csp api call
         api_resource = resources.COMMERCE.get("ESTIMATED_CHARGES").format(
@@ -187,7 +184,6 @@ class TestCommerceDependencyOnDifferentServices:
         )
 
     @pytest.mark.dependency()
-    @pytest.mark.skip(reason="https://vmware.slack.com/archives/C1K5Q80SW/p1665400530463819")
     def test_api_get_offers(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -216,7 +212,6 @@ class TestCommerceDependencyOnDifferentServices:
         )
 
     @pytest.mark.dependency()
-    @pytest.mark.skip(reason="https://vmware.slack.com/archives/C1K5Q80SW/p1665400530463819")
     def test_api_list_subscriptions(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
