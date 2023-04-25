@@ -16,6 +16,7 @@ from lib.csp import resources
     min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
     rerun_filter=None,
 )
+@pytest.mark.usefixtures("update_csp_access_token")
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_service_unavailable_for_class",
     ["csp-commerce", "csp-onboarding"],
@@ -43,7 +44,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_clients(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -59,7 +60,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_users(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -75,7 +76,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_users_v2(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -91,7 +92,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_groups(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -107,7 +108,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_search_org_users(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -128,7 +129,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_orgs(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -142,7 +143,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_detail(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -158,7 +159,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_oauth_apps(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -174,11 +175,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_principal_user_info(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -190,11 +191,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_terms_of_service_signatures(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -206,7 +207,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_user_account(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -224,7 +225,7 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_user_account_v2(self, inject_k8s_infra_fault_service_unavailable_for_class):
@@ -242,11 +243,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_svc_roles_for_user_account(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -261,11 +262,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_svc_roles_for_user_account_v2(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -280,11 +281,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_info_for_user_account(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -299,11 +300,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_info_for_user_account_v2(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -318,11 +319,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_roles_for_user_account(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -337,11 +338,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_org_roles_for_user_account_v2(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -356,11 +357,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_orgs_for_user_account(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -374,11 +375,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_orgs_for_user_account_v2(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -392,11 +393,11 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)
 
     def test_api_get_all_invitations_for_user_account(
-        self, inject_k8s_infra_fault_service_unavailable_for_class
+            self, inject_k8s_infra_fault_service_unavailable_for_class
     ):
         # expected csp api response (status_code)
         expected_response = 200
@@ -410,5 +411,5 @@ class TestAMDependencyOnDifferentServices:
 
         # verify csp api actual status_code with expected status code when fault is present
         assert (
-            am_resp.status_code == expected_response
+                am_resp.status_code == expected_response
         ), "AM service did not return expected response {}".format(expected_response)

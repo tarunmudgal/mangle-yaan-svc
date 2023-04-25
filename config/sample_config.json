@@ -50,16 +50,22 @@
     "decc": {
       "host": "csp-console-ara-csp-smantu.ara.decc.vmware.com",
       "defaultOrg": {
-        "id": "65f565b9-9dbc-4cd1-8123-ecd03ff2b8c7"
+        "id": "7f7634ec-670a-47cf-b9ab-ddb79a40a946"
       },
       "defaultUser": {
         "id": "vmware.com:84783bf4-2bd4-490d-866a-83a82b9fc953",
         "email": "smantu@vmware.com",
         "accessToken": "",
-        "refreshToken": "eroeRhcRpLXXBWhbX72zKgDe9gOfrDVUwvjbXvN05FYtdqElXX8q8fc9SE4aBmVh"
+        "refreshToken": "gS1BXO6WSOc7lkMHteBUKfhuf6ZDrtezawH0TtLOiupLN_HXOUDDMIowwTLAPVUP"
       },
       "defaultService": {
-        "id": "214ed902-4894-426f-968c-af7cd1ae52a1"
+        "id": "78c7092a-3cb8-4ae3-bd92-f18c33a71e1c"
+      },
+      "defaultBillingAccount": {
+        "id": "1a3b4754-291f-4156-bbef-e84170c0198a"
+      },
+       "defaultOnboardingContext": {
+        "id": "1c6a7bcd-2a6e-4173-8618-1c93689858f2"
       }
     }
   },

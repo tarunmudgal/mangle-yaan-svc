@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """ pytest service unavailability test cases """
 
-
 import pytest
 from flaky import flaky
 
@@ -14,6 +13,7 @@ from lib.csp import resources
     min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
     rerun_filter=None,
 )
+@pytest.mark.usefixtures("update_csp_access_token")
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_service_unavailable_for_class", ["csp-gaz-core"], indirect=True,
 )
