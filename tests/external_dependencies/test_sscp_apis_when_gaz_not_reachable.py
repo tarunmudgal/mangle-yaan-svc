@@ -12,7 +12,7 @@ from lib.csp import resources
 from src.testlib.csp import utils as csp_utils
 from src.testlib.pytest import utils as pytest_utils
 
-LIST_NETWORK_POLICY_FILENAMES = ["preview_env_egress_am_service.yaml"]
+LIST_NETWORK_POLICY_FILENAMES = ["decc_env_egress_am_service.yaml"]
 
 
 @flaky(
@@ -20,6 +20,7 @@ LIST_NETWORK_POLICY_FILENAMES = ["preview_env_egress_am_service.yaml"]
     min_passes=myconfig.get("mangleYaan").get("retryFailedTests").get("minPasses"),
     rerun_filter=None,
 )
+@pytest.mark.usefixtures("update_csp_access_token")
 @pytest.mark.parametrize(
     "inject_k8s_infra_fault_block_egress_traffic_for_class",
     LIST_NETWORK_POLICY_FILENAMES,
