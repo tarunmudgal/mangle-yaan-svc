@@ -160,6 +160,7 @@ class TestCommerceDependencyOnDifferentServices:
             com_resp.status_code, expected_response
         )
 
+    @pytest.mark.skip(reason="API deprecated")
     @pytest.mark.dependency()
     def test_api_get_estimated_charges(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
