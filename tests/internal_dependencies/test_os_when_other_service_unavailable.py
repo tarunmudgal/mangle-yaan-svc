@@ -172,7 +172,7 @@ class TestOSDependencyOnDifferentServices:
             "title": "dummy faq topic",
             "linkTitle": "dummy faq topic",
             "onboardingContextIds": [
-                "1c6a7bcd-2a6e-4173-8618-1c93689858f2"
+                "7034da8b-1287-4f6e-a2d2-0cf57ecf8ea7"
             ],
             "text": "dummy faq topic",
         }
@@ -265,7 +265,7 @@ class TestOSDependencyOnDifferentServices:
         request_body = {
             "title": "new dummy faq topic",
             "onboardingContextIds": [
-                "1c6a7bcd-2a6e-4173-8618-1c93689858f2"
+                "7034da8b-1287-4f6e-a2d2-0cf57ecf8ea7"
             ],
             "text": "new dummy faq topic",
         }

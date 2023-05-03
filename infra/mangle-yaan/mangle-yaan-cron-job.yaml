@@ -22,7 +22,7 @@ spec:
               - name: TAG
                 value: "RunByCronJob"
               - name: TEST_SUITE_NAME
-                value: "test_csp_apis_when_gaz_not_reachable,test_sscp_apis_when_gaz_not_reachable,test_am_api_when_a_service_down,test_commerce_api_when_a_service_down,test_slc_api_when_a_service_down,test_onboarding_api_when_a_service_down"
+                value: "test_csp_apis_when_gaz_not_reachable,test_sscp_apis_when_gaz_not_reachable,test_am_api_when_a_service_down,test_commerce_api_when_a_service_down,test_slc_api_when_a_service_down,test_onboarding_api_when_a_service_down,test_csp_apis_when_vip_not_reachable,test_csp_apis_when_it_not_reachable"
             resources:
               limits:
                 memory: "2Gi"
