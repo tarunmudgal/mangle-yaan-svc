@@ -46,4 +46,4 @@ CMD python /mangle-yaan/test_runner.py \
     --pytest_args ${PYTEST_ARGS:-' '} \
     --myconfig ${MYCONFIG:-' '} \
     --run_id ${run_id:-' '} \
-    --csp_env ${CSP_ENV:-'preview'}
+    --csp_env ${CSP_ENV:-'decc'}

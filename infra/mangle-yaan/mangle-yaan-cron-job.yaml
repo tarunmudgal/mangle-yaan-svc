@@ -1,9 +1,9 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: resiliency-all-workloads-csp-apis-preview
+  name: resiliency-all-workloads-csp-apis-decc
 spec:
-  schedule: "0 2 * * *"
+  schedule: "0 18 * * *"
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
   jobTemplate:
@@ -11,18 +11,18 @@ spec:
       template:
         spec:
           containers:
-          - name: resiliency-all-workloads-csp-apis-preview
+          - name: resiliency-all-workloads-csp-apis-decc
             image: vmwaresaas.jfrog.io/csp/resiliency-workload:latest
             imagePullPolicy: Always
             env:
               - name: WORKLOAD_ID
-                value: "2e3TRSByiiSa2yWqzrahFb"
+                value: "hk2VNSAL84rpJ5zRYDi3ji"
               - name: VERSION
                 value: "0"
               - name: TAG
                 value: "RunByCronJob"
               - name: TEST_SUITE_NAME
-                value: "test_csp_apis_when_it_not_reachable,test_csp_apis_when_gaz_not_reachable,test_sscp_apis_when_gaz_not_reachable,test_paginated_api_when_one_service_instance_down,test_am_api_when_a_service_down,test_slc_api_when_a_service_down,test_onboarding_api_when_a_service_down,test_commerce_api_when_a_service_down,test_csp_login_logout_workflow_with_minimal_services,test_csp_pages_when_commerce_endpoints_blocked"
+                value: "test_csp_apis_when_gaz_not_reachable,test_sscp_apis_when_gaz_not_reachable,test_am_api_when_a_service_down,test_commerce_api_when_a_service_down,test_slc_api_when_a_service_down,test_onboarding_api_when_a_service_down"
             resources:
               limits:
                 memory: "2Gi"
