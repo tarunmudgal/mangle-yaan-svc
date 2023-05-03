@@ -216,7 +216,7 @@ def setup_mangle_infra(csp_env: str = "decc") -> None:
     endpoint.create_and_test_mangle_endpoint(mclient, csp_env=csp_env)
 
 
-def cleanup_old_reports(log_dir: str, max_count: int = 5) -> None:
+def cleanup_old_reports(log_dir: str, max_count: int = 10) -> None:
     """
     deletes mangle-yaan-test-reports present under logs/ dir which are older than specified number of days
     Args:
@@ -313,7 +313,7 @@ def prepare_setup(
     setup_mangle_infra(csp_env=csp_env)
 
     # cleanup older mangle-yaan-test-reports
-    cleanup_old_reports(lib_params.LOG_DIR, max_count=5)
+    cleanup_old_reports(lib_params.LOG_DIR, max_count=10)
 
     # test_runner cache to maintain states
     mycache = {}
