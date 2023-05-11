@@ -507,11 +507,9 @@ def init_chrome_driver(request):
         # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub'
         #                                           , desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
         selenium_hub_fqdn = (
-            "http://"
-            + testlib_params.SELENIUM_GRID_HOST
-            + ":"
-            + testlib_params.SELENIUM_GRID_PORT
-            + testlib_params.SELENIUM_HUB_URI
+                "https://"
+                + testlib_params.SELENIUM_GRID_HOST
+                + testlib_params.SELENIUM_HUB_URI
         )
 
         chrome_options = webdriver.ChromeOptions()
