@@ -19,31 +19,22 @@ DEPLOYMENT_NAMES_TO_BE_SCALED = [
     "csp-commerce-aws-adapter",
     "csp-commerce-notifications",
     "csp-commerce-sap-adapter",
-    "csp-customer-management",
-    "csp-customer-support",
-    "csp-data-aggregator",
-    "csp-data-enrichment",
-    "csp-data-mediator",
     "csp-email",
     "csp-federation",
-    "csp-ff-service",
-    "csp-fraud-management",
     "csp-iam-vmwid",
     "csp-identity-governance",
     "csp-lake-consumer",
     "csp-onboarding",
     "csp-operator-portal",
     "csp-post-office",
-    "csp-promotional-info",
     "csp-resource-manager",
     "csp-rtc",
-    "csp-usage-meter",
     "ns-event-service",
-    "ns-inapp",
+    "ns-inapp"
 ]
 
 NEW_REPLICA_COUNT = 0
-USER = "lhruser3usd@yahoo.com"
+USER = "stg_pune_user25@harakirimail.com"
 PASSWORD = "Test@123"
 DEPLOYMENTS_COULD_NOT_BE_SCALED = False
 
