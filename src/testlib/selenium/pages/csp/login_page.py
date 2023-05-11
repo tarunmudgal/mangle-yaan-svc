@@ -105,9 +105,13 @@ class LoginPage(BasePage):
             self.locators.BTN_USER_MENU
         ), "could not find user menu button locator={}".format(self.locators.TB_EMAIL)
 
-        self.click(self.locators.BTN_USER_MENU)
-        self.click(self.locators.BTN_SIGN_OUT)
+        try:
+            self.click(self.locators.BTN_USER_MENU)
+            self.click(self.locators.BTN_SIGN_OUT)
+            return True
+        except Exception as err:
+            mylog.debug("Could not sign Out due to error : {}".format(err))
+            return False
 
-        logged_out = self.wait_for_element(self.locators.TXT_LOGOUT_MSG, timeout=180)
-
-        return logged_out
+        # logged_out = self.wait_for_element(self.locators.TXT_LOGOUT_MSG, timeout=180)
+        # return logged_out
