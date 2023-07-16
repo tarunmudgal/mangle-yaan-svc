@@ -426,9 +426,9 @@ class CSPAPIFlows(object):
         resp_group = self.make_call("POST", orgs_oauth_apps, expected_status_code=200, json=payload)
         mylog.debug("Processing End for oauth_app")
 
-    def add_user_organization(self, email):
+    def add_user_organization(self, email, default_org_id_expected):
         mylog.debug("Processing Started for user_addition")
-        user_addition = f"/am/api/orgs/55e921ca-8131-4c95-a90f-647f5db4953f/invitations"
+        user_addition = f"/am/api/orgs/{default_org_id_expected}/invitations"
         payload = {
             "organizationRoles": [
                 {
@@ -467,13 +467,14 @@ class CSPAPIFlows(object):
 
     def get_service_onboarded_in_orgs(self, default_org_id_expected):
         # Service Onboarded in Org
-        get_service = f"/slc/api/definitions?orgLink=/csp/gateway/am/api/orgs/{default_org_id_expected}"
+        get_service = f"/slc/api/definitions?orgLink=/csp/gateway/am/api/orgs/{default_org_id_expected}&expand=true"
         resp_get_service = self.make_call("GET", get_service)
-        if resp_get_service.json().get("totalResults") != 0:
-            services_url = resp_get_service.json().get("serviceDefinitionLinks")[0]
+        if resp_get_service.json().get("results") != 0:
+            services_url = resp_get_service.json().get("results")[0].get("documentSelfLink")
             service_id = services_url.split("/")[-1]
             mylog.debug("service_id={}".format(service_id))
         else:
+            mylog.debug("service={}")
             new_service_creation = f"/slc/api/definitions"
             payload = {
                 "name": "CSP-Astra-Test-Service_" + str(uuid.uuid4()),
@@ -528,9 +529,9 @@ class CSPAPIFlows(object):
 
     def get_service_onboarded_in_orgs1(self, default_org_id_expected):
         # Service Onboarded in Org
-        get_service = f"/slc/api/definitions?orgLink=/csp/gateway/am/api/orgs/{default_org_id_expected}"
+        get_service = f"/slc/api/definitions?orgLink=/csp/gateway/am/api/orgs/{default_org_id_expected}&expand=true"
         resp_get_service = self.make_call("GET", get_service)
-        services_url = resp_get_service.json().get("serviceDefinitionLinks")[0]
+        services_url = resp_get_service.json().get("results")[0]["documentSelfLink"]
         service_id = services_url.split("/")[-1]
         mylog.debug("service_id={}".format(service_id))
 
@@ -574,6 +575,10 @@ class CSPAPIFlows(object):
     def delete_service_from_org(self, service_id):
         delete_service = f"/slc/api/definitions/external/{service_id}"
         self.make_call("DELETE", delete_service)
+
+    def delete_project_from_org(self, project_id):
+        delete_project = f"/resource/api/v1/orgs/4667e650-3544-4c70-be66-6fecc26468d7/projects/{project_id}"
+        self.make_call("DELETE", delete_project)
 
     def get_instance_count(self, service_id):
         get_instance = f"/slc/api/definitions/external/{service_id}/service-instances"
@@ -637,6 +642,19 @@ class CSPAPIFlows(object):
         userid = get_user_id_response.json().get("userId")
         return userid
 
+    def get_service_association(self, default_org_id_expected):
+        get_service_association = f"/slc/api/v2/orgs/{default_org_id_expected}/services?serviceDefinitionId=3ea30b24-4435-429c-addd-b8fbce2ccef3"
+        get_service_association_response = self.make_call("GET", get_service_association)
+        results = get_service_association_response.json().get("totalResults")
+        return results
+
+    def set_user_default_org(self, user, default_org_id_expected):
+        default_org_resource_v2 = f"/am/api/v2/users/{user}/profile/default-org"
+        default_org_payload = {"id": default_org_id_expected}
+        resp_default_org = self.make_call(
+            "PUT", default_org_resource_v2, json=default_org_payload
+        )
+
 
 def process_user_information(api_flow, user_row):
     try:
@@ -656,7 +674,6 @@ def process_user_information(api_flow, user_row):
         # api_flow.add_user_organization(user_row.get("user"))
         # mylog.debug("processing done for org={}".format(user_row.get("user")))
         # status = api_flow.check_refresh_token(user_row.get("refreshToken"))
-        # user_row["status"] = status
         # api_flow.new_organization_group(user_row.get("orgId"))
         # service_id = api_flow.new_organization_services(user_row.get("orgId"))
         # user_row["ServiceDefinitionId"] = service_id
@@ -671,16 +688,20 @@ def process_user_information(api_flow, user_row):
         # api_flow.create_org_metadata(user_row.get("orgId"), user_row.get("ServiceDefinitionId"))
         # api_flow.organization_services(user_row.get("orgId"), user_row.get("ServiceDefinitionId"))
         # api_flow.remove_service_from_org(user_row.get("ServiceDefinitionId"), user_row.get("orgId"))
-        api_flow.delete_service_from_org(user_row.get("ServiceDefinitionId"))
+        # api_flow.delete_service_from_org(user_row.get("ServiceDefinitionId"))
+        # api_flow.delete_project_from_org(user_row.get("id"))
+        # totalResults = api_flow.get_service_association(user_row.get("orgId"))
+        api_flow.set_user_default_org(user_row.get("user"),user_row.get("orgId"))
         # userid = api_flow.get_acct_userid(user_row.get("user"))
         # user_row["userId"] = userid
-        # user_row["status"] = "PASS"
+        # user_row["totalResults"] = totalResults
         # count = api_flow.get_instance_count(user_row.get("ServiceDefinitionId"))
         # count = api_flow.get_oauth_app_count(user_row.get("org_id"))
         # user_row["count"] = count
+        user_row["status"] = "PASS"
     except Exception as e:
         user_row["status"] = "FAIL"
-        mylog.debug("processing failed for user={}".format(user_row.get("ServiceDefinitionId")))
+        mylog.debug("processing failed for user={}".format(user_row.get("orgId")))
         raise
     return user_row
 
