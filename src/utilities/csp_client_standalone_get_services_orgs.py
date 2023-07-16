@@ -3,7 +3,6 @@
 """ CSP REST Client (standalone) for different use-cases"""
 
 import abc
-import datetime
 import inspect
 import logging.handlers
 import os
@@ -11,8 +10,6 @@ import sys
 import time
 import typing
 import csv
-import re
-import concurrent.futures
 
 import requests
 import urllib3
@@ -22,6 +19,7 @@ from requests.packages.urllib3.exceptions import ConnectTimeoutError
 from requests.packages.urllib3.util.retry import Retry
 
 requests.packages.urllib3.disable_warnings()
+
 
 # define constants
 HTTP_RETRIABLE_ERRORS = (
@@ -45,6 +43,7 @@ LOG_FORMAT = (
     "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
 )
 LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
+
 
 # initialize logger
 mylog = logging.getLogger("csp_client_standalone_get_data_org")
@@ -273,7 +272,6 @@ class CSPClient(RESTClient):
             CSPClient object
         """
 
-        self._access_token = None
         adapter = HTTPAdapter(max_retries=retry_obj)
 
         if CSPClient.__single_instance is not None:
@@ -309,11 +307,7 @@ class CSPClient(RESTClient):
         access_token_url = self._base_url + "/am/api/auth/api-tokens/authorize"
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Cookie": "visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; "
-                      "nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; "
-                      "incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; "
-                      "incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; "
-                      "incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==",
+            "Cookie": "visid_incap_1729671=8nN6ObgUQO2DZgaqE39n1MjxK18AAAAAQUIPAAAAAAAB8r3FWv5IQSDtqQiSFWMy; nlbi_1729671=GGBSOJWSxhwQTi/AcPvC0AAAAAAMzj+SD4kv+gKLfKspMsW7; incap_ses_1135_1729671=cVzfZWfL9GDzPfgmnVTAD5owYl8AAAAAPnB6wFOkTMNOoJ/uPACH4g==; incap_ses_711_1729671=Iw6xVjF0ohoa4Zw/3PrdCRt1aF8AAAAADpUs5iu2LEcjkWuXCzxFuA==; incap_ses_1132_1729671=ZHs4bdSuDATLlV6OI6y1D0/6aF8AAAAAsQh8diZEML1Ro1a0bL1fvA==",
         }
         payload = "refresh_token={}".format(self._refresh_token)
 
@@ -327,8 +321,7 @@ class CSPClient(RESTClient):
             return response.json().get("access_token")
         else:
             raise Exception(
-                "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, "
-                "text={})".format(
+                "could not fetch access_token using Request(url={}, headers={}, payload={}). Response(status={}, text={})".format(
                     access_token_url, headers, payload, response.status_code, response.text,
                 )
             )
@@ -352,75 +345,65 @@ class CSPClient(RESTClient):
         return CSPResponse(req_resp)
 
 
-# Get all the services present in the environment
-def get_service_def_ids(client):
-    try:
+if __name__ == "__main__":
 
-        GET_SERVICES = "/slc/api/ui/definitions"
+    # define constants for current use case
+    # SERVICE_ID = "87e50f21-c111-4f17-8646-2a29a8816161"
+    SERVICES_FILE_PATH = "services_list.txt"
 
-        # Get all services in an environment
-        get_services_resp = client.make_call(
-            "GET",
-            GET_SERVICES
-        )
-        mylog.info("get services response={}".format(get_services_resp))
-        if get_services_resp.status_code != 200:
-            mylog.error(
-                "Error occurred, unable to fetch services"
-            )
+    # ORG_ACCESS_RESOURCE = "/slc/api/definitions/external/{serviceId}/org-access/actions"
+    # SERVICE_ACCESS_RESOURCE = "/slc/api/service-access"
+    # ORGS_USERS = "/am/api/v2/orgs/{orgId}/users"
+    # ORGS_USERS = "/am/api/v2/orgs/{orgId}/users"
+    # ORGS_ROLES = "/am/api/orgs/{orgId}/roles"
+    # ORGS_GROUPS = "/am/api/orgs/{orgId}/groups"
+    # ORGS_OAUTH_APPS = "/am/api/orgs/{orgId}/oauth-apps"
+    SERVICES_ORGS= "/slc/api/v2/definitions/{serviceId}/orgs"
+    SERVICES_ORGS_WITH_PAGINATION = "/slc/api/v2/definitions/{serviceId}/orgs?pageStart={pageStart}&pageLimit=200"
 
-        all_services = get_services_resp.json.get("results")
-        return all_services
-
-    except Exception as e:
-        mylog.error(
-            "Error occurred while fetching service definition Ids"
-        )
-        raise
-
-
-# Return displayName and ServiceDefinition id in list format
-def return_service_def_ids(item):
-    try:
-        if re.match("CSP-Test-Service-.*", item["displayName"]):
-            return [item["displayName"], item["serviceDefinitionId"]]
-
-    except Exception as e:
-        mylog.error(
-            "Error in writing serviceDefinitionIds"
-        )
-        raise
-
-
-def main():
     # initialize csp rest client
-    client = CSPClient(
-        "console-stg.cloud.vmware.com",
-        "",
+    cclient = CSPClient(
+        "console.cloud.vmware.com",
+        "mV97AeCd4N4cY-2VFnkHGb2EsrjXg5hItQXNOQFdEknQ3274bn576gFsS-bInedm",
         timeout=120,
     )
 
-    all_services = get_service_def_ids(client)
-    with open("stg_service_definitions.csv", "w") as csvfile:
-        fields = ["displayName", "serviceDefinitionId"]
+    # use case: remove service access from given orgs
+    with open("services_orgs.csv", "w") as csvfile:
+        fields = ["service_id", "org_id"]
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(fields)
+        with open(SERVICES_FILE_PATH) as fp:
+            for service_id in fp:
+                service_id = service_id.strip()
 
-        # in-parallel execution
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            execution_result = (
-                executor.submit(return_service_def_ids, item)
-                for item in all_services
-            )
-            for future in concurrent.futures.as_completed(execution_result):
-                mylog.info("Service definition id fetched for {}".format(future.result()))
-                try:
-                    csv_writer.writerow(future.result())
-                except Exception as fault:
-                    mylog.exception(fault)
+                mylog.info("processing service_id={}".format(service_id))
 
-    mylog.info("Script end time: {}".format(datetime.datetime.now(datetime.timezone.utc)))
+                # Get all users in an org
+                services_org_resp_count = cclient.make_call(
+                    "GET",
+                    SERVICES_ORGS.format(serviceId=service_id)
+                )
 
+                # mylog.info("services_org_resp={}".format(services_org_resp))
+                if services_org_resp_count.status_code != 200:
+                    mylog.error(
+                        "Error occurred for GET {} for org={}".format(SERVICES_ORGS, service_id)
+                    )
+                    continue
 
-if __name__ == "__main__":
-    main()
+                no_of_orgs = services_org_resp_count.json.get("totalResults")
+
+                mylog.info("Service Id={}".format(service_id))
+                mylog.info("total Results={}".format(no_of_orgs))
+
+                for page_start in range(0, no_of_orgs, 200):
+                    services_org_resp = cclient.make_call(
+                        "GET",
+                        SERVICES_ORGS_WITH_PAGINATION.format(serviceId=service_id, pageStart=page_start)
+                    )
+                    count = str(services_org_resp.json).count("orgId")
+                    mylog.info("page Count={}".format(count))
+                    for i in range(count):
+                        org_id = services_org_resp.json.get("results")[i]["orgId"]
+                        csv_writer.writerow([service_id, org_id])
