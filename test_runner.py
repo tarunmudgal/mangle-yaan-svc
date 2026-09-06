@@ -461,8 +461,8 @@ def generate_and_copy_result_trends(bucket: str, result_key: str, history_key: s
         s3_client.download_files_from_s3(bucket, workload_history_key, allure_raw)
 
     allure_report_gen_cmd = "allure generate {} --clean -o {}".format(allure_raw, allure_html)
-    # allure_report_gen_cmd = b'allure generate /Users/mtarun/vmware/code/mangle-yaan-service/logs/allure/raw --clean ' \
-    #                         b'-o /Users/mtarun/vmware/code/mangle-yaan-service/logs/allure/html'
+    # allure_report_gen_cmd = b'allure generate /Users/mtarun/company/code/mangle-yaan-service/logs/allure/raw --clean ' \
+    #                         b'-o /Users/mtarun/company/code/mangle-yaan-service/logs/allure/html'
     cmd_output = utils.run_cmd(allure_report_gen_cmd)
     mylog.debug("cmd='{}' executed with output={}".format(allure_report_gen_cmd, cmd_output))
 

@@ -56,7 +56,7 @@
 # # setup details there and have them automatically attached to bugs when using
 # # the bugzilla autofiling feature provided by the pytest-traditions plugin.
 # # This variable is set using the autouse, function-scoped fixture set_testdir
-# # in vmware/spark/topology/fixture.py.
+# # in company/spark/topology/fixture.py.
 # testdir = None
 #
 # # NOTE: Update this value after a branch has been cut for the systest repo.
@@ -179,7 +179,7 @@
 #
 # def get_runner_ip():
 #     """
-#     Return the VMware 10-network/local ip address of the current machine.
+#     Return the company 10-network/local ip address of the current machine.
 #     """
 #     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #     try:
@@ -217,7 +217,7 @@
 #     return address
 #
 #
-# # from vmware.pxelib.utils
+# # from company.pxelib.utils
 # def can_connect(hostname, port):
 #     """
 #     Check if a host accepts connections.
@@ -1287,11 +1287,11 @@
 #
 #     ca_subj = ca_cert.get_subject()
 #     default_ca_subj = {
-#         "commonName": "VMware India",
+#         "commonName": "company India",
 #         "countryName": "IN",
 #         "stateOrProvinceName": "MH",
 #         "localityName": "Pune",
-#         "organizationName": "VMWare Inc",
+#         "organizationName": "company Inc",
 #     }
 #
 #     if ca_subj_dict is None:
@@ -1383,7 +1383,7 @@
 #         "countryName": "IN",
 #         "stateOrProvinceName": "MH",
 #         "localityName": "Pune",
-#         "organizationName": "VMWare Inc",
+#         "organizationName": "company Inc",
 #     }
 #
 #     if client_subj_dict is None:

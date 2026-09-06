@@ -96,6 +96,6 @@ spec:
         - ipBlock:
             cidr: 52.89.149.0/24  # GAZ IP (found using nslookup csp-preview.gaz-dev.csp-vidm-prod.com
         - ipBlock:
-            cidr: 10.113.54.0/24  # GIT IP (found using nslookup apigw-stg.vmware.com)
+            cidr: 10.113.54.0/24  # GIT IP (found using nslookup apigw-stg.company.com)
 #        - ipBlock:
-#            cidr: 10.30.237.0/24  # RDS IP (found using nslookup postgres-stg.us-west-2.csp.vmware.com)
+#            cidr: 10.30.237.0/24  # RDS IP (found using nslookup postgres-stg.us-west-2.csp.company.com)

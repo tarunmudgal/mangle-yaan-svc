@@ -353,7 +353,7 @@ if __name__ == "__main__":
 
     # initialize csp rest client
     cclient = CSPClient(
-        "console-stg.cloud.vmware.com",
+        "console-stg.cloud.company.com",
         "OQXUGqSbAz5A4QE4arU8j1rI0AxIl8drNgicKO1nIsYMgfusG8XUK5xUKzeRA5Rp",
         timeout=120,
     )
@@ -404,7 +404,7 @@ if __name__ == "__main__":
                             "actions": [
                                 {
                                     "type": "REDIRECT",
-                                    "redirectURL": "https://console-dev.cloud.vmware.com/csp/gateway/portal/#/user/my-roles",
+                                    "redirectURL": "https://console-dev.cloud.company.com/csp/gateway/portal/#/user/my-roles",
                                     "displayHTML": "VIEW ROLES",
                                     "language": "en"
                                 },

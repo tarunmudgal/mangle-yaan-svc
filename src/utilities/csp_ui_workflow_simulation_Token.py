@@ -36,7 +36,7 @@ CODE_VERIFIER_CONST = pkce.generate_code_verifier(length=43)
 CODE_CHALLENGE_CONST = pkce.get_code_challenge(CODE_VERIFIER_CONST)
 REQUEST_SESSION = requests.session()
 PO_AUTH_TOKEN = ""
-CSP_URL = "https://console-preview.cloud.vmware.com"
+CSP_URL = "https://console-preview.cloud.company.com"
 INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
 OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"
 MAX_WORKERS = 1
@@ -69,7 +69,7 @@ mylog.addHandler(file_handler)
 
 # class to execute CSP API calls #
 class CSPAPIFlows(object):
-    def __init__(self, csp_url="https://console-preview.cloud.vmware.com", api_token=""):
+    def __init__(self, csp_url="https://console-preview.cloud.company.com", api_token=""):
         self.api_token = api_token
         self.access_token = ""
         self.session = requests.session()
@@ -239,7 +239,7 @@ class CSPUIFlows(object):
             "Content-Type": "application/x-www-form-urlencoded",
         }
 
-    def execute_my_vmware_flow(self, idp_login_url, csp_url, username, password):
+    def execute_my_company_flow(self, idp_login_url, csp_url, username, password):
 
         ####### Request 3 GAZ HOST
         # Set Pre-Parameters:
@@ -373,7 +373,7 @@ class CSPUIFlows(object):
     def execute_federation_flow(self, idp_login_url, csp_url, username, password):
         # sample idp_login_url='https://gaz-preview.csp-vidm-prod.com/oauth/authorize?idp_id=00a291e5-e699-40a3-94ba
         # -fc80b697f486&response_type=code&login_hint=cspperf_user20002@cspperf.com&client_id=csp_stg_pkce_portal_client_id&
-        # redirect_uri=https://console-stg.cloud.vmware.com/csp/gateway/portal&state=test.&
+        # redirect_uri=https://console-stg.cloud.company.com/csp/gateway/portal&state=test.&
         # code_challenge=u4vtn7A5lyQnHWCEYiqhT_wnmZutzN_lNHGspqfXJM8&code_challenge_method=S256&
         # context_id=e759d7ca-3e8a-4b91-9826-017f80bb1c92'
 
@@ -462,12 +462,12 @@ class CSPUIFlows(object):
         csp_discovery_url = ""
         if "dev" in csp_url:
             csp_discovery_url = (
-                    "https://console-dev.cloud.vmware.com/csp/gateway/am/api/auth/discovery?"
+                    "https://console-dev.cloud.company.com/csp/gateway/am/api/auth/discovery?"
                     + "username="
                     + username
                     + "&"
                     + "state=test.&"
-                    + "redirect_uri=https://console-dev.cloud.vmware.com/csp/gateway/portal&"
+                    + "redirect_uri=https://console-dev.cloud.company.com/csp/gateway/portal&"
                     + "client_id=csp_gaz_pkce_portal_client_id&"
                     + "code_challenge="
                     + str(CODE_CHALLENGE_CONST)
@@ -476,12 +476,12 @@ class CSPUIFlows(object):
             )
         elif "preview" in csp_url:
             csp_discovery_url = (
-                    "https://console-preview.cloud.vmware.com/csp/gateway/am/api/auth/discovery?"
+                    "https://console-preview.cloud.company.com/csp/gateway/am/api/auth/discovery?"
                     + "username="
                     + username
                     + "&"
                     + "state=test.&"
-                    + "redirect_uri=https://console-preview.cloud.vmware.com/csp/gateway/portal&"
+                    + "redirect_uri=https://console-preview.cloud.company.com/csp/gateway/portal&"
                     + "client_id=csp_preview_pkce_portal_client_id&"
                     + "code_challenge="
                     + str(CODE_CHALLENGE_CONST)
@@ -490,12 +490,12 @@ class CSPUIFlows(object):
             )
         elif "stg" in csp_url:
             csp_discovery_url = (
-                    "https://console-stg.cloud.vmware.com/csp/gateway/am/api/auth/discovery?"
+                    "https://console-stg.cloud.company.com/csp/gateway/am/api/auth/discovery?"
                     + "username="
                     + username
                     + "&"
                     + "state=test.&"
-                    + "redirect_uri=https://console-stg.cloud.vmware.com/csp/gateway/portal&"
+                    + "redirect_uri=https://console-stg.cloud.company.com/csp/gateway/portal&"
                     + "client_id=csp_stg_pkce_portal_client_id&"
                     + "code_challenge="
                     + str(CODE_CHALLENGE_CONST)
@@ -573,8 +573,8 @@ class CSPUIFlows(object):
         elif "cspperf.com" in user_email:
             resp = self.execute_federation_flow(idp_login_url, csp_url, user_email, password)
         else:
-            resp = self.execute_my_vmware_flow(idp_login_url, csp_url, user_email, password)
-            mylog.debug("execute_my_vmware_flow resp.url={}".format(resp.url))
+            resp = self.execute_my_company_flow(idp_login_url, csp_url, user_email, password)
+            mylog.debug("execute_my_company_flow resp.url={}".format(resp.url))
 
         if csp_url in resp.url:
             code = self.extract_token_from_url(resp.url, "code")[0]
@@ -588,7 +588,7 @@ class CSPUIFlows(object):
                         + authorize_uri
                         + "?grant_type=authorization_code&"
                         + "client_id=csp_gaz_pkce_portal_client_id&"
-                        + "redirect_uri=https%3A%2F%2Fconsole-dev.cloud.vmware.com%2Fcsp%2Fgateway%2Fportal&"
+                        + "redirect_uri=https%3A%2F%2Fconsole-dev.cloud.company.com%2Fcsp%2Fgateway%2Fportal&"
                         + "code="
                         + str(code)
                         + "&"
@@ -597,7 +597,7 @@ class CSPUIFlows(object):
                 )
                 authrization_str = "Basic Y3NwX2dhel9wa2NlX3BvcnRhbF9jbGllbnRfaWQ6"
             elif "preview" in csp_url:
-                csp_authorize_uri = csp_url + authorize_uri + "?grant_type=authorization_code&" + "client_id=csp_gaz_pkce_portal_client_id&" + "redirect_uri=https%3A%2F%2Fconsole-preview.cloud.vmware.com%2Fcsp%2Fgateway" "%2Fportal&" + "code=" + str(
+                csp_authorize_uri = csp_url + authorize_uri + "?grant_type=authorization_code&" + "client_id=csp_gaz_pkce_portal_client_id&" + "redirect_uri=https%3A%2F%2Fconsole-preview.cloud.company.com%2Fcsp%2Fgateway" "%2Fportal&" + "code=" + str(
                     code
                 ) + "&" + "code_verifier=" + str(
                     CODE_VERIFIER_CONST
@@ -606,7 +606,7 @@ class CSPUIFlows(object):
             elif "stg" in csp_url:
                 csp_authorize_uri = csp_url + authorize_uri + "?grant_type=authorization_code&" + \
                                     "client_id=csp_stg_pkce_portal_client_id&" + \
-                                    "redirect_uri=https%3A%2F%2Fconsole-stg.cloud.vmware.com%2Fcsp%2Fgateway" \
+                                    "redirect_uri=https%3A%2F%2Fconsole-stg.cloud.company.com%2Fcsp%2Fgateway" \
                                     "%2Fportal&" + "code=" + str(
                     code
                 ) + "&" + "code_verifier=" + str(
@@ -693,7 +693,7 @@ class CSPUIFlows(object):
     def extract_token_from_url(self, url_data, parameter_name):
         """
         This method will extract said parameter from URL Body
-        :param url_data:'https://dev.csp.vmware.com/csp/gateway/portal/?token=eyJhbGci'
+        :param url_data:'https://dev.csp.company.com/csp/gateway/portal/?token=eyJhbGci'
         :param parameter_name:token
         :return: Extracted Value of specified parameter
         """

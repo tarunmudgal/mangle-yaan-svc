@@ -1,5 +1,5 @@
-FROM vmware-docker-csp-tools.bintray.io/csp-resiliency-tests:latest
-MAINTAINER CSP QE Team "csp-pune-qe@vmware.com"
+FROM company-docker-csp-tools.bintray.io/csp-resiliency-tests:latest
+MAINTAINER CSP QE Team "csp-pune-qe@company.com"
 
 COPY run.py /
 COPY ./pre_scripts /pre_scripts

@@ -5,7 +5,7 @@
 __author__ = "tarun mudgal"
 
 # selenium grid
-SELENIUM_GRID_HOST = "selenium-mangle-yaan.ara.decc.vmware.com"
+SELENIUM_GRID_HOST = "selenium-mangle-yaan.ara.decc.company.com"
 SELENIUM_GRID_PORT = "4444"
 SELENIUM_GRID_CONSOLE_URI = "/grid/console"
 SELENIUM_HUB_URI = "/wd/hub"

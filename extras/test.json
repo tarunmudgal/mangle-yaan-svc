@@ -1,0 +1,53 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "action": {
+                            "query": "BLOCK",
+                            "operator": "OR",
+                            "prefix_length": 0,
+                            "max_expansions": 50,
+                            "fuzzy_transpositions": true,
+                            "lenient": false,
+                            "zero_terms_query": "NONE",
+                            "auto_generate_synonyms_phrase_query": true,
+                            "boost": 1
+                        }
+                    }
+                },
+                {
+                    "range": {
+                        "timestamp": {
+                            "from": "now-5m",
+                            "to": null,
+                            "include_lower": true,
+                            "include_upper": true,
+                            "boost": 1
+                        }
+                    }
+                }
+            ],
+            "must_not": [
+                {
+                    "match": {
+                        "terminatingRuleId": {
+                            "query": "AWSManagedRulesBotControlRuleSet",
+                            "operator": "OR",
+                            "prefix_length": 0,
+                            "max_expansions": 50,
+                            "fuzzy_transpositions": true,
+                            "lenient": false,
+                            "zero_terms_query": "NONE",
+                            "auto_generate_synonyms_phrase_query": true,
+                            "boost": 1
+                        }
+                    }
+                }
+            ],
+            "adjust_pure_negative": true,
+            "boost": 1
+        }
+    }
+}

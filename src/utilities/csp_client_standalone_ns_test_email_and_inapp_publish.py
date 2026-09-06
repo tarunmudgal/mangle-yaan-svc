@@ -354,7 +354,7 @@ if __name__ == "__main__":
 
     # initialize csp rest client
     cclient = CSPClient(
-        "console-stg.cloud.vmware.com",
+        "console-stg.cloud.company.com",
         "OQXUGqSbAz5A4QE4arU8j1rI0AxIl8drNgicKO1nIsYMgfusG8XUK5xUKzeRA5Rp",
         timeout=120,
     )
@@ -405,7 +405,7 @@ if __name__ == "__main__":
                             "actions": [
                                 {
                                     "type": "REDIRECT",
-                                    "redirectURL": "https://console-dev.cloud.vmware.com/csp/gateway/portal/#/user/my-roles",
+                                    "redirectURL": "https://console-dev.cloud.company.com/csp/gateway/portal/#/user/my-roles",
                                     "displayHTML": "VIEW ROLES",
                                     "language": "en"
                                 },
@@ -437,7 +437,7 @@ if __name__ == "__main__":
                         },
                         "substitutions": {
                             "firstName": "Mangesh",
-                            "urlLink": "https://console-stg.cloud.vmware.com/csp/gateway/os/api/onboarding-referral?source=MARKETING&onboardingContextId=0cea497e-fff6-4156-996d-39a0affa3ccb&orderOnboardingId=508b7261-3a5c-463f-85b1-2e1bd6887e2f"
+                            "urlLink": "https://console-stg.cloud.company.com/csp/gateway/os/api/onboarding-referral?source=MARKETING&onboardingContextId=0cea497e-fff6-4156-996d-39a0affa3ccb&orderOnboardingId=508b7261-3a5c-463f-85b1-2e1bd6887e2f"
                         }
                     }
                 }

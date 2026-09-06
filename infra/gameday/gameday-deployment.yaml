@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name:  gameday-service
-        image: harbor-repo.vmware.com/csp_qe/gameday-service:latest
+        image: harbor-repo.company.com/csp_qe/gameday-service:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
@@ -48,7 +48,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: gameday-service.svc-stage.eng.vmware.com
+  - host: gameday-service.svc-stage.eng.company.com
     http:
       paths:
       - backend:

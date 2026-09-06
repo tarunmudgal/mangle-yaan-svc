@@ -362,7 +362,7 @@ if __name__ == "__main__":
 
     # initialize csp rest client
     cclient = CSPClient(
-        "console-preview.cloud.vmware.com",
+        "console-preview.cloud.company.com",
         "zihPqKgyjyxoGYAB8vTHUPJSXuOG6FxsEnUnRsRyMApaD2SwQwF1x8JHkqbcqJ52",
         timeout=120,
     )

@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: pre-post-workload-job-resiliency
-          image: vmware-docker-csp-tools.bintray.io/csp-resiliency-workload-wrapper:latest
+          image: company-docker-csp-tools.bintray.io/csp-resiliency-workload-wrapper:latest
           env:
             - name: type
               value: "pre"

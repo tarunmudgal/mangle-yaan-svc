@@ -17,7 +17,7 @@ class SubscriptionsPage(BasePage):
         ), "could not find error msg locator={}".format(self.commerce_sub_locators.TXT_ERROR_MSG)
         assert self.if_element_exists(
             self.commerce_sub_locators.BTN_BACK_TO_HOME_PAGE
-        ), "could not find Back to Vmware cloud services locator={}".format(
+        ), "could not find Back to company cloud services locator={}".format(
             self.commerce_sub_locators.BTN_BACK_TO_HOME_PAGE
         )
 

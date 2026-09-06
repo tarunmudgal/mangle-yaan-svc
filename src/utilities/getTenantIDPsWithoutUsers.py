@@ -9,7 +9,6 @@ import os
 import sys
 import time
 import typing
-import math
 
 import requests
 import urllib3
@@ -18,8 +17,9 @@ from requests.exceptions import (ConnectTimeout, ConnectionError, ReadTimeout, S
 from requests.packages.urllib3.exceptions import ConnectTimeoutError
 from requests.packages.urllib3.util.retry import Retry
 
-requests.packages.urllib3.disable_warnings()
+import config
 
+requests.packages.urllib3.disable_warnings()
 
 # define constants
 HTTP_RETRIABLE_ERRORS = (
@@ -43,7 +43,6 @@ LOG_FORMAT = (
     "[%(asctime)s] [%(levelname)s] [%(filename)s] [%(lineno)d]: [%(funcName)s] %(message)s"
 )
 LOG_DATE_FORMAT = "%d-%m-%Y %I:%M:%S %p"
-
 
 # initialize logger
 mylog = logging.getLogger("csp_client_get_orgs")
@@ -344,70 +343,79 @@ class CSPClient(RESTClient):
             req_resp = self.request(verb, api_resource, **kwargs)
         return CSPResponse(req_resp)
 
+    def divide_chunks(l, n):
+
+        # looping till length l
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
+
 
 if __name__ == "__main__":
-    import csv
     # define constants for current use case
-    ORG_ID = "ef0502f1-7ff1-484c-853d-a76901cfb87c"
+    SERVICE_ID = "142cd4ab-5727-4e7d-9cc2-a87ff8998635"
+    ORGS_FILE_PATH = "orgList_trap_domain_orgs.txt"
 
-    ORG_USERS_RESOURCE = "/am/api/v2/orgs/{orgId}/users"
-    PAGE_SIZE = 100
+    IDP_REGISTRATIONS = "/am/api/idp-registrations"
+    USER_SEARCH = "/am/api/v2/users/search"
 
     # initialize csp rest client
     cclient = CSPClient(
-        "console.cloud.company.com",
-        "tv4B59ixaVU2wHa1HrlThQ5NATqTeDZazPyunMpeEH0bICwNOp1b6PY-gASDOZww",
+        "console-stg.cloud.company.com",
+        config.REFRESH_TOKEN,
         timeout=120,
     )
 
-    with open('stg_org_users.csv', 'w', newline='') as csvfile:
-        fieldnames = ['user_email', 'user_role']
-        csv_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        csv_writer.writeheader()
+    # making call for each user block
+    mylog.info("Test started")
 
-        org_id = ORG_ID
+    master_idps_list = cclient.make_call("GET", IDP_REGISTRATIONS).json
+    mylog.debug("master_idps_list response={}".format(master_idps_list))
 
-        # mylog.info("processing org_id={}".format(org_id))
+    vidmpreview_idps = [idp_info for idp_info in master_idps_list if 'vidmpreview' in idp_info.get('idpUrl')]
+    mylog.debug("vidmpreview_idps_count={}. All vidmpreview_idps={}".format(len(vidmpreview_idps), vidmpreview_idps))
 
-        # Get list of subscriptions in an org
-        get_org_users_resp = cclient.make_call(
-            "GET",
-            ORG_USERS_RESOURCE.format(orgId=org_id),
-            params={"orgId": org_id}
-        )
-        # mylog.info("get_org_users_resp={}".format(get_org_users_resp))
+    idp_tenants_with_no_users = []
+    idp_tenants_with_users = []
+    all_tenants = []
+    for idx, idp_info in enumerate(vidmpreview_idps):
+        tdict = []
+        mylog.info(f"processing idp no. {idx}")
+        if not idp_info.get('idpDomains'):
+            continue
+        users = []
+        idp_tenants_dict = {'idpId': idp_info.get('idpId'), 'idpDisplayName': idp_info.get('idpDisplayName'),
+                            'idpDomains': []}
+        for domain in idp_info.get('idpDomains'):
+            user_search_payload = {
+                "searchTerm": f"@{domain}",
+                "idpId": idp_info['idpId'],
+                "pageStart": 1,
+                "pageLimit": 200
+            }
+            mylog.debug("calling user search with search term={} and idpId={}".format(user_search_payload.get(
+                'searchTerm'), idp_info['idpId']))
+            try:
+                user_search_results = cclient.make_call("POST", USER_SEARCH, json=user_search_payload).json
+            except Exception as exp:
+                mylog.debug("exception occurred!")
+                users = []
+            # mylog.debug("user_search_results response={}".format(user_search_results))
+            users.append(user_search_results)
 
-        # Perform important verifications before processing further for a given org_id
-        if get_org_users_resp.status_code != 200:
-            mylog.error(
-                "Error occurred for GET {} for org={}".format(ORG_USERS_RESOURCE, org_id)
-            )
-        else:
-            loop_count = math.ceil(get_org_users_resp.json.get("totalResults") / PAGE_SIZE)
+            total_users = user_search_results['totalResults']
+            idp_tenants_dict['idpDomains'].append({'idpDomain': domain, 'totalUsers': total_users})
+            if total_users == 0:
+                if idp_tenants_dict not in idp_tenants_with_no_users:
+                    idp_tenants_with_no_users.append(idp_tenants_dict)
+            else:
+                mylog.debug("{} domain contains {} users".format(domain, total_users))
+                idp_tenants_with_users.append(idp_tenants_dict)
 
-            page_start = 1
-            for count in range(loop_count):
-                # breakpoint()
-                get_org_users_resp = cclient.make_call(
-                    "GET",
-                    ORG_USERS_RESOURCE.format(orgId=org_id),
-                    params={"orgId": org_id, 'pageStart': page_start, 'pageLimit': PAGE_SIZE}
-                )
-                mylog.info("results count: {}".format(len(get_org_users_resp.json.get('results'))))
-                for result in get_org_users_resp.json.get('results'):
-                    mylog.info("reading result email: {} org_roles: {}".format(result.get("user").get("email"),
-                                                                             result.get("organizationRoles")))
-                    org_roles = []
-                    for org_role in result.get('organizationRoles'):
-                        if org_role.get('name') == "org_owner":
-                            org_roles.append('org_owner')
-                            break
-                    if 'org_owner' in org_roles:
-                        csv_writer.writerow(
-                            {'user_email': result.get("user").get("email"), 'user_role': 'org_owner'})
-                    else:
-                        csv_writer.writerow(
-                            {'user_email': result.get("user").get("email"), 'user_role': 'org_member'})
-                page_start += PAGE_SIZE
+        all_tenants.append(idp_tenants_dict)
 
+    mylog.info("all_tenants={}".format(all_tenants))
+    mylog.debug(f"idp_tenants_with_no_users = {idp_tenants_with_no_users}")
+    mylog.debug(f"idp_tenants_with_users = {idp_tenants_with_users}")
+    # breakpoint()
 
+    mylog.info("Test ended")

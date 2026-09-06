@@ -1,5 +1,5 @@
-FROM harbor-repo.vmware.com/dockerhub-proxy-cache/library/python:3.8-alpine
-MAINTAINER CSP QE Team "csp-pune-qe@vmware.com"
+FROM harbor-repo.company.com/dockerhub-proxy-cache/library/python:3.8-alpine
+MAINTAINER CSP QE Team "csp-pune-qe@company.com"
 
 ARG CRYPTOGRAPHY_DONT_BUILD_RUST=1
 

@@ -20,7 +20,7 @@ if csp_env == "dev":
 
 
 # def interceptor(request):
-#     if request.url == 'https://console-preview.cloud.vmware.com/csp/gateway/ff-service/api/sdk/public-flags':
+#     if request.url == 'https://console-preview.cloud.company.com/csp/gateway/ff-service/api/sdk/public-flags':
 #         request.create_response(
 #             status_code=503,
 #             headers={'Content-Type': 'application/json'},  # Optional headers dictionary
@@ -94,7 +94,7 @@ class TestCSPUIWhenExternalCallsBlocked:
         del self.driver.request_interceptor
         del self.driver.requests
 
-        request_url = "https://feedback.esp-staging.vmware-aws.com/api/feedback/v1/trigger-events"
+        request_url = "https://feedback.esp-staging.company-aws.com/api/feedback/v1/trigger-events"
         request_response = 503
         request_headers = {"Content-Type": "application/json"}
         request_body = "<html>feedback call mocked!</html>"

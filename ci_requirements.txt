@@ -1,4 +1,0 @@
-pylint==2.6.0
-mypy==0.812
-anybadge==1.7.0
-pylint-fail-under==0.3.0

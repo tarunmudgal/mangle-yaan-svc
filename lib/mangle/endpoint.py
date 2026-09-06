@@ -1,5 +1,5 @@
 """
-Copyright 2017 VMware, Inc. All rights reserved. -- VMware confidential
+Copyright 2017 company, Inc. All rights reserved. -- company confidential
 """
 import os
 import sys

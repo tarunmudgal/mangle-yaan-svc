@@ -352,7 +352,7 @@ if __name__ == "__main__":
     API_TOKENS_FILE_PATH = "preview_300x_users.csv"
     USER_API_TOKEN_FILE_PATH = "preview_300x_users_updated.csv"
 
-    BASE_URL = "https://console-preview.cloud.vmware.com/csp/gateway"
+    BASE_URL = "https://console-preview.cloud.company.com/csp/gateway"
     PO_REFRESH_TOKEN = "8Bj3wiATU_3gg1Bm2OBDdOIW2IxwB0rWR9RHdYqWIQR5VsOiWir702h4wHIb2Wm7"
 
     # use case: remove service access from given orgs

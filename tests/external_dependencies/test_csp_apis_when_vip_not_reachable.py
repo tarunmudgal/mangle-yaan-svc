@@ -48,7 +48,7 @@ class TestCSPAPIsWhenVIPServiceNotReachable:
             serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         # request_body = {
-        #     "seller": "VMWARE",
+        #     "seller": "company",
         #     "context": {"title": "test context"},
         #     "description": "patched description",
         #     "title": "Single Host",
@@ -83,7 +83,7 @@ class TestCSPAPIsWhenVIPServiceNotReachable:
             serviceDefinitionId=myconfig.get("csp").get(csp_env).get("defaultService").get("id")
         )
         request_body = {
-            "linkUrl": "https://jira.eng.vmware.com/",
+            "linkUrl": "https://jira.eng.company.com/",
             "title": "FAQ 13?",
             "linkTitle": "More info",
             "text": "Test description for FAQ 13",

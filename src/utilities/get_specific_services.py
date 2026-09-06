@@ -395,7 +395,7 @@ def return_service_def_ids(item):
 def main():
     # initialize csp rest client
     client = CSPClient(
-        "console-stg.cloud.vmware.com",
+        "console-stg.cloud.company.com",
         "",
         timeout=120,
     )

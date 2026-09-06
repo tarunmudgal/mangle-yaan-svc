@@ -165,18 +165,18 @@
     "path": "commerce"
   },
   "420": {
-    "name": "IAM VMwareID",
-    "type": "CSP_IAM_VMWAREID",
-    "path": "iam-vmwareid"
+    "name": "IAM companyID",
+    "type": "CSP_IAM_companyID",
+    "path": "iam-companyid"
   },
   "430": {
-    "name": "IAM VMwareID IDP Driver",
-    "type": "CSP_IAM_VMWAREID_IDP_DRIVER",
+    "name": "IAM companyID IDP Driver",
+    "type": "CSP_IAM_companyID_IDP_DRIVER",
     "path": null
   },
   "440": {
-    "name": "IAM VMwareID Persistence Driver",
-    "type": "CSP_IAM_VMWAREID_PERSISTENCE_DRIVER",
+    "name": "IAM companyID Persistence Driver",
+    "type": "CSP_IAM_companyID_PERSISTENCE_DRIVER",
     "path": null
   },
   "450": {

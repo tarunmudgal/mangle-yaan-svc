@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
           - name: resiliency-all-workloads-csp-apis-decc
-            image: vmwaresaas.jfrog.io/csp/resiliency-workload:latest
+            image: companysaas.jfrog.io/csp/resiliency-workload:latest
             imagePullPolicy: Always
             env:
               - name: WORKLOAD_ID

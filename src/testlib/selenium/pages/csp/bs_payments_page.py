@@ -19,7 +19,7 @@ class PaymentsPage(BasePage):
         )
         assert self.if_element_exists(
             self.commerce_payments_locators.BTN_BACK_TO_HOME_PAGE
-        ), "could not find Back to Vmware cloud services locator={}".format(
+        ), "could not find Back to company cloud services locator={}".format(
             self.commerce_payments_locators.BTN_BACK_TO_HOME_PAGE
         )
 

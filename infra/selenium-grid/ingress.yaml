@@ -15,7 +15,7 @@ spec:
       port:
         number: 4444
   rules:
-    - host: selenium-mangle-yaan.ara.decc.vmware.com
+    - host: selenium-mangle-yaan.ara.decc.company.com
       http:
         paths:
           - path: /

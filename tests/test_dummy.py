@@ -14,7 +14,7 @@ FF_CONFIG_CACHE_UPDATE_INTERVAL = 300
 def interceptor(request):
     if (
         request.url
-        == "https://console-preview.cloud.vmware.com/csp/gateway/ff-service/api/sdk/public-flags"
+        == "https://console-preview.cloud.company.com/csp/gateway/ff-service/api/sdk/public-flags"
     ):
         request.create_response(
             status_code=503,
@@ -47,7 +47,7 @@ class TestDummy:
         """
         print("test_example1 called")
         self.driver.request_interceptor = interceptor
-        self.driver.get("https://console-preview.cloud.vmware.com")
+        self.driver.get("https://console-preview.cloud.company.com")
         for request in self.driver.requests:
             if request.response:
                 print(
@@ -143,7 +143,7 @@ class TestDummy:
         auth_authorize_data = {
             "grant_type": "authorization_code",
             "client_id": client_id_const,
-            "redirect_uri": "https://console-preview.cloud.vmware.com/csp/gateway/discovery",
+            "redirect_uri": "https://console-preview.cloud.company.com/csp/gateway/discovery",
             "code": auth_code,
             "code_verifier": code_verifier_const,
         }

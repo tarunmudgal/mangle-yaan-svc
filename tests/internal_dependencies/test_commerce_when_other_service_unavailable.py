@@ -239,7 +239,7 @@ class TestCommerceDependencyOnDifferentServices:
         )
 
     @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
-    @pytest.mark.skip(reason="Open Thread : https://vmware.slack.com/archives/C1K5Q80SW/p1664377422413779")
+    @pytest.mark.skip(reason="Open Thread : https://company.slack.com/archives/C1K5Q80SW/p1664377422413779")
     def test_api_get_invoice(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]
@@ -267,7 +267,7 @@ class TestCommerceDependencyOnDifferentServices:
         )
 
     @pytest.mark.dependency(depends=["test_api_get_billing_accounts"])
-    @pytest.mark.skip(reason="Open Thread : https://vmware.slack.com/archives/C1K5Q80SW/p1664377422413779")
+    @pytest.mark.skip(reason="Open Thread : https://company.slack.com/archives/C1K5Q80SW/p1664377422413779")
     def test_api_get_statement(self, inject_k8s_infra_fault_service_unavailable_for_class):
         # expected csp api response (status_code)
         expected_response = [200]

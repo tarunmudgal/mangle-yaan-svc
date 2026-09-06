@@ -111,4 +111,4 @@ spec:
 #            .csp-vidm-prod.com
         - ipBlock:
             cidr: 10.30.237.0/24  # RDS IP (found using nslookup postgres-stg.us-west-2.csp
-#            .vmware.com)
+#            .company.com)

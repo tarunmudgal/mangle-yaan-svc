@@ -1,0 +1,1282 @@
+[
+  {
+    "ok": true,
+    "resp": {
+      "type": "monitor",
+      "schema_version": 3,
+      "name": "Global Rate Limit Monitor",
+      "enabled": true,
+      "enabled_time": 1683116362541,
+      "schedule": {
+        "period": {
+          "interval": 5,
+          "unit": "MINUTES"
+        }
+      },
+      "inputs": [
+        {
+          "search": {
+            "indices": [
+              "awswaf-*"
+            ],
+            "query": {
+              "query": {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "action": {
+                          "query": "BLOCK",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "terminatingRuleId": {
+                          "query": "global_rate_limit_generic",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "timestamp": {
+                          "from": "now-5m",
+                          "to": null,
+                          "include_lower": true,
+                          "include_upper": true,
+                          "boost": 1
+                        }
+                      }
+                    }
+                  ],
+                  "adjust_pure_negative": true,
+                  "boost": 1
+                }
+              }
+            }
+          }
+        }
+      ],
+      "triggers": [
+        {
+          "id": "VnWO4YcBBettTDdj14IJ",
+          "name": "Global Rate Limit Trigger",
+          "severity": "1",
+          "condition": {
+            "script": {
+              "source": "ctx.results[0].hits.total.value > 100",
+              "lang": "painless"
+            }
+          },
+          "actions": [
+            {
+              "id": "V3WO4YcBBettTDdj14IJ",
+              "name": "Global Rate Limit Action",
+              "destination_id": "hP0-gIcBE_CG3P5QZ7Pp",
+              "message_template": {
+                "source": "{{#ctx}}\n{{#results}}{{#hits}}\n\nCloudFront WAF rule {{hits.0._source.terminatingRuleId}} blocked *{{total.value}}* requests in between {{periodStart}} to {{periodEnd}}.\n\nPlease access following Kibana dashboard url to debug further - https://vpc-waf-dashboards-dev-standard-qzetvss2wnr7emdqzqxs57nvt4.us-east-1.es.amazonaws.com/_plugin/kibana/app/dashboards#/view/dashboard?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'{{periodStart}}',to:'{{periodEnd}}'))&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:action,negate:!f,params:(query:BLOCK),type:phrase),query:(match_phrase:(action:BLOCK))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:terminatingRuleId,negate:!f,params:(query:{{hits.0._source.terminatingRuleId}}),type:phrase),query:(match_phrase:(terminatingRuleId:{{hits.0._source.terminatingRuleId}})))),fullScreenMode:!f,options:(darkTheme:!f,hidePanelTitles:!f,useMargins:!t),query:(language:lucene,query:''),timeRestore:!f,title:WAFDashboard,viewMode:view)\n\nPlease follow AlertstoAction section of the following runbook - https://confluence.eng.company.com/display/CSP/Runbook%3A+Cloudfront+Alerts#Runbook:CloudfrontAlerts-AlertstoAction\n\n{{/hits}}\n{{/results}}\n{{/ctx}}",
+                "lang": "mustache"
+              },
+              "throttle_enabled": false,
+              "subject_template": {
+                "source": ":alert: *WAF Rule global_rate_limit_generic Blocked Some Requests*",
+                "lang": "mustache"
+              }
+            }
+          ]
+        }
+      ],
+      "last_update_time": 1683801534384,
+      "ui_metadata": {
+        "schedule": {
+          "cronExpression": "0 */1 * * *",
+          "period": {
+            "unit": "MINUTES",
+            "interval": 5
+          },
+          "timezone": null,
+          "daily": 0,
+          "monthly": {
+            "type": "day",
+            "day": 1
+          },
+          "weekly": {
+            "tue": false,
+            "wed": false,
+            "thur": false,
+            "sat": false,
+            "fri": false,
+            "mon": false,
+            "sun": false
+          },
+          "frequency": "interval"
+        },
+        "search": {
+          "aggregationType": "count",
+          "fieldName": "",
+          "overDocuments": "all documents",
+          "searchType": "query",
+          "bucketValue": 1,
+          "timeField": "",
+          "groupedOverTop": 5,
+          "bucketUnitOfTime": "h",
+          "where": {
+            "fieldName": [],
+            "fieldRangeEnd": 0,
+            "fieldRangeStart": 0,
+            "fieldValue": "",
+            "operator": "is"
+          },
+          "groupedOverFieldName": "bytes"
+        },
+        "triggers": {
+          "Global Rate Limit Trigger": {
+            "value": 10000,
+            "enum": "ABOVE"
+          }
+        }
+      }
+    },
+    "activeCount": 0,
+    "dayCount": 0,
+    "version": 6,
+    "ifSeqNo": 29,
+    "ifPrimaryTerm": 1
+  },
+  {
+    "ok": true,
+    "resp": {
+      "type": "monitor",
+      "schema_version": 3,
+      "name": "Automation Rate Limit Monitor",
+      "enabled": true,
+      "enabled_time": 1683116507815,
+      "schedule": {
+        "period": {
+          "interval": 5,
+          "unit": "MINUTES"
+        }
+      },
+      "inputs": [
+        {
+          "search": {
+            "indices": [
+              "awswaf-*"
+            ],
+            "query": {
+              "query": {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "action": {
+                          "query": "BLOCK",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "terminatingRuleId": {
+                          "query": "global_rate_limit_automation",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "timestamp": {
+                          "from": "now-5m",
+                          "to": null,
+                          "include_lower": true,
+                          "include_upper": true,
+                          "boost": 1
+                        }
+                      }
+                    }
+                  ],
+                  "adjust_pure_negative": true,
+                  "boost": 1
+                }
+              }
+            }
+          }
+        }
+      ],
+      "triggers": [
+        {
+          "id": "pBqQ4YcBYMsrBDr8eWYx",
+          "name": "Automation Rate Limit Trigger",
+          "severity": "1",
+          "condition": {
+            "script": {
+              "source": "ctx.results[0].hits.total.value > 100",
+              "lang": "painless"
+            }
+          },
+          "actions": [
+            {
+              "id": "pRqQ4YcBYMsrBDr8eWYy",
+              "name": "Automation Rate Limit Action",
+              "destination_id": "hP0-gIcBE_CG3P5QZ7Pp",
+              "message_template": {
+                "source": "{{#ctx}}\n{{#results}}{{#hits}}\n\nCloudFront WAF rule {{hits.0._source.terminatingRuleId}} blocked *{{total.value}}* requests in between {{periodStart}} to {{periodEnd}}.\n\nPlease access following Kibana dashboard url to debug further - https://vpc-waf-dashboards-dev-standard-qzetvss2wnr7emdqzqxs57nvt4.us-east-1.es.amazonaws.com/_plugin/kibana/app/dashboards#/view/dashboard?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'{{periodStart}}',to:'{{periodEnd}}'))&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:action,negate:!f,params:(query:BLOCK),type:phrase),query:(match_phrase:(action:BLOCK))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:terminatingRuleId,negate:!f,params:(query:{{hits.0._source.terminatingRuleId}}),type:phrase),query:(match_phrase:(terminatingRuleId:{{hits.0._source.terminatingRuleId}})))),fullScreenMode:!f,options:(darkTheme:!f,hidePanelTitles:!f,useMargins:!t),query:(language:lucene,query:''),timeRestore:!f,title:WAFDashboard,viewMode:view)\n\nPlease follow AlertstoAction section of the following runbook - https://confluence.eng.company.com/display/CSP/Runbook%3A+Cloudfront+Alerts#Runbook:CloudfrontAlerts-AlertstoAction\n\n{{/hits}}\n{{/results}}\n{{/ctx}}",
+                "lang": "mustache"
+              },
+              "throttle_enabled": false,
+              "subject_template": {
+                "source": ":alert: *WAF Rule global_rate_limit_automation Blocked Some Requests*",
+                "lang": "mustache"
+              }
+            }
+          ]
+        }
+      ],
+      "last_update_time": 1683801641930,
+      "ui_metadata": {
+        "schedule": {
+          "cronExpression": "0 */1 * * *",
+          "period": {
+            "unit": "MINUTES",
+            "interval": 5
+          },
+          "timezone": null,
+          "daily": 0,
+          "monthly": {
+            "type": "day",
+            "day": 1
+          },
+          "weekly": {
+            "tue": false,
+            "wed": false,
+            "thur": false,
+            "sat": false,
+            "fri": false,
+            "mon": false,
+            "sun": false
+          },
+          "frequency": "interval"
+        },
+        "search": {
+          "aggregationType": "count",
+          "fieldName": "",
+          "overDocuments": "all documents",
+          "searchType": "query",
+          "bucketValue": 1,
+          "timeField": "",
+          "groupedOverTop": 5,
+          "bucketUnitOfTime": "h",
+          "where": {
+            "fieldName": [],
+            "fieldRangeEnd": 0,
+            "fieldRangeStart": 0,
+            "fieldValue": "",
+            "operator": "is"
+          },
+          "groupedOverFieldName": "bytes"
+        },
+        "triggers": {
+          "Automation Rate Limit Trigger": {
+            "value": 10000,
+            "enum": "ABOVE"
+          }
+        }
+      }
+    },
+    "activeCount": 0,
+    "dayCount": 0,
+    "version": 6,
+    "ifSeqNo": 29,
+    "ifPrimaryTerm": 1
+  },
+  {
+    "ok": true,
+    "resp": {
+      "type": "monitor",
+      "schema_version": 3,
+      "name": "AWS-AWSManagedRulesSQLiRuleSet Monitor",
+      "enabled": true,
+      "enabled_time": 1683115323536,
+      "schedule": {
+        "period": {
+          "interval": 5,
+          "unit": "MINUTES"
+        }
+      },
+      "inputs": [
+        {
+          "search": {
+            "indices": [
+              "awswaf-*"
+            ],
+            "query": {
+              "query": {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "action": {
+                          "query": "BLOCK",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "terminatingRuleId": {
+                          "query": "AWSManagedRulesSQLiRuleSet",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "timestamp": {
+                          "from": "now-5m",
+                          "to": null,
+                          "include_lower": true,
+                          "include_upper": true,
+                          "boost": 1
+                        }
+                      }
+                    }
+                  ],
+                  "adjust_pure_negative": true,
+                  "boost": 1
+                }
+              }
+            }
+          }
+        }
+      ],
+      "triggers": [
+        {
+          "id": "_HV-4YcBBettTDdjeoGa",
+          "name": "AWS-AWSManagedRulesSQLiRuleSet Trigger",
+          "severity": "1",
+          "condition": {
+            "script": {
+              "source": "ctx.results[0].hits.total.value > 10",
+              "lang": "painless"
+            }
+          },
+          "actions": [
+            {
+              "id": "_XV-4YcBBettTDdjeoGa",
+              "name": "AWS-AWSManagedRulesSQLiRuleSet Action",
+              "destination_id": "hP0-gIcBE_CG3P5QZ7Pp",
+              "message_template": {
+                "source": "{{#ctx}}\n{{#results}}{{#hits}}\n\nCloudFront WAF rule {{hits.0._source.terminatingRuleId}} blocked *{{total.value}}* requests in between {{periodStart}} to {{periodEnd}}.\n\nPlease access following Kibana dashboard url to debug further - https://vpc-waf-dashboards-dev-standard-qzetvss2wnr7emdqzqxs57nvt4.us-east-1.es.amazonaws.com/_plugin/kibana/app/dashboards#/view/dashboard?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'{{periodStart}}',to:'{{periodEnd}}'))&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:action,negate:!f,params:(query:BLOCK),type:phrase),query:(match_phrase:(action:BLOCK))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:terminatingRuleId,negate:!f,params:(query:{{hits.0._source.terminatingRuleId}}),type:phrase),query:(match_phrase:(terminatingRuleId:{{hits.0._source.terminatingRuleId}})))),fullScreenMode:!f,options:(darkTheme:!f,hidePanelTitles:!f,useMargins:!t),query:(language:lucene,query:''),timeRestore:!f,title:WAFDashboard,viewMode:view)\n\nPlease follow AlertstoAction section of the following runbook - https://confluence.eng.company.com/display/CSP/Runbook%3A+Cloudfront+Alerts#Runbook:CloudfrontAlerts-AlertstoAction\n\n{{/hits}}\n{{/results}}\n{{/ctx}}",
+                "lang": "mustache"
+              },
+              "throttle_enabled": false,
+              "subject_template": {
+                "source": ":alert: *WAF Rule AWS-AWSManagedRulesSQLiRuleSet Blocked Some Requests*",
+                "lang": "mustache"
+              }
+            }
+          ]
+        }
+      ],
+      "last_update_time": 1683801717782,
+      "ui_metadata": {
+        "schedule": {
+          "cronExpression": "0 */1 * * *",
+          "period": {
+            "unit": "MINUTES",
+            "interval": 5
+          },
+          "timezone": null,
+          "daily": 0,
+          "monthly": {
+            "type": "day",
+            "day": 1
+          },
+          "weekly": {
+            "tue": false,
+            "wed": false,
+            "thur": false,
+            "sat": false,
+            "fri": false,
+            "mon": false,
+            "sun": false
+          },
+          "frequency": "interval"
+        },
+        "search": {
+          "aggregationType": "count",
+          "fieldName": "",
+          "overDocuments": "all documents",
+          "searchType": "query",
+          "bucketValue": 1,
+          "timeField": "",
+          "groupedOverTop": 5,
+          "bucketUnitOfTime": "h",
+          "where": {
+            "fieldName": [],
+            "fieldRangeEnd": 0,
+            "fieldRangeStart": 0,
+            "fieldValue": "",
+            "operator": "is"
+          },
+          "groupedOverFieldName": "bytes"
+        },
+        "triggers": {
+          "AWS-AWSManagedRulesSQLiRuleSet Trigger": {
+            "value": 10000,
+            "enum": "ABOVE"
+          }
+        }
+      }
+    },
+    "activeCount": 0,
+    "dayCount": 0,
+    "version": 6,
+    "ifSeqNo": 12,
+    "ifPrimaryTerm": 1
+  },
+  {
+    "ok": true,
+    "resp": {
+      "type": "monitor",
+      "schema_version": 3,
+      "name": "AWS-AWSManagedRulesKnownBadInputsRuleSet Monitor",
+      "enabled": true,
+      "enabled_time": 1683115169004,
+      "schedule": {
+        "period": {
+          "interval": 5,
+          "unit": "MINUTES"
+        }
+      },
+      "inputs": [
+        {
+          "search": {
+            "indices": [
+              "awswaf-*"
+            ],
+            "query": {
+              "query": {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "action": {
+                          "query": "BLOCK",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "terminatingRuleId": {
+                          "query": "AWSManagedRulesKnownBadInputsRuleSet",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "timestamp": {
+                          "from": "now-5m",
+                          "to": null,
+                          "include_lower": true,
+                          "include_upper": true,
+                          "boost": 1
+                        }
+                      }
+                    }
+                  ],
+                  "adjust_pure_negative": true,
+                  "boost": 1
+                }
+              }
+            }
+          }
+        }
+      ],
+      "triggers": [
+        {
+          "id": "9XV84YcBBettTDdjFoHn",
+          "name": "AWS-AWSManagedRulesKnownBadInputsRuleSet Trigger",
+          "severity": "1",
+          "condition": {
+            "script": {
+              "source": "ctx.results[0].hits.total.value > 10",
+              "lang": "painless"
+            }
+          },
+          "actions": [
+            {
+              "id": "9nV84YcBBettTDdjFoHn",
+              "name": "AWS-AWSManagedRulesKnownBadInputsRuleSet Action",
+              "destination_id": "hP0-gIcBE_CG3P5QZ7Pp",
+              "message_template": {
+                "source": "{{#ctx}}\n{{#results}}\n{{#hits}}\n\nCloudFront WAF rule {{hits.0._source.terminatingRuleId}} blocked *{{total.value}}* requests in between {{periodStart}} to {{periodEnd}}.\n\nPlease access following Kibana dashboard url to debug further - https://vpc-waf-dashboards-dev-standard-qzetvss2wnr7emdqzqxs57nvt4.us-east-1.es.amazonaws.com/_plugin/kibana/app/dashboards#/view/dashboard?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'{{periodStart}}',to:'{{periodEnd}}'))&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:action,negate:!f,params:(query:BLOCK),type:phrase),query:(match_phrase:(action:BLOCK))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:terminatingRuleId,negate:!f,params:(query:{{hits.0._source.terminatingRuleId}}),type:phrase),query:(match_phrase:(terminatingRuleId:{{hits.0._source.terminatingRuleId}})))),fullScreenMode:!f,options:(darkTheme:!f,hidePanelTitles:!f,useMargins:!t),query:(language:lucene,query:''),timeRestore:!f,title:WAFDashboard,viewMode:view)\n\nPlease follow AlertstoAction section of the following runbook - https://confluence.eng.company.com/display/CSP/Runbook%3A+Cloudfront+Alerts#Runbook:CloudfrontAlerts-AlertstoAction\n\n{{/hits}}\n{{/results}}\n{{/ctx}}",
+                "lang": "mustache"
+              },
+              "throttle_enabled": false,
+              "subject_template": {
+                "source": ":alert: *WAF Rule AWS-AWSManagedRulesKnownBadInputsRuleSet Blocked Some Requests*",
+                "lang": "mustache"
+              }
+            }
+          ]
+        }
+      ],
+      "last_update_time": 1683801852089,
+      "ui_metadata": {
+        "schedule": {
+          "cronExpression": "0 */1 * * *",
+          "period": {
+            "unit": "MINUTES",
+            "interval": 5
+          },
+          "timezone": null,
+          "daily": 0,
+          "monthly": {
+            "type": "day",
+            "day": 1
+          },
+          "weekly": {
+            "tue": false,
+            "wed": false,
+            "thur": false,
+            "sat": false,
+            "fri": false,
+            "mon": false,
+            "sun": false
+          },
+          "frequency": "interval"
+        },
+        "search": {
+          "aggregationType": "count",
+          "fieldName": "",
+          "overDocuments": "all documents",
+          "searchType": "query",
+          "bucketValue": 1,
+          "timeField": "",
+          "groupedOverTop": 5,
+          "bucketUnitOfTime": "h",
+          "where": {
+            "fieldName": [],
+            "fieldRangeEnd": 0,
+            "fieldRangeStart": 0,
+            "fieldValue": "",
+            "operator": "is"
+          },
+          "groupedOverFieldName": "bytes"
+        },
+        "triggers": {
+          "AWS-AWSManagedRulesKnownBadInputsRuleSet Trigger": {
+            "value": 10000,
+            "enum": "ABOVE"
+          }
+        }
+      }
+    },
+    "activeCount": 0,
+    "dayCount": 0,
+    "version": 6,
+    "ifSeqNo": 31,
+    "ifPrimaryTerm": 1
+  },
+  {
+    "ok": true,
+    "resp": {
+      "type": "monitor",
+      "schema_version": 3,
+      "name": "AWS-AWSManagedRulesCommonRuleSet Monitor",
+      "enabled": true,
+      "enabled_time": 1683114932537,
+      "schedule": {
+        "period": {
+          "interval": 5,
+          "unit": "MINUTES"
+        }
+      },
+      "inputs": [
+        {
+          "search": {
+            "indices": [
+              "awswaf-*"
+            ],
+            "query": {
+              "query": {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "action": {
+                          "query": "BLOCK",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "terminatingRuleId": {
+                          "query": "AWSManagedRulesCommonRuleSet",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "timestamp": {
+                          "from": "now-5m",
+                          "to": null,
+                          "include_lower": true,
+                          "include_upper": true,
+                          "boost": 1
+                        }
+                      }
+                    }
+                  ],
+                  "adjust_pure_negative": true,
+                  "boost": 1
+                }
+              }
+            }
+          }
+        }
+      ],
+      "triggers": [
+        {
+          "id": "Rxp44YcBYMsrBDr89maK",
+          "name": "AWS-AWSManagedRulesCommonRuleSet Trigger",
+          "severity": "1",
+          "condition": {
+            "script": {
+              "source": "ctx.results[0].hits.total.value > 10",
+              "lang": "painless"
+            }
+          },
+          "actions": [
+            {
+              "id": "SBp44YcBYMsrBDr89maK",
+              "name": "AWS-AWSManagedRulesCommonRuleSet Action",
+              "destination_id": "hP0-gIcBE_CG3P5QZ7Pp",
+              "message_template": {
+                "source": "{{#ctx}}\n{{#results}}\n{{#hits}}\n\nCloudFront WAF rule {{hits.0._source.terminatingRuleId}} blocked *{{total.value}}* requests in between {{periodStart}} to {{periodEnd}}.\n\nPlease access following Kibana dashboard url to debug further - https://vpc-waf-dashboards-dev-standard-qzetvss2wnr7emdqzqxs57nvt4.us-east-1.es.amazonaws.com/_plugin/kibana/app/dashboards#/view/dashboard?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'{{periodStart}}',to:'{{periodEnd}}'))&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:action,negate:!f,params:(query:BLOCK),type:phrase),query:(match_phrase:(action:BLOCK))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:terminatingRuleId,negate:!f,params:(query:{{hits.0._source.terminatingRuleId}}),type:phrase),query:(match_phrase:(terminatingRuleId:{{hits.0._source.terminatingRuleId}})))),fullScreenMode:!f,options:(darkTheme:!f,hidePanelTitles:!f,useMargins:!t),query:(language:lucene,query:''),timeRestore:!f,title:WAFDashboard,viewMode:view)\n\nPlease follow AlertstoAction section of the following runbook - https://confluence.eng.company.com/display/CSP/Runbook%3A+Cloudfront+Alerts#Runbook:CloudfrontAlerts-AlertstoAction\n\n{{/hits}}\n{{/results}}\n{{/ctx}}",
+                "lang": "mustache"
+              },
+              "throttle_enabled": false,
+              "subject_template": {
+                "source": ":alert: *WAF Rule AWS-AWSManagedRulesCommonRuleSet Blocked Some Requests*",
+                "lang": "mustache"
+              }
+            }
+          ]
+        }
+      ],
+      "last_update_time": 1683801943301,
+      "ui_metadata": {
+        "schedule": {
+          "cronExpression": "0 */1 * * *",
+          "period": {
+            "unit": "MINUTES",
+            "interval": 5
+          },
+          "timezone": null,
+          "daily": 0,
+          "monthly": {
+            "type": "day",
+            "day": 1
+          },
+          "weekly": {
+            "tue": false,
+            "wed": false,
+            "thur": false,
+            "sat": false,
+            "fri": false,
+            "mon": false,
+            "sun": false
+          },
+          "frequency": "interval"
+        },
+        "search": {
+          "aggregationType": "count",
+          "fieldName": "",
+          "overDocuments": "all documents",
+          "searchType": "query",
+          "bucketValue": 1,
+          "timeField": "",
+          "groupedOverTop": 5,
+          "bucketUnitOfTime": "h",
+          "where": {
+            "fieldName": [],
+            "fieldRangeEnd": 0,
+            "fieldRangeStart": 0,
+            "fieldValue": "",
+            "operator": "is"
+          },
+          "groupedOverFieldName": "bytes"
+        },
+        "triggers": {
+          "AWS-AWSManagedRulesCommonRuleSet Trigger": {
+            "value": 10000,
+            "enum": "ABOVE"
+          }
+        }
+      }
+    },
+    "activeCount": 0,
+    "dayCount": 0,
+    "version": 6,
+    "ifSeqNo": 7,
+    "ifPrimaryTerm": 1
+  },
+  {
+    "ok": true,
+    "resp": {
+      "type": "monitor",
+      "schema_version": 3,
+      "name": "AWS-AWSManagedRulesBotControlRuleSet Monitor",
+      "enabled": true,
+      "enabled_time": 1683113514043,
+      "schedule": {
+        "period": {
+          "interval": 5,
+          "unit": "MINUTES"
+        }
+      },
+      "inputs": [
+        {
+          "search": {
+            "indices": [
+              "awswaf-*"
+            ],
+            "query": {
+              "query": {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "action": {
+                          "query": "BLOCK",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "terminatingRuleId": {
+                          "query": "AWSManagedRulesBotControlRuleSet",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "timestamp": {
+                          "from": "now-5m",
+                          "to": null,
+                          "include_lower": true,
+                          "include_upper": true,
+                          "boost": 1
+                        }
+                      }
+                    }
+                  ],
+                  "adjust_pure_negative": true,
+                  "boost": 1
+                }
+              }
+            }
+          }
+        }
+      ],
+      "triggers": [
+        {
+          "id": "Ixpp4YcBYMsrBDr842Y3",
+          "name": "AWS-AWSManagedRulesBotControlRuleSet Trigger",
+          "severity": "1",
+          "condition": {
+            "script": {
+              "source": "ctx.results[0].hits.total.value > 100",
+              "lang": "painless"
+            }
+          },
+          "actions": [
+            {
+              "id": "JBpp4YcBYMsrBDr842Y3",
+              "name": "Firewall Blocked Requests For AWSManagedRulesBotControlRuleSet",
+              "destination_id": "hP0-gIcBE_CG3P5QZ7Pp",
+              "message_template": {
+                "source": "{{#ctx}}\n{{#results}}\n{{#hits}}\n\nCloudFront WAF rule {{hits.0._source.terminatingRuleId}} blocked *{{total.value}}* requests in between {{periodStart}} to {{periodEnd}}.\n\nPlease access following Kibana dashboard url to debug further - https://vpc-waf-dashboards-dev-standard-qzetvss2wnr7emdqzqxs57nvt4.us-east-1.es.amazonaws.com/_plugin/kibana/app/dashboards#/view/dashboard?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'{{periodStart}}',to:'{{periodEnd}}'))&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:action,negate:!f,params:(query:BLOCK),type:phrase),query:(match_phrase:(action:BLOCK))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:terminatingRuleId,negate:!f,params:(query:{{hits.0._source.terminatingRuleId}}),type:phrase),query:(match_phrase:(terminatingRuleId:{{hits.0._source.terminatingRuleId}})))),fullScreenMode:!f,options:(darkTheme:!f,hidePanelTitles:!f,useMargins:!t),query:(language:lucene,query:''),timeRestore:!f,title:WAFDashboard,viewMode:view)\n\nPlease follow AlertstoAction section of the following runbook - https://confluence.eng.company.com/display/CSP/Runbook%3A+Cloudfront+Alerts#Runbook:CloudfrontAlerts-AlertstoAction\n\n{{/hits}}\n{{/results}}\n{{/ctx}}",
+                "lang": "mustache"
+              },
+              "throttle_enabled": false,
+              "subject_template": {
+                "source": "AWS-AWSManagedRulesBotControlRuleSet Action",
+                "lang": "mustache"
+              }
+            }
+          ]
+        }
+      ],
+      "last_update_time": 1683802010762,
+      "ui_metadata": {
+        "schedule": {
+          "cronExpression": "0 */1 * * *",
+          "period": {
+            "unit": "MINUTES",
+            "interval": 5
+          },
+          "timezone": null,
+          "daily": 0,
+          "monthly": {
+            "type": "day",
+            "day": 1
+          },
+          "weekly": {
+            "tue": false,
+            "wed": false,
+            "thur": false,
+            "sat": false,
+            "fri": false,
+            "mon": false,
+            "sun": false
+          },
+          "frequency": "interval"
+        },
+        "search": {
+          "aggregationType": "count",
+          "fieldName": "",
+          "overDocuments": "all documents",
+          "searchType": "query",
+          "bucketValue": 1,
+          "timeField": "",
+          "groupedOverTop": 5,
+          "bucketUnitOfTime": "h",
+          "where": {
+            "fieldName": [],
+            "fieldRangeEnd": 0,
+            "fieldRangeStart": 0,
+            "fieldValue": "",
+            "operator": "is"
+          },
+          "groupedOverFieldName": "bytes"
+        },
+        "triggers": {
+          "AWS-AWSManagedRulesBotControlRuleSet Trigger": {
+            "value": 10000,
+            "enum": "ABOVE"
+          }
+        }
+      }
+    },
+    "activeCount": 0,
+    "dayCount": 0,
+    "version": 6,
+    "ifSeqNo": 33,
+    "ifPrimaryTerm": 1
+  },
+  {
+    "ok": true,
+    "resp": {
+      "type": "monitor",
+      "schema_version": 3,
+      "name": "AWS-AWSManagedRulesAnonymousIpList Monitor",
+      "enabled": true,
+      "enabled_time": 1683115780623,
+      "schedule": {
+        "period": {
+          "interval": 5,
+          "unit": "MINUTES"
+        }
+      },
+      "inputs": [
+        {
+          "search": {
+            "indices": [
+              "awswaf-*"
+            ],
+            "query": {
+              "query": {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "action": {
+                          "query": "BLOCK",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "terminatingRuleId": {
+                          "query": "AWSManagedRulesAnonymousIpList",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "timestamp": {
+                          "from": "now-5m",
+                          "to": null,
+                          "include_lower": true,
+                          "include_upper": true,
+                          "boost": 1
+                        }
+                      }
+                    }
+                  ],
+                  "adjust_pure_negative": true,
+                  "boost": 1
+                }
+              }
+            }
+          }
+        }
+      ],
+      "triggers": [
+        {
+          "id": "gBqF4YcBYMsrBDr8F2aj",
+          "name": "AWS-AWSManagedRulesAnonymousIpList Trigger",
+          "severity": "1",
+          "condition": {
+            "script": {
+              "source": "ctx.results[0].hits.total.value > 10",
+              "lang": "painless"
+            }
+          },
+          "actions": [
+            {
+              "id": "gRqF4YcBYMsrBDr8F2aj",
+              "name": "AWS-AWSManagedRulesAnonymousIpList Action",
+              "destination_id": "hP0-gIcBE_CG3P5QZ7Pp",
+              "message_template": {
+                "source": "{{#ctx}}\n{{#results}}\n{{#hits}}\n\nCloudFront WAF rule {{hits.0._source.terminatingRuleId}} blocked *{{total.value}}* requests in between {{periodStart}} to {{periodEnd}}.\n\nPlease access following Kibana dashboard url to debug further - https://vpc-waf-dashboards-dev-standard-qzetvss2wnr7emdqzqxs57nvt4.us-east-1.es.amazonaws.com/_plugin/kibana/app/dashboards#/view/dashboard?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'{{periodStart}}',to:'{{periodEnd}}'))&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:action,negate:!f,params:(query:BLOCK),type:phrase),query:(match_phrase:(action:BLOCK))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:terminatingRuleId,negate:!f,params:(query:{{hits.0._source.terminatingRuleId}}),type:phrase),query:(match_phrase:(terminatingRuleId:{{hits.0._source.terminatingRuleId}})))),fullScreenMode:!f,options:(darkTheme:!f,hidePanelTitles:!f,useMargins:!t),query:(language:lucene,query:''),timeRestore:!f,title:WAFDashboard,viewMode:view)\n\nPlease follow AlertstoAction section of the following runbook - https://confluence.eng.company.com/display/CSP/Runbook%3A+Cloudfront+Alerts#Runbook:CloudfrontAlerts-AlertstoAction\n\n{{/hits}}\n{{/results}}\n{{/ctx}}",
+                "lang": "mustache"
+              },
+              "throttle_enabled": false,
+              "subject_template": {
+                "source": ":alert: *WAF Rule AWS-AWSManagedRulesAnonymousIpList Blocked Some Requests*",
+                "lang": "mustache"
+              }
+            }
+          ]
+        }
+      ],
+      "last_update_time": 1683802094435,
+      "ui_metadata": {
+        "schedule": {
+          "cronExpression": "0 */1 * * *",
+          "period": {
+            "unit": "MINUTES",
+            "interval": 5
+          },
+          "timezone": null,
+          "daily": 0,
+          "monthly": {
+            "type": "day",
+            "day": 1
+          },
+          "weekly": {
+            "tue": false,
+            "wed": false,
+            "thur": false,
+            "sat": false,
+            "fri": false,
+            "mon": false,
+            "sun": false
+          },
+          "frequency": "interval"
+        },
+        "search": {
+          "aggregationType": "count",
+          "fieldName": "",
+          "overDocuments": "all documents",
+          "searchType": "query",
+          "bucketValue": 1,
+          "timeField": "",
+          "groupedOverTop": 5,
+          "bucketUnitOfTime": "h",
+          "where": {
+            "fieldName": [],
+            "fieldRangeEnd": 0,
+            "fieldRangeStart": 0,
+            "fieldValue": "",
+            "operator": "is"
+          },
+          "groupedOverFieldName": "bytes"
+        },
+        "triggers": {
+          "AWS-AWSManagedRulesAnonymousIpList Trigger": {
+            "value": 10000,
+            "enum": "ABOVE"
+          }
+        }
+      }
+    },
+    "activeCount": 0,
+    "dayCount": 0,
+    "version": 6,
+    "ifSeqNo": 31,
+    "ifPrimaryTerm": 1
+  },
+  {
+    "ok": true,
+    "resp": {
+      "type": "monitor",
+      "schema_version": 3,
+      "name": "AWS-AWSManagedRulesAmazonIpReputationList Monitor",
+      "enabled": true,
+      "enabled_time": 1683115541403,
+      "schedule": {
+        "period": {
+          "interval": 5,
+          "unit": "MINUTES"
+        }
+      },
+      "inputs": [
+        {
+          "search": {
+            "indices": [
+              "awswaf-*"
+            ],
+            "query": {
+              "query": {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "action": {
+                          "query": "BLOCK",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "terminatingRuleId": {
+                          "query": "AWSManagedRulesAmazonIpReputationList",
+                          "operator": "OR",
+                          "prefix_length": 0,
+                          "max_expansions": 50,
+                          "fuzzy_transpositions": true,
+                          "lenient": false,
+                          "zero_terms_query": "NONE",
+                          "auto_generate_synonyms_phrase_query": true,
+                          "boost": 1
+                        }
+                      }
+                    },
+                    {
+                      "range": {
+                        "timestamp": {
+                          "from": "now-5m",
+                          "to": null,
+                          "include_lower": true,
+                          "include_upper": true,
+                          "boost": 1
+                        }
+                      }
+                    }
+                  ],
+                  "adjust_pure_negative": true,
+                  "boost": 1
+                }
+              }
+            }
+          }
+        }
+      ],
+      "triggers": [
+        {
+          "id": "E3WC4YcBBettTDdjy4J6",
+          "name": "AWS-AWSManagedRulesAmazonIpReputationList Trigger",
+          "severity": "1",
+          "condition": {
+            "script": {
+              "source": "ctx.results[0].hits.total.value > 10",
+              "lang": "painless"
+            }
+          },
+          "actions": [
+            {
+              "id": "FHWC4YcBBettTDdjy4J6",
+              "name": "AWS-AWSManagedRulesAmazonIpReputationList Action",
+              "destination_id": "hP0-gIcBE_CG3P5QZ7Pp",
+              "message_template": {
+                "source": "{{#ctx}}\n{{#results}}\n{{#hits}}\n\nCloudFront WAF rule {{hits.0._source.terminatingRuleId}} blocked *{{total.value}}* requests in between {{periodStart}} to {{periodEnd}}.\n\nPlease access following Kibana dashboard url to debug further - https://vpc-waf-dashboards-dev-standard-qzetvss2wnr7emdqzqxs57nvt4.us-east-1.es.amazonaws.com/_plugin/kibana/app/dashboards#/view/dashboard?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'{{periodStart}}',to:'{{periodEnd}}'))&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:action,negate:!f,params:(query:BLOCK),type:phrase),query:(match_phrase:(action:BLOCK))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:awswaf,key:terminatingRuleId,negate:!f,params:(query:{{hits.0._source.terminatingRuleId}}),type:phrase),query:(match_phrase:(terminatingRuleId:{{hits.0._source.terminatingRuleId}})))),fullScreenMode:!f,options:(darkTheme:!f,hidePanelTitles:!f,useMargins:!t),query:(language:lucene,query:''),timeRestore:!f,title:WAFDashboard,viewMode:view)\n\nPlease follow AlertstoAction section of the following runbook - https://confluence.eng.company.com/display/CSP/Runbook%3A+Cloudfront+Alerts#Runbook:CloudfrontAlerts-AlertstoAction\n\n{{/hits}}\n{{/results}}\n{{/ctx}}",
+                "lang": "mustache"
+              },
+              "throttle_enabled": false,
+              "subject_template": {
+                "source": ":alert: *WAF Rule AWS-AWSManagedRulesAmazonIpReputationList Blocked Some Requests*",
+                "lang": "mustache"
+              }
+            }
+          ]
+        }
+      ],
+      "last_update_time": 1683802165140,
+      "ui_metadata": {
+        "schedule": {
+          "cronExpression": "0 */1 * * *",
+          "period": {
+            "unit": "MINUTES",
+            "interval": 5
+          },
+          "timezone": null,
+          "daily": 0,
+          "monthly": {
+            "type": "day",
+            "day": 1
+          },
+          "weekly": {
+            "tue": false,
+            "wed": false,
+            "thur": false,
+            "sat": false,
+            "fri": false,
+            "mon": false,
+            "sun": false
+          },
+          "frequency": "interval"
+        },
+        "search": {
+          "aggregationType": "count",
+          "fieldName": "",
+          "overDocuments": "all documents",
+          "searchType": "query",
+          "bucketValue": 1,
+          "timeField": "",
+          "groupedOverTop": 5,
+          "bucketUnitOfTime": "h",
+          "where": {
+            "fieldName": [],
+            "fieldRangeEnd": 0,
+            "fieldRangeStart": 0,
+            "fieldValue": "",
+            "operator": "is"
+          },
+          "groupedOverFieldName": "bytes"
+        },
+        "triggers": {
+          "AWS-AWSManagedRulesAmazonIpReputationList Trigger": {
+            "value": 10000,
+            "enum": "ABOVE"
+          }
+        }
+      }
+    },
+    "activeCount": 0,
+    "dayCount": 0,
+    "version": 7,
+    "ifSeqNo": 33,
+    "ifPrimaryTerm": 1
+  }
+]

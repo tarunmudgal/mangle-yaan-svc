@@ -9,9 +9,9 @@ class CommerceInvoicesLocators:
     TXT_ERROR = (By.XPATH, "//div[contains(text(),'503 ERROR')]")
     TXT_ERROR_MSG = (
         By.XPATH,
-        "(//div[contains(.,'VMware Cloud commerce Services is undergoing scheduled maintenance right now.')])[6]",
+        "(//div[contains(.,'company Cloud commerce Services is undergoing scheduled maintenance right now.')])[6]",
     )
     BTN_BACK_TO_HOME_PAGE = (
         By.XPATH,
-        "//button[contains(text(),'Back to VMware cloud services')]",
+        "//button[contains(text(),'Back to company cloud services')]",
     )

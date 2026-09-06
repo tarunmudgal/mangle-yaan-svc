@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: selenium-node-chrome
-          image: harbor-repo.vmware.com/csp_qe/selenium/node-chrome-debug:3.141
+          image: harbor-repo.company.com/csp_qe/selenium/node-chrome-debug:3.141
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5900

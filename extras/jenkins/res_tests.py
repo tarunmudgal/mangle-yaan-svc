@@ -19,7 +19,7 @@ sys.path.append(BASEDIR)
 
 PROJECTDIR = os.path.dirname(BASEDIR)
 RESULTSDIR = os.path.join(PROJECTDIR, "results")
-MAXIM_GUN_ENDPOINT = "http://maxim-gun-service.svc-stage.eng.vmware.com"
+MAXIM_GUN_ENDPOINT = "http://maxim-gun-service.svc-stage.eng.company.com"
 MANGLE_YAAN_TEST_REPORT_NAME = "mangle-yaan-test-report.html"
 
 START = 0

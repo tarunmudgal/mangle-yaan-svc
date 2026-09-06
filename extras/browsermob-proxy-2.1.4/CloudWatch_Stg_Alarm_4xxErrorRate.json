@@ -1,0 +1,31 @@
+{
+    "Type": "AWS::CloudWatch::Alarm",
+    "Properties": {
+        "AlarmName": "CloudWatch_Stg_Alarm_4xxErrorRate",
+        "AlarmDescription": "description: 4xx error rate has been spiked up\njira_team: csp-eng-all\nslack_channel: csp-cdn-alerts-stg\nseverity: warning\nrunbook_url: https://confluence.eng.company.com/x/0TwMYg",
+        "ActionsEnabled": true,
+        "OKActions": [],
+        "AlarmActions": [
+            "arn:aws:sns:us-east-1:356948649880:metrics_topic"
+        ],
+        "InsufficientDataActions": [],
+        "MetricName": "4xxErrorRate",
+        "Namespace": "AWS/CloudFront",
+        "Statistic": "Average",
+        "Dimensions": [
+            {
+                "Name": "DistributionId",
+                "Value": "E3J9E3ZE55P9YX"
+            },
+            {
+                "Name": "Region",
+                "Value": "Global"
+            }
+        ],
+        "Period": 300,
+        "EvaluationPeriods": 1,
+        "DatapointsToAlarm": 1,
+        "Threshold": 30,
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold"
+    }
+}

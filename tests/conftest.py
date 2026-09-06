@@ -504,7 +504,7 @@ def init_chrome_driver(request):
             myconfig.get("mangleYaan").get("webDriver").get("chromeDriverPath")
         )
     else:
-        # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub'
+        # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.company.com:31001/wd/hub'
         #                                           , desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
         selenium_hub_fqdn = (
                 "https://"
@@ -549,7 +549,7 @@ def init_chrome_driver_with_call_interceptor(request):
             myconfig.get("mangleYaan").get("webDriver").get("chromeDriverPath")
         )
     else:
-        # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.vmware.com:31001/wd/hub'
+        # driver = webdriver.Remote(command_executor='http://selenium-mangle-yaan.svc-stage.eng.company.com:31001/wd/hub'
         #                                           , desired_capabilities=getattr(DesiredCapabilities, "CHROME"))
         selenium_hub_fqdn = (
             "http://"
@@ -645,7 +645,7 @@ def block_commerce_endpoints_using_gateway_api(request):
                         "paths": [
                             {
                                 "path": "/csp/gateway/commerce/api",
-                                "body": "VMware Cloud commerce Services is undergoing scheduled maintenance right now.",
+                                "body": "company Cloud commerce Services is undergoing scheduled maintenance right now.",
                                 "exclude": [],
                             }
                         ]
@@ -721,7 +721,7 @@ def get_auth_code_using_csp_ui_workflow():
         elif csp_env == "dev":
             vidm_host = "csp-dev.vidmpreview.com"
         elif csp_env == "prd":
-            vidm_host = "csp-prod.vmwareidentity.com"
+            vidm_host = "csp-prod.companyidentity.com"
         else:
             vidm_host = "csp-preview.preprod.vidmlabs.com"
 

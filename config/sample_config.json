@@ -5,20 +5,20 @@
       "testLogPath": "mangle-yaan/logs/",
       "awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
       "testReportPath": "mangle-yaan/results/",
-      "awsSecretAccessKey": "hDdsiNAJoCYqGfYE3nfTRKBQran2+6QUTPS5qUGd",
+      "awsSecretAccessKey": "dummy_secret_key",
       "resultTrendsBucketName": "csp-qe-res",
       "resultTrendsHistoryPath": "workloads-history/"
     }
   },
   "csp": {
     "preview": {
-      "host": "console-preview.cloud.vmware.com",
+      "host": "console-preview.cloud.company.com",
       "defaultOrg": {
         "id": "f09537d7-633a-4204-891e-2fe6e58265a7"
       },
       "defaultUser": {
-        "id": "preview_vmware.com:02a0ab43-a8f8-41f6-acb0-cb8c4309d820",
-        "email": "adityak3@vmware.com",
+        "id": "preview_company.com:02a0ab43-a8f8-41f6-acb0-cb8c4309d820",
+        "email": "adityak3@company.com",
         "accessToken": "",
         "refreshToken": "ZcMhmvffR70Auq1_z4RNKTWST6tcM88CspTnxwBv4Fx1YN7rNSweha2OHGOMOpzO"
       },
@@ -33,13 +33,13 @@
       }
     },
     "dev": {
-      "host": "console-dev.cloud.vmware.com",
+      "host": "console-dev.cloud.company.com",
       "defaultOrg": {
         "id": "78cf9533-05b5-460a-b785-66e373aaf095"
       },
       "defaultUser": {
-        "id": "vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
-        "email": "mtarun@vmware.com",
+        "id": "company.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
+        "email": "mtarun@company.com",
         "accessToken": "",
         "refreshToken": "zM8cN2CZQlkE7jEiqboPnCKUNmFLUjoavvIblaRlZ35frdLLxxC9Z8l5qDlZ1SaI"
       },
@@ -48,13 +48,13 @@
       }
     },
     "decc": {
-      "host": "csp-console-ara-csp-smantu.ara.decc.vmware.com",
+      "host": "csp-console-ara-csp-smantu.ara.decc.company.com",
       "defaultOrg": {
         "id": "d77e9cdd-9dfd-4b33-a98d-889497a6d8d8"
       },
       "defaultUser": {
-        "id": "vmware.com:84783bf4-2bd4-490d-866a-83a82b9fc953",
-        "email": "smantu@vmware.com",
+        "id": "company.com:84783bf4-2bd4-490d-866a-83a82b9fc953",
+        "email": "smantu@company.com",
         "accessToken": "",
         "refreshToken": "VYIiUdXzVdlWiWavdCw6_gPDpcehmBUFHM1SEddauZG2EKzjl3GJq3AkYQd4rF6h"
       },
@@ -97,7 +97,7 @@
   "mangleYaan": {
     "webDriver": {
       "initLocal": false,
-      "chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
+      "chromeDriverPath": "/Users/mtarun/company/code/mangle-yaan-service/extras/chromedriver"
     },
     "testLogPath": "logs/test_runner.log",
     "testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",

@@ -35,8 +35,8 @@ HTTP_RETRIABLE_ERRORS = (
 CODE_VERIFIER_CONST = pkce.generate_code_verifier(length=43)
 CODE_CHALLENGE_CONST = pkce.get_code_challenge(CODE_VERIFIER_CONST)
 REQUEST_SESSION = requests.session()
-PO_AUTH_TOKEN = ""
-CSP_URL = "https://console-preview.cloud.vmware.com"
+PO_AUTH_TOKEN = "OQXUGqSbAz5A4QE4arU8j1rI0AxIl8drNgicKO1nIsYMgfusG8XUK5xUKzeRA5Rp"
+CSP_URL = "https://console-preview.cloud.company.com"
 INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
 OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"
 MAX_WORKERS = 10
@@ -80,7 +80,7 @@ def create_service_ticker():
 
 # class to execute CSP API calls #
 class CSPAPIFlows(object):
-    def __init__(self, csp_url="https://console-preview.cloud.vmware.com", api_token=""):
+    def __init__(self, csp_url="https://console-preview.cloud.company.com", api_token=""):
         self.api_token = api_token
         self.access_token = ""
         self.session = requests.session()
@@ -276,11 +276,11 @@ class CSPAPIFlows(object):
                 "sellers": [
                     {
                         "enabled": True,
-                        "seller": "VMWARE"
+                        "seller": "company"
                     }
                 ],
                 "service-urls": {
-                    "service-home": "www.cloud.vmware.com"
+                    "service-home": "www.cloud.company.com"
                 },
                 "serviceTicker": create_service_ticker(),
                 "org-id": default_org_id_expected
@@ -337,11 +337,11 @@ class CSPAPIFlows(object):
             "sellers": [
                 {
                     "enabled": True,
-                    "seller": "VMWARE"
+                    "seller": "company"
                 }
             ],
             "service-urls": {
-                "service-home": "www.cloud.vmware.com"
+                "service-home": "www.cloud.company.com"
             },
             "serviceTicker": create_service_ticker(),
             "org-id": default_org_id_expected
@@ -503,11 +503,11 @@ class CSPAPIFlows(object):
                 "sellers": [
                     {
                         "enabled": True,
-                        "seller": "VMWARE"
+                        "seller": "company"
                     }
                 ],
                 "service-urls": {
-                    "service-home": "www.cloud.vmware.com"
+                    "service-home": "www.cloud.company.com"
                 },
                 "serviceTicker": create_service_ticker(),
                 "org-id": default_org_id_expected

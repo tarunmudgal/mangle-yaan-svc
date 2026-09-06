@@ -34,7 +34,7 @@ CODE_VERIFIER_CONST = pkce.generate_code_verifier(length=43)
 CODE_CHALLENGE_CONST = pkce.get_code_challenge(CODE_VERIFIER_CONST)
 REQUEST_SESSION = requests.session()
 PO_AUTH_TOKEN = "ZcMhmvffR70Auq1_z4RNKTWST6tcM88CspTnxwBv4Fx1YN7rNSweha2OHGOMOpzO"
-CSP_URL = "https://console-preview.cloud.vmware.com"
+CSP_URL = "https://console-preview.cloud.company.com"
 INPUT_API_TOKENS_FILE = "oauth_apps.csv"
 OUTPUT_API_TOKEN_FILE = "oauth_apps_updated.csv"
 MAX_WORKERS = 60
@@ -65,7 +65,7 @@ mylog.addHandler(file_handler)
 
 # class to execute CSP API calls #
 class CSPAPIFlows(object):
-    def __init__(self, csp_url="https://console-preview.cloud.vmware.com", api_token=""):
+    def __init__(self, csp_url="https://console-preview.cloud.company.com", api_token=""):
         self.api_token = api_token
         self.access_token = ""
         self.session = requests.session()

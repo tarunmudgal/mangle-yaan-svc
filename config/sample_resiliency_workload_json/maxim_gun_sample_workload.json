@@ -2,7 +2,7 @@
 	"project_id": "k6uWqG34zLumCemXEjjwEi",
 	"description": "Workload for Test-run-all-testsuites",
 	"sut_details": {
-		"csp_host": "console-preview.cloud.vmware.com",
+		"csp_host": "console-preview.cloud.company.com",
 		"csp_protocol": "https"
 	},
 	"service_tags": [
@@ -10,15 +10,15 @@
 	],
 	"workload_name": "Test-run-all-testsuites",
 	"workload_type": "res",
-	"workload_image": "vmware-docker-csp-tools.bintray.io/mangle-yaan",
+	"workload_image": "company-docker-csp-tools.bintray.io/mangle-yaan",
 	"wavefront_links": [
 		{
-			"wavefront_link": "https://vmwareprod.wavefront.com/dashboards/csp1#_v01(g:(d:5705.187801,ls:!f,s:1610503231.12106),p:(csp_micro_service:(d:Label_2,f:TAG_KEY,k:app,l:'Csp%20Micro%20Service',m:(Label_11:csp-customer-support,Label_2:csp-account-management-mvc),q:'ts(http.server.requests.seconds.max)',s:Label_11),kubernetes_namespace:(d:Label_2,f:TAG_KEY,k:kubernetes_namespace,l:kubernetes_namespace,m:(Label_2:csp-app-dev,Label_4:csp-app-preview),q:'ts(http.server.requests.seconds.count)',s:Label_4),region:(d:'01%20-%20%20us-west-2',l:Region,m:('01%20-%20%20us-west-2':us-west-2,'02%20-%20us-east-1':us-east-1),vo:!('02%20-%20us-east-1','01%20-%20%20us-west-2'))))",
+			"wavefront_link": "https://companyprod.wavefront.com/dashboards/csp1#_v01(g:(d:5705.187801,ls:!f,s:1610503231.12106),p:(csp_micro_service:(d:Label_2,f:TAG_KEY,k:app,l:'Csp%20Micro%20Service',m:(Label_11:csp-customer-support,Label_2:csp-account-management-mvc),q:'ts(http.server.requests.seconds.max)',s:Label_11),kubernetes_namespace:(d:Label_2,f:TAG_KEY,k:kubernetes_namespace,l:kubernetes_namespace,m:(Label_2:csp-app-dev,Label_4:csp-app-preview),q:'ts(http.server.requests.seconds.count)',s:Label_4),region:(d:'01%20-%20%20us-west-2',l:Region,m:('01%20-%20%20us-west-2':us-west-2,'02%20-%20us-east-1':us-east-1),vo:!('02%20-%20us-east-1','01%20-%20%20us-west-2'))))",
 			"waverfront_link_name": "Customer Support"
 		}
 	],
 	"confluence_links": {
-		"confluence_link": "https://confluence.eng.vmware.com/display/E2EQEPUNE/Current+Perf+Workloads",
+		"confluence_link": "https://confluence.eng.company.com/display/E2EQEPUNE/Current+Perf+Workloads",
 		"confluence_page_id": "628859985",
 		"confluence_link_name": "Current Perf Workloads",
 		"confluence_report_name": "None",
@@ -31,20 +31,20 @@
 				"testLogPath": "mangle-yaan/logs/",
 				"awsAccessKeyID": "AKIAUE4JITGQ3LKSAK5E",
 				"testReportPath": "mangle-yaan/results/",
-				"awsSecretAccessKey": "hDdsiNAJoCYqGfYE3nfTRKBQran2+6QUTPS5qUGd",
+				"awsSecretAccessKey": "dummy_secret_key",
 				"resultTrendsBucketName": "csp-qe-res",
 				"resultTrendsHistoryPath": "workloads-history/"
 			}
 		},
 		"csp": {
 			"preview": {
-				"host": "console-preview.cloud.vmware.com",
+				"host": "console-preview.cloud.company.com",
 				"defaultOrg": {
 					"id": "f09537d7-633a-4204-891e-2fe6e58265a7"
 				},
 				 "defaultUser": {
-					"id": "preview_vmware.com:02a0ab43-a8f8-41f6-acb0-cb8c4309d820",
-					"email": "adityak3@vmware.com",
+					"id": "preview_company.com:02a0ab43-a8f8-41f6-acb0-cb8c4309d820",
+					"email": "adityak3@company.com",
 					"accessToken": "",
 					"refreshToken": "cMtNzVdi8mLwfFR2bllMLtgVLSWo7QfJV5TegQlM0R-KYf7z5SHPCjC7Y4I7bCDT"
 				  },
@@ -59,13 +59,13 @@
 				}
 			},
 			"dev": {
-				"host": "console-dev.cloud.vmware.com",
+				"host": "console-dev.cloud.company.com",
 				"defaultOrg": {
 					"id": "78cf9533-05b5-460a-b785-66e373aaf095"
 				},
 				"defaultUser": {
-					"id": "vmware.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
-					"email": "mtarun@vmware.com",
+					"id": "company.com:4b77a83b-8aa1-4055-85d7-8931a919518d",
+					"email": "mtarun@company.com",
 					"accessToken": "",
 					"refreshToken": "zM8cN2CZQlkE7jEiqboPnCKUNmFLUjoavvIblaRlZ35frdLLxxC9Z8l5qDlZ1SaI"
 				},
@@ -96,7 +96,7 @@
 		"mangleYaan": {
 			"webDriver": {
 				"initLocal": false,
-				"chromeDriverPath": "/Users/mtarun/vmware/code/mangle-yaan-service/extras/chromedriver"
+				"chromeDriverPath": "/Users/mtarun/company/code/mangle-yaan-service/extras/chromedriver"
 			},
 			"testLogPath": "logs/test_runner.log",
 			"testReportPath": "logs/mangle-yaan-test-report-{timeStamp}.html",
@@ -110,7 +110,7 @@
 	},
 	"workload_profile": {
 		"perf_nodes": "1",
-		"perf_test_name": "com.vmware.perf.tests.regressions.AllGetApisThruRefreshTokenTest",
+		"perf_test_name": "com.company.perf.tests.regressions.AllGetApisThruRefreshTokenTest",
 		"injection_profile": {
 			"users": "10",
 			"duration": "10 minutes",
