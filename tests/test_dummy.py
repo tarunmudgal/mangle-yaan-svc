@@ -5,9 +5,9 @@ from flaky import flaky
 
 from src.testlib.selenium.pages.csp.login_page import LoginPage
 
-USER = "lhruser3usd@yahoo.com"
-PASSWORD = "Test@123"
-PO_ORG_ID = "1c6f6c98-28bd-47b4-83f6-cad067495fce"
+USER = "<YOUR_TEST_USER_EMAIL>"
+PASSWORD = "<YOUR_TEST_PASSWORD>"
+PO_ORG_ID = "<YOUR_PO_ORG_ID>"
 FF_CONFIG_CACHE_UPDATE_INTERVAL = 300
 
 
@@ -122,7 +122,7 @@ class TestDummy:
         from lib.csp import resources as csp_resources
 
         response_obj = get_auth_code_using_csp_ui_workflow(
-            "perf_preview_oo_100x_1@mailsac.com", "Test!preview@90"
+            "<YOUR_TEST_USER_EMAIL>", "<YOUR_TEST_PASSWORD>"
         )
         session = response_obj.get("session")
         auth_code = response_obj.get("code")

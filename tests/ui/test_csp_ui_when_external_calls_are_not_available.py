@@ -11,12 +11,12 @@ import pytest
 from src.testlib.selenium.pages.csp.login_page import LoginPage
 from src.testlib.selenium.pages.csp.my_account_page import MyAccountPage
 
-USER = "lhruser3usd@yahoo.com"
-PASSWORD = "Test@123"
+USER = "<YOUR_TEST_USER_EMAIL>"
+PASSWORD = "<YOUR_TEST_PASSWORD>"
 
 if csp_env == "dev":
-    USER = "sscpperfuser1@harakirimail.com"
-    PASSWORD = "Test@123"
+    USER = "<YOUR_DEV_TEST_USER_EMAIL>"
+    PASSWORD = "<YOUR_DEV_TEST_PASSWORD>"
 
 
 # def interceptor(request):

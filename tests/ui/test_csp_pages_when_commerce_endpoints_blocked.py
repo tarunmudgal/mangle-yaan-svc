@@ -21,9 +21,9 @@ from src.testlib.selenium.pages.csp.bs_promotional_credits_page import Promotion
 from src.testlib.selenium.pages.csp.bs_invoices_page import InvoicesPage
 
 
-USER = "lhruser3usd@yahoo.com"
-PASSWORD = "Test@123"
-PO_ORG_ID = "1c6f6c98-28bd-47b4-83f6-cad067495fce"
+USER = "<YOUR_TEST_USER_EMAIL>"
+PASSWORD = "<YOUR_TEST_PASSWORD>"
+PO_ORG_ID = "<YOUR_PO_ORG_ID>"
 FF_CONFIG_CACHE_UPDATE_INTERVAL = 400
 
 

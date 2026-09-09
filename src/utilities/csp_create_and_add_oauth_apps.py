@@ -33,7 +33,7 @@ HTTP_RETRIABLE_ERRORS = (
 CODE_VERIFIER_CONST = pkce.generate_code_verifier(length=43)
 CODE_CHALLENGE_CONST = pkce.get_code_challenge(CODE_VERIFIER_CONST)
 REQUEST_SESSION = requests.session()
-PO_AUTH_TOKEN = "ZcMhmvffR70Auq1_z4RNKTWST6tcM88CspTnxwBv4Fx1YN7rNSweha2OHGOMOpzO"
+PO_AUTH_TOKEN = "<YOUR_CSP_REFRESH_TOKEN>"
 CSP_URL = "https://console-preview.cloud.company.com"
 INPUT_API_TOKENS_FILE = "oauth_apps.csv"
 OUTPUT_API_TOKEN_FILE = "oauth_apps_updated.csv"

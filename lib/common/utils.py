@@ -62,8 +62,8 @@ def verify_status(do_log=True, return_status=True, success_status_range=(200, 29
 
 
 def purge_old_reports_from_s3(
-    aws_key="AKIAUE4JITGQ3LKSAK5E",
-    aws_secret="hDdsiNAJoCYqGfYE3nfTRKBQran2+6QUTPS5qUGd",
+    aws_key="<YOUR_AWS_ACCESS_KEY_ID>",
+    aws_secret="<YOUR_AWS_SECRET_ACCESS_KEY>",
     bucket_name="csp-e2e-qe",
     s3_key_prefix="mangle-yaan/results/mangle-yaan-test-report",
     days_before=60,

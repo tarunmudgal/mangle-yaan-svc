@@ -35,7 +35,7 @@ HTTP_RETRIABLE_ERRORS = (
 CODE_VERIFIER_CONST = pkce.generate_code_verifier(length=43)
 CODE_CHALLENGE_CONST = pkce.get_code_challenge(CODE_VERIFIER_CONST)
 REQUEST_SESSION = requests.session()
-PO_AUTH_TOKEN = "OQXUGqSbAz5A4QE4arU8j1rI0AxIl8drNgicKO1nIsYMgfusG8XUK5xUKzeRA5Rp"
+PO_AUTH_TOKEN = "<YOUR_CSP_REFRESH_TOKEN>"
 CSP_URL = "https://console-preview.cloud.company.com"
 INPUT_API_TOKENS_FILE = "preview_300x_users.csv"
 OUTPUT_API_TOKEN_FILE = "preview_300x_users_updated.csv"

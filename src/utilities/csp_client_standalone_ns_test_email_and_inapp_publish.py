@@ -355,7 +355,7 @@ if __name__ == "__main__":
     # initialize csp rest client
     cclient = CSPClient(
         "console-stg.cloud.company.com",
-        "OQXUGqSbAz5A4QE4arU8j1rI0AxIl8drNgicKO1nIsYMgfusG8XUK5xUKzeRA5Rp",
+        "<YOUR_CSP_REFRESH_TOKEN>",
         timeout=120,
     )
 
